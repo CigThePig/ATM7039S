@@ -28,3 +28,5 @@ First seek an existing log tied to a board/release hash. Capture the kernel cmdl
 The three masks distinguish discovery, presence and policy. A four-core SCU count with only two possible CPUs suggests a software cap; four possible/present with two online points toward policy or startup failures; a two-core count needs revision/SCU interpretation research. Each outcome would narrow the ledger without presuming it in advance.
 
 These outcomes are now machine-readable as prediction **P-CPU** in [predictions.json](../evidence/predictions.json) and are evaluated by `tools/runtime_capture.py`. **P-KCONFIG** reads `/proc/config.gz` if the release kernel exports it, which would replace the failed IKCONFIG extraction.
+
+Build comparison (FW-009): `owl_smp_init_cpus`, `owl_smp_prepare_cpus`, `scu_get_core_count`, `cpu_up` and `arm_dt_init_cpu_maps` have identical sizes in the Koriki v1.0 kernel and the pinned source built with GCC 4.9.3. That supports reading the release's CPU mechanism against `platsmp-owl.c`. It does not prove the code is identical, and the release kernel otherwise comes from a vendor-derived tree.

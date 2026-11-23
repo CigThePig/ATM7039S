@@ -223,5 +223,14 @@
     "examined": "2026-11-23",
     "license_status": "Release notes read only",
     "scope": "MinUI original-RG35XX status; firmware selection"
+  },
+  {
+    "id": "ubuntu-gcc49-cross",
+    "url": "https://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-4.9-cross/",
+    "revision": "gcc-4.9-arm-linux-gnueabihf 4.9.3-13ubuntu2cross1 and binutils 2.26.1-1ubuntu1~16.04.8; package SHA-256 in evidence/build/kernel-gcc493.json",
+    "type": "host-toolchain",
+    "examined": "2026-11-23",
+    "license_status": "Toolchain not redistributed",
+    "scope": "research-host cross compilation; not firmware evidence"
   }
 ]

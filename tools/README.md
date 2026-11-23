@@ -91,6 +91,7 @@ See [firmware reproduction](../reports/firmware-analysis.md) for exact commands 
 | `rootfs_catalogue.py IMAGE PLAN OUT [--extract DIR]` | Hash nested ext4 rootfs, selected regular inodes, ELF metadata | No mount, symlink output, recursive extraction, native execution or library loading |
 | `boot_payloads.py COMPONENT OUT` | Bounded internal gzip identification, expanded hashes/version strings | 64 MiB per stream, max 256 candidates; no claimed behavior from strings |
 | `arm_refs.py COMPONENT OUT --start N --end N` | A32 direct branches and PC-relative word literals | Offset coordinates; not a disassembler or code/data classifier; no Thumb support |
+| `kallsyms.py IMAGE OUT [--symbols FILE]` | Recover the 3.x absolute-address kallsyms table from a decompressed ARM Image; summary with name-set hash | Heuristic table location; validated against a build System.map; no Thumb/relative-base layouts; not a disassembler |
 | `validate_firmware.py` | Binary finding hash/range links and manifest integrity | Checks retained evidence, not hardware or availability of external inputs |
 
 The S500 CMU comparison fields are curated in `comparisons/cmu-fields.json` and applied by build_dataset.py without promoting target register reset/access values. Regeneration now preserves extra curated source/file provenance records; the previous builder would have silently dropped new records outside its fixed extraction list. This correction has a regression test.

@@ -1,0 +1,28 @@
+make: Entering directory '<WORK>/kernel-input'
+  HOSTCC  scripts/basic/fixdep
+  GEN     <WORK>/kbuild/Makefile
+  HOSTCC  scripts/kconfig/conf.o
+  SHIPPED scripts/kconfig/zconf.tab.c
+  SHIPPED scripts/kconfig/zconf.lex.c
+  SHIPPED scripts/kconfig/zconf.hash.c
+  HOSTCC  scripts/kconfig/zconf.tab.o
+In file included from scripts/kconfig/zconf.tab.c:2502:
+In function 'dep_stack_insert',
+    inlined from 'sym_check_print_recursive' at <WORK>/kernel-input/scripts/kconfig/symbol.c:1038:3,
+    inlined from 'sym_check_deps' at <WORK>/kernel-input/scripts/kconfig/symbol.c:1209:3:
+<WORK>/kernel-input/scripts/kconfig/symbol.c:1014:19: warning: storing the address of local variable 'cv_stack' in 'check_top' [-Wdangling-pointer=]
+ 1014 |         check_top = stack;
+      |         ~~~~~~~~~~^~~~~~~
+<WORK>/kernel-input/scripts/kconfig/symbol.c: In function 'sym_check_deps':
+<WORK>/kernel-input/scripts/kconfig/symbol.c:1035:26: note: 'cv_stack' declared here
+ 1035 |         struct dep_stack cv_stack;
+      |                          ^~~~~~~~
+<WORK>/kernel-input/scripts/kconfig/symbol.c:1005:4: note: 'check_top' declared here
+ 1005 | } *check_top;
+      |    ^~~~~~~~~
+  HOSTLD  scripts/kconfig/conf
+drivers/mmc/host/Kconfig:397:warning: leading whitespace ignored
+#
+# configuration written to .config
+#
+make: Leaving directory '<WORK>/kernel-input'

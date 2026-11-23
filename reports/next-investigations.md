@@ -28,7 +28,7 @@ The project does not need a firmware rewrite to improve immediately: a reliable 
 1. **Image evidence: completed for one CFW release, partial overall.** Koriki v1.0 and V6C bootfix are catalogued; acquire authenticated stock/Garlic next and compare component hashes.
 2. **AFI: partially completed.** Writer, layout, size conversion and getters reconstructed. Trace `0xb4070820` producer, DDR paths and final memory fixups before replacing early boot.
 3. **CMU semantics: partially completed.** Ten reviewed gate/reset positions; resolve UART divisor/manual discrepancies and expand dependencies rather than asserting whole-block compatibility.
-4. **Builds: attempted, blocked.** Obtain exact historical compiler or record an explicit compatibility patch series; retain failed logs and separate built from shipped identity.
+4. **Builds: unmodified source now builds with GCC 4.9.3 (BUILD-001).** The release kernel comes from a vendor-derived tree with 122 extra functions and a different configuration (FW-008/009). Next: look for that tree (stock or Anbernic BSP drops, later Koriki sources), reconstruct a release-like config from symbols, and keep the source DTB out of any boot (DT-003).
 5. **CPU: investigation documented, unresolved.** Prefer existing logs with final cmdline/SCU/masks; physical tests require separate authorization.
 6. **GPU: concrete artifacts acquired, ABI map partial.** Match exact kernel build configuration and bridge layouts to bundled libraries, then trace buffer/display ownership and synchronization. Preserve reMESA attribution.
 

@@ -1641,5 +1641,192 @@
     "related_findings": [
       "FW-005"
     ]
+  },
+  {
+    "id": "BUILD-001",
+    "subsystem": "kernel",
+    "claim": "The pinned vendor kernel (81cc77b5, rg35xx_atm7039_defconfig, no patches) builds zImage, 61 modules and DTBs with Ubuntu GCC 4.9.3 (4.9.3-13ubuntu2cross1) and binutils 2.26.1 when host tools use HOSTCFLAGS='-O2 -fcommon'. The earlier compiler-gcc8.h blocker does not apply to GCC 4.9.",
+    "confidence": "verified",
+    "classification": "verified-source-observation",
+    "scope": "source-build",
+    "evidence": [
+      {
+        "source": "ubuntu-gcc49-cross",
+        "section": "evidence/build/kernel-gcc493.json"
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "Makefile",
+        "line_start": 1,
+        "line_end": 4
+      }
+    ],
+    "supporting_evidence": [
+      "ubuntu-gcc49-cross",
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Host build only; nothing was booted. The compiler is not the Linaro GCC 4.9-2017.01 named by the release kernels, and the output is not byte-identical to any release component.",
+    "related_findings": [
+      "FW-003",
+      "FW-007"
+    ]
+  },
+  {
+    "id": "FW-008",
+    "subsystem": "kernel",
+    "claim": "Kallsyms recovered from the Koriki v1.0 /uImage show a configuration different from rg35xx_atm7039_defconfig: the release has Android USB gadget functions (adb, mtp, rndis, acm, accessory, FunctionFS), EHCI, squashfs, hibernation/swsusp, gameport and Bluetooth PCM code that the defconfig build lacks; the defconfig build has xHCI, V4L2/videobuf2, ext2, USB monitor/umonitor, tablet and FocalTech touchscreen drivers that the release lacks.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#uImage",
+        "sha256": "1b792401ae06904c85441a07f7e3b7fe32e80aef2a85211ef529fefee461f174",
+        "offset_start": 0,
+        "offset_end": 5541472
+      },
+      {
+        "source": "ubuntu-gcc49-cross",
+        "section": "evidence/build/kernel-gcc493.json"
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/configs/rg35xx_atm7039_defconfig",
+        "line_start": 386,
+        "line_end": 403
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "ubuntu-gcc49-cross",
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Inferred from symbol presence (tools/kallsyms.py, validated against a System.map); options are not read from an embedded config, which this kernel does not contain. Built-in versus module placement is not distinguished.",
+    "related_findings": [
+      "CPU-001",
+      "FW-003",
+      "BUILD-001"
+    ]
+  },
+  {
+    "id": "FW-009",
+    "subsystem": "kernel",
+    "claim": "The Koriki v1.0 /uImage contains 122 text symbols whose names occur nowhere in the pinned rg35xx branch of rg35xx-cfw/s500_kernel (the master branch also lacks the sampled ones), including owl_chipid_*, owl_jtag_init/jtag_handler, owl_force_shutdown, atc260x_poll_hard_onoff, hard_key_* , allen_* board routines, acts_verify_keybox/acts_create_cert and drm_get_rootkey/drm_get_devicekey. CPU bring-up functions owl_smp_init_cpus (152 bytes), owl_smp_prepare_cpus, scu_get_core_count, cpu_up and arm_dt_init_cpu_maps have identical sizes in the release and the source build.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#uImage",
+        "sha256": "1b792401ae06904c85441a07f7e3b7fe32e80aef2a85211ef529fefee461f174",
+        "offset_start": 0,
+        "offset_end": 5541472
+      },
+      {
+        "source": "ubuntu-gcc49-cross",
+        "section": "evidence/build/kernel-gcc493.json"
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/mach-owl/platsmp-owl.c",
+        "line_start": 202,
+        "line_end": 248
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "ubuntu-gcc49-cross",
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "The release kernel was built from a vendor-derived tree that is not public in the inspected repositories; the pinned source is a partial model of it. Equal function sizes support, but do not prove, identical source for the CPU routines (CPU-002). Purpose of the security-named routines was not analysed.",
+    "related_findings": [
+      "CPU-002",
+      "FW-003",
+      "FW-008"
+    ]
+  },
+  {
+    "id": "GPU-010",
+    "subsystem": "gpu",
+    "claim": "pvrsrvkm.ko built from the pinned source with GCC 4.9.3 has the same vermagic as the Koriki v1.0 module, identical .data (0x788) and .bss (0x20d0c) sizes, .text 0x1f57c versus 0x1f6c8, and 745 of 814 common functions of identical size; the release additionally has OMAPLFBEarlySuspendHandler and OMAPLFBEarlyResumeHandler.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#pvrsrvkm.ko",
+        "sha256": "578fca81480cc77b419701363a93d9b81e83d894a246423809d04c2d43946df4",
+        "offset_start": 0,
+        "offset_end": 258640
+      },
+      {
+        "source": "ubuntu-gcc49-cross",
+        "section": "evidence/build/kernel-gcc493.json"
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "ubuntu-gcc49-cross"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Consistent with the same DDK source built under an Android early-suspend configuration; not byte identity, and no GPU execution.",
+    "related_findings": [
+      "GPU-008",
+      "FW-008"
+    ]
+  },
+  {
+    "id": "DT-003",
+    "subsystem": "device-tree",
+    "claim": "The rg35xx_atm7039.dtb compiled from the pinned source differs from the Koriki v1.0 KERNEL.DTB in 22 nodes. The source DTB adds vdd-core-dcdc and vdd-gpu-dcdc regulator nodes under the ATC2603C and a gpuvdd-supply on the GPU, and changes the LCD pixclock, mmc@b0230000 max_clk, USB plug-detect, vbus_otg_en and wifi_bt_power_ctl properties.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#kernel.dtb",
+        "sha256": "ad4b8b4dd98fbb95bde8854ff0bd9c2e870c3c0c21f27be0122c741f36686f0f",
+        "offset_start": 0,
+        "offset_end": 28111
+      },
+      {
+        "source": "ubuntu-gcc49-cross",
+        "section": "evidence/build/kernel-gcc493.json"
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/boot/dts/rg35xx_atm7039.dts",
+        "line_start": 1,
+        "line_end": 20
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "ubuntu-gcc49-cross",
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "A source-built DTB would add CPU/GPU voltage-regulator control that the release DTB does not have. It must not be booted without separate review (V4). Electrical meaning of the regulator settings is not established.",
+    "related_findings": [
+      "UART-002",
+      "DT-002"
+    ]
   }
 ]

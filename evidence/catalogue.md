@@ -29,6 +29,7 @@ Machine-readable records: `sources.json`, `files.json`, `artifacts.json`. Hashes
 | garlic-links | [garlic-links](https://www.black-seraph.com/) | `unpinned web page retrieved 2026-11-23` | GarlicOS 1.4.9 distribution route; firmware selection | Link page read only; GarlicOS 1.4.9 post not reachable (HTTP 403) |
 | anbernic-download | [anbernic-download](https://win.anbernic.com/download/270.html) | `unpinned web page retrieved 2026-11-23` | Stock RG35XX firmware distribution; firmware selection | Page read only; firmware not downloaded |
 | minui-legacy | [minui-legacy](https://github.com/shauninman/MinUI-Legacy-RG35XX/releases) | `unpinned web page retrieved 2026-11-23` | MinUI original-RG35XX status; firmware selection | Release notes read only |
+| ubuntu-gcc49-cross | [ubuntu-gcc49-cross](https://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-4.9-cross/) | `gcc-4.9-arm-linux-gnueabihf 4.9.3-13ubuntu2cross1 and binutils 2.26.1-1ubuntu1~16.04.8; package SHA-256 in evidence/build/kernel-gcc493.json` | research-host cross compilation; not firmware evidence | Toolchain not redistributed |
 
 ## Examined files
 

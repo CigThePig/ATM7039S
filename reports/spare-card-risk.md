@@ -34,7 +34,8 @@ Whether 1008000 kHz equals the stock frequency limit is unverified. Using an ove
 - Electrical or thermal effects of normal operation are the same as any user running Koriki, but they are not measured here.
 - First-boot partitioning can fail on a faulty card. Use a known-good spare and keep the downloaded image to re-flash it.
 - The ADB fallback boots a different kernel build (`adb_uImage`, build #19, FW-007). Record it as a modification, and restore `/uImage` afterwards.
-- V4, booting a source-built kernel or modified DTB, changes the kernel and boot policy. It needs its own review once a build exists (see [build reproduction](build-reproduction.md)), and P-NAND should have returned `removable-only` first.
+- **Do not boot the source-built DTB as is.** It adds `vdd-core-dcdc`/`vdd-gpu-dcdc` regulator nodes and a GPU supply that the release DTB lacks (DT-003). Letting Linux drive core and GPU voltages differently from shipping firmware is an electrical risk, not just a software one.
+- V4, booting a source-built kernel or modified DTB, changes the kernel and boot policy. A build now exists but has not been booted; it runs a different configuration from the release and needs its own review (see [build reproduction](build-reproduction.md)), and P-NAND should have returned `removable-only` first.
 
 ## Checklist before V3
 

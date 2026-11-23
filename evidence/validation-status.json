@@ -13,10 +13,13 @@
   "pending": [
     "V3 read-only capture on the baseline (requires owner approval)",
     "Catalogue Koriki 1.0.3.1 or stock image for a second comparison capture",
-    "Historical kernel build with GCC 4.9 (toolchain located; run not permitted in this session)",
-    "Actual ATM7039S register semantics and reset values"
+    "Actual ATM7039S register semantics and reset values",
+    "Locate the vendor-derived kernel tree used by Koriki v1.0 (FW-009)"
   ],
   "test_baseline": "Koriki v1.0, default /uImage, spare card; see reports/test-firmware-selection.md",
   "observation_records": 0,
-  "pre_registered_predictions": 8
+  "pre_registered_predictions": 8,
+  "source_builds": [
+    "vendor kernel 81cc77b5 with Ubuntu GCC 4.9.3: built, not booted (evidence/build/kernel-gcc493.json)"
+  ]
 }

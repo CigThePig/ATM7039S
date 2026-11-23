@@ -1,0 +1,352 @@
+{
+  "format_version": 1,
+  "date": "2026-11-23",
+  "purpose": "Unmodified pinned vendor kernel built with a GCC 4.9 cross compiler, compared with Koriki v1.0 release kernels. Not a reproduction of shipped bytes.",
+  "source": {
+    "source": "vendor-kernel",
+    "revision": "81cc77b59250341b9abe90ed4188cde7b7aa1eeb",
+    "defconfig": "rg35xx_atm7039_defconfig",
+    "defconfig_sha256": "f362f841faa4e8c479f0bc899c22854fc79fb200cc3cf21f28e2a7ac71d7fa6c",
+    "patches": []
+  },
+  "toolchain": {
+    "compiler": "arm-linux-gnueabihf-gcc (Ubuntu/Linaro 4.9.3-13ubuntu2) 4.9.3",
+    "binutils": "2.26.1-1ubuntu1~16.04.8",
+    "origin": "http://archive.ubuntu.com/ubuntu/pool (Ubuntu 16.04 universe/main)",
+    "packages": [
+      {
+        "file": "binutils-arm-linux-gnueabihf_2.26.1-1ubuntu1~16.04.8_amd64.deb",
+        "sha256": "c6946c65265ad42f6cfef35def1214d623ace552dacbf898457f81aa6a5861e7"
+      },
+      {
+        "file": "cpp-4.9-arm-linux-gnueabihf_4.9.3-13ubuntu2cross1_amd64.deb",
+        "sha256": "8dbd377e413e993b0f0f4e6218b957bdcac8bdbe2fa4a04ecedcfc36b53f1ea0"
+      },
+      {
+        "file": "gcc-4.9-arm-linux-gnueabihf-base_4.9.3-13ubuntu2cross1_amd64.deb",
+        "sha256": "5f7cb56ee634d3cf62400683f5d00162eff5605cbdf1ba0281e404ddac8a2c9e"
+      },
+      {
+        "file": "gcc-4.9-arm-linux-gnueabihf_4.9.3-13ubuntu2cross1_amd64.deb",
+        "sha256": "920d07f97bdba8703aa4e2162ae8cab03110409435fbdf3a574e6f27bf9bd4b0"
+      },
+      {
+        "file": "libgcc-4.9-dev-armhf-cross_4.9.3-13ubuntu2cross1_all.deb",
+        "sha256": "48ae26ea9c44bca5484f4fe989a01259cc1d871966d58ca3db74cfb23c65b45b"
+      },
+      {
+        "file": "libisl15_0.16.1-1_amd64.deb",
+        "sha256": "842d832c28ded8725303ef42e81ff3b190371ab1f0617196a5290adf91e3a60d"
+      },
+      {
+        "file": "libmpc3_1.0.3-1_amd64.deb",
+        "sha256": "45e7071d4be2f5a1dc2eb621e67504f4fe6352b194ed12ad9d74ced8cce0c8fb"
+      },
+      {
+        "file": "libmpfr4_3.1.4-1_amd64.deb",
+        "sha256": "3973a97387bbe0e8a775995c22861d8478edee2a594e8117970f635de25b2c8a"
+      }
+    ],
+    "release_compiler": "Linaro GCC 4.9-2017.01 (gcc 4.9.4); not obtainable"
+  },
+  "commands": [
+    "make O=<BUILD> ARCH=arm CROSS_COMPILE=<TC>/arm-linux-gnueabihf- rg35xx_atm7039_defconfig",
+    "make O=<BUILD> ARCH=arm CROSS_COMPILE=<TC>/arm-linux-gnueabihf- HOSTCFLAGS='-O2 -fcommon' -j<N> zImage modules dtbs"
+  ],
+  "result": {
+    "exit_status": 0,
+    "warnings": 189,
+    "modules": 61,
+    "config_equals_defconfig": true,
+    "config_sha256": "cf62d709a348fb28366c9b7f7669a9cc5f892f42ac2883e1407dea938925ecf7",
+    "outputs": {
+      "Image": {
+        "size": 11805268,
+        "sha256": "b59f18cf1b2d25631abf94342205c8599ae6ce71fbe80865698c4f2b2b679cbb"
+      },
+      "zImage": {
+        "size": 5637064,
+        "sha256": "691e6e846a5bfc0533de0e68b7a63a81aaee9dd9fc5fbf4a6d50d59c7920642a"
+      },
+      "System.map": {
+        "size": 2368447,
+        "sha256": "31b1b01d9115cecdb0f3f5e7cf088a984fc29491d7c7c7945165660afb69f3a4"
+      },
+      "rg35xx_atm7039.dtb": {
+        "size": 32740,
+        "sha256": "d82e55f64a78ff1394925ea57b8e1dce32778d46567fddcfb239a0ffff2ed79b"
+      },
+      "pvrsrvkm.ko": {
+        "size": 1351664,
+        "sha256": "6ead376dd6b489221b9b2a5d15a2729abaa16099add18f65967a5b76d8bcf8ab"
+      }
+    },
+    "version_string": "Linux version 3.10.37 (<builder>) (gcc version 4.9.3 (Ubuntu/Linaro 4.9.3-13ubuntu2) ) #1 SMP PREEMPT <date>"
+  },
+  "kallsyms": {
+    "tool": "tools/kallsyms.py",
+    "validation": "All 72,480 symbols recovered from the built Image appear in the build System.map at the same address and type.",
+    "images": {
+      "release /uImage": {
+        "image_sha256": "5883f67328823b10e2e82576d5e043a3ff4c78b2095644250008bf640622fc5e",
+        "num_syms": 71514,
+        "offsets": {
+          "token_table_offset": 9327120,
+          "token_index_offset": 9328064,
+          "num_syms_offset": 8466384
+        },
+        "text_start": 3221258240,
+        "name_set_sha256": "538fcc0bcf1bdeda466c4fb8c0f9c90897b7b78c276d61b633c206cacb7f1539"
+      },
+      "release /adb_uImage": {
+        "image_sha256": "5c93e98d3cf0486a383e5c3a85baf9e59e6655a85227a42287a075309a0b6e68",
+        "num_syms": 71519,
+        "offsets": {
+          "token_table_offset": 9327248,
+          "token_index_offset": 9328192,
+          "num_syms_offset": 8466400
+        },
+        "text_start": 3221258240,
+        "name_set_sha256": "4fe39f10d2befcc516c2750e8c62abd63948aeab923d34ba538890b23097f6ca"
+      },
+      "build Image": {
+        "image_sha256": "b59f18cf1b2d25631abf94342205c8599ae6ce71fbe80865698c4f2b2b679cbb",
+        "num_syms": 72480,
+        "offsets": {
+          "token_table_offset": 9493024,
+          "token_index_offset": 9493952,
+          "num_syms_offset": 8617360
+        },
+        "text_start": 3221258240,
+        "name_set_sha256": "fc8e90d99fd6fd02aa73307f50a9f123451b7fcea889e416ae272d0cc4a78953"
+      }
+    }
+  },
+  "symbol_comparison": {
+    "filtered_names": {
+      "release": 47923,
+      "build": 48251,
+      "common": 46690,
+      "release_only": 1233,
+      "build_only": 1561
+    },
+    "text_functions_compared": 33008,
+    "identical_size": 29122,
+    "key_functions": {
+      "owl_smp_init_cpus": {
+        "release": 152,
+        "build": 152
+      },
+      "owl_smp_prepare_cpus": {
+        "release": 44,
+        "build": 44
+      },
+      "owl_boot_secondary": {
+        "release": 584,
+        "build": 588
+      },
+      "scu_get_core_count": {
+        "release": 16,
+        "build": 16
+      },
+      "cpu_up": {
+        "release": 148,
+        "build": 148
+      },
+      "arm_dt_init_cpu_maps": {
+        "release": 544,
+        "build": 544
+      },
+      "start_kernel": {
+        "release": 796,
+        "build": 796
+      },
+      "setup_arch": {
+        "release": 1724,
+        "build": 1728
+      },
+      "acts_mmc_probe": {
+        "release": 3312,
+        "build": 3376
+      }
+    },
+    "release_only_absent_from_public_source": [
+      "acmmod_exit",
+      "acmmod_init",
+      "acts_create_cert",
+      "acts_verify_keybox",
+      "aes_crypt_cbc",
+      "aes_crypt_cfb128",
+      "aes_crypt_cfb8",
+      "aes_crypt_ctr",
+      "aes_crypt_ecb",
+      "aes_self_test",
+      "aes_setkey_dec",
+      "aes_setkey_enc",
+      "allen_adjust_volume",
+      "allen_led_poll",
+      "asoc_earphone_poll",
+      "asoc_spi_cs",
+      "atc260x_poll_hard_onoff",
+      "atc260x_wakeup_flag_attr_shown",
+      "audio_input_mode_get",
+      "audio_input_mode_put",
+      "bDeviceClass_show",
+      "bDeviceClass_store",
+      "bDeviceProtocol_show",
+      "bDeviceProtocol_store",
+      "bDeviceSubClass_show",
+      "bDeviceSubClass_store",
+      "bcdDevice_show",
+      "bcdDevice_store",
+      "bluetooth_pcm_audio_hw_params",
+      "bluetooth_pcm_audio_prepare",
+      "bluetooth_pcm_audio_set_dai_fmt",
+      "bluetooth_pcm_audio_set_dai_sysclk",
+      "bluetooth_pcm_dai_hw_free",
+      "bluetooth_pcm_exit",
+      "bluetooth_pcm_init",
+      "bluetooth_pcm_probe",
+      "bluetooth_pcm_remove",
+      "bta_test_init",
+      "bta_test_waiting_turn_over",
+      "chipid_io_remap_init",
+      "cma_activate_area_already_reaserved",
+      "codec_bluetooth_pcm_probe",
+      "codec_bluetooth_pcm_remove",
+      "count_sg_urb_need_trbs",
+      "drm_bytes_xor",
+      "drm_crc32",
+      "drm_enlarge_devicekey",
+      "drm_get_devicekey",
+      "drm_get_rootkey",
+      "drm_init_version",
+      "dwc3_actions_shutdown",
+      "dwc3_overflow_handler",
+      "dwc3_overflow_work_handler",
+      "handle_trans_cmd",
+      "hard_key_get_state",
+      "hardkey_proc_open",
+      "hardkey_proc_show",
+      "hci_dev_do_open",
+      "iManufacturer_show",
+      "iManufacturer_store",
+      "iProduct_show",
+      "iProduct_store",
+      "iSerial_show",
+      "iSerial_store",
+      "ibonding_read",
+      "idProduct_show",
+      "idProduct_store",
+      "idVendor_show",
+      "idVendor_store",
+      "init_work_handler",
+      "jtag_handler",
+      "mktno_aux_read",
+      "onoff_gpio_getval",
+      "owl_chipid_exit",
+      "owl_chipid_init",
+      "owl_chipid_ioctl",
+      "owl_chipid_open",
+      "owl_chipid_release",
+      "owl_force_shutdown",
+      "owl_get_alarm_flag",
+      "owl_get_dsi_gamma_val",
+      "owl_jtag_init",
+      "owl_set_alarm_flag",
+      "proc_upgrade_flag_init",
+      "read_current_uref",
+      "read_current_uref2",
+      "read_tsensor_refval",
+      "set_my_charg_led",
+      "show_led_test",
+      "show_moto",
+      "stop_dwc3_overflow_work",
+      "stop_usb_status_delaywork",
+      "store_led_test",
+      "store_moto",
+      "stub_bulk_in_complete",
+      "stub_bulk_out_complete",
+      "stub_do_read_common",
+      "stub_do_write_common",
+      "stub_function_bind",
+      "stub_function_bind_config",
+      "stub_function_cleanup",
+      "stub_function_disable",
+      "stub_function_init",
+      "stub_function_set_alt",
+      "stub_function_setup",
+      "stub_function_unbind",
+      "stub_ioctl",
+      "stub_open",
+      "stub_read",
+      "stub_release",
+      "stub_req_get",
+      "stub_req_put",
+      "stub_request_free",
+      "stub_request_new",
+      "stub_send_ack",
+      "stub_start_in_transfer",
+      "stub_start_out_transfer",
+      "stub_write",
+      "sysrq_change_jtag",
+      "upgrade_flag_proc_open",
+      "upgrade_flag_proc_show",
+      "upgrade_flag_proc_write"
+    ]
+  },
+  "pvrsrvkm": {
+    "release": {
+      "size": 258640,
+      "text": 128712,
+      "data": 1928,
+      "bss": 134412,
+      "functions": 816
+    },
+    "build": {
+      "size": 1351664,
+      "text": 128380,
+      "data": 1928,
+      "bss": 134412,
+      "functions": 814,
+      "note": "unstripped"
+    },
+    "same_vermagic": "3.10.37 SMP preempt mod_unload ARMv7 p2v8",
+    "common_functions": 814,
+    "identical_size": 745,
+    "release_only": [
+      "OMAPLFBEarlyResumeHandler",
+      "OMAPLFBEarlySuspendHandler"
+    ]
+  },
+  "dtb_comparison": {
+    "release": "evidence/firmware/koriki-v1.0.json#kernel.dtb",
+    "build_sha256": "d82e55f64a78ff1394925ea57b8e1dce32778d46567fddcfb239a0ffff2ed79b",
+    "changed_nodes": 22,
+    "build_only_nodes": [
+      "/i2c@b0174000/atc2603c@65/vdd-core-dcdc",
+      "/i2c@b0174000/atc2603c@65/vdd-gpu-dcdc"
+    ],
+    "notable_property_changes": {
+      "/gpu@b0300000": [
+        "gpuvdd-supply"
+      ],
+      "/lcd0@b02a0000/mode@640x480p60": [
+        "pixclock"
+      ],
+      "/mmc@b0230000": [
+        "max_clk"
+      ],
+      "/wifi_bt_power_ctl": [
+        "status",
+        "wifi_bt_power_gpios",
+        "wifi_vol_range",
+        "wifi_wakeup_host_gpios"
+      ],
+      "/": [
+        "model"
+      ]
+    }
+  },
+  "limitations": "Different compiler (4.9.3 vs Linaro 4.9.4) and different configuration from the release; equal function sizes are evidence of shared source for those functions, not proof. Nothing was booted."
+}

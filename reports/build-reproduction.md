@@ -70,4 +70,33 @@ The Ubuntu package hashes, recorded so that a later run uses identical bytes:
 | `libmpc3_1.0.3-1_amd64.deb` | `45e7071d4be2f5a1dc2eb621e67504f4fe6352b194ed12ad9d74ced8cce0c8fb` |
 | `libmpfr4_3.1.4-1_amd64.deb` | `3973a97387bbe0e8a775995c22861d8478edee2a594e8117970f635de25b2c8a` |
 
-**Not built in this session.** Running the unpacked toolchain was refused by the session's permission policy, and that refusal was not worked around. With the owner's go-ahead, the next attempt is: unpack the packages into a scratch prefix with `dpkg -x`, then build `rg35xx_atm7039_defconfig` with `HOSTCFLAGS='-O2 -fcommon'` and no source patches. Compare `.config`, `vmlinux` symbols and function sizes against the release kernel (whose expanded payload hash is in `kernel-payload.json`). A completed build would remain "same source, different compiler", not a reproduction of the shipped bytes.
+## GCC 4.9.3 build and release comparison (2026-11-23)
+
+With the owner's go-ahead, the packages above were unpacked into a scratch prefix and used without changes. Full record: [kernel-gcc493.json](../evidence/build/kernel-gcc493.json). Logs: [configure](build-logs/kernel-gcc493-configure.log), [build, condensed to warnings and tail](build-logs/kernel-gcc493-build.log).
+
+```sh
+make -C "$work/kernel-input" O="$work/kbuild" ARCH=arm CROSS_COMPILE="$tc/arm-linux-gnueabihf-" rg35xx_atm7039_defconfig
+make -C "$work/kernel-input" O="$work/kbuild" ARCH=arm CROSS_COMPILE="$tc/arm-linux-gnueabihf-" HOSTCFLAGS='-O2 -fcommon' -j"$(nproc)" zImage modules dtbs
+```
+
+**Result: the unmodified pinned source builds** (BUILD-001): zImage, 61 modules and all DTBs, exit status 0, 189 compiler warnings, `.config` identical to the defconfig. Nothing was booted.
+
+Comparing it with the release, using [kallsyms.py](../tools/kallsyms.py) to recover the release kernels' symbol tables:
+
+| Comparison | Result |
+|---|---|
+| Kernel symbols (compiler-generated names filtered) | release 47,923; build 48,251; 46,690 shared |
+| Text functions present in both | 33,008 compared; 29,122 (88%) identical size |
+| CPU bring-up (`owl_smp_init_cpus`, `scu_get_core_count`, `cpu_up`, `arm_dt_init_cpu_maps`) | Identical sizes |
+| Configuration (FW-008) | Release has Android USB gadget, EHCI, squashfs, hibernation and Bluetooth PCM; build has xHCI, V4L2, ext2, umonitor and touchscreen/tablet drivers |
+| Source coverage (FW-009) | **122 release functions do not exist in the public source**: chip ID, JTAG switching, forced shutdown, hard-key polling, `allen_*` board code and keybox/DRM-key routines |
+| PowerVR module (GPU-010) | Same vermagic, identical data/bss, 745 of 814 functions identical size; release adds early-suspend handlers |
+| DTB (DT-003) | 22 nodes differ; the source DTB **adds CPU and GPU DCDC regulator nodes** that the release lacks |
+
+**Conclusion.** Koriki v1.0's `/uImage` was built from a vendor-derived tree with Android-style configuration and code that the public `s500_kernel` branches do not contain. The public tree is a close partial model: most functions, including CPU bring-up and the GPU module, match in size. It is not the release's source. A byte-for-byte reproduction would need that tree, its configuration and Linaro 4.9-2017.01, none of which are public.
+
+Practical consequences:
+
+- Reading CPU-002's source mechanism against the release is better supported now, though it is still not proven.
+- The source-built DTB must **not** be booted as is. It adds voltage-regulator control that the shipping firmware does not use (see [spare-card risk](spare-card-risk.md)).
+- A V4 source-kernel boot would run a different configuration with no keybox, chip-ID or hard-key code. It needs its own review.

@@ -24,9 +24,10 @@ The source/build command details are in [tools](../tools/README.md), [firmware a
 
 | Check | Result | Meaning |
 |---|---|---|
-| Unit suite | 97 passed | Adds capture script/parser, predictions, redaction and observation-ledger tests |
+| Unit suite | 102 passed | Adds capture script/parser, predictions, redaction, observation-ledger and kallsyms tests |
 | Koriki v1.0 re-acquisition | Download and expanded hashes match `acquisitions.json` | Same bytes as the original analysis |
 | Manifest regeneration | Existing disk and rootfs component records reproduced exactly; nine selected files added (init scripts, SimpleMenu config, boot config) | Extends, does not alter, earlier evidence |
 | Source audit, vendor kernel and U-Boot | All hashes and cited line ranges valid, including the two new MMC driver files | Other sources not re-cloned in this run |
 | Capture script | Runs under dash and under BusyBox-only applets; parser reports zero integrity errors on the resulting host capture | Script portability, not target behaviour |
-| Kernel build with GCC 4.9.3 | Not run | Toolchain located and hashed; execution not permitted in this session |
+| Kernel build with GCC 4.9.3 | Pass; zImage, 61 modules, DTBs; not booted | Unmodified source builds; not byte-identical to release (BUILD-001) |
+| kallsyms extractor | All 72,480 build symbols match System.map | Validates recovered release symbol tables (FW-008, FW-009) |
