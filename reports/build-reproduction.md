@@ -152,4 +152,27 @@ Bootloaders were never public-source, even in alpha 0.1. Its U-Boot already carr
 
 Alpha 0.1 boots with no ramdisk and sets `root=` only in `uEnv.txt`. That contradicts the static reading that `uEnv.txt` is never applied (C-UENV; BOOT-007 downgraded to inferred). Prediction P-UENV resolves it on hardware.
 
-For a public-source comparison build, alpha 0.1/0.2 are the shipped references. They use GCC 7.3.0 (Buildroot 2018.11), so a size-faithful rebuild needs that compiler, not 4.9.
+For a public-source comparison build, alpha 0.1/0.2 are the shipped references. They use GCC 7.3.0 (Buildroot 2018.11), so a size-faithful rebuild needs that compiler, not 4.9. That rebuild is below.
+
+## RetroArch alpha 0.1 kernel reproduced (2026-11-23)
+
+Record: [alpha01-gcc730.json](../evidence/build/alpha01-gcc730.json). Log: [build, condensed](build-logs/kernel-alpha01-gcc730-build.log). Findings: BUILD-002, DT-004.
+
+**Recipe found.** `rg35xx-cfw/buildroot_s500` master is commit `8cf4a7d`, the hash in the release compiler string "Buildroot 2018.11-git-g8cf4a7d-dirty". Its `rg35xx` branch `configs/rg35xx_atm7039_defconfig` specifies:
+- kernel: `s500_kernel` `origin/rg35xx` (head `81cc77b5` since 7 March 2023) with defconfig `rg35xx_atm7039`;
+- patches: five kernel patches from `board/rg35xx/patches/linux` (GCC 5+ support, xHCI trace, ftrace);
+- toolchain: GCC 7.3.0, binutils 2.28.1, glibc, Cortex-A9/vfpv3-d16.
+
+**Toolchain.** Bootlin `armv7-eabihf--glibc--stable-2018.11-1`: GCC 7.3.0 configured `--with-cpu=cortex-a9 --with-fpu=vfpv3-d16`, binutils 2.29.1. SHA-256 matches Bootlin's published value.
+
+| Build variant | Text functions with identical size |
+|---|---:|
+| Out-of-tree, extra `-mtune=cortex-a9` | 86.8% |
+| Out-of-tree, toolchain defaults | 99.99% (5 of 33,851 differ) |
+| **In-tree at `/buildroot_output/buildroot_s500/output/build/linux-origin_rg35xx`** (the absolute path embedded in the release), release build user/host/number/timestamp | identical Image size; **99.92% of all bytes identical** |
+
+In the final build, symbol names match exactly, and 72,177 of 72,374 kallsyms entries match by name, type and address. Only 128 bytes differ inside code, as 1–6 literal-pool bytes in 94 functions. The other 9,259 differing bytes are pointer tables into merged strings (pinctrl group/pad/function names, tracepoint formats) and the compiler banner. That pattern is what a different binutils/GCC patch level produces. It does not indicate any source difference.
+
+The alpha 0.1 DTB differs from the DTB built from source in two properties: the pre-`81cc77b5` `model` string and `boot_cap_threshold` 0 vs 3 (DT-004). It keeps the source's CPU/GPU DCDC regulator nodes that the Koriki DTB drops.
+
+**Conclusion.** The first shipped public-source RG35XX kernel is reproducible from public inputs, short of byte identity. Closing the last 0.08% would mean rebuilding the exact Buildroot 2018.11-git toolchain (binutils 2.28.1) from `buildroot_s500`. This is now the project's **source-backed reference kernel**. It is the one kernel for which every function has inspectable source, and it actually shipped. The vendor-tree kernels used from alpha 0.3 onward remain closed.

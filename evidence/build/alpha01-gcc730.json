@@ -1,0 +1,145 @@
+{
+  "format_version": 1,
+  "date": "2026-11-23",
+  "purpose": "Rebuild the RetroArch alpha 0.1 kernel (the first public-source RG35XX kernel) from its Buildroot recipe and compare with the shipped bytes.",
+  "recipe": {
+    "buildroot": "rg35xx-cfw/buildroot_s500",
+    "buildroot_master": "8cf4a7d6e8ae1843253b950de219eeb73e938874 (matches the \"Buildroot 2018.11-git-g8cf4a7d-dirty\" compiler string of the release)",
+    "buildroot_rg35xx_branch": "126e6a033b770d8f12eaf1d6af21c63564c24d37 (configs/rg35xx_atm7039_defconfig)",
+    "kernel": {
+      "source": "vendor-kernel",
+      "revision": "81cc77b59250341b9abe90ed4188cde7b7aa1eeb (origin/rg35xx head since 2023-03-07)",
+      "defconfig": "rg35xx_atm7039_defconfig",
+      "patches": [
+        {
+          "file": "0001-unbreak-xhci-trace.patch",
+          "sha256": "8e061ffef39a01fecda98e3743306f9304660f809c8fb12e62268289152c3954"
+        },
+        {
+          "file": "0002-kernel-add-support-for-gcc-5.patch",
+          "sha256": "a12eaa552ad3141585204c82b0e5aa514e28f8642f34da0d6d6eb11885f8d636"
+        },
+        {
+          "file": "0003-ARM-8158-1-LLVMLinux-use-static-inline-in-ARM-ftrace.patch",
+          "sha256": "49ae931869ea3183690199b20ad7085172fdd1294798b6f71f8d1097dc638826"
+        },
+        {
+          "file": "0004-Fix-compile-errors-with-gcc5.patch",
+          "sha256": "f19e5d1832fe875dc59bec57bce7b048e69869be8afe754f5e102347ca68ff43"
+        },
+        {
+          "file": "0005-compiler-gcc-integrate-the-various-compiler-gcc-345-.patch",
+          "sha256": "79a9f7399c35b7d2b811446df64df0578299ba35b808532fb62b4f5bf208208a"
+        }
+      ],
+      "patch_origin": "buildroot_s500 rg35xx:board/rg35xx/patches/linux"
+    },
+    "toolchain_in_recipe": "Buildroot 2018.11-git GCC 7.3.0, binutils 2.28.1, glibc, cortex-a9/vfpv3-d16 hard-float"
+  },
+  "toolchain_used": {
+    "name": "Bootlin armv7-eabihf--glibc--stable-2018.11-1",
+    "url": "https://toolchains.bootlin.com/downloads/releases/toolchains/armv7-eabihf/tarballs/armv7-eabihf--glibc--stable-2018.11-1.tar.bz2",
+    "sha256": "c8d4d3ca70442652e0e72f57ae6e878375640508f1e08de3152f63414c43b2e4",
+    "published_sha256_match": true,
+    "gcc": "7.3.0 (Buildroot 2018.08.1-00003-g576b333)",
+    "binutils": "2.29.1",
+    "configured": "--with-cpu=cortex-a9 --with-fpu=vfpv3-d16 --with-float=hard --with-mode=arm --with-abi=aapcs-linux"
+  },
+  "build": {
+    "location": "in-tree at /buildroot_output/buildroot_s500/output/build/linux-origin_rg35xx (the absolute path embedded in the release image)",
+    "environment": {
+      "KBUILD_BUILD_USER": "root",
+      "KBUILD_BUILD_HOST": "30d269650fcb",
+      "KBUILD_BUILD_VERSION": "4",
+      "KBUILD_BUILD_TIMESTAMP": "Sun Mar 12 03:24:28 UTC 2023"
+    },
+    "command": "make ARCH=arm CROSS_COMPILE=<bootlin>/bin/arm-linux- rg35xx_atm7039_defconfig && make ARCH=arm CROSS_COMPILE=<bootlin>/bin/arm-linux- HOSTCFLAGS='-O2 -fcommon' zImage",
+    "image": {
+      "size": 11764244,
+      "sha256": "baf2020a9b9d62d25b1dcc263eb60e1d1c3eda67900081fafaabe207e316649f"
+    },
+    "zImage_sha256": "e8eabab21b0a24b812d4cc04957b418e4ae7ee57f607a931ad954b12390d8a3c"
+  },
+  "release": {
+    "component": "evidence/firmware/early-batocera.json rg35xx_retroarch_alpha_v0.1 p1:/uImage",
+    "uimage_sha256": "eb75af729b64aceabda4e9322bd5b0ef8926ec01f31eb9931764c4d3e64a2964",
+    "image_size": 11764244,
+    "image_sha256": "f8ba7a57583dda90020f96098b924112c759210513ee20c3347ffe853d697ed3"
+  },
+  "comparison": {
+    "image_size_equal": true,
+    "bytes_identical": 11754857,
+    "bytes_total": 11764244,
+    "pct": 99.92,
+    "bytes_differing": 9387,
+    "differing_in_code": 128,
+    "code_functions_touched": 94,
+    "differing_in_data": 9259,
+    "largest_data_differences": [
+      [
+        "atm7059_groups",
+        2921
+      ],
+      [
+        "atm7059_pads",
+        1286
+      ],
+      [
+        "atm7059_functions",
+        526
+      ],
+      [
+        "print_fmt_arm_ipi_send",
+        270
+      ],
+      [
+        "print_fmt_arm_ipi",
+        250
+      ],
+      [
+        "activity_stats_fops",
+        216
+      ],
+      [
+        "linux_banner",
+        145
+      ],
+      [
+        "regoffset_table",
+        144
+      ],
+      [
+        "print_fmt_sys_enter",
+        135
+      ],
+      [
+        "symbols.26881",
+        72
+      ]
+    ],
+    "kallsyms_entries_identical": 72177,
+    "kallsyms_entries": 72374,
+    "interpretation": "Code differs only in 1-6 literal-pool bytes per function (pointers to strings whose addresses moved); data differences are string-pointer tables (pinctrl group/pad/function names, tracepoint formats) and the compiler banner. Consistent with a different binutils/GCC patch level changing merged-string layout, not with any source difference."
+  },
+  "earlier_attempts": [
+    {
+      "variant": "out-of-tree O= build with KCFLAGS=-mtune=cortex-a9",
+      "text_functions_identical_size_pct": 86.76
+    },
+    {
+      "variant": "out-of-tree O= build, toolchain default tuning",
+      "text_functions_identical_size_pct": 99.99,
+      "note": "absolute __FILE__ paths change string sizes and shift layout"
+    }
+  ],
+  "dtb": {
+    "release_sha256": "e56f2f49164eb93af8621ba707b5372c61a6784fbfa99c146a2130003f166682",
+    "built_from_pinned_sha256": "d82e55f64a78ff1394925ea57b8e1dce32778d46567fddcfb239a0ffff2ed79b",
+    "changed_nodes": 2,
+    "changes": {
+      "/": "model \"Actions GS705A board\" in release = value before commit 81cc77b5",
+      "/i2c@b0174000/atc2603c@65/atc260x-power": "boot_cap_threshold 0 in release vs 3 in source"
+    }
+  },
+  "limitations": "Not byte-identical: the exact Buildroot 2018.11-git toolchain (binutils 2.28.1) was not rebuilt. The release DTB was built from the DTS one commit earlier with one local change. Nothing was booted."
+}

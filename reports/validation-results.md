@@ -31,3 +31,4 @@ The source/build command details are in [tools](../tools/README.md), [firmware a
 | Capture script | Runs under dash and under BusyBox-only applets; parser reports zero integrity errors on the resulting host capture | Script portability, not target behaviour |
 | Kernel build with GCC 4.9.3 | Pass; zImage, 61 modules, DTBs; not booted | Unmodified source builds; not byte-identical to release (BUILD-001) |
 | kallsyms extractor | All 72,480 build symbols match System.map | Validates recovered release symbol tables (FW-008, FW-009) |
+| Alpha 0.1 kernel rebuild (GCC 7.3.0) | Same Image size; 99.92% bytes identical; 128 code bytes differ | Public-source reference reproduced short of byte identity (BUILD-002) |

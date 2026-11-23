@@ -313,5 +313,23 @@
     "examined": "2026-11-23",
     "license_status": "Redistribution not established; metadata only; no firmware committed",
     "scope": "Early original-RG35XX RetroArch/Batocera images (March-May 2023): kernel, DTB, U-Boot lineage"
+  },
+  {
+    "id": "buildroot-s500",
+    "url": "https://github.com/rg35xx-cfw/buildroot_s500",
+    "revision": "master 8cf4a7d6e8ae1843253b950de219eeb73e938874; rg35xx 126e6a033b770d8f12eaf1d6af21c63564c24d37",
+    "type": "source-repository",
+    "examined": "2026-11-23",
+    "license_status": "GPL build recipe; kernel patches used for a local build, not imported",
+    "scope": "Buildroot recipe and toolchain origin of the RetroArch alpha 0.1 / Batocera Lite alpha 0.2 kernels"
+  },
+  {
+    "id": "bootlin-gcc73",
+    "url": "https://toolchains.bootlin.com/downloads/releases/toolchains/armv7-eabihf/tarballs/armv7-eabihf--glibc--stable-2018.11-1.tar.bz2",
+    "revision": "armv7-eabihf--glibc--stable-2018.11-1; SHA-256 c8d4d3ca70442652e0e72f57ae6e878375640508f1e08de3152f63414c43b2e4",
+    "type": "host-toolchain",
+    "examined": "2026-11-23",
+    "license_status": "Toolchain not redistributed",
+    "scope": "research-host cross compilation (GCC 7.3.0, binutils 2.29.1); not firmware evidence"
   }
 ]

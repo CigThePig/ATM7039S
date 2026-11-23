@@ -943,3 +943,35 @@ Evidence:
 - [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
 
 Limits: Even the public-source-kernel releases used vendor bootloader binaries. The early-window hash covers padding as well as loader code; the change coinciding with the 6.0C test build fits a board-revision early-loader fix but its content was not diffed.
+
+## BUILD-002
+
+The RetroArch alpha 0.1 kernel is reproduced from public source: s500_kernel 81cc77b5 plus the five kernel patches of rg35xx-cfw/buildroot_s500 (rg35xx branch), rg35xx_atm7039_defconfig, GCC 7.3.0 (Bootlin stable-2018.11-1, binutils 2.29.1), built in-tree at the path embedded in the release with its build user, host, number and timestamp. The decompressed Image has exactly the release size (11,764,244 bytes); 99.92% of bytes are identical, 72,177 of 72,374 kallsyms entries match by name, type and address, and only 128 bytes differ inside code (literal-pool string pointers in 94 functions). The release toolchain's 'Buildroot 2018.11-git-g8cf4a7d' string matches buildroot_s500 master 8cf4a7d.
+
+**Confidence:** verified · **Scope:** source-build · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [rg35xx-cfw-releases / evidence/firmware/early-batocera.json rg35xx_retroarch_alpha_v0.1 p1:/uImage sha256 eb75af729b64aceabda4e9322bd5b0ef8926ec01f31eb9931764c4d3e64a2964](https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases)
+
+- [buildroot-s500 / configs/rg35xx_atm7039_defconfig and board/rg35xx/patches/linux at 126e6a0; evidence/build/alpha01-gcc730.json](https://github.com/rg35xx-cfw/buildroot_s500)
+
+- [bootlin-gcc73 / toolchain used; evidence/build/alpha01-gcc730.json](https://toolchains.bootlin.com/downloads/releases/toolchains/armv7-eabihf/tarballs/armv7-eabihf--glibc--stable-2018.11-1.tar.bz2)
+
+- [vendor-kernel / Makefile](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/Makefile#L1-L4)
+
+Limits: Not byte-identical: binutils 2.29.1 and Buildroot 2018.08 GCC patches differ from the recipe's 2.28.1 and 2018.11-git toolchain, which changes merged-string layout. Nothing was booted. This reproduces only the March 2023 public-source kernel; the vendor-tree kernels used from alpha 0.3 onward remain unreproducible.
+
+## DT-004
+
+The RetroArch alpha 0.1 KERNEL.DTB differs from the DTB compiled from pinned rg35xx_atm7039.dts (81cc77b5) in two properties only: model is 'Actions GS705A board' (the value before commit 81cc77b5, which changed only that line) and atc260x-power boot_cap_threshold is 0 instead of 3.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [rg35xx-cfw-releases / evidence/firmware/early-batocera.json rg35xx_retroarch_alpha_v0.1 p1:/KERNEL.DTB sha256 e56f2f49164eb93af8621ba707b5372c61a6784fbfa99c146a2130003f166682](https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases)
+
+- [vendor-kernel / arch/arm/boot/dts/rg35xx_atm7039.dts](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/boot/dts/rg35xx_atm7039.dts#L1-L20)
+
+Limits: Property-level FDT comparison with the repository parser. Unlike the Koriki DTB (DT-003), this public-source-era DTB keeps the source's vdd-core/vdd-gpu DCDC regulator nodes; whether booting them is electrically safe is not established.

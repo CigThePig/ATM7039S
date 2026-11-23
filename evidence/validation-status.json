@@ -20,6 +20,7 @@
   "observation_records": 0,
   "pre_registered_predictions": 8,
   "source_builds": [
-    "vendor kernel 81cc77b5 with Ubuntu GCC 4.9.3: built, not booted (evidence/build/kernel-gcc493.json)"
+    "vendor kernel 81cc77b5 with Ubuntu GCC 4.9.3: built, not booted (evidence/build/kernel-gcc493.json)",
+    "RetroArch alpha 0.1 kernel reproduced with GCC 7.3.0: same Image size, 99.92% bytes identical, not booted (evidence/build/alpha01-gcc730.json)"
   ]
 }
