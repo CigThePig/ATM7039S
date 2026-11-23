@@ -255,6 +255,8 @@ def validate(root):
         if f['confidence']=='verified' and f['scope']=='ATM7039S-hardware' and not f.get('hardware_validated'):errors.append('unvalidated target finding '+f['id'])
     from validate_firmware import validate as validate_binary_evidence
     errors.extend(validate_binary_evidence(root))
+    from validate_observations import validate as validate_observations
+    errors.extend(validate_observations(root))
     ids=set();seen={}
     for block in model['blocks']:
         if block['id'] in ids:errors.append('duplicate block '+block['id'])

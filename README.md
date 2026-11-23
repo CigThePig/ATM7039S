@@ -11,6 +11,8 @@ A source-controlled research foundation for the Actions ATM7039S, using the **or
 - [Source catalogue](evidence/catalogue.md) and [findings ledger](evidence/findings.md): exact revisions, paths, line ranges, hashes, confidence and limitations.
 - [Coverage matrix](reports/coverage-matrix.md), [knowledge gaps](reports/knowledge-gaps.md) and [next investigations](reports/next-investigations.md).
 
+Physical testing: [baseline firmware choice](reports/test-firmware-selection.md) (Koriki v1.0 on a spare card) and the [read-only capture procedure](device/README.md). No test has been run yet.
+
 [Offline continuation engineering report](reports/offline-continuation.md): released firmware, AFI writer/consumers, CPU topology, CMU fields, graphics ABI and recorded build blockers.
 
 ## What is established

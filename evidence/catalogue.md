@@ -24,6 +24,11 @@ Machine-readable records: `sources.json`, `files.json`, `artifacts.json`. Hashes
 | koriki-v1.0-release | [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0) | `koriki_rg35xx_v1.0; exact content hashes in evidence/firmware/acquisitions.json` | Public original-RG35XX Koriki v1.0 release bytes; not stock/Garlic or measured silicon | Redistribution not established; metadata only; no firmware committed |
 | koriki-v6c-release | [koriki-v6c-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v0.9.1) | `koriki_rg35xx_v0.9.1; exact content hashes in evidence/firmware/acquisitions.json` | Public original-RG35XX V6C boot-fix archive; version-specific artifacts | Redistribution not established; metadata only; no firmware committed |
 | arm-toolchain8 | [arm-toolchain8](https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf.tar.xz) | `GNU Arm 8.3-2019.03; archive SHA-256 d4f6480ecaa99e977e3833cc8a8e1263f9eecd1ce2d022bb548a24c4f32670f5` | research-host cross compilation; not firmware evidence | Toolchain not redistributed |
+| koriki-releases | [koriki-releases](https://github.com/rg35xx-cfw/Koriki/releases) | `unpinned web page retrieved 2026-11-23` | original-RG35XX CFW release history; firmware selection | Release notes read; no assets downloaded in this step |
+| knulli-rg35xx | [knulli-rg35xx](https://knulli.org/devices/anbernic/rg35xx/) | `unpinned web page retrieved 2026-11-23` | KNULLI support status for original RG35XX; firmware selection | Documentation read only |
+| garlic-links | [garlic-links](https://www.black-seraph.com/) | `unpinned web page retrieved 2026-11-23` | GarlicOS 1.4.9 distribution route; firmware selection | Link page read only; GarlicOS 1.4.9 post not reachable (HTTP 403) |
+| anbernic-download | [anbernic-download](https://win.anbernic.com/download/270.html) | `unpinned web page retrieved 2026-11-23` | Stock RG35XX firmware distribution; firmware selection | Page read only; firmware not downloaded |
+| minui-legacy | [minui-legacy](https://github.com/shauninman/MinUI-Legacy-RG35XX/releases) | `unpinned web page retrieved 2026-11-23` | MinUI original-RG35XX status; firmware selection | Release notes read only |
 
 ## Examined files
 

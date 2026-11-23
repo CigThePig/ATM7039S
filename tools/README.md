@@ -69,6 +69,16 @@ For the mainline S500 comparison, prepend `/dts-v1/;` to the pinned `arch/arm/bo
 
 Malformed/truncated FDTs, invalid reg geometry, unsupported flattened DTS syntax, duplicate properties, hash mismatches and stale generated files fail explicitly. Unit tests generate representative binary fixtures in memory, including valid/invalid uImages, FDTs and MBR entries, and also check differences against the real extracted board datasets. `unittest discover -s tests -v` and CI execute the tests without network or hardware access.
 
+## Runtime capture tools
+
+| Tool | Purpose | Deliberate limits |
+|---|---|---|
+| `device/capture.sh [PARENT]` | POSIX/BusyBox read-only collector for test V3; `--list` prints the allowlist | Fixed allowlist only; writes only its own output folder; no `/dev/mem`, I2C, power_supply, debugfs or writes |
+| `runtime_capture.py CAPTURE OUT` | Verifies item hashes, script version and allowlist; parses CPU/memory/storage/display/config/FDT; links kernel and DTB to catalogued firmware; CPU outcome hint | Hints are not findings; a capture describes one boot of one board |
+| `validate_observations.py` | JSON Schemas for sources/findings/contradictions/observations; observation-to-firmware/tool/summary links; hardware findings must cite observations | Called by `research.py validate`; checks records, not the truth of observations |
+
+Tests run the real script against a synthetic export tree (`ATM_CAPTURE_ROOT`) and check tampering, allowlist drift, unknown script versions and ledger links. See the [operator guide](../device/README.md).
+
 ## Full-image continuation tools
 
 See [firmware reproduction](../reports/firmware-analysis.md) for exact commands and pinned public inputs. Install optional dependencies in an isolated venv with `requirements-firmware.txt`; ordinary evidence validation and unit tests do not require network or firmware downloads. CI installs these dependencies to exercise a synthetic FAT image as well.
