@@ -131,3 +131,25 @@ Prompted by the owner-supplied dossier ([review](gpu-dossier-review.md)):
 - **Boot path:** the release U-Boot's `bootcmd=run ramboot` runs `bootm` on preloaded images, so the early loader reads `uImage`, `ramdisk.img` and the DTB from FAT and `uEnv.txt` is not applied (BOOT-007; prediction P-UENV).
 
 The non-public product tree has still not been found. Of what is public, MiaUI's patched tree is the closest buildable approximation.
+
+## Early release kernels (2026-11-23)
+
+All eleven early original-RG35XX images and boot bundles on `rg35xx-cfw.github.io` (RetroArch alpha 0.1 to Batocera beta 0.8.1, March–May 2023) were downloaded once, hashed and opened read-only. Only the kernel, DTB, `uEnv.txt` and raw U-Boot were kept for analysis, then the archives were deleted. Every `boot.tar.xz` matched its published `.sha256`. Catalogue: [early-batocera.json](../evidence/firmware/early-batocera.json).
+
+| Release (date) | Kernel build | Compiler | Vendor functions (of 122) |
+|---|---|---|---:|
+| RetroArch alpha 0.1 (12 Mar) | `root@30d269650fcb` #4 | Buildroot GCC 7.3.0 | **0** |
+| Batocera Lite alpha 0.2 (14–16 Mar) | `root@46ffd7f4c6ac` #8 | Buildroot GCC 7.3.0 | **0** |
+| alpha 0.3 (24 Mar) | `ctalon@endymion` #18 | Linaro 4.9.4 | 122 |
+| alpha 0.4, 0.5, 0.5 6.0C test, 0.6 (Apr) | ctalon #3 | Linaro 4.9.4 | 78 (no USB stub/Android gadget) |
+| beta 0.7, dev 0.7 (20–24 Apr) | ctalon #65, ADB #64 | Linaro 4.9.4 | 122 |
+| beta 0.8, 0.8.1 (27 Apr–4 May) | ctalon #1, ADB #64 | Linaro 4.9.4 | 122 |
+| Koriki (Jun 2023–Jan 2024) | ctalon #19 (ADB), #75, #40 | Linaro 4.9.4 | 122 |
+
+**Only alpha 0.1 and 0.2 were built from the public source.** Every text symbol in them occurs in the pinned `s500_kernel`. From alpha 0.3, eight days later, every shipped kernel is a ctalon build of the vendor product tree. All ctalon builds share at least 99.7% of function sizes with Koriki v1.0 #75 and differ in configuration (FW-013).
+
+Bootloaders were never public-source, even in alpha 0.1. Its U-Boot already carries `allenS500=1` and `bootcmd=run ramboot`. U-Boot changed once, at alpha 0.4, to the binary Koriki still ships. The early-loader window changed once, at the 0.5 "6.0C" board-revision test build (BOOT-008).
+
+Alpha 0.1 boots with no ramdisk and sets `root=` only in `uEnv.txt`. That contradicts the static reading that `uEnv.txt` is never applied (C-UENV; BOOT-007 downgraded to inferred). Prediction P-UENV resolves it on hardware.
+
+For a public-source comparison build, alpha 0.1/0.2 are the shipped references. They use GCC 7.3.0 (Buildroot 2018.11), so a size-faithful rebuild needs that compiler, not 4.9.

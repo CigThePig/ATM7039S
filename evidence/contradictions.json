@@ -97,5 +97,16 @@
     ],
     "status": "Unresolved source/document discrepancy; ATM7039S applicability unknown",
     "next_validation": "Inspect history and vendor serial/clock code; compare existing trustworthy baud-rate observations before any target test."
+  },
+  {
+    "id": "C-UENV",
+    "issue": "Release U-Boot bootcmd=run ramboot suggests uEnv.txt is not imported (BOOT-007; MiaUI reports the same), but RetroArch alpha 0.1 can only find its root filesystem through uEnv.txt's root=/dev/mmcblk0p2 (no ramdisk, no root= in DTB or kernel).",
+    "findings": [
+      "BOOT-007",
+      "BOOT-008",
+      "FW-013"
+    ],
+    "status": "Unresolved. Possibilities: the early loader applies uEnv.txt bootargs, U-Boot runs from a different stored environment, or alpha 0.1 did not boot as packaged.",
+    "next_validation": "Prediction P-UENV on the V3 capture: presence of init=/init (only in uEnv.txt) in /proc/cmdline."
   }
 ]

@@ -862,7 +862,7 @@ Limits: Not finding the product tree in these repositories does not prove it is 
 
 The Koriki v1.0 U-Boot default environment sets bootcmd=run ramboot with ramboot=bootm ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r} (kernel_addr_r=0x7fc0, ramdisk_addr_r=0x1ffffc0, fdt_addr_r=0x03800000). The fatload- and uEnv.txt-based mmcboot/setbootenv commands exist but are not reached from bootcmd, so on the default path the kernel, ramdisk and DTB are already in memory before U-Boot runs and uEnv.txt is not imported.
 
-**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** static-inspection
+**Confidence:** inferred · **Scope:** release-binary · **Validation:** static-inspection
 
 Evidence:
 
@@ -870,7 +870,7 @@ Evidence:
 
 - [miaui-gpu-rg35xx / src/kernel-rg35xx/TEST_BOOT.md: 'The pre-loader reads p1:/uImage directly (U-Boot's bootcmd is ramboot, and it does not read uEnv.txt)'](https://github.com/miaui-cfw/MiaUI-GPU-RG35XX)
 
-Limits: Static environment text: the early loader or a stored environment could override bootcmd at runtime. Implies the early loader reads the FAT partition, which has not been traced in its code. Prediction P-UENV tests it from /proc/cmdline.
+Limits: Static environment text: the early loader or a stored environment could override bootcmd at runtime. Implies the early loader reads the FAT partition, which has not been traced in its code. Prediction P-UENV tests it from /proc/cmdline. Contradicted by RetroArch alpha 0.1, which ships no ramdisk.img, has no root= in its DTB /chosen or kernel image, and sets root=/dev/mmcblk0p2 only in uEnv.txt, with a U-Boot that has the same ramboot bootcmd (C-UENV). Either uEnv.txt is applied by another stage or the static reading is wrong.
 
 ## FW-011
 
@@ -903,3 +903,43 @@ Evidence:
 - [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
 
 Limits: MiaUI's patches are an independent reconstruction, not vendor source; their own notes list unported vendor code. Built with GCC 4.9.3 rather than the Linaro 4.9.4 their script names; not booted.
+
+## FW-013
+
+Kernel lineage across the early original-RG35XX releases: RetroArch alpha 0.1 (Linux 3.10.37 root@30d269650fcb, Buildroot GCC 7.3.0, #4, Mar 12 2023) and Batocera Lite alpha 0.2 (root@46ffd7f4c6ac, #8, Mar 14 2023) contain none of the 122 vendor functions, and every text symbol they contain occurs in the pinned public s500_kernel source. From alpha 0.3 (Mar 24 2023) every kernel is a ctalon@endymion Linaro GCC 4.9-2017.01 build from the vendor product tree: #18 (alpha 0.3), #3 (alpha 0.4-0.6; lacks only the 44 USB stub/Android gadget functions), #65 and ADB #64 (beta 0.7/dev 0.7), #1 and #64 (beta 0.8/0.8.1), then #19, #75 and #40 in Koriki; each shares at least 99.7% of text-function sizes with Koriki v1.0 #75.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [rg35xx-cfw-releases / evidence/firmware/early-batocera.json rg35xx_retroarch_alpha_v0.1 p1:/uImage sha256 eb75af729b64aceabda4e9322bd5b0ef8926ec01f31eb9931764c4d3e64a2964](https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases)
+
+- [rg35xx-cfw-releases / evidence/firmware/early-batocera.json rg35xx_batocera_lite_alpha_v0.2 p1:/uImage sha256 f473f3dc6faa2e4a0de4d634de951ba3b288d97bef0d141cb8b91b82895f1a70](https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases)
+
+- [rg35xx-cfw-releases / evidence/firmware/early-batocera.json rg35xx_batocera_lite_alpha_v0.3 p1:/uImage sha256 6c074434e15d8da57bef864cc375859b2b4ecadaa0db0a527b7534c92562d142](https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases)
+
+- [rg35xx-cfw-releases / evidence/firmware/early-batocera.json rg35xx_batocera_lite_alpha_v0.4 p1:/uImage sha256 978de42d1cac309de81e44b2b670c35795ff96f34619598759ef26f7a029de13](https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases)
+
+- [rg35xx-cfw-releases / evidence/firmware/early-batocera.json rg35xx_batocera_beta_v0.7 uImage sha256 8485f4103fee21f53cd3bcdde45e110364ea0e61020e37b20504c08a32abfe4f](https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases)
+
+- [rg35xx-cfw-releases / evidence/firmware/early-batocera.json rg35xx_batocera_beta_v0.8 uImage sha256 18a50ab04f4e7fc1bf7f20b0ec78c39c90b97f2c6e834f267c59024b40a04c51](https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases)
+
+Limits: Name and size comparison of recovered kallsyms; not source identity. The two public-source builds used GCC 7.3.0, so their function sizes are not comparable to the GCC 4.9 builds. Who 'ctalon' is and how the project obtained the vendor tree are not established.
+
+## BOOT-008
+
+Boot components across the early releases: alpha 0.1-0.3 carry a U-Boot uImage (726,396 bytes, sha256 65fd7ee676...) that already contains allenS500=1, bootcmd=run ramboot, console=ttyS%d and androidboot.serialno=; from alpha 0.4 the U-Boot is byte-identical to Koriki v1.0's (814ce6dbe7...). The raw early-loader window (0x200200-0x300000) hashes 6631626e... through alpha 0.5 and equals Koriki v1.0's 904f92f6... from the alpha 0.5 '6.0C' board-revision test build onward.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [rg35xx-cfw-releases / evidence/firmware/early-batocera.json rg35xx_retroarch_alpha_v0.1 raw:0x300000 u-boot.uimage sha256 65fd7ee676e890bdeacfe30fa1d21e9129627c9fd4e54003676034eeb943f11f](https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases)
+
+- [rg35xx-cfw-releases / evidence/firmware/early-batocera.json rg35xx_batocera_lite_alpha_v0.4 raw:0x300000 u-boot.uimage sha256 814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd](https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases)
+
+- [rg35xx-cfw-releases / evidence/firmware/early-batocera.json early_region_sha256 per release](https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Even the public-source-kernel releases used vendor bootloader binaries. The early-window hash covers padding as well as loader code; the change coinciding with the 6.0C test build fits a board-revision early-loader fix but its content was not diffed.

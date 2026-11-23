@@ -38,6 +38,7 @@ Machine-readable records: `sources.json`, `files.json`, `artifacts.json`. Hashes
 | miaui-gpu-rg35xx | [miaui-gpu-rg35xx](https://github.com/miaui-cfw/MiaUI-GPU-RG35XX) | `54342da5b43c14afd177f2deea5771459aea7efb (src/kernel-rg35xx/)` | Independent RG35XX kernel reconstruction: pinned s500_kernel plus patches recovered from the running vendor kernel; project-reported boot notes | Kernel patches and notes read; not imported |
 | gpu-dossier | [gpu-dossier](https://github.com/CigThePig/ATM7039S) | `Owner-supplied research dossier "Original RG35XX GPU Enablement and ATM7039S Reverse Engineering", 22 Nov 2026; not committed` | Leads for GPU history, MiaUI and early Batocera releases; not primary evidence | Owner-provided document; summarised only |
 | koriki-1031-release | [koriki-1031-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_batocera_rg35xx_20240105) | `koriki_batocera_rg35xx_20240105; exact content hashes in evidence/firmware/acquisitions.json` | Public original-RG35XX Koriki 1.0.3.1 boot bundle; second comparison kernel | Redistribution not established; metadata only; no firmware committed |
+| rg35xx-cfw-releases | [rg35xx-cfw-releases](https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases) | `Release assets from rg35xx_retroarch_alpha_v0.1 to rg35xx_batocera_beta_v0.8.1; exact hashes in evidence/firmware/acquisitions.json` | Early original-RG35XX RetroArch/Batocera images (March-May 2023): kernel, DTB, U-Boot lineage | Redistribution not established; metadata only; no firmware committed |
 
 ## Examined files
 

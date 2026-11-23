@@ -316,7 +316,9 @@
       "BOOT-007",
       "BOOT-006"
     ],
-    "contradictions": [],
+    "contradictions": [
+      "C-UENV"
+    ],
     "capture_items": [
       "cmdline"
     ],

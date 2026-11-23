@@ -304,5 +304,14 @@
     "examined": "2026-11-23",
     "license_status": "Redistribution not established; metadata only; no firmware committed",
     "scope": "Public original-RG35XX Koriki 1.0.3.1 boot bundle; second comparison kernel"
+  },
+  {
+    "id": "rg35xx-cfw-releases",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases",
+    "revision": "Release assets from rg35xx_retroarch_alpha_v0.1 to rg35xx_batocera_beta_v0.8.1; exact hashes in evidence/firmware/acquisitions.json",
+    "type": "firmware-release",
+    "examined": "2026-11-23",
+    "license_status": "Redistribution not established; metadata only; no firmware committed",
+    "scope": "Early original-RG35XX RetroArch/Batocera images (March-May 2023): kernel, DTB, U-Boot lineage"
   }
 ]

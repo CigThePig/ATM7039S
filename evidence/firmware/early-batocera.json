@@ -1,0 +1,710 @@
+{
+  "format_version": 1,
+  "date": "2026-11-23",
+  "source": "rg35xx-cfw-releases",
+  "method": "Each asset downloaded once, hashed, opened read-only (zip: image extracted to scratch and its first FAT partition read with pyfatfs; tar.xz: members streamed), selected kernel/DTB/uEnv/U-Boot files hashed, then the archive and image deleted. Nothing mounted or executed. Kernel analysis with tools/kallsyms.py; vendor_functions_of_122 counts names from evidence/build/kernel-gcc493.json; pct_identical_size compares shared text function sizes.",
+  "references": {
+    "public_defconfig_gcc493": "evidence/build/kernel-gcc493.json",
+    "koriki_v1_0_75": "evidence/firmware/kernel-payload.json",
+    "koriki_1031_40": "evidence/firmware/koriki-1031-kernel-payload.json"
+  },
+  "limitations": "Zip-wrapped images were hashed via the zip archive only (the extracted .img hash was not retained). Sidecar .sha256 files exist only for the boot.tar.xz assets.",
+  "releases": [
+    {
+      "tag": "rg35xx_retroarch_alpha_v0.1",
+      "asset": "retroarch_gpu_rg35xx_20230313.img.zip",
+      "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_retroarch_alpha_v0.1/retroarch_gpu_rg35xx_20230313.img.zip",
+      "size": 880407793,
+      "sha256": "5925e47b8b9fc7d009855fa63a393ce8495886c234b91326631af3f033ea7dc2",
+      "fat_root": [
+        "KERNEL.DTB",
+        "boot_logo.bmp.gz",
+        "uEnv.txt",
+        "uImage"
+      ],
+      "early_region_sha256": "6631626e667ba48ab12567d0b5ec70223e148da593ec4e4d6c93f9768fa4c364",
+      "components": [
+        {
+          "id": "KERNEL.DTB",
+          "path": "p1:/KERNEL.DTB",
+          "size": 32716,
+          "sha256": "e56f2f49164eb93af8621ba707b5372c61a6784fbfa99c146a2130003f166682"
+        },
+        {
+          "id": "uEnv.txt",
+          "path": "p1:/uEnv.txt",
+          "size": 77,
+          "sha256": "26cb7df9e3d9a482ad17364ec029af0c9e8993992d5e61e223cb93de61ebbdad"
+        },
+        {
+          "id": "uImage",
+          "path": "p1:/uImage",
+          "size": 5636440,
+          "sha256": "eb75af729b64aceabda4e9322bd5b0ef8926ec01f31eb9931764c4d3e64a2964",
+          "kernel": {
+            "version": "Linux version 3.10.37 (root@30d269650fcb) (gcc version 7.3.0 (Buildroot 2018.11-git-g8cf4a7d-dirty) ) #4 SMP PREEMPT Sun Mar 12 03:24:28 UTC 2023",
+            "gzip_offset": 17972,
+            "image_size": 11764244,
+            "image_sha256": "f8ba7a57583dda90020f96098b924112c759210513ee20c3347ffe853d697ed3",
+            "num_syms": 72374,
+            "vendor_functions_of_122": 0,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 59.5,
+              "koriki_v1.0_#75": 57.6,
+              "koriki_1.0.3.1_#40": 57.5
+            }
+          }
+        },
+        {
+          "id": "u-boot.uimage",
+          "path": "raw:0x300000 u-boot.uimage",
+          "size": 726396,
+          "sha256": "65fd7ee676e890bdeacfe30fa1d21e9129627c9fd4e54003676034eeb943f11f"
+        }
+      ]
+    },
+    {
+      "tag": "rg35xx_batocera_lite_alpha_v0.2",
+      "asset": "batocera_lite_rg35xx_20230316.img.zip",
+      "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_lite_alpha_v0.2/batocera_lite_rg35xx_20230316.img.zip",
+      "size": 937522852,
+      "sha256": "654e0093fa5926905252abd261fdb98302685d3199a4df76eba02d8d31324715",
+      "fat_root": [
+        "KERNEL.DTB",
+        "boot_logo.bmp.gz",
+        "uEnv.txt",
+        "uImage"
+      ],
+      "early_region_sha256": "6631626e667ba48ab12567d0b5ec70223e148da593ec4e4d6c93f9768fa4c364",
+      "components": [
+        {
+          "id": "KERNEL.DTB",
+          "path": "p1:/KERNEL.DTB",
+          "size": 32754,
+          "sha256": "7c1f4fd8b92847b753ae5145d25944bca3e767f31b408b9dd803d33019beab73"
+        },
+        {
+          "id": "uEnv.txt",
+          "path": "p1:/uEnv.txt",
+          "size": 77,
+          "sha256": "26cb7df9e3d9a482ad17364ec029af0c9e8993992d5e61e223cb93de61ebbdad"
+        },
+        {
+          "id": "uImage",
+          "path": "p1:/uImage",
+          "size": 5636448,
+          "sha256": "f473f3dc6faa2e4a0de4d634de951ba3b288d97bef0d141cb8b91b82895f1a70",
+          "kernel": {
+            "version": "Linux version 3.10.37 (root@46ffd7f4c6ac) (gcc version 7.3.0 (Buildroot 2018.11-git-g8cf4a7d-dirty) ) #8 SMP PREEMPT Tue Mar 14 17:10:22 UTC 2023",
+            "gzip_offset": 17972,
+            "image_size": 11764244,
+            "image_sha256": "eca01c1419f1756c3affd1a0b61eda68c526e34b69b724035772a9d600c1ab09",
+            "num_syms": 72374,
+            "vendor_functions_of_122": 0,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 59.5,
+              "koriki_v1.0_#75": 57.6,
+              "koriki_1.0.3.1_#40": 57.5
+            }
+          }
+        },
+        {
+          "id": "u-boot.uimage",
+          "path": "raw:0x300000 u-boot.uimage",
+          "size": 726396,
+          "sha256": "65fd7ee676e890bdeacfe30fa1d21e9129627c9fd4e54003676034eeb943f11f"
+        }
+      ]
+    },
+    {
+      "tag": "rg35xx_batocera_lite_alpha_v0.2",
+      "asset": "kernel-motor-test.zip",
+      "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_lite_alpha_v0.2/kernel-motor-test.zip",
+      "size": 7495,
+      "sha256": "4229fcd5d6f276e583ccbddba636d94c22250120e0038c07bb1e7a1bd681138e",
+      "components": [
+        {
+          "id": "kernel.dtb",
+          "path": "kernel.dtb",
+          "size": 27941,
+          "sha256": "48c31c6790d292d5f673d12c51545f87061a9f85a5688e5af323c494fc4b00d3"
+        }
+      ]
+    },
+    {
+      "tag": "rg35xx_batocera_lite_alpha_v0.3",
+      "asset": "batocera_lite_rg35xx_20230324_r3.zip",
+      "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_lite_alpha_v0.3/batocera_lite_rg35xx_20230324_r3.zip",
+      "size": 941227355,
+      "sha256": "4281b84bc1d781a1026920d30d584217ae140c3d5dcdc5084afc2bbd8e786e4f",
+      "fat_root": [
+        "BOOT",
+        "KERNEL.DTB",
+        "RAMDISK.IMG",
+        "batocera-boot.conf",
+        "boot_logo.bmp.gz",
+        "uEnv.txt",
+        "uImage"
+      ],
+      "early_region_sha256": "6631626e667ba48ab12567d0b5ec70223e148da593ec4e4d6c93f9768fa4c364",
+      "components": [
+        {
+          "id": "KERNEL.DTB",
+          "path": "p1:/KERNEL.DTB",
+          "size": 32029,
+          "sha256": "69e0d455dd299c728b5137f1fa22a711aa1e391c03ca30e1c92eb648646acbcd"
+        },
+        {
+          "id": "uEnv.txt",
+          "path": "p1:/uEnv.txt",
+          "size": 251,
+          "sha256": "7cee3bb3f2a6e5458da5ed8f89bd316a5f06d748a91f87df07d12452bf15e442"
+        },
+        {
+          "id": "uImage",
+          "path": "p1:/uImage",
+          "size": 5699784,
+          "sha256": "6c074434e15d8da57bef864cc375859b2b4ecadaa0db0a527b7534c92562d142",
+          "kernel": {
+            "version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #18 SMP PREEMPT Fri Mar 24 13:48:02 UTC 2023",
+            "gzip_offset": 17588,
+            "image_size": 11898788,
+            "image_sha256": "6855e95a0c1b60234a83868263a5a0986035476c68d190aab4738e3093e70a7a",
+            "num_syms": 73611,
+            "vendor_functions_of_122": 122,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 88.2,
+              "koriki_v1.0_#75": 99.9,
+              "koriki_1.0.3.1_#40": 99.8
+            }
+          }
+        },
+        {
+          "id": "u-boot.uimage",
+          "path": "raw:0x300000 u-boot.uimage",
+          "size": 726396,
+          "sha256": "65fd7ee676e890bdeacfe30fa1d21e9129627c9fd4e54003676034eeb943f11f"
+        }
+      ]
+    },
+    {
+      "tag": "rg35xx_batocera_lite_alpha_v0.4",
+      "asset": "batocera_lite_rg35xx_20230410.zip",
+      "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_lite_alpha_v0.4/batocera_lite_rg35xx_20230410.zip",
+      "size": 1292027780,
+      "sha256": "9dd1c43b850070e038458d5c90c52a3d12c299094b1827b1f98120097e872a9b",
+      "fat_root": [
+        "BOOT",
+        "KERNEL.DTB",
+        "RAMDISK.IMG",
+        "batocera-boot.conf",
+        "boot_logo.bmp.gz",
+        "uEnv.txt",
+        "uImage"
+      ],
+      "early_region_sha256": "6631626e667ba48ab12567d0b5ec70223e148da593ec4e4d6c93f9768fa4c364",
+      "components": [
+        {
+          "id": "KERNEL.DTB",
+          "path": "p1:/KERNEL.DTB",
+          "size": 28120,
+          "sha256": "5b14afb93cbf06f263a19ad6f3cb78fa564c9bfde11f0a4dd76e42f2a43f9f39"
+        },
+        {
+          "id": "uEnv.txt",
+          "path": "p1:/uEnv.txt",
+          "size": 251,
+          "sha256": "7cee3bb3f2a6e5458da5ed8f89bd316a5f06d748a91f87df07d12452bf15e442"
+        },
+        {
+          "id": "uImage",
+          "path": "p1:/uImage",
+          "size": 5633984,
+          "sha256": "978de42d1cac309de81e44b2b670c35795ff96f34619598759ef26f7a029de13",
+          "kernel": {
+            "version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #3 SMP PREEMPT Mon Apr 10 01:04:19 UTC 2023",
+            "gzip_offset": 17588,
+            "image_size": 11775348,
+            "image_sha256": "a10870564e71ed84e435971dbb9ff5fa5e54c1160c457327ad8e5d8da7205a35",
+            "num_syms": 72627,
+            "vendor_functions_of_122": 78,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 88.2,
+              "koriki_v1.0_#75": 99.9,
+              "koriki_1.0.3.1_#40": 99.7
+            }
+          }
+        },
+        {
+          "id": "u-boot.uimage",
+          "path": "raw:0x300000 u-boot.uimage",
+          "size": 726396,
+          "sha256": "814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd"
+        }
+      ]
+    },
+    {
+      "tag": "rg35xx_batocera_lite_alpha_v0.5",
+      "asset": "batocera_lite_rg35xx_20230410_v0.5.zip",
+      "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_lite_alpha_v0.5/batocera_lite_rg35xx_20230410_v0.5.zip",
+      "size": 1297268321,
+      "sha256": "f3055e13eb6b3b0a7b8285a6d9443fc2195e91c72f8e8fb07a6120fc70d9b118",
+      "fat_root": [
+        "BOOT",
+        "KERNEL.DTB",
+        "RAMDISK.IMG",
+        "batocera-boot.conf",
+        "boot_logo.bmp.gz",
+        "uEnv.txt",
+        "uImage"
+      ],
+      "early_region_sha256": "6631626e667ba48ab12567d0b5ec70223e148da593ec4e4d6c93f9768fa4c364",
+      "components": [
+        {
+          "id": "KERNEL.DTB",
+          "path": "p1:/KERNEL.DTB",
+          "size": 28120,
+          "sha256": "5b14afb93cbf06f263a19ad6f3cb78fa564c9bfde11f0a4dd76e42f2a43f9f39"
+        },
+        {
+          "id": "uEnv.txt",
+          "path": "p1:/uEnv.txt",
+          "size": 251,
+          "sha256": "7cee3bb3f2a6e5458da5ed8f89bd316a5f06d748a91f87df07d12452bf15e442"
+        },
+        {
+          "id": "uImage",
+          "path": "p1:/uImage",
+          "size": 5633984,
+          "sha256": "978de42d1cac309de81e44b2b670c35795ff96f34619598759ef26f7a029de13",
+          "kernel": {
+            "version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #3 SMP PREEMPT Mon Apr 10 01:04:19 UTC 2023",
+            "gzip_offset": 17588,
+            "image_size": 11775348,
+            "image_sha256": "a10870564e71ed84e435971dbb9ff5fa5e54c1160c457327ad8e5d8da7205a35",
+            "num_syms": 72627,
+            "vendor_functions_of_122": 78,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 88.2,
+              "koriki_v1.0_#75": 99.9,
+              "koriki_1.0.3.1_#40": 99.7
+            }
+          }
+        },
+        {
+          "id": "u-boot.uimage",
+          "path": "raw:0x300000 u-boot.uimage",
+          "size": 726396,
+          "sha256": "814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd"
+        }
+      ]
+    },
+    {
+      "tag": "rg35xx_batocera_lite_alpha_v0.5_6C_Test",
+      "asset": "batocera_lite_rg35xx_20230412_v0.5_6.0C_Test.zip",
+      "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_lite_alpha_v0.5_6C_Test/batocera_lite_rg35xx_20230412_v0.5_6.0C_Test.zip",
+      "size": 1297281912,
+      "sha256": "aea4d6f212db30addf9d280d6c6b6278776257343ef56c14e39af1e85942fa42",
+      "fat_root": [
+        "BOOT",
+        "KERNEL.DTB",
+        "RAMDISK.IMG",
+        "batocera-boot.conf",
+        "boot_logo.bmp.gz",
+        "uEnv.txt",
+        "uImage"
+      ],
+      "early_region_sha256": "904f92f60dbdf653f29b453899c459d1fff4cbe1ae7278ea98fa41cd2a3145df",
+      "components": [
+        {
+          "id": "KERNEL.DTB",
+          "path": "p1:/KERNEL.DTB",
+          "size": 28059,
+          "sha256": "994842d4234b00b34c14c393c3579d0a0af60898d108c8245a89089c50395b33"
+        },
+        {
+          "id": "uEnv.txt",
+          "path": "p1:/uEnv.txt",
+          "size": 251,
+          "sha256": "7cee3bb3f2a6e5458da5ed8f89bd316a5f06d748a91f87df07d12452bf15e442"
+        },
+        {
+          "id": "uImage",
+          "path": "p1:/uImage",
+          "size": 5633984,
+          "sha256": "978de42d1cac309de81e44b2b670c35795ff96f34619598759ef26f7a029de13",
+          "kernel": {
+            "version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #3 SMP PREEMPT Mon Apr 10 01:04:19 UTC 2023",
+            "gzip_offset": 17588,
+            "image_size": 11775348,
+            "image_sha256": "a10870564e71ed84e435971dbb9ff5fa5e54c1160c457327ad8e5d8da7205a35",
+            "num_syms": 72627,
+            "vendor_functions_of_122": 78,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 88.2,
+              "koriki_v1.0_#75": 99.9,
+              "koriki_1.0.3.1_#40": 99.7
+            }
+          }
+        },
+        {
+          "id": "u-boot.uimage",
+          "path": "raw:0x300000 u-boot.uimage",
+          "size": 726396,
+          "sha256": "814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd"
+        }
+      ]
+    },
+    {
+      "tag": "rg35xx_batocera_lite_alpha_v0.6",
+      "asset": "batocera_lite_rg35xx_20230412_v0.6.zip",
+      "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_lite_alpha_v0.6/batocera_lite_rg35xx_20230412_v0.6.zip",
+      "size": 1303767161,
+      "sha256": "873a2e95318303fca879c8bf29d6912e7644e8f8197c0626a04233ef06f8de7f",
+      "fat_root": [
+        "2100mAh-gpu.dtb",
+        "BOOT",
+        "KERNEL.DTB",
+        "RAMDISK.IMG",
+        "batocera-boot.conf",
+        "boot_logo.bmp.gz",
+        "uEnv.txt",
+        "uImage"
+      ],
+      "early_region_sha256": "904f92f60dbdf653f29b453899c459d1fff4cbe1ae7278ea98fa41cd2a3145df",
+      "components": [
+        {
+          "id": "KERNEL.DTB",
+          "path": "p1:/KERNEL.DTB",
+          "size": 28059,
+          "sha256": "994842d4234b00b34c14c393c3579d0a0af60898d108c8245a89089c50395b33"
+        },
+        {
+          "id": "uEnv.txt",
+          "path": "p1:/uEnv.txt",
+          "size": 251,
+          "sha256": "7cee3bb3f2a6e5458da5ed8f89bd316a5f06d748a91f87df07d12452bf15e442"
+        },
+        {
+          "id": "uImage",
+          "path": "p1:/uImage",
+          "size": 5633856,
+          "sha256": "f2d9e5f61206dbfb3559f0a194b96cfb4751d4bcf4e7af2c6941c5bf1a73cf00",
+          "kernel": {
+            "version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #3 SMP PREEMPT Tue Apr 11 19:42:47 UTC 2023",
+            "gzip_offset": 17588,
+            "image_size": 11775348,
+            "image_sha256": "384f7114ea4fba37f8ea4202b5ecc076185246220069f9928b06333178de9c9a",
+            "num_syms": 72626,
+            "vendor_functions_of_122": 78,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 88.2,
+              "koriki_v1.0_#75": 99.9,
+              "koriki_1.0.3.1_#40": 99.7
+            }
+          }
+        },
+        {
+          "id": "2100mAh-gpu.dtb",
+          "path": "p1:/2100mAh-gpu.dtb",
+          "size": 28059,
+          "sha256": "f56ab6313ddd13c935a3950696927e6dbbda0bc0426c0d579a3b213e969efacd"
+        },
+        {
+          "id": "u-boot.uimage",
+          "path": "raw:0x300000 u-boot.uimage",
+          "size": 726396,
+          "sha256": "814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd"
+        }
+      ]
+    },
+    {
+      "tag": "rg35xx_batocera_beta_v0.7",
+      "asset": "boot.tar.xz",
+      "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_beta_v0.7/boot.tar.xz",
+      "size": 1260146712,
+      "sha256": "8bbde61927ec1e88b9cb1343f328d2705c289ec3587db79e8c8f50d509a32a00",
+      "published_sha256_matches": true,
+      "components": [
+        {
+          "id": "2100mAh-gpu.dtb",
+          "path": "2100mAh-gpu.dtb",
+          "size": 28059,
+          "sha256": "f56ab6313ddd13c935a3950696927e6dbbda0bc0426c0d579a3b213e969efacd"
+        },
+        {
+          "id": "2600mAh-gpu.dtb",
+          "path": "2600mAh-gpu.dtb",
+          "size": 28161,
+          "sha256": "7be0ae8b4e3db74d8cf89017271397a36ee46aaa1c5b8ec556dd523de7682856"
+        },
+        {
+          "id": "adb_uImage",
+          "path": "adb_uImage",
+          "size": 5541544,
+          "sha256": "7dd7085bec891138975f7ab9b35214b17cb2be8af5447f24095cc1a4918b8162",
+          "kernel": {
+            "version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #64 SMP PREEMPT Tue Apr 18 16:27:19 UTC 2023",
+            "gzip_offset": 17588,
+            "image_size": 11533588,
+            "image_sha256": "ac67d610a6f0735f4cb3aea450233f5350137659443cd8c36d0a01909a67eb9d",
+            "num_syms": 71514,
+            "vendor_functions_of_122": 122,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 88.2,
+              "koriki_v1.0_#75": 100.0,
+              "koriki_1.0.3.1_#40": 99.8
+            }
+          }
+        },
+        {
+          "id": "kernel.dtb",
+          "path": "kernel.dtb",
+          "size": 28161,
+          "sha256": "df1566b48c5f9c5a7976fd57673b2faac594cf903894c29fed0f1fd31b7fb524"
+        },
+        {
+          "id": "uEnv.txt",
+          "path": "uEnv.txt",
+          "size": 121,
+          "sha256": "1dd2ae2422c8d611a5e3fe3960fc5a37f050152f49bf5ec5160dc989a1297d4a"
+        },
+        {
+          "id": "uImage",
+          "path": "uImage",
+          "size": 5620432,
+          "sha256": "8485f4103fee21f53cd3bcdde45e110364ea0e61020e37b20504c08a32abfe4f",
+          "kernel": {
+            "version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #65 SMP PREEMPT Tue Apr 18 17:06:21 UTC 2023",
+            "gzip_offset": 17588,
+            "image_size": 11705092,
+            "image_sha256": "9499203921275294daf9224b3655b7d55d98375d1dfcfcdd1a83551bae1a5cd5",
+            "num_syms": 72350,
+            "vendor_functions_of_122": 122,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 88.1,
+              "koriki_v1.0_#75": 99.9,
+              "koriki_1.0.3.1_#40": 99.8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "tag": "rg35xx_batocera_dev_v0.7",
+      "asset": "boot.tar.xz",
+      "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_dev_v0.7/boot.tar.xz",
+      "size": 1052167376,
+      "sha256": "d3628b549b2338042bda03d8cfc22629e8ef2c0bce2172dedabc074324c91419",
+      "published_sha256_matches": true,
+      "components": [
+        {
+          "id": "2100mAh-gpu.dtb",
+          "path": "2100mAh-gpu.dtb",
+          "size": 28059,
+          "sha256": "f56ab6313ddd13c935a3950696927e6dbbda0bc0426c0d579a3b213e969efacd"
+        },
+        {
+          "id": "2600mAh-gpu.dtb",
+          "path": "2600mAh-gpu.dtb",
+          "size": 28161,
+          "sha256": "7be0ae8b4e3db74d8cf89017271397a36ee46aaa1c5b8ec556dd523de7682856"
+        },
+        {
+          "id": "adb_uImage",
+          "path": "adb_uImage",
+          "size": 5541544,
+          "sha256": "7dd7085bec891138975f7ab9b35214b17cb2be8af5447f24095cc1a4918b8162",
+          "kernel": {
+            "version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #64 SMP PREEMPT Tue Apr 18 16:27:19 UTC 2023",
+            "gzip_offset": 17588,
+            "image_size": 11533588,
+            "image_sha256": "ac67d610a6f0735f4cb3aea450233f5350137659443cd8c36d0a01909a67eb9d",
+            "num_syms": 71514,
+            "vendor_functions_of_122": 122,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 88.2,
+              "koriki_v1.0_#75": 100.0,
+              "koriki_1.0.3.1_#40": 99.8
+            }
+          }
+        },
+        {
+          "id": "kernel.dtb",
+          "path": "kernel.dtb",
+          "size": 28161,
+          "sha256": "df1566b48c5f9c5a7976fd57673b2faac594cf903894c29fed0f1fd31b7fb524"
+        },
+        {
+          "id": "uEnv.txt",
+          "path": "uEnv.txt",
+          "size": 121,
+          "sha256": "1dd2ae2422c8d611a5e3fe3960fc5a37f050152f49bf5ec5160dc989a1297d4a"
+        },
+        {
+          "id": "uImage",
+          "path": "uImage",
+          "size": 5620432,
+          "sha256": "8485f4103fee21f53cd3bcdde45e110364ea0e61020e37b20504c08a32abfe4f",
+          "kernel": {
+            "version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #65 SMP PREEMPT Tue Apr 18 17:06:21 UTC 2023",
+            "gzip_offset": 17588,
+            "image_size": 11705092,
+            "image_sha256": "9499203921275294daf9224b3655b7d55d98375d1dfcfcdd1a83551bae1a5cd5",
+            "num_syms": 72350,
+            "vendor_functions_of_122": 122,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 88.1,
+              "koriki_v1.0_#75": 99.9,
+              "koriki_1.0.3.1_#40": 99.8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "tag": "rg35xx_batocera_beta_v0.8",
+      "asset": "boot.tar.xz",
+      "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_beta_v0.8/boot.tar.xz",
+      "size": 995471980,
+      "sha256": "279e6fb2e1414c46efe5aa48bfe67a085adcb97512086d8e7658fb1375e23917",
+      "published_sha256_matches": true,
+      "components": [
+        {
+          "id": "2100mAh-gpu.dtb",
+          "path": "2100mAh-gpu.dtb",
+          "size": 28059,
+          "sha256": "f56ab6313ddd13c935a3950696927e6dbbda0bc0426c0d579a3b213e969efacd"
+        },
+        {
+          "id": "2600mAh-gpu.dtb",
+          "path": "2600mAh-gpu.dtb",
+          "size": 28161,
+          "sha256": "7be0ae8b4e3db74d8cf89017271397a36ee46aaa1c5b8ec556dd523de7682856"
+        },
+        {
+          "id": "adb_uImage",
+          "path": "adb_uImage",
+          "size": 5541544,
+          "sha256": "7dd7085bec891138975f7ab9b35214b17cb2be8af5447f24095cc1a4918b8162",
+          "kernel": {
+            "version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #64 SMP PREEMPT Tue Apr 18 16:27:19 UTC 2023",
+            "gzip_offset": 17588,
+            "image_size": 11533588,
+            "image_sha256": "ac67d610a6f0735f4cb3aea450233f5350137659443cd8c36d0a01909a67eb9d",
+            "num_syms": 71514,
+            "vendor_functions_of_122": 122,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 88.2,
+              "koriki_v1.0_#75": 100.0,
+              "koriki_1.0.3.1_#40": 99.8
+            }
+          }
+        },
+        {
+          "id": "kernel.dtb",
+          "path": "kernel.dtb",
+          "size": 32155,
+          "sha256": "0432fb03e00a7ed4319f34fb523a2d560a9fdcefec18655c37b1d9cca91fefb7"
+        },
+        {
+          "id": "uEnv.txt",
+          "path": "uEnv.txt",
+          "size": 121,
+          "sha256": "1dd2ae2422c8d611a5e3fe3960fc5a37f050152f49bf5ec5160dc989a1297d4a"
+        },
+        {
+          "id": "uImage",
+          "path": "uImage",
+          "size": 5620432,
+          "sha256": "18a50ab04f4e7fc1bf7f20b0ec78c39c90b97f2c6e834f267c59024b40a04c51",
+          "kernel": {
+            "version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #1 SMP PREEMPT Tue Apr 25 16:54:48 UTC 2023",
+            "gzip_offset": 17588,
+            "image_size": 11705092,
+            "image_sha256": "0904f409d90450d1aeec67c9976e3b77de59d9a0f5640ac9989a523edac252b3",
+            "num_syms": 72350,
+            "vendor_functions_of_122": 122,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 88.1,
+              "koriki_v1.0_#75": 99.9,
+              "koriki_1.0.3.1_#40": 99.8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "tag": "rg35xx_batocera_beta_v0.8.1",
+      "asset": "boot.tar.xz",
+      "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_beta_v0.8.1/boot.tar.xz",
+      "size": 999348972,
+      "sha256": "d3fae1e6b9d6a27e00a0b30add554755d9e2e0fa7a9871a76848d8a42136c473",
+      "published_sha256_matches": true,
+      "components": [
+        {
+          "id": "2100mAh-gpu.dtb",
+          "path": "2100mAh-gpu.dtb",
+          "size": 28059,
+          "sha256": "f56ab6313ddd13c935a3950696927e6dbbda0bc0426c0d579a3b213e969efacd"
+        },
+        {
+          "id": "2600mAh-gpu.dtb",
+          "path": "2600mAh-gpu.dtb",
+          "size": 28161,
+          "sha256": "7be0ae8b4e3db74d8cf89017271397a36ee46aaa1c5b8ec556dd523de7682856"
+        },
+        {
+          "id": "adb_uImage",
+          "path": "adb_uImage",
+          "size": 5541544,
+          "sha256": "7dd7085bec891138975f7ab9b35214b17cb2be8af5447f24095cc1a4918b8162",
+          "kernel": {
+            "version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #64 SMP PREEMPT Tue Apr 18 16:27:19 UTC 2023",
+            "gzip_offset": 17588,
+            "image_size": 11533588,
+            "image_sha256": "ac67d610a6f0735f4cb3aea450233f5350137659443cd8c36d0a01909a67eb9d",
+            "num_syms": 71514,
+            "vendor_functions_of_122": 122,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 88.2,
+              "koriki_v1.0_#75": 100.0,
+              "koriki_1.0.3.1_#40": 99.8
+            }
+          }
+        },
+        {
+          "id": "kernel.dtb",
+          "path": "kernel.dtb",
+          "size": 32155,
+          "sha256": "0432fb03e00a7ed4319f34fb523a2d560a9fdcefec18655c37b1d9cca91fefb7"
+        },
+        {
+          "id": "uEnv.txt",
+          "path": "uEnv.txt",
+          "size": 121,
+          "sha256": "1dd2ae2422c8d611a5e3fe3960fc5a37f050152f49bf5ec5160dc989a1297d4a"
+        },
+        {
+          "id": "uImage",
+          "path": "uImage",
+          "size": 5620432,
+          "sha256": "18a50ab04f4e7fc1bf7f20b0ec78c39c90b97f2c6e834f267c59024b40a04c51",
+          "kernel": {
+            "version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #1 SMP PREEMPT Tue Apr 25 16:54:48 UTC 2023",
+            "gzip_offset": 17588,
+            "image_size": 11705092,
+            "image_sha256": "0904f409d90450d1aeec67c9976e3b77de59d9a0f5640ac9989a523edac252b3",
+            "num_syms": 72350,
+            "vendor_functions_of_122": 122,
+            "pct_identical_size": {
+              "public_defconfig_gcc493": 88.1,
+              "koriki_v1.0_#75": 99.9,
+              "koriki_1.0.3.1_#40": 99.8
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

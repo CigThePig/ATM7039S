@@ -27,5 +27,113 @@
     "sha256": "bb8fe633e4ce89cf10b22cae36a71ad9c867b354468c1d37c5a076bd4928ca1b",
     "compression": "xz-tar",
     "expansion": "Select only the manifest-listed members with an xz/tar reader; never execute."
+  },
+  {
+    "source": "rg35xx-cfw-releases",
+    "filename": "rg35xx_retroarch_alpha_v0.1/retroarch_gpu_rg35xx_20230313.img.zip",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_retroarch_alpha_v0.1/retroarch_gpu_rg35xx_20230313.img.zip",
+    "size": 880407793,
+    "sha256": "5925e47b8b9fc7d009855fa63a393ce8495886c234b91326631af3f033ea7dc2",
+    "compression": "zip",
+    "expansion": "Select only kernel, DTB, uEnv.txt and the raw U-Boot region; never execute or mount."
+  },
+  {
+    "source": "rg35xx-cfw-releases",
+    "filename": "rg35xx_batocera_lite_alpha_v0.2/batocera_lite_rg35xx_20230316.img.zip",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_lite_alpha_v0.2/batocera_lite_rg35xx_20230316.img.zip",
+    "size": 937522852,
+    "sha256": "654e0093fa5926905252abd261fdb98302685d3199a4df76eba02d8d31324715",
+    "compression": "zip",
+    "expansion": "Select only kernel, DTB, uEnv.txt and the raw U-Boot region; never execute or mount."
+  },
+  {
+    "source": "rg35xx-cfw-releases",
+    "filename": "rg35xx_batocera_lite_alpha_v0.2/kernel-motor-test.zip",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_lite_alpha_v0.2/kernel-motor-test.zip",
+    "size": 7495,
+    "sha256": "4229fcd5d6f276e583ccbddba636d94c22250120e0038c07bb1e7a1bd681138e",
+    "compression": "zip",
+    "expansion": "Select only kernel, DTB, uEnv.txt and the raw U-Boot region; never execute or mount."
+  },
+  {
+    "source": "rg35xx-cfw-releases",
+    "filename": "rg35xx_batocera_lite_alpha_v0.3/batocera_lite_rg35xx_20230324_r3.zip",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_lite_alpha_v0.3/batocera_lite_rg35xx_20230324_r3.zip",
+    "size": 941227355,
+    "sha256": "4281b84bc1d781a1026920d30d584217ae140c3d5dcdc5084afc2bbd8e786e4f",
+    "compression": "zip",
+    "expansion": "Select only kernel, DTB, uEnv.txt and the raw U-Boot region; never execute or mount."
+  },
+  {
+    "source": "rg35xx-cfw-releases",
+    "filename": "rg35xx_batocera_lite_alpha_v0.4/batocera_lite_rg35xx_20230410.zip",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_lite_alpha_v0.4/batocera_lite_rg35xx_20230410.zip",
+    "size": 1292027780,
+    "sha256": "9dd1c43b850070e038458d5c90c52a3d12c299094b1827b1f98120097e872a9b",
+    "compression": "zip",
+    "expansion": "Select only kernel, DTB, uEnv.txt and the raw U-Boot region; never execute or mount."
+  },
+  {
+    "source": "rg35xx-cfw-releases",
+    "filename": "rg35xx_batocera_lite_alpha_v0.5/batocera_lite_rg35xx_20230410_v0.5.zip",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_lite_alpha_v0.5/batocera_lite_rg35xx_20230410_v0.5.zip",
+    "size": 1297268321,
+    "sha256": "f3055e13eb6b3b0a7b8285a6d9443fc2195e91c72f8e8fb07a6120fc70d9b118",
+    "compression": "zip",
+    "expansion": "Select only kernel, DTB, uEnv.txt and the raw U-Boot region; never execute or mount."
+  },
+  {
+    "source": "rg35xx-cfw-releases",
+    "filename": "rg35xx_batocera_lite_alpha_v0.5_6C_Test/batocera_lite_rg35xx_20230412_v0.5_6.0C_Test.zip",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_lite_alpha_v0.5_6C_Test/batocera_lite_rg35xx_20230412_v0.5_6.0C_Test.zip",
+    "size": 1297281912,
+    "sha256": "aea4d6f212db30addf9d280d6c6b6278776257343ef56c14e39af1e85942fa42",
+    "compression": "zip",
+    "expansion": "Select only kernel, DTB, uEnv.txt and the raw U-Boot region; never execute or mount."
+  },
+  {
+    "source": "rg35xx-cfw-releases",
+    "filename": "rg35xx_batocera_lite_alpha_v0.6/batocera_lite_rg35xx_20230412_v0.6.zip",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_lite_alpha_v0.6/batocera_lite_rg35xx_20230412_v0.6.zip",
+    "size": 1303767161,
+    "sha256": "873a2e95318303fca879c8bf29d6912e7644e8f8197c0626a04233ef06f8de7f",
+    "compression": "zip",
+    "expansion": "Select only kernel, DTB, uEnv.txt and the raw U-Boot region; never execute or mount."
+  },
+  {
+    "source": "rg35xx-cfw-releases",
+    "filename": "rg35xx_batocera_beta_v0.7/boot.tar.xz",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_beta_v0.7/boot.tar.xz",
+    "size": 1260146712,
+    "sha256": "8bbde61927ec1e88b9cb1343f328d2705c289ec3587db79e8c8f50d509a32a00",
+    "compression": "xz-tar",
+    "expansion": "Select only kernel, DTB, uEnv.txt and the raw U-Boot region; never execute or mount."
+  },
+  {
+    "source": "rg35xx-cfw-releases",
+    "filename": "rg35xx_batocera_dev_v0.7/boot.tar.xz",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_dev_v0.7/boot.tar.xz",
+    "size": 1052167376,
+    "sha256": "d3628b549b2338042bda03d8cfc22629e8ef2c0bce2172dedabc074324c91419",
+    "compression": "xz-tar",
+    "expansion": "Select only kernel, DTB, uEnv.txt and the raw U-Boot region; never execute or mount."
+  },
+  {
+    "source": "rg35xx-cfw-releases",
+    "filename": "rg35xx_batocera_beta_v0.8/boot.tar.xz",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_beta_v0.8/boot.tar.xz",
+    "size": 995471980,
+    "sha256": "279e6fb2e1414c46efe5aa48bfe67a085adcb97512086d8e7658fb1375e23917",
+    "compression": "xz-tar",
+    "expansion": "Select only kernel, DTB, uEnv.txt and the raw U-Boot region; never execute or mount."
+  },
+  {
+    "source": "rg35xx-cfw-releases",
+    "filename": "rg35xx_batocera_beta_v0.8.1/boot.tar.xz",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases/download/rg35xx_batocera_beta_v0.8.1/boot.tar.xz",
+    "size": 999348972,
+    "sha256": "d3fae1e6b9d6a27e00a0b30add554755d9e2e0fa7a9871a76848d8a42136c473",
+    "compression": "xz-tar",
+    "expansion": "Select only kernel, DTB, uEnv.txt and the raw U-Boot region; never execute or mount."
   }
 ]
