@@ -623,5 +623,13 @@
     "size": 11760,
     "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/mmc/host/gl520x_mmc.h",
     "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/mmc/host/gl520x_mmc.h"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/Makefile",
+    "sha256": "f48a6362d4e3914201f877fe5d77c93e776f4981f5c06375596c42b9e4a47e8d",
+    "size": 747,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/Makefile",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/Makefile"
   }
 ]

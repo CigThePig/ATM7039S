@@ -1828,5 +1828,65 @@
       "UART-002",
       "DT-002"
     ]
+  },
+  {
+    "id": "FW-010",
+    "subsystem": "kernel",
+    "claim": "Of the 122 Koriki v1.0 kernel functions absent from the pinned s500_kernel source, 20 are defined in the prebuilt arch/arm/mach-owl/libcidop archive already present in public trees (whose Makefile line is commented out) and 6 occur in an older Actions ATM7051 3.4 BSP. The remaining 96 (USB stub/upgrade gadget, gadget descriptor sysfs, Bluetooth PCM audio, dwc3 overflow handling, 'allen' LED/motor/audio board code, JTAG switching, alarm and forced-shutdown code) occur in none of 15 public branches searched across rg35xx-cfw/s500_kernel, LeMaker/linux-actions, LeMaker/android-actions, xapp-le/kernel, sparky-sbc/sparky-test and ivoszbg/linux-atm7051-3.4. The release kernel's debug strings carry an 'allen--' prefix and the release U-Boot contains 'allenS500=1', absent from the public U-Boot source.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#uImage",
+        "sha256": "1b792401ae06904c85441a07f7e3b7fe32e80aef2a85211ef529fefee461f174",
+        "offset_start": 0,
+        "offset_end": 5541472
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/mach-owl/Makefile",
+        "line_start": 18,
+        "line_end": 18
+      },
+      {
+        "source": "lemaker-linux-actions",
+        "section": "evidence/build/vendor-tree-search.json"
+      },
+      {
+        "source": "xapp-le-kernel",
+        "section": "evidence/build/vendor-tree-search.json"
+      },
+      {
+        "source": "lemaker-android-actions",
+        "section": "evidence/build/vendor-tree-search.json"
+      },
+      {
+        "source": "atm7051-kernel",
+        "section": "evidence/build/vendor-tree-search.json"
+      },
+      {
+        "source": "sparky-test",
+        "section": "evidence/build/vendor-tree-search.json"
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "vendor-kernel",
+      "lemaker-linux-actions",
+      "lemaker-android-actions",
+      "xapp-le-kernel",
+      "sparky-test",
+      "atm7051-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Not finding the product tree in these repositories does not prove it is unpublished. The 'allen' tag is a developer or vendor label of unknown identity; no attribution to a company is made. Symbol names only; behaviour was not analysed.",
+    "related_findings": [
+      "FW-009",
+      "BOOT-006"
+    ]
   }
 ]

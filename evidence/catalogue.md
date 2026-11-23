@@ -30,6 +30,11 @@ Machine-readable records: `sources.json`, `files.json`, `artifacts.json`. Hashes
 | anbernic-download | [anbernic-download](https://win.anbernic.com/download/270.html) | `unpinned web page retrieved 2026-11-23` | Stock RG35XX firmware distribution; firmware selection | Page read only; firmware not downloaded |
 | minui-legacy | [minui-legacy](https://github.com/shauninman/MinUI-Legacy-RG35XX/releases) | `unpinned web page retrieved 2026-11-23` | MinUI original-RG35XX status; firmware selection | Release notes read only |
 | ubuntu-gcc49-cross | [ubuntu-gcc49-cross](https://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-4.9-cross/) | `gcc-4.9-arm-linux-gnueabihf 4.9.3-13ubuntu2cross1 and binutils 2.26.1-1ubuntu1~16.04.8; package SHA-256 in evidence/build/kernel-gcc493.json` | research-host cross compilation; not firmware evidence | Toolchain not redistributed |
+| lemaker-linux-actions | [lemaker-linux-actions](https://github.com/LeMaker/linux-actions) | `branch heads in evidence/build/vendor-tree-search.json` | Actions S500 3.10 kernel (LeMaker Guitar); vendor-tree search | GPL kernel source; searched only, nothing imported |
+| lemaker-android-actions | [lemaker-android-actions](https://github.com/LeMaker/android-actions) | `91fd670a2a9f13dcd5c1a10c3413cbad6b386d80 (kernel/ only)` | Actions S500 Android BSP; vendor-tree search | GPL kernel source; searched only, nothing imported |
+| xapp-le-kernel | [xapp-le-kernel](https://github.com/xapp-le/kernel) | `branch heads in evidence/build/vendor-tree-search.json` | Actions S500 SDK kernel named as origin of linux-yocto S500 patches; vendor-tree search | GPL kernel source; searched only, nothing imported |
+| sparky-test | [sparky-test](https://github.com/sparky-sbc/sparky-test) | `bca02f75a18619905369835523808411713b1451 (kernel-RT/kernel/ only)` | S500 SBC kernel copy; vendor-tree search | GPL kernel source; searched only, nothing imported |
+| atm7051-kernel | [atm7051-kernel](https://github.com/ivoszbg/linux-atm7051-3.4) | `02c6a503e12ab1087aceffcaaf0ab67b85b5f431` | Older Actions ATM7051 3.4 BSP; vendor-tree search | GPL kernel source; searched only, nothing imported |
 
 ## Examined files
 
@@ -113,3 +118,4 @@ Machine-readable records: `sources.json`, `files.json`, `artifacts.json`. Hashes
 | vendor-kernel | [drivers/gpu/pvr/eurasia_km_linux/services4/srvkm/env/linux/pvr_drm.h](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/srvkm/env/linux/pvr_drm.h) | `77fd294746305d6b29ad711b5338315cff0c9ff81d744dffbaafeaed8d803158` | 7190 |
 | vendor-kernel | [drivers/mmc/host/gl520x_mmc.c](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/mmc/host/gl520x_mmc.c) | `82e9fc0d252858d1f806d78ab739cab05df79e224e69274cd81a2fc980fe9fd8` | 53516 |
 | vendor-kernel | [drivers/mmc/host/gl520x_mmc.h](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/mmc/host/gl520x_mmc.h) | `52beb72cea9848d8b7694a7a78b248637d733ad5edd8044095206d02c56745d9` | 11760 |
+| vendor-kernel | [arch/arm/mach-owl/Makefile](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/Makefile) | `f48a6362d4e3914201f877fe5d77c93e776f4981f5c06375596c42b9e4a47e8d` | 747 |

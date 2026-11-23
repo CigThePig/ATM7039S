@@ -100,3 +100,24 @@ Practical consequences:
 - Reading CPU-002's source mechanism against the release is better supported now, though it is still not proven.
 - The source-built DTB must **not** be booted as is. It adds voltage-regulator control that the shipping firmware does not use (see [spare-card risk](spare-card-risk.md)).
 - A V4 source-kernel boot would run a different configuration with no keybox, chip-ID or hard-key code. It needs its own review.
+
+## Search for the release kernel's source tree (2026-11-23)
+
+Record: [vendor-tree-search.json](../evidence/build/vendor-tree-search.json). Finding: FW-010.
+
+The 122 release functions missing from the pinned source were searched by exact name in 15 public branches of six repositories: `rg35xx-cfw/s500_kernel` (both branches), `LeMaker/linux-actions` (4), `LeMaker/android-actions` (kernel/), `xapp-le/kernel` (8, the SDK named as the origin of the linux-yocto S500 patches), `sparky-sbc/sparky-test` and `ivoszbg/linux-atm7051-3.4`. GitHub code search and web search were also tried.
+
+| Origin | Functions | Notes |
+|---|---:|---|
+| `arch/arm/mach-owl/libcidop` | 20 | A **prebuilt `ar` archive already in the public trees** (AES, RSA, bignum, SHA-256, entropy, DRM-key and `chipid_op` objects). Its Makefile line `#obj-y += libcidop` is commented out, so the release build linked it and the public config does not. This covers chip ID, keybox and certificate code. |
+| Older Actions BSP (ATM7051 3.4, `mach-leopard/atc260x`) | 6 | Power-key polling and upgrade-flag proc code carried forward |
+| **Not found anywhere** | 96 | USB "stub" upgrade gadget (24), gadget descriptor sysfs (16), Bluetooth PCM audio (14), "allen" LED/motor/audio board code (11), dwc3 overflow handling (6), DRM-key helpers (6, possibly stripped libcidop locals), forced shutdown/alarm (5), JTAG switching (3), other (11) |
+
+The release kernel's debug messages use an `allen--` prefix, and the release U-Boot passes `allenS500=1`, which the public U-Boot source does not contain. So both binaries come from a **device-maker product BSP**: the public Actions S500 3.10 tree, plus the closed libcidop objects, plus product code that is not public in any repository searched. Tinyhack's article says Anbernic does not release the source. Its only kernel lead is a Ko-fi post, which refuses automated fetches.
+
+What would close the gap:
+
+1. Read the Ko-fi post ("RG35XX: Getting the GPU to work, Part 1") in a browser for the tree its author used.
+2. Ask the Koriki maintainers which tree produced build #75. Asking is outward-facing and needs the owner's decision.
+3. A formal GPL source request to the device maker (owner's decision).
+4. Otherwise treat the 96 functions as a closed delta. The public tree plus libcidop is the closest available source.

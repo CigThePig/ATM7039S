@@ -833,3 +833,27 @@ Evidence:
 - [vendor-kernel / arch/arm/boot/dts/rg35xx_atm7039.dts](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/boot/dts/rg35xx_atm7039.dts#L1-L20)
 
 Limits: A source-built DTB would add CPU/GPU voltage-regulator control that the release DTB does not have. It must not be booted without separate review (V4). Electrical meaning of the regulator settings is not established.
+
+## FW-010
+
+Of the 122 Koriki v1.0 kernel functions absent from the pinned s500_kernel source, 20 are defined in the prebuilt arch/arm/mach-owl/libcidop archive already present in public trees (whose Makefile line is commented out) and 6 occur in an older Actions ATM7051 3.4 BSP. The remaining 96 (USB stub/upgrade gadget, gadget descriptor sysfs, Bluetooth PCM audio, dwc3 overflow handling, 'allen' LED/motor/audio board code, JTAG switching, alarm and forced-shutdown code) occur in none of 15 public branches searched across rg35xx-cfw/s500_kernel, LeMaker/linux-actions, LeMaker/android-actions, xapp-le/kernel, sparky-sbc/sparky-test and ivoszbg/linux-atm7051-3.4. The release kernel's debug strings carry an 'allen--' prefix and the release U-Boot contains 'allenS500=1', absent from the public U-Boot source.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [vendor-kernel / arch/arm/mach-owl/Makefile](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/Makefile#L18-L18)
+
+- [lemaker-linux-actions / evidence/build/vendor-tree-search.json](https://github.com/LeMaker/linux-actions)
+
+- [xapp-le-kernel / evidence/build/vendor-tree-search.json](https://github.com/xapp-le/kernel)
+
+- [lemaker-android-actions / evidence/build/vendor-tree-search.json](https://github.com/LeMaker/android-actions)
+
+- [atm7051-kernel / evidence/build/vendor-tree-search.json](https://github.com/ivoszbg/linux-atm7051-3.4)
+
+- [sparky-test / evidence/build/vendor-tree-search.json](https://github.com/sparky-sbc/sparky-test)
+
+Limits: Not finding the product tree in these repositories does not prove it is unpublished. The 'allen' tag is a developer or vendor label of unknown identity; no attribution to a company is made. Symbol names only; behaviour was not analysed.

@@ -14,7 +14,7 @@
     "V3 read-only capture on the baseline (requires owner approval)",
     "Catalogue Koriki 1.0.3.1 or stock image for a second comparison capture",
     "Actual ATM7039S register semantics and reset values",
-    "Locate the vendor-derived kernel tree used by Koriki v1.0 (FW-009)"
+    "Vendor product kernel tree: searched 15 public branches, not found (FW-010); next steps need owner decisions"
   ],
   "test_baseline": "Koriki v1.0, default /uImage, spare card; see reports/test-firmware-selection.md",
   "observation_records": 0,

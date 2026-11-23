@@ -232,5 +232,50 @@
     "examined": "2026-11-23",
     "license_status": "Toolchain not redistributed",
     "scope": "research-host cross compilation; not firmware evidence"
+  },
+  {
+    "id": "lemaker-linux-actions",
+    "url": "https://github.com/LeMaker/linux-actions",
+    "revision": "branch heads in evidence/build/vendor-tree-search.json",
+    "type": "source-repository",
+    "examined": "2026-11-23",
+    "license_status": "GPL kernel source; searched only, nothing imported",
+    "scope": "Actions S500 3.10 kernel (LeMaker Guitar); vendor-tree search"
+  },
+  {
+    "id": "lemaker-android-actions",
+    "url": "https://github.com/LeMaker/android-actions",
+    "revision": "91fd670a2a9f13dcd5c1a10c3413cbad6b386d80 (kernel/ only)",
+    "type": "source-repository",
+    "examined": "2026-11-23",
+    "license_status": "GPL kernel source; searched only, nothing imported",
+    "scope": "Actions S500 Android BSP; vendor-tree search"
+  },
+  {
+    "id": "xapp-le-kernel",
+    "url": "https://github.com/xapp-le/kernel",
+    "revision": "branch heads in evidence/build/vendor-tree-search.json",
+    "type": "source-repository",
+    "examined": "2026-11-23",
+    "license_status": "GPL kernel source; searched only, nothing imported",
+    "scope": "Actions S500 SDK kernel named as origin of linux-yocto S500 patches; vendor-tree search"
+  },
+  {
+    "id": "sparky-test",
+    "url": "https://github.com/sparky-sbc/sparky-test",
+    "revision": "bca02f75a18619905369835523808411713b1451 (kernel-RT/kernel/ only)",
+    "type": "source-repository",
+    "examined": "2026-11-23",
+    "license_status": "GPL kernel source; searched only, nothing imported",
+    "scope": "S500 SBC kernel copy; vendor-tree search"
+  },
+  {
+    "id": "atm7051-kernel",
+    "url": "https://github.com/ivoszbg/linux-atm7051-3.4",
+    "revision": "02c6a503e12ab1087aceffcaaf0ab67b85b5f431",
+    "type": "source-repository",
+    "examined": "2026-11-23",
+    "license_status": "GPL kernel source; searched only, nothing imported",
+    "scope": "Older Actions ATM7051 3.4 BSP; vendor-tree search"
   }
 ]
