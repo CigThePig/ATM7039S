@@ -210,7 +210,7 @@ def firmware(data):
                     if pos+64>len(data):raise ValueError('short uImage')
                     h=bytearray(data[pos:pos+64]);_,hcrc,stamp,size,load,ep,dcrc=struct.unpack_from('>7I',h)
                     h[4:8]=b'\0'*4;payload=data[pos+64:pos+64+size]
-                    entry.update(size=size,load=hex(load),entry=hex(ep),name=data[pos+32:pos+64].split(b'\0')[0].decode('ascii',errors='replace'),compression=data[pos+31],header_crc_ok=zlib.crc32(h)==hcrc,payload_crc_ok=len(payload)==size and zlib.crc32(payload)==dcrc)
+                    entry.update(size=size,timestamp=stamp,os_id=data[pos+28],architecture_id=data[pos+29],image_type_id=data[pos+30],load=hex(load),entry=hex(ep),name=data[pos+32:pos+64].split(b'\0')[0].decode('ascii',errors='replace'),compression=data[pos+31],header_crc_ok=zlib.crc32(h)==hcrc,payload_crc_ok=len(payload)==size and zlib.crc32(payload)==dcrc)
                     entry['valid']=entry['header_crc_ok'] and entry['payload_crc_ok']
                 else:
                     if pos+20>len(data): raise ValueError('short ELF')
@@ -253,6 +253,8 @@ def validate(root):
             if e['source'] not in sourceids:errors.append('missing source '+e['source'])
         if f.get('hardware_validated') and f.get('validation')!='hardware-observation':errors.append('unsupported hardware validation '+f['id'])
         if f['confidence']=='verified' and f['scope']=='ATM7039S-hardware' and not f.get('hardware_validated'):errors.append('unvalidated target finding '+f['id'])
+    from validate_firmware import validate as validate_binary_evidence
+    errors.extend(validate_binary_evidence(root))
     ids=set();seen={}
     for block in model['blocks']:
         if block['id'] in ids:errors.append('duplicate block '+block['id'])

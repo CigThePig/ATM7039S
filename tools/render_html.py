@@ -21,6 +21,6 @@ print('Rendered',len(files),'documents to site/')
 import shutil
 for folder in ['evidence','registers','comparisons','reports','tools']:
  for p in (ROOT/folder).rglob('*'):
-  if p.is_file() and p.suffix in ['.json','.csv','.h','.py']:
+  if p.is_file() and p.suffix in ['.json','.csv','.h','.py','.log']:
    dest=site/p.relative_to(ROOT);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest)
 shutil.copyfile(ROOT/'LICENSE',site/'LICENSE')

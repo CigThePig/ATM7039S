@@ -1,0 +1,80 @@
+{
+  "source": "koriki-v1.0-release",
+  "release": "koriki_rg35xx_v1.0 / koriki-rg35xx-v1.0_20231112.img.gz",
+  "image_sha256": "d5bd300740884d80faee2fd3ae70d91f86e6a316610c56efc0e1f7545539d6ae",
+  "raw_regions": [
+    {
+      "id": "early-region.bin",
+      "offset": 2097664,
+      "size": 1048064,
+      "boundary": "analysis window ending at U-Boot; not a proven loader length"
+    },
+    {
+      "id": "u-boot.uimage",
+      "offset": 3145728,
+      "format": "uImage"
+    }
+  ],
+  "fat_partition": 1,
+  "fat_files": [
+    {
+      "id": "uImage",
+      "path": "/uImage"
+    },
+    {
+      "id": "adb_uImage",
+      "path": "/adb_uImage"
+    },
+    {
+      "id": "kernel.dtb",
+      "path": "/KERNEL.DTB"
+    },
+    {
+      "id": "2100mAh-gpu.dtb",
+      "path": "/2100mAh-gpu.dtb"
+    },
+    {
+      "id": "2600mAh-gpu.dtb",
+      "path": "/2600mAh-gpu.dtb"
+    },
+    {
+      "id": "ramdisk.img",
+      "path": "/RAMDISK.IMG"
+    },
+    {
+      "id": "uEnv.txt",
+      "path": "/uEnv.txt"
+    }
+  ],
+  "rootfs_path": "/BOOT/BATOCERA",
+  "rootfs_files": [
+    {
+      "id": "pvrsrvkm.ko",
+      "path": "/lib/modules/3.10.37/kernel/drivers/gpu/pvr/eurasia_km_linux/pvrsrvkm.ko"
+    },
+    {
+      "id": "libEGL.so.1.14.3625561",
+      "path": "/usr/lib/libEGL.so.1.14.3625561"
+    },
+    {
+      "id": "libsrv_um.so.1.14.3625561",
+      "path": "/usr/lib/libsrv_um.so.1.14.3625561"
+    },
+    {
+      "id": "libGLESv2.so.1.14.3625561",
+      "path": "/usr/lib/libGLESv2.so.1.14.3625561"
+    },
+    {
+      "id": "libglslcompiler.so.1.14.3625561",
+      "path": "/usr/lib/libglslcompiler.so.1.14.3625561"
+    },
+    {
+      "id": "libusc.so.1.14.3625561",
+      "path": "/usr/lib/libusc.so.1.14.3625561"
+    },
+    {
+      "id": "ddk-install.log",
+      "path": "/etc/powervr_ddk_install.log"
+    }
+  ]
+}

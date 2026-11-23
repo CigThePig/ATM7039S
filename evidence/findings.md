@@ -461,3 +461,165 @@ Evidence:
 - [sgx544-history / README.md](https://github.com/reMESA-devgroup/SGX544-reMESA/blob/4c1e3095e73a506bfc48bd77041d35da0d1231e6/README.md#L1-L7)
 
 Limits: Maintainer-reported status; no independent renderer testing, no ATM7039S integration shown.
+
+## FW-001
+
+The acquired original-RG35XX Koriki v1.0 disk image has 4,303,355,904 bytes, three MBR entries starting at LBAs 16384, 6307840 and 7356416, and a valid legacy U-Boot uImage at disk offset 0x300000.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Whole-image and gzip hashes, MBR geometry and extraction plan are in evidence/firmware. This is one CFW release, not authenticated stock/Garlic firmware or ROM media-search behavior.
+
+## FW-002
+
+The Koriki v1.0 U-Boot uImage declares load 0x05000000, entry 0x05000040, compression 0, and payload size 726332; both header and payload CRC32 validate.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Header declarations are not proof of actual runtime mapping or source identity. The payload starts at uImage offset 0x40; its embedded valid FDT starts at uImage offset 0xad5e0.
+
+## BOOT-004
+
+In the selected early-region binary, the A32 routine at offset 0x6500 clears 16 bytes at 0xb4060300, copies three AFI magic bytes there, and stores boot-mode/device, UART fields and a size result at offsets +4 through +0xc.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Function label is analyst-assigned. Effective addresses are in firmware address space; physical translation is not established. Region start is disk offset 0x200200; its 0xffe00-byte analysis boundary is not an established loader file length.
+
+## MEM-004
+
+The early-region helper at offset 0x9180 combines bytes +2 and +3 of its input as a little-endian 16-bit quantity and shifts it left by 20. The AFI producer calls it with 0xb4070820 and writes the result to 0xb406030c.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: This supports a MiB-to-byte size encoding. The runtime input bytes, detected capacity, producer of that parameter block, and hardware address translation are unknown; the on-disk region does not capture runtime RAM.
+
+## BOOT-005
+
+Koriki v1.0 U-Boot payload routines at offsets 0x4194..0x42d0 check the first three AFI bytes and read byte fields at 0xb4060304..307 and word fields at 0xb4060308/30c, matching the inspected owl_afi.h field order.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [uboot / arch/arm/include/asm/arch-owl/owl_afi.h](https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/arch/arm/include/asm/arch-owl/owl_afi.h#L5-L15)
+
+- [uboot / board/actions/owl/owl_afi.c](https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/board/actions/owl/owl_afi.c#L12-L70)
+
+Limits: Payload offsets exclude the 64-byte uImage header; evidence ranges include that header. Matching this small interface does not establish that the complete release bootloader was built from the pinned source.
+
+## FW-003
+
+Koriki v1.0 uImage declares Linux-3.10.37, load/entry 0x8000 and compression 0. A CRC-valid embedded gzip stream at file offset 0x44b4 expands to a kernel containing a Linux 3.10.37 / Linaro GCC 4.9.4 / build #75 string.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Bounded decompression, expanded hash and version-string offset are in kernel-payload.json. This is not Linux 4.9.170 and does not identify the kernel in other releases. Outer uImage compression and internal zImage compression are separate layers.
+
+## FW-004
+
+The V6C boot-fix archive uImage is byte-identical to the Koriki v1.0 uImage (SHA-256 1b792401ae06904c85441a07f7e3b7fe32e80aef2a85211ef529fefee461f174), while their kernel.dtb files differ.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v6c-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v0.9.1)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v6c-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v0.9.1)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Equality establishes shared kernel bytes for these acquired artifacts; it does not prove release chronology, authorship, stock origin, or behavior on any board revision.
+
+## GPU-008
+
+Koriki v1.0 rootfs contains an ARM ELF32 pvrsrvkm.ko declaring vermagic 3.10.37 SMP preempt mod_unload ARMv7 p2v8, depends=drm, and an actions,atm7039c-gpu OF alias. Its selected graphics libraries use filenames 1.14.3625561.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: These are module metadata and bundled-library observations, independently checked with readelf; they do not establish loaded module, renderer, silicon revision, or complete ABI compatibility. Full hashes, paths, inodes and DT_NEEDED entries are retained.
+
+## GPU-009
+
+The pinned Linux DDK source defines PVRSRV_BRIDGE_PACKAGE with bridge ID, structure size, input/output pointers and sizes, and kernel-services handle; the DRM build passes this package to a dispatcher that validates the process handle for non-connect commands.
+
+**Confidence:** verified · **Scope:** related-source-observation · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [vendor-kernel / drivers/gpu/pvr/eurasia_km_linux/services4/include/pvr_bridge.h](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/include/pvr_bridge.h#L312-L322)
+
+- [vendor-kernel / drivers/gpu/pvr/eurasia_km_linux/services4/srvkm/env/linux/pvr_bridge_k.c](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/srvkm/env/linux/pvr_bridge_k.c#L242-L324)
+
+- [vendor-kernel / drivers/gpu/pvr/eurasia_km_linux/config_kernel.h](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/config_kernel.h#L40-L42)
+
+Limits: Source ABI only. Pointer width, packing, build options and complete bridge command structures must match a real userspace/module pair before use. No IOCTL was issued.
+
+## CLK-004
+
+Ten reviewed S500 GPIO/UART gate and reset positions agree between manual sections 3.3.3.16..19 and Linux v6.12 owl-s500.c; the ATM7039-labelled header has matching register offsets 0xa0..0xac.
+
+**Confidence:** verified · **Scope:** related-source-observation · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [linux / drivers/clk/actions/owl-s500.c](https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/clk/actions/owl-s500.c#L187-L187)
+
+- [linux / drivers/clk/actions/owl-s500.c](https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/clk/actions/owl-s500.c#L331-L370)
+
+- [linux / drivers/clk/actions/owl-s500.c](https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/clk/actions/owl-s500.c#L547-L563)
+
+- [vendor-kernel / arch/arm/mach-owl/include/mach/regs_map-atm7039.h](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/include/mach/regs_map-atm7039.h#L66-L69)
+
+- [s500-pdf / PDF pages 91..93 / printed pages 75..77](https://gzhls.at/blob/ldb/9/a/e/c/e8dd47a7e48102d05772a88a11c09fc5d86e.pdf)
+
+Limits: Detailed field evidence is in comparisons/cmu-fields.json. Related access/reset values remain S500-scoped; target register widths/access/reset and compatibility remain unknown. Vendor ancestry can be shared.
+
+## CLK-005
+
+S500 manual section 3.3.3.7 describes UART0DIV bits 8:0 and a special value 312, whereas Linux v6.12 configures its UART0 divider at shift 0 with width 8 and no custom table.
+
+**Confidence:** verified · **Scope:** related-source-observation · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [s500-pdf / PDF page 88 / printed page 72 / section 3.3.3.7](https://gzhls.at/blob/ldb/9/a/e/c/e8dd47a7e48102d05772a88a11c09fc5d86e.pdf)
+
+- [linux / drivers/clk/actions/owl-s500.c](https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/clk/actions/owl-s500.c#L331-L335)
+
+Limits: Document/source discrepancy retained; no silicon behavior, target field width or safe programming value is inferred.

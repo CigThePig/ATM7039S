@@ -922,5 +922,374 @@
     "hardware_validated": false,
     "limitations": "Maintainer-reported status; no independent renderer testing, no ATM7039S integration shown.",
     "related_findings": []
+  },
+  {
+    "id": "FW-001",
+    "subsystem": "firmware",
+    "claim": "The acquired original-RG35XX Koriki v1.0 disk image has 4,303,355,904 bytes, three MBR entries starting at LBAs 16384, 6307840 and 7356416, and a valid legacy U-Boot uImage at disk offset 0x300000.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#u-boot.uimage",
+        "sha256": "814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd",
+        "offset_start": 0,
+        "offset_end": 64
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Whole-image and gzip hashes, MBR geometry and extraction plan are in evidence/firmware. This is one CFW release, not authenticated stock/Garlic firmware or ROM media-search behavior.",
+    "related_findings": []
+  },
+  {
+    "id": "FW-002",
+    "subsystem": "boot",
+    "claim": "The Koriki v1.0 U-Boot uImage declares load 0x05000000, entry 0x05000040, compression 0, and payload size 726332; both header and payload CRC32 validate.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#u-boot.uimage",
+        "sha256": "814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd",
+        "offset_start": 0,
+        "offset_end": 64
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Header declarations are not proof of actual runtime mapping or source identity. The payload starts at uImage offset 0x40; its embedded valid FDT starts at uImage offset 0xad5e0.",
+    "related_findings": []
+  },
+  {
+    "id": "BOOT-004",
+    "subsystem": "boot",
+    "claim": "In the selected early-region binary, the A32 routine at offset 0x6500 clears 16 bytes at 0xb4060300, copies three AFI magic bytes there, and stores boot-mode/device, UART fields and a size result at offsets +4 through +0xc.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#early-region.bin",
+        "sha256": "904f92f60dbdf653f29b453899c459d1fff4cbe1ae7278ea98fa41cd2a3145df",
+        "offset_start": 25856,
+        "offset_end": 25992
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Function label is analyst-assigned. Effective addresses are in firmware address space; physical translation is not established. Region start is disk offset 0x200200; its 0xffe00-byte analysis boundary is not an established loader file length.",
+    "related_findings": []
+  },
+  {
+    "id": "MEM-004",
+    "subsystem": "memory",
+    "claim": "The early-region helper at offset 0x9180 combines bytes +2 and +3 of its input as a little-endian 16-bit quantity and shifts it left by 20. The AFI producer calls it with 0xb4070820 and writes the result to 0xb406030c.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#early-region.bin",
+        "sha256": "904f92f60dbdf653f29b453899c459d1fff4cbe1ae7278ea98fa41cd2a3145df",
+        "offset_start": 25948,
+        "offset_end": 25992
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#early-region.bin",
+        "sha256": "904f92f60dbdf653f29b453899c459d1fff4cbe1ae7278ea98fa41cd2a3145df",
+        "offset_start": 37248,
+        "offset_end": 37268
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "This supports a MiB-to-byte size encoding. The runtime input bytes, detected capacity, producer of that parameter block, and hardware address translation are unknown; the on-disk region does not capture runtime RAM.",
+    "related_findings": []
+  },
+  {
+    "id": "BOOT-005",
+    "subsystem": "boot",
+    "claim": "Koriki v1.0 U-Boot payload routines at offsets 0x4194..0x42d0 check the first three AFI bytes and read byte fields at 0xb4060304..307 and word fields at 0xb4060308/30c, matching the inspected owl_afi.h field order.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#u-boot.uimage",
+        "sha256": "814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd",
+        "offset_start": 16852,
+        "offset_end": 17168
+      },
+      {
+        "source": "uboot",
+        "path": "arch/arm/include/asm/arch-owl/owl_afi.h",
+        "line_start": 5,
+        "line_end": 15
+      },
+      {
+        "source": "uboot",
+        "path": "board/actions/owl/owl_afi.c",
+        "line_start": 12,
+        "line_end": 70
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "uboot"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Payload offsets exclude the 64-byte uImage header; evidence ranges include that header. Matching this small interface does not establish that the complete release bootloader was built from the pinned source.",
+    "related_findings": []
+  },
+  {
+    "id": "FW-003",
+    "subsystem": "kernel",
+    "claim": "Koriki v1.0 uImage declares Linux-3.10.37, load/entry 0x8000 and compression 0. A CRC-valid embedded gzip stream at file offset 0x44b4 expands to a kernel containing a Linux 3.10.37 / Linaro GCC 4.9.4 / build #75 string.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#uImage",
+        "sha256": "1b792401ae06904c85441a07f7e3b7fe32e80aef2a85211ef529fefee461f174",
+        "offset_start": 0,
+        "offset_end": 64
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#uImage",
+        "sha256": "1b792401ae06904c85441a07f7e3b7fe32e80aef2a85211ef529fefee461f174",
+        "offset_start": 17588,
+        "offset_end": 17591
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Bounded decompression, expanded hash and version-string offset are in kernel-payload.json. This is not Linux 4.9.170 and does not identify the kernel in other releases. Outer uImage compression and internal zImage compression are separate layers.",
+    "related_findings": []
+  },
+  {
+    "id": "FW-004",
+    "subsystem": "firmware",
+    "claim": "The V6C boot-fix archive uImage is byte-identical to the Koriki v1.0 uImage (SHA-256 1b792401ae06904c85441a07f7e3b7fe32e80aef2a85211ef529fefee461f174), while their kernel.dtb files differ.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v6c-release",
+        "artifact": "evidence/firmware/v6c-bootfix.json#v6c-uImage",
+        "sha256": "1b792401ae06904c85441a07f7e3b7fe32e80aef2a85211ef529fefee461f174",
+        "offset_start": 0,
+        "offset_end": 64
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#uImage",
+        "sha256": "1b792401ae06904c85441a07f7e3b7fe32e80aef2a85211ef529fefee461f174",
+        "offset_start": 0,
+        "offset_end": 64
+      },
+      {
+        "source": "koriki-v6c-release",
+        "artifact": "evidence/firmware/v6c-bootfix.json#v6c-kernel.dtb",
+        "sha256": "c14a5f3e74f2910ba6210bbbb983ab5bb6bb463e3fe7ecae7faab1e09480a3db",
+        "offset_start": 0,
+        "offset_end": 40
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#kernel.dtb",
+        "sha256": "ad4b8b4dd98fbb95bde8854ff0bd9c2e870c3c0c21f27be0122c741f36686f0f",
+        "offset_start": 0,
+        "offset_end": 40
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v6c-release",
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Equality establishes shared kernel bytes for these acquired artifacts; it does not prove release chronology, authorship, stock origin, or behavior on any board revision.",
+    "related_findings": []
+  },
+  {
+    "id": "GPU-008",
+    "subsystem": "gpu",
+    "claim": "Koriki v1.0 rootfs contains an ARM ELF32 pvrsrvkm.ko declaring vermagic 3.10.37 SMP preempt mod_unload ARMv7 p2v8, depends=drm, and an actions,atm7039c-gpu OF alias. Its selected graphics libraries use filenames 1.14.3625561.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#pvrsrvkm.ko",
+        "sha256": "578fca81480cc77b419701363a93d9b81e83d894a246423809d04c2d43946df4",
+        "offset_start": 0,
+        "offset_end": 52
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#libGLESv2.so.1.14.3625561",
+        "sha256": "533765244971cf68d9de92f9d9eb6adb60bd0335d665231d5a8d56ba041bf326",
+        "offset_start": 0,
+        "offset_end": 52
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "These are module metadata and bundled-library observations, independently checked with readelf; they do not establish loaded module, renderer, silicon revision, or complete ABI compatibility. Full hashes, paths, inodes and DT_NEEDED entries are retained.",
+    "related_findings": []
+  },
+  {
+    "id": "GPU-009",
+    "subsystem": "gpu",
+    "claim": "The pinned Linux DDK source defines PVRSRV_BRIDGE_PACKAGE with bridge ID, structure size, input/output pointers and sizes, and kernel-services handle; the DRM build passes this package to a dispatcher that validates the process handle for non-connect commands.",
+    "confidence": "verified",
+    "classification": "verified-source-observation",
+    "scope": "related-source-observation",
+    "evidence": [
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/gpu/pvr/eurasia_km_linux/services4/include/pvr_bridge.h",
+        "line_start": 312,
+        "line_end": 322
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/gpu/pvr/eurasia_km_linux/services4/srvkm/env/linux/pvr_bridge_k.c",
+        "line_start": 242,
+        "line_end": 324
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/gpu/pvr/eurasia_km_linux/config_kernel.h",
+        "line_start": 40,
+        "line_end": 42
+      }
+    ],
+    "supporting_evidence": [
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Source ABI only. Pointer width, packing, build options and complete bridge command structures must match a real userspace/module pair before use. No IOCTL was issued.",
+    "related_findings": []
+  },
+  {
+    "id": "CLK-004",
+    "subsystem": "clock",
+    "claim": "Ten reviewed S500 GPIO/UART gate and reset positions agree between manual sections 3.3.3.16..19 and Linux v6.12 owl-s500.c; the ATM7039-labelled header has matching register offsets 0xa0..0xac.",
+    "confidence": "verified",
+    "classification": "verified-source-observation",
+    "scope": "related-source-observation",
+    "evidence": [
+      {
+        "source": "linux",
+        "path": "drivers/clk/actions/owl-s500.c",
+        "line_start": 187,
+        "line_end": 187
+      },
+      {
+        "source": "linux",
+        "path": "drivers/clk/actions/owl-s500.c",
+        "line_start": 331,
+        "line_end": 370
+      },
+      {
+        "source": "linux",
+        "path": "drivers/clk/actions/owl-s500.c",
+        "line_start": 547,
+        "line_end": 563
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
+        "line_start": 66,
+        "line_end": 69
+      },
+      {
+        "source": "s500-pdf",
+        "section": "PDF pages 91..93 / printed pages 75..77"
+      }
+    ],
+    "supporting_evidence": [
+      "linux",
+      "vendor-kernel",
+      "s500-pdf"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Detailed field evidence is in comparisons/cmu-fields.json. Related access/reset values remain S500-scoped; target register widths/access/reset and compatibility remain unknown. Vendor ancestry can be shared.",
+    "related_findings": []
+  },
+  {
+    "id": "CLK-005",
+    "subsystem": "clock",
+    "claim": "S500 manual section 3.3.3.7 describes UART0DIV bits 8:0 and a special value 312, whereas Linux v6.12 configures its UART0 divider at shift 0 with width 8 and no custom table.",
+    "confidence": "verified",
+    "classification": "verified-source-observation",
+    "scope": "related-source-observation",
+    "evidence": [
+      {
+        "source": "s500-pdf",
+        "section": "PDF page 88 / printed page 72 / section 3.3.3.7"
+      },
+      {
+        "source": "linux",
+        "path": "drivers/clk/actions/owl-s500.c",
+        "line_start": 331,
+        "line_end": 335
+      }
+    ],
+    "supporting_evidence": [
+      "s500-pdf",
+      "linux"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Document/source discrepancy retained; no silicon behavior, target field width or safe programming value is inferred.",
+    "related_findings": []
   }
 ]

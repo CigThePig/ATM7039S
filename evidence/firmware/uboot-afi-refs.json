@@ -1,0 +1,203 @@
+{
+  "size": 726332,
+  "sha256": "e0fdd70d5e6f8a3906945fce0024c224010138baabb370f95dbc7e0e0ed8b2fd",
+  "range_start": 16788,
+  "range_end": 17104,
+  "coordinate_space": "component-relative bytes; A32 PC=instruction+8",
+  "references": [
+    {
+      "offset": 16796,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 1,
+      "literal_offset": 16828,
+      "value": 84390229
+    },
+    {
+      "offset": 16800,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 0,
+      "literal_offset": 16832,
+      "value": 3020292864
+    },
+    {
+      "offset": 16804,
+      "kind": "branch-link",
+      "condition": 14,
+      "target_offset": 278064,
+      "target_in_component": true
+    },
+    {
+      "offset": 16812,
+      "kind": "literal-load",
+      "condition": 0,
+      "register": 3,
+      "literal_offset": 16836,
+      "value": 3020292096
+    },
+    {
+      "offset": 16848,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 1,
+      "literal_offset": 16880,
+      "value": 84390229
+    },
+    {
+      "offset": 16852,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 0,
+      "literal_offset": 16884,
+      "value": 3020292864
+    },
+    {
+      "offset": 16856,
+      "kind": "branch-link",
+      "condition": 14,
+      "target_offset": 278064,
+      "target_in_component": true
+    },
+    {
+      "offset": 16864,
+      "kind": "literal-load",
+      "condition": 0,
+      "register": 3,
+      "literal_offset": 16888,
+      "value": 3020292096
+    },
+    {
+      "offset": 16900,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 1,
+      "literal_offset": 16932,
+      "value": 84390229
+    },
+    {
+      "offset": 16904,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 0,
+      "literal_offset": 16936,
+      "value": 3020292864
+    },
+    {
+      "offset": 16908,
+      "kind": "branch-link",
+      "condition": 14,
+      "target_offset": 278064,
+      "target_in_component": true
+    },
+    {
+      "offset": 16916,
+      "kind": "literal-load",
+      "condition": 0,
+      "register": 3,
+      "literal_offset": 16940,
+      "value": 3020292096
+    },
+    {
+      "offset": 16952,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 1,
+      "literal_offset": 16984,
+      "value": 84390229
+    },
+    {
+      "offset": 16956,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 0,
+      "literal_offset": 16988,
+      "value": 3020292864
+    },
+    {
+      "offset": 16960,
+      "kind": "branch-link",
+      "condition": 14,
+      "target_offset": 278064,
+      "target_in_component": true
+    },
+    {
+      "offset": 16968,
+      "kind": "literal-load",
+      "condition": 0,
+      "register": 3,
+      "literal_offset": 16992,
+      "value": 3020292096
+    },
+    {
+      "offset": 17004,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 1,
+      "literal_offset": 17036,
+      "value": 84390229
+    },
+    {
+      "offset": 17008,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 0,
+      "literal_offset": 17040,
+      "value": 3020292864
+    },
+    {
+      "offset": 17012,
+      "kind": "branch-link",
+      "condition": 14,
+      "target_offset": 278064,
+      "target_in_component": true
+    },
+    {
+      "offset": 17020,
+      "kind": "literal-load",
+      "condition": 0,
+      "register": 3,
+      "literal_offset": 17044,
+      "value": 3020292096
+    },
+    {
+      "offset": 17028,
+      "kind": "literal-load",
+      "condition": 1,
+      "register": 0,
+      "literal_offset": 17048,
+      "value": 115200
+    },
+    {
+      "offset": 17060,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 1,
+      "literal_offset": 17092,
+      "value": 84390229
+    },
+    {
+      "offset": 17064,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 0,
+      "literal_offset": 17096,
+      "value": 3020292864
+    },
+    {
+      "offset": 17068,
+      "kind": "branch-link",
+      "condition": 14,
+      "target_offset": 278064,
+      "target_in_component": true
+    },
+    {
+      "offset": 17076,
+      "kind": "literal-load",
+      "condition": 0,
+      "register": 3,
+      "literal_offset": 17100,
+      "value": 3020292096
+    }
+  ]
+}

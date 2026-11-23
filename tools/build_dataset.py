@@ -36,9 +36,23 @@ FILES={
  'sgx544-history':['README.md','LICENSE'],
  'koriki':['README.md','generate_release.sh'], 'buildroot':['README']}
 
+def apply_cmu_fields(blocks):
+ rows=json.loads((ROOT/'comparisons/cmu-fields.json').read_text())
+ block=next(b for b in blocks if b['id']=='candidate:CMU_BASE')
+ for row in rows:
+  reg=next(x for x in block['registers'] if x['name']==row['register'])
+  if not any(f['name']==row['field']['name'] for f in reg['fields']):
+   reg['fields'].append(row['field'])
+
+def preserve_extra(generated, previous, key):
+ keys={key(x) for x in generated}
+ return generated+[x for x in previous if key(x) not in keys]
+
 def ref(source,path,line=1,end=None):return dict(source=source,path=path,line_start=line,line_end=end or line)
 
 def build(inputs):
+ old_sources=json.loads((ROOT/'evidence/sources.json').read_text())
+ old_files=json.loads((ROOT/'evidence/files.json').read_text())
  sources=[];file_records=[]
  for sid,(folder,repo,commit) in REPOS.items():
   p=inputs/folder
@@ -104,6 +118,7 @@ def build(inputs):
    for field in defs2:
     if field['name'].startswith(prefix) and field['expression'].startswith(('BIT(', 'GENMASK(')):
      reg['fields'].append(dict(name=field['name'],mask=field['value'],meaning='S500 source symbol; ATM7039S semantics unverified',scope='S500-source',confidence='inferred',evidence=[ref('linux',path,field['line'])]))
+ apply_cmu_fields(blocks)
  r.save(ROOT/'registers/canonical/hardware.json',dict(schema_version=1,target='ATM7039S',hardware_validated=False,blocks=blocks))
  # Preserve upstream register/bitmask observations separately from target claims.
  upstream=[]
@@ -131,6 +146,9 @@ def build(inputs):
   b=pdf.read_bytes();url='https://gzhls.at/blob/ldb/9/a/e/c/e8dd47a7e48102d05772a88a11c09fc5d86e.pdf'
   sources.append(dict(id='s500-pdf',url=url,revision='S500 datasheet v1.4 dated 2015-07-17; mirrored manufacturer-branded document',type='related-chip-manual',examined='2026-11-22',license_status='All rights reserved; referenced, not redistributed',scope='S500 only; not authenticated as an ATM7039S manual'))
   file_records.append(dict(source='s500-pdf',path='s500-datasheet.pdf',sha256=r.sha(b),size=len(b),raw_url=url,view_url=url,pages=329))
+ # Preserve curated acquisition sources and extra audited files not regenerated here.
+ sources=preserve_extra(sources,old_sources,lambda x:x['id'])
+ file_records=preserve_extra(file_records,old_files,lambda x:(x['source'],x['path']))
  r.save(ROOT/'evidence/sources.json',sources)
  r.save(ROOT/'evidence/files.json',file_records)
  r.generate(ROOT)
