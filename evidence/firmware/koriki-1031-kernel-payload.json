@@ -1,0 +1,20 @@
+{
+  "size": 5527072,
+  "sha256": "492a854dce5f924a3b80128b6a4eebf3554da98d24f4e2978779508da299d93f",
+  "gzip_streams": [
+    {
+      "offset": 17588,
+      "compressed_size": 5509427,
+      "size": 11514532,
+      "sha256": "f3c19e29d418a3e8761e32f4e8f58259574f9078574d06c428cc3cdecb5e130f",
+      "gzip_crc_valid": true,
+      "linux_version_strings": [
+        {
+          "offset": 7569532,
+          "text": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #40 SMP PREEMPT Wed Dec 13 01:46:08 UTC 2023"
+        }
+      ],
+      "cpio_newc_magic": false
+    }
+  ]
+}

@@ -121,3 +121,13 @@ What would close the gap:
 2. Ask the Koriki maintainers which tree produced build #75. Asking is outward-facing and needs the owner's decision.
 3. A formal GPL source request to the device maker (owner's decision).
 4. Otherwise treat the 96 functions as a closed delta. The public tree plus libcidop is the closest available source.
+
+### Follow-up: MiaUI reconstruction and Koriki 1.0.3.1 (2026-11-23)
+
+Prompted by the owner-supplied dossier ([review](gpu-dossier-review.md)):
+
+- **Koriki 1.0.3.1** (`boot.tar.xz`, SHA-256 `bb8fe633…ca1b`, catalogued in [koriki-1031-boot.json](../evidence/firmware/koriki-1031-boot.json)) ships ctalon build **#40** (Dec 13 2023). Same vendor tree as v1.0's #75: 99.8% of shared functions have identical sizes and all 122 vendor functions are present. Configuration differs. The DTB and `uEnv.txt` are identical to v1.0 (FW-011). The ADB kernel #19 (June 2023) also contains all 122.
+- **MiaUI-GPU-RG35XX** applies nine reconstruction patches to the same pinned tree. With its configuration and GCC 4.9.3 it builds cleanly and recovers 29 of the 96 unexplained functions (LED/motor sysfs, gadget descriptor sysfs, `allen_adjust_volume`, `owl_force_shutdown`). It still lacks the USB stub gadget, Bluetooth PCM, dwc3 overflow, JTAG and DRM-key code (FW-012). Its build script expects the exact Linaro 4.9.4 toolchain as a local tarball; that tarball is not in its repository.
+- **Boot path:** the release U-Boot's `bootcmd=run ramboot` runs `bootm` on preloaded images, so the early loader reads `uImage`, `ramdisk.img` and the DTB from FAT and `uEnv.txt` is not applied (BOOT-007; prediction P-UENV).
+
+The non-public product tree has still not been found. Of what is public, MiaUI's patched tree is the closest buildable approximation.

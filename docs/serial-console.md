@@ -6,8 +6,8 @@ Scope: **Koriki v1.0** release bytes plus the pinned vendor kernel and U-Boot so
 
 | Layer | Evidence | Effect |
 |---|---|---|
-| `uEnv.txt` | `bootargs=earlyprintk clk_ignore_unused selinux=0 init=/init` | No `console=` from the card |
-| Release DTB `/chosen` | `bootargs = "earlyprintk clk_ignore_unused selinux=0"` | No `console=` from the DT |
+| `uEnv.txt` | `bootargs=earlyprintk clk_ignore_unused selinux=0 init=/init` | **Probably never read** under the default boot path: `bootcmd=run ramboot` runs `bootm` on images already in memory, with no `fatload` or `env import` (BOOT-007) |
+| Release DTB `/chosen` | `bootargs = "earlyprintk clk_ignore_unused selinux=0"` | No `console=`; with `uEnv.txt` unused, this is the base command line that U-Boot extends |
 | U-Boot environment | `console=ttyS2,115200`, `baudrate=115200`, `stdout=serial` | U-Boot's own variable; not referenced by the boot commands found |
 | U-Boot FDT fixup | Release binary contains `console=ttyS%d`; source `owl_boot_fdt.c:181–183` prepends `console=ttyS<AFI uart_index>` | **The kernel console index comes from the early loader's AFI record at runtime** |
 | AFI producer | Early routine copies `uart_index` from `0xb407082c` (BOOT-004) | Value not present in the static window; set at runtime |

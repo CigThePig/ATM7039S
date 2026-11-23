@@ -477,6 +477,8 @@ def _p_kernel(s):
         return 'uimage-build', {}
     if 'adb-kernel-payload.json' in manifests:
         return 'adb-uimage-build', {}
+    if 'koriki-1031-kernel-payload.json' in manifests:
+        return 'koriki-1031-build', {}
     return 'other', {'version': s['kernel_version']}
 
 
@@ -495,8 +497,15 @@ def _p_gpu(s):
     return ('pvr-loaded' if loaded else 'pvr-not-loaded'), {'pvr_version': s.get('pvr_version')}
 
 
+def _p_uenv(s):
+    if 'cmdline' not in s:
+        return 'not-evaluable', {}
+    return ('uenv-applied' if 'init=/init' in s['cmdline']['tokens'] else 'uenv-not-applied'), {}
+
+
 EVALUATORS = {'P-CPU': _p_cpu, 'P-CONSOLE': _p_console, 'P-BOOTDEV': _p_bootdev, 'P-NAND': _p_nand,
-              'P-RAM': _p_ram, 'P-KERNEL': _p_kernel, 'P-KCONFIG': _p_kconfig, 'P-GPU': _p_gpu}
+              'P-RAM': _p_ram, 'P-KERNEL': _p_kernel, 'P-KCONFIG': _p_kconfig, 'P-GPU': _p_gpu,
+              'P-UENV': _p_uenv}
 
 
 def evaluate_predictions(summary, root=ROOT):

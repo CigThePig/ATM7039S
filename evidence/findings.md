@@ -857,3 +857,49 @@ Evidence:
 - [sparky-test / evidence/build/vendor-tree-search.json](https://github.com/sparky-sbc/sparky-test)
 
 Limits: Not finding the product tree in these repositories does not prove it is unpublished. The 'allen' tag is a developer or vendor label of unknown identity; no attribution to a company is made. Symbol names only; behaviour was not analysed.
+
+## BOOT-007
+
+The Koriki v1.0 U-Boot default environment sets bootcmd=run ramboot with ramboot=bootm ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r} (kernel_addr_r=0x7fc0, ramdisk_addr_r=0x1ffffc0, fdt_addr_r=0x03800000). The fatload- and uEnv.txt-based mmcboot/setbootenv commands exist but are not reached from bootcmd, so on the default path the kernel, ramdisk and DTB are already in memory before U-Boot runs and uEnv.txt is not imported.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** static-inspection
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [miaui-gpu-rg35xx / src/kernel-rg35xx/TEST_BOOT.md: 'The pre-loader reads p1:/uImage directly (U-Boot's bootcmd is ramboot, and it does not read uEnv.txt)'](https://github.com/miaui-cfw/MiaUI-GPU-RG35XX)
+
+Limits: Static environment text: the early loader or a stored environment could override bootcmd at runtime. Implies the early loader reads the FAT partition, which has not been traced in its code. Prediction P-UENV tests it from /proc/cmdline.
+
+## FW-011
+
+Koriki 1.0.3.1 (koriki_batocera_rg35xx_20240105) ships a different kernel build, Linux 3.10.37 ctalon@endymion Linaro GCC 4.9-2017.01 #40 dated Dec 13 2023, with KERNEL.DTB and uEnv.txt byte-identical to Koriki v1.0. Compared by kallsyms with the v1.0 build #75, 33098 of 33178 shared text functions (99.8%) have identical sizes and all 122 vendor functions absent from the public source are present in both; the differences are configuration (build #40 adds xHCI, ext2 and joydev; build #75 has EHCI, hostap, the VDE/VCE video drivers and LED triggers).
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-1031-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_batocera_rg35xx_20240105)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-1031-release / evidence/build/vendor-tree-search.json](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_batocera_rg35xx_20240105)
+
+Limits: Symbol-level comparison; equal sizes support but do not prove identical source. Which Koriki release first shipped build #40 and how it relates to Anbernic's stock kernel are not established; 'stock-like' is the release notes' own description.
+
+## FW-012
+
+MiaUI-GPU-RG35XX reconstructs the RG35XX kernel as the pinned s500_kernel 81cc77b5 plus nine patches it describes as recovered from the running vendor kernel (ctalon #40, binary only). Built here with GCC 4.9.3 and its configuration, the result contains 29 of the 96 vendor functions found in no public tree (LED/motor sysfs, gadget descriptor sysfs, allen_adjust_volume, allen_led_poll, owl_force_shutdown) and none of the USB stub gadget, Bluetooth PCM, dwc3 overflow, JTAG or DRM-key functions; 88.3% of shared text functions match the release build #75 in size, versus 88.2% for the unpatched defconfig build.
+
+**Confidence:** verified · **Scope:** source-build · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [miaui-gpu-rg35xx / src/kernel-rg35xx/build.sh, patches/0001-0009, config/rg35xx-test.config](https://github.com/miaui-cfw/MiaUI-GPU-RG35XX)
+
+- [ubuntu-gcc49-cross / evidence/build/vendor-tree-search.json](https://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-4.9-cross/)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: MiaUI's patches are an independent reconstruction, not vendor source; their own notes list unported vendor code. Built with GCC 4.9.3 rather than the Linaro 4.9.4 their script names; not booted.

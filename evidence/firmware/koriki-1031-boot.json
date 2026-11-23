@@ -1,0 +1,65 @@
+{
+  "format_version": 1,
+  "source": "koriki-1031-release",
+  "release": "koriki_batocera_rg35xx_20240105 / boot.tar.xz",
+  "size": 955360700,
+  "sha256": "bb8fe633e4ce89cf10b22cae36a71ad9c867b354468c1d37c5a076bd4928ca1b",
+  "container": "tar.xz; members selected with xz -dc | tar -x, nothing executed",
+  "components": [
+    {
+      "id": "uImage",
+      "location": {
+        "kind": "tar-member",
+        "path": "uImage"
+      },
+      "size": 5527072,
+      "sha256": "492a854dce5f924a3b80128b6a4eebf3554da98d24f4e2978779508da299d93f"
+    },
+    {
+      "id": "kernel.dtb",
+      "location": {
+        "kind": "tar-member",
+        "path": "kernel.dtb"
+      },
+      "size": 28111,
+      "sha256": "ad4b8b4dd98fbb95bde8854ff0bd9c2e870c3c0c21f27be0122c741f36686f0f"
+    },
+    {
+      "id": "uEnv.txt",
+      "location": {
+        "kind": "tar-member",
+        "path": "uEnv.txt"
+      },
+      "size": 121,
+      "sha256": "1dd2ae2422c8d611a5e3fe3960fc5a37f050152f49bf5ec5160dc989a1297d4a"
+    },
+    {
+      "id": "ramdisk.img",
+      "location": {
+        "kind": "tar-member",
+        "path": "ramdisk.img"
+      },
+      "size": 16102953,
+      "sha256": "98ada166346bf24740adf462b6f5cb8abfe0eb8f1401531fb29220f75241eb77"
+    },
+    {
+      "id": "gpio_keys_polled.ko",
+      "location": {
+        "kind": "tar-member",
+        "path": "modules/gpio_keys_polled.ko"
+      },
+      "size": 8344,
+      "sha256": "88dbe54056c24b079a6b1e85bae5c0e5d02afa09c5ed812c10e5e91e1ed3b893"
+    },
+    {
+      "id": "atc260x_cap_gauge.ko",
+      "location": {
+        "kind": "tar-member",
+        "path": "modules/atc260x_cap_gauge.ko"
+      },
+      "size": 35448,
+      "sha256": "2c172ad872ef94e85886d41c02b13f7a29f082aedb9cbecd708e589fa881850c"
+    }
+  ],
+  "notes": "kernel.dtb and uEnv.txt are byte-identical to Koriki v1.0 KERNEL.DTB and uEnv.txt."
+}

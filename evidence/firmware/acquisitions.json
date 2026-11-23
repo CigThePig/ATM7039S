@@ -18,5 +18,14 @@
     "sha256": "d14273634264eaced0daa0f8b2d7160d21c6b0aeb35b8decee5553c5ec35617c",
     "compression": "zip",
     "expansion": "Select only the three manifest-listed files using a ZIP reader; never execute."
+  },
+  {
+    "source": "koriki-1031-release",
+    "filename": "boot.tar.xz",
+    "url": "https://github.com/rg35xx-cfw/Koriki/releases/download/koriki_batocera_rg35xx_20240105/boot.tar.xz",
+    "size": 955360700,
+    "sha256": "bb8fe633e4ce89cf10b22cae36a71ad9c867b354468c1d37c5a076bd4928ca1b",
+    "compression": "xz-tar",
+    "expansion": "Select only the manifest-listed members with an xz/tar reader; never execute."
   }
 ]

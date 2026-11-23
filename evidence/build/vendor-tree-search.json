@@ -58,6 +58,14 @@
     },
     {
       "other": "GitHub code search for 25 distinctive names; web search; Tinyhack article (its kernel lead, a Ko-fi post, returns HTTP 403 to automated fetches)"
+    },
+    {
+      "repo": "miaui-cfw/MiaUI-GPU-RG35XX",
+      "path": "src/kernel-rg35xx/",
+      "revisions": {
+        "main": "54342da5b43c14afd177f2deea5771459aea7efb"
+      },
+      "note": "Not a vendor tree: pinned s500_kernel plus nine reconstruction patches"
     }
   ],
   "method": "git grep -w -F of exact names in .c/.h (and binary files) at each listed revision.",
@@ -227,6 +235,78 @@
     "release kernel debug messages prefixed \"allen--\" (e.g. \"allen--<%s> otg insert\", \"allen-- Entry SD/MMC module error reset\")",
     "release U-Boot bootargs fragment \"allenS500=1\", absent from the pinned u-boot_s500 source"
   ],
-  "conclusion": "The Koriki v1.0 kernel is built from a product BSP: the public Actions S500 3.10 tree plus the libcidop prebuilt archive, older Actions BSP code and about 96 functions of device-maker code (USB stub/upgrade gadget, gadget descriptor sysfs, Bluetooth PCM audio, dwc3 overflow handling, LED/motor/audio board code tagged \"allen\", JTAG switching, alarm/forced-shutdown). That product tree was not found in any public repository searched.",
-  "limitations": "Absence from searched trees is not proof the tree is unpublished elsewhere. drm_* names in the unexplained set may come from libcidop members whose local symbols are stripped. Symbol names only; behaviour was not analysed."
+  "conclusion": "The Koriki v1.0 kernel is built from a product BSP: the public Actions S500 3.10 tree plus the libcidop prebuilt archive, older Actions BSP code and about 96 functions of device-maker code (USB stub/upgrade gadget, gadget descriptor sysfs, Bluetooth PCM audio, dwc3 overflow handling, LED/motor/audio board code tagged \"allen\", JTAG switching, alarm/forced-shutdown). That product tree was not found in any public repository searched. Koriki 1.0.3.1 build #40 comes from the same product tree with a different configuration. The closest public approximation is MiaUI's reconstruction, which recovers 29 of the 96 functions.",
+  "limitations": "Absence from searched trees is not proof the tree is unpublished elsewhere. drm_* names in the unexplained set may come from libcidop members whose local symbols are stripped. Symbol names only; behaviour was not analysed.",
+  "koriki_1031_kernel": {
+    "build": "#40 Dec 13 2023",
+    "comparison_with_v1_0_build_75": {
+      "common": 47104,
+      "a_only": 819,
+      "b_only": 658,
+      "compared": 33178,
+      "identical": 33098,
+      "pct": 99.8
+    },
+    "absent122_present": 122,
+    "unexplained96_present": 96
+  },
+  "miaui_reconstruction": {
+    "patches": 9,
+    "config_sha256": "464bf96ae6b4e1fd3c28c3cdf0a03bc035ffbe0bdac3d98f8fe7e016d5a912d7",
+    "compiler": "Ubuntu GCC 4.9.3 (their script names Linaro 4.9.4)",
+    "result": {
+      "syms": 74396,
+      "common": 46945,
+      "release_only": 978,
+      "build_only": 3642,
+      "compared": 33093,
+      "identical": 29229,
+      "pct": 88.3,
+      "of_122_present": 29,
+      "of_96_present": 29,
+      "recovered_96": [
+        "acmmod_exit",
+        "acmmod_init",
+        "allen_adjust_volume",
+        "allen_led_poll",
+        "asoc_earphone_poll",
+        "bDeviceClass_show",
+        "bDeviceClass_store",
+        "bDeviceProtocol_show",
+        "bDeviceProtocol_store",
+        "bDeviceSubClass_show",
+        "bDeviceSubClass_store",
+        "bcdDevice_show",
+        "bcdDevice_store",
+        "iManufacturer_show",
+        "iManufacturer_store",
+        "iProduct_show",
+        "iProduct_store",
+        "iSerial_show",
+        "iSerial_store",
+        "idProduct_show",
+        "idProduct_store",
+        "idVendor_show",
+        "idVendor_store",
+        "init_work_handler",
+        "owl_force_shutdown",
+        "show_led_test",
+        "show_moto",
+        "store_led_test",
+        "store_moto"
+      ]
+    },
+    "defconfig_baseline": {
+      "syms": 72480,
+      "common": 46690,
+      "release_only": 1233,
+      "build_only": 1561,
+      "compared": 33008,
+      "identical": 29122,
+      "pct": 88.2,
+      "of_122_present": 0,
+      "of_96_present": 0,
+      "recovered_96": []
+    }
+  }
 }

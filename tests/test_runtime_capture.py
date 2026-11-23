@@ -133,6 +133,7 @@ class CaptureScriptTests(unittest.TestCase):
         self.assertEqual(p['P-KERNEL']['outcome'], 'uimage-build')
         self.assertEqual(p['P-KCONFIG']['outcome'], 'nr-cpus-4')
         self.assertEqual(p['P-GPU']['outcome'], 'pvr-loaded')
+        self.assertEqual(p['P-UENV']['outcome'], 'uenv-applied')
         declared = {x['id']: {o['id'] for o in x['outcomes']} for x in json.loads((ROOT / 'evidence/predictions.json').read_text())}
         self.assertEqual(set(p), set(declared))
 

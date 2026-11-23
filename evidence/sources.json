@@ -277,5 +277,32 @@
     "examined": "2026-11-23",
     "license_status": "GPL kernel source; searched only, nothing imported",
     "scope": "Older Actions ATM7051 3.4 BSP; vendor-tree search"
+  },
+  {
+    "id": "miaui-gpu-rg35xx",
+    "url": "https://github.com/miaui-cfw/MiaUI-GPU-RG35XX",
+    "revision": "54342da5b43c14afd177f2deea5771459aea7efb (src/kernel-rg35xx/)",
+    "type": "source-repository",
+    "examined": "2026-11-23",
+    "license_status": "Kernel patches and notes read; not imported",
+    "scope": "Independent RG35XX kernel reconstruction: pinned s500_kernel plus patches recovered from the running vendor kernel; project-reported boot notes"
+  },
+  {
+    "id": "gpu-dossier",
+    "url": "https://github.com/CigThePig/ATM7039S",
+    "revision": "Owner-supplied research dossier \"Original RG35XX GPU Enablement and ATM7039S Reverse Engineering\", 22 Nov 2026; not committed",
+    "type": "secondary-research",
+    "examined": "2026-11-23",
+    "license_status": "Owner-provided document; summarised only",
+    "scope": "Leads for GPU history, MiaUI and early Batocera releases; not primary evidence"
+  },
+  {
+    "id": "koriki-1031-release",
+    "url": "https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_batocera_rg35xx_20240105",
+    "revision": "koriki_batocera_rg35xx_20240105; exact content hashes in evidence/firmware/acquisitions.json",
+    "type": "firmware-release",
+    "examined": "2026-11-23",
+    "license_status": "Redistribution not established; metadata only; no firmware committed",
+    "scope": "Public original-RG35XX Koriki 1.0.3.1 boot bundle; second comparison kernel"
   }
 ]

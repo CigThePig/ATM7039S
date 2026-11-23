@@ -9,7 +9,7 @@ def validate(root):
     errors=[];index={}
     folder=root/'evidence/firmware'
     if not folder.exists():return errors
-    for name in ['koriki-v1.0.json','koriki-v1.0-rootfs.json','v6c-bootfix.json']:
+    for name in ['koriki-v1.0.json','koriki-v1.0-rootfs.json','v6c-bootfix.json','koriki-1031-boot.json']:
         p=folder/name
         try:
             m=json.loads(p.read_text());seen=set()
