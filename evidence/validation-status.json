@@ -1,15 +1,26 @@
 {
-  "session": "2026-11-22",
+  "session": "2026-11-23",
   "hardware_tests_executed": [],
-  "whole_firmware_images_analyzed": [],
+  "whole_firmware_images_analyzed": [
+    "koriki-rg35xx-v1.0_20231112.img (expanded SHA-256 d5bd300740884d80faee2fd3ae70d91f86e6a316610c56efc0e1f7545539d6ae)"
+  ],
   "public_components_analyzed": [
     "2100mAh-gpu.dtb",
-    "gpio_keys_polled.ko"
+    "gpio_keys_polled.ko",
+    "bootfix_for_revision_v6c.zip"
   ],
   "independent_check": "Built vendor DTC locally; FDT-to-DTS round trip comparison has zero property differences.",
   "pending": [
-    "Known-provenance stock and Garlic boot images",
-    "Runtime final DT and CPU topology",
-    "Actual ATM7039S register semantics and reset values"
+    "V3 read-only capture on the baseline (requires owner approval)",
+    "Catalogue Koriki 1.0.3.1 or stock image for a second comparison capture",
+    "Actual ATM7039S register semantics and reset values",
+    "Vendor product kernel tree: searched 15 public branches, not found (FW-010); next steps need owner decisions"
+  ],
+  "test_baseline": "Koriki v1.0, default /uImage, spare card; see reports/test-firmware-selection.md",
+  "observation_records": 0,
+  "pre_registered_predictions": 8,
+  "source_builds": [
+    "vendor kernel 81cc77b5 with Ubuntu GCC 4.9.3: built, not booted (evidence/build/kernel-gcc493.json)",
+    "RetroArch alpha 0.1 kernel reproduced with GCC 7.3.0: same Image size, 99.92% bytes identical, not booted (evidence/build/alpha01-gcc730.json)"
   ]
 }

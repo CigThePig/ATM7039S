@@ -6,7 +6,7 @@ Add sources to `evidence/sources.json` and reproducible file hashes to `evidence
 
 Edit register definitions only in `registers/canonical/hardware.json` or improve the reproducible extraction in `tools/build_dataset.py`; run the generator afterward. Never edit generated CSV, Markdown or headers by hand. `candidate:` entries are related-chip leads and must not be treated as safe MMIO definitions. Preserve unknown width/access/reset/field semantics rather than fill them from naming conventions.
 
-Hardware-derived findings need explicit permission, procedure, equipment, artifacts, firmware identity and observed result. No live MMIO writes, power changes, boot modifications or SD-card experiments are authorized by this repository. The owner's failing factory card and working GarlicOS card are excluded from experimentation.
+Hardware-derived findings need an observation record in `evidence/observations.json` (schema in `evidence/schemas/observations.schema.json`), produced with a known version of `device/capture.sh` or another documented procedure. They also need explicit permission, procedure, equipment, artifacts, firmware identity and observed result. No live MMIO writes, power changes, boot modifications or SD-card experiments are authorized by this repository. The owner's failing factory card and working GarlicOS card are excluded from experimentation.
 
 Do not contribute firmware binaries, libraries, ROM dumps, copied manuals or disassembly with uncertain redistribution rights. Link and provide extraction instructions instead. Keep third-party notices when importing licensed source; this initial release deliberately imports no driver source.
 

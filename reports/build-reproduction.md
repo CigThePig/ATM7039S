@@ -46,3 +46,133 @@ Logs normalize only the scratch-root path to `<WORK>`. They are diagnostics gene
 The release contains a 2600mAh DTB absent from the previous source recipe checkout, confirming a source/release mismatch rather than demonstrating a reproducible producer. The U-Boot package installs `u-boot-rg35xx.img`, while genimage requests `u-boot-dtb.img`. A release containing U-Boot does not resolve that naming inconsistency. The binary header load/entry differs from the pinned `s500.h` text base; a small matching AFI ABI is insufficient to prove source identity.
 
 Next obtain the exact historical compiler or stage a separately recorded patch series, rebuild source without modifying evidence inputs, then compare output configuration/DTBs and function-level fingerprints. Until then a successful modern build, if later achieved, would still be distinct from reproducing shipped firmware.
+
+## Toolchain status (2026-11-23)
+
+Both release kernels name **Linaro GCC 4.9-2017.01 (gcc 4.9.4)**: `/uImage` build #75 (FW-003) and `/adb_uImage` build #19 (FW-007). Reproducing them byte for byte needs that compiler.
+
+| Route | Status |
+|---|---|
+| `releases.linaro.org`, `releases-ie.linaro.org` and `snapshots.linaro.org` paths for `gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf.tar.xz` | All redirect to `https://www.linaro.org/contact/` (60,125-byte HTML). No archive and no checksum obtainable from Linaro. |
+| Koriki SDK release `koriki_batocera_rg35xx_sdk_20240208` (`arm-buildroot-linux-gnueabihf_sdk-buildroot.tar.gz`, about 1.15 GB) | Release notes describe a Buildroot toolchain for the latest RG35XX firmware but state no GCC version. Not acquired. It is a later Buildroot toolchain, not evidence of the 2023 kernel compiler. |
+| Ubuntu 16.04 `gcc-4.9-arm-linux-gnueabihf 4.9.3-13ubuntu2cross1` and binutils 2.26.1 from `archive.ubuntu.com` | Downloaded to scratch only. The same GCC 4.9 series, so the unmodified tree's `compiler-gcc4.h` applies and the `compiler-gcc8.h` blocker disappears. Not Linaro 4.9.4, so the output would not be byte-identical. |
+
+The Ubuntu package hashes, recorded so that a later run uses identical bytes:
+
+| Package | SHA-256 |
+|---|---|
+| `gcc-4.9-arm-linux-gnueabihf_4.9.3-13ubuntu2cross1_amd64.deb` | `920d07f97bdba8703aa4e2162ae8cab03110409435fbdf3a574e6f27bf9bd4b0` |
+| `cpp-4.9-arm-linux-gnueabihf_4.9.3-13ubuntu2cross1_amd64.deb` | `8dbd377e413e993b0f0f4e6218b957bdcac8bdbe2fa4a04ecedcfc36b53f1ea0` |
+| `gcc-4.9-arm-linux-gnueabihf-base_4.9.3-13ubuntu2cross1_amd64.deb` | `5f7cb56ee634d3cf62400683f5d00162eff5605cbdf1ba0281e404ddac8a2c9e` |
+| `libgcc-4.9-dev-armhf-cross_4.9.3-13ubuntu2cross1_all.deb` | `48ae26ea9c44bca5484f4fe989a01259cc1d871966d58ca3db74cfb23c65b45b` |
+| `binutils-arm-linux-gnueabihf_2.26.1-1ubuntu1~16.04.8_amd64.deb` | `c6946c65265ad42f6cfef35def1214d623ace552dacbf898457f81aa6a5861e7` |
+| `libisl15_0.16.1-1_amd64.deb` | `842d832c28ded8725303ef42e81ff3b190371ab1f0617196a5290adf91e3a60d` |
+| `libmpc3_1.0.3-1_amd64.deb` | `45e7071d4be2f5a1dc2eb621e67504f4fe6352b194ed12ad9d74ced8cce0c8fb` |
+| `libmpfr4_3.1.4-1_amd64.deb` | `3973a97387bbe0e8a775995c22861d8478edee2a594e8117970f635de25b2c8a` |
+
+## GCC 4.9.3 build and release comparison (2026-11-23)
+
+With the owner's go-ahead, the packages above were unpacked into a scratch prefix and used without changes. Full record: [kernel-gcc493.json](../evidence/build/kernel-gcc493.json). Logs: [configure](build-logs/kernel-gcc493-configure.log), [build, condensed to warnings and tail](build-logs/kernel-gcc493-build.log).
+
+```sh
+make -C "$work/kernel-input" O="$work/kbuild" ARCH=arm CROSS_COMPILE="$tc/arm-linux-gnueabihf-" rg35xx_atm7039_defconfig
+make -C "$work/kernel-input" O="$work/kbuild" ARCH=arm CROSS_COMPILE="$tc/arm-linux-gnueabihf-" HOSTCFLAGS='-O2 -fcommon' -j"$(nproc)" zImage modules dtbs
+```
+
+**Result: the unmodified pinned source builds** (BUILD-001): zImage, 61 modules and all DTBs, exit status 0, 189 compiler warnings, `.config` identical to the defconfig. Nothing was booted.
+
+Comparing it with the release, using [kallsyms.py](../tools/kallsyms.py) to recover the release kernels' symbol tables:
+
+| Comparison | Result |
+|---|---|
+| Kernel symbols (compiler-generated names filtered) | release 47,923; build 48,251; 46,690 shared |
+| Text functions present in both | 33,008 compared; 29,122 (88%) identical size |
+| CPU bring-up (`owl_smp_init_cpus`, `scu_get_core_count`, `cpu_up`, `arm_dt_init_cpu_maps`) | Identical sizes |
+| Configuration (FW-008) | Release has Android USB gadget, EHCI, squashfs, hibernation and Bluetooth PCM; build has xHCI, V4L2, ext2, umonitor and touchscreen/tablet drivers |
+| Source coverage (FW-009) | **122 release functions do not exist in the public source**: chip ID, JTAG switching, forced shutdown, hard-key polling, `allen_*` board code and keybox/DRM-key routines |
+| PowerVR module (GPU-010) | Same vermagic, identical data/bss, 745 of 814 functions identical size; release adds early-suspend handlers |
+| DTB (DT-003) | 22 nodes differ; the source DTB **adds CPU and GPU DCDC regulator nodes** that the release lacks |
+
+**Conclusion.** Koriki v1.0's `/uImage` was built from a vendor-derived tree with Android-style configuration and code that the public `s500_kernel` branches do not contain. The public tree is a close partial model: most functions, including CPU bring-up and the GPU module, match in size. It is not the release's source. A byte-for-byte reproduction would need that tree, its configuration and Linaro 4.9-2017.01, none of which are public.
+
+Practical consequences:
+
+- Reading CPU-002's source mechanism against the release is better supported now, though it is still not proven.
+- The source-built DTB must **not** be booted as is. It adds voltage-regulator control that the shipping firmware does not use (see [spare-card risk](spare-card-risk.md)).
+- A V4 source-kernel boot would run a different configuration with no keybox, chip-ID or hard-key code. It needs its own review.
+
+## Search for the release kernel's source tree (2026-11-23)
+
+Record: [vendor-tree-search.json](../evidence/build/vendor-tree-search.json). Finding: FW-010.
+
+The 122 release functions missing from the pinned source were searched by exact name in 15 public branches of six repositories: `rg35xx-cfw/s500_kernel` (both branches), `LeMaker/linux-actions` (4), `LeMaker/android-actions` (kernel/), `xapp-le/kernel` (8, the SDK named as the origin of the linux-yocto S500 patches), `sparky-sbc/sparky-test` and `ivoszbg/linux-atm7051-3.4`. GitHub code search and web search were also tried.
+
+| Origin | Functions | Notes |
+|---|---:|---|
+| `arch/arm/mach-owl/libcidop` | 20 | A **prebuilt `ar` archive already in the public trees** (AES, RSA, bignum, SHA-256, entropy, DRM-key and `chipid_op` objects). Its Makefile line `#obj-y += libcidop` is commented out, so the release build linked it and the public config does not. This covers chip ID, keybox and certificate code. |
+| Older Actions BSP (ATM7051 3.4, `mach-leopard/atc260x`) | 6 | Power-key polling and upgrade-flag proc code carried forward |
+| **Not found anywhere** | 96 | USB "stub" upgrade gadget (24), gadget descriptor sysfs (16), Bluetooth PCM audio (14), "allen" LED/motor/audio board code (11), dwc3 overflow handling (6), DRM-key helpers (6, possibly stripped libcidop locals), forced shutdown/alarm (5), JTAG switching (3), other (11) |
+
+The release kernel's debug messages use an `allen--` prefix, and the release U-Boot passes `allenS500=1`, which the public U-Boot source does not contain. So both binaries come from a **device-maker product BSP**: the public Actions S500 3.10 tree, plus the closed libcidop objects, plus product code that is not public in any repository searched. Tinyhack's article says Anbernic does not release the source. Its only kernel lead is a Ko-fi post, which refuses automated fetches.
+
+What would close the gap:
+
+1. Read the Ko-fi post ("RG35XX: Getting the GPU to work, Part 1") in a browser for the tree its author used.
+2. Ask the Koriki maintainers which tree produced build #75. Asking is outward-facing and needs the owner's decision.
+3. A formal GPL source request to the device maker (owner's decision).
+4. Otherwise treat the 96 functions as a closed delta. The public tree plus libcidop is the closest available source.
+
+### Follow-up: MiaUI reconstruction and Koriki 1.0.3.1 (2026-11-23)
+
+Prompted by the owner-supplied dossier ([review](gpu-dossier-review.md)):
+
+- **Koriki 1.0.3.1** (`boot.tar.xz`, SHA-256 `bb8fe633…ca1b`, catalogued in [koriki-1031-boot.json](../evidence/firmware/koriki-1031-boot.json)) ships ctalon build **#40** (Dec 13 2023). Same vendor tree as v1.0's #75: 99.8% of shared functions have identical sizes and all 122 vendor functions are present. Configuration differs. The DTB and `uEnv.txt` are identical to v1.0 (FW-011). The ADB kernel #19 (June 2023) also contains all 122.
+- **MiaUI-GPU-RG35XX** applies nine reconstruction patches to the same pinned tree. With its configuration and GCC 4.9.3 it builds cleanly and recovers 29 of the 96 unexplained functions (LED/motor sysfs, gadget descriptor sysfs, `allen_adjust_volume`, `owl_force_shutdown`). It still lacks the USB stub gadget, Bluetooth PCM, dwc3 overflow, JTAG and DRM-key code (FW-012). Its build script expects the exact Linaro 4.9.4 toolchain as a local tarball; that tarball is not in its repository.
+- **Boot path:** the release U-Boot's `bootcmd=run ramboot` runs `bootm` on preloaded images, so the early loader reads `uImage`, `ramdisk.img` and the DTB from FAT and `uEnv.txt` is not applied (BOOT-007; prediction P-UENV).
+
+The non-public product tree has still not been found. Of what is public, MiaUI's patched tree is the closest buildable approximation.
+
+## Early release kernels (2026-11-23)
+
+All eleven early original-RG35XX images and boot bundles on `rg35xx-cfw.github.io` (RetroArch alpha 0.1 to Batocera beta 0.8.1, March–May 2023) were downloaded once, hashed and opened read-only. Only the kernel, DTB, `uEnv.txt` and raw U-Boot were kept for analysis, then the archives were deleted. Every `boot.tar.xz` matched its published `.sha256`. Catalogue: [early-batocera.json](../evidence/firmware/early-batocera.json).
+
+| Release (date) | Kernel build | Compiler | Vendor functions (of 122) |
+|---|---|---|---:|
+| RetroArch alpha 0.1 (12 Mar) | `root@30d269650fcb` #4 | Buildroot GCC 7.3.0 | **0** |
+| Batocera Lite alpha 0.2 (14–16 Mar) | `root@46ffd7f4c6ac` #8 | Buildroot GCC 7.3.0 | **0** |
+| alpha 0.3 (24 Mar) | `ctalon@endymion` #18 | Linaro 4.9.4 | 122 |
+| alpha 0.4, 0.5, 0.5 6.0C test, 0.6 (Apr) | ctalon #3 | Linaro 4.9.4 | 78 (no USB stub/Android gadget) |
+| beta 0.7, dev 0.7 (20–24 Apr) | ctalon #65, ADB #64 | Linaro 4.9.4 | 122 |
+| beta 0.8, 0.8.1 (27 Apr–4 May) | ctalon #1, ADB #64 | Linaro 4.9.4 | 122 |
+| Koriki (Jun 2023–Jan 2024) | ctalon #19 (ADB), #75, #40 | Linaro 4.9.4 | 122 |
+
+**Only alpha 0.1 and 0.2 were built from the public source.** Every text symbol in them occurs in the pinned `s500_kernel`. From alpha 0.3, eight days later, every shipped kernel is a ctalon build of the vendor product tree. All ctalon builds share at least 99.7% of function sizes with Koriki v1.0 #75 and differ in configuration (FW-013).
+
+Bootloaders were never public-source, even in alpha 0.1. Its U-Boot already carries `allenS500=1` and `bootcmd=run ramboot`. U-Boot changed once, at alpha 0.4, to the binary Koriki still ships. The early-loader window changed once, at the 0.5 "6.0C" board-revision test build (BOOT-008).
+
+Alpha 0.1 boots with no ramdisk and sets `root=` only in `uEnv.txt`. That contradicts the static reading that `uEnv.txt` is never applied (C-UENV; BOOT-007 downgraded to inferred). Prediction P-UENV resolves it on hardware.
+
+For a public-source comparison build, alpha 0.1/0.2 are the shipped references. They use GCC 7.3.0 (Buildroot 2018.11), so a size-faithful rebuild needs that compiler, not 4.9. That rebuild is below.
+
+## RetroArch alpha 0.1 kernel reproduced (2026-11-23)
+
+Record: [alpha01-gcc730.json](../evidence/build/alpha01-gcc730.json). Log: [build, condensed](build-logs/kernel-alpha01-gcc730-build.log). Findings: BUILD-002, DT-004.
+
+**Recipe found.** `rg35xx-cfw/buildroot_s500` master is commit `8cf4a7d`, the hash in the release compiler string "Buildroot 2018.11-git-g8cf4a7d-dirty". Its `rg35xx` branch `configs/rg35xx_atm7039_defconfig` specifies:
+- kernel: `s500_kernel` `origin/rg35xx` (head `81cc77b5` since 7 March 2023) with defconfig `rg35xx_atm7039`;
+- patches: five kernel patches from `board/rg35xx/patches/linux` (GCC 5+ support, xHCI trace, ftrace);
+- toolchain: GCC 7.3.0, binutils 2.28.1, glibc, Cortex-A9/vfpv3-d16.
+
+**Toolchain.** Bootlin `armv7-eabihf--glibc--stable-2018.11-1`: GCC 7.3.0 configured `--with-cpu=cortex-a9 --with-fpu=vfpv3-d16`, binutils 2.29.1. SHA-256 matches Bootlin's published value.
+
+| Build variant | Text functions with identical size |
+|---|---:|
+| Out-of-tree, extra `-mtune=cortex-a9` | 86.8% |
+| Out-of-tree, toolchain defaults | 99.99% (5 of 33,851 differ) |
+| **In-tree at `/buildroot_output/buildroot_s500/output/build/linux-origin_rg35xx`** (the absolute path embedded in the release), release build user/host/number/timestamp | identical Image size; **99.92% of all bytes identical** |
+
+In the final build, symbol names match exactly, and 72,177 of 72,374 kallsyms entries match by name, type and address. Only 128 bytes differ inside code, as 1–6 literal-pool bytes in 94 functions. The other 9,259 differing bytes are pointer tables into merged strings (pinctrl group/pad/function names, tracepoint formats) and the compiler banner. That pattern is what a different binutils/GCC patch level produces. It does not indicate any source difference.
+
+The alpha 0.1 DTB differs from the DTB built from source in two properties: the pre-`81cc77b5` `model` string and `boot_cap_threshold` 0 vs 3 (DT-004). It keeps the source's CPU/GPU DCDC regulator nodes that the Koriki DTB drops.
+
+**Conclusion.** The first shipped public-source RG35XX kernel is reproducible from public inputs, short of byte identity. Closing the last 0.08% would mean rebuilding the exact Buildroot 2018.11-git toolchain (binutils 2.28.1) from `buildroot_s500`. This is now the project's **source-backed reference kernel**. It is the one kernel for which every function has inspectable source, and it actually shipped. The vendor-tree kernels used from alpha 0.3 onward remain closed.

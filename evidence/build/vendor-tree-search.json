@@ -1,0 +1,312 @@
+{
+  "format_version": 1,
+  "date": "2026-11-23",
+  "question": "Where does the Koriki v1.0 /uImage code absent from the pinned s500_kernel come from?",
+  "input": {
+    "names": 122,
+    "derived_from": "evidence/build/kernel-gcc493.json release_only_absent_from_public_source"
+  },
+  "searched": [
+    {
+      "repo": "rg35xx-cfw/s500_kernel",
+      "revisions": {
+        "rg35xx": "81cc77b59250341b9abe90ed4188cde7b7aa1eeb",
+        "master": "7822529336084aa87bee806b720a3b489c5df7d6"
+      }
+    },
+    {
+      "repo": "LeMaker/linux-actions",
+      "revisions": {
+        "linux-3.10.y": "7f697bae5f80090b20b4a58ea27ed578411e028f",
+        "linux-3.10.y-display": "c30289ab55f23aa9dec861b20754b262581bfbb8",
+        "linux-3.10.y-snappy": "2933e3abb449da09a0cbd38ebe48ded3ddf798c2",
+        "s500-master": "ecc4a1c47ce629b83bfbc31c93e1cd768f729bae"
+      }
+    },
+    {
+      "repo": "LeMaker/android-actions",
+      "path": "kernel/",
+      "revisions": {
+        "master": "91fd670a2a9f13dcd5c1a10c3413cbad6b386d80"
+      }
+    },
+    {
+      "repo": "xapp-le/kernel",
+      "revisions": {
+        "Ubuntu-Snappy-Core": "322f972576aafca6775086d54d7b4c63ccf1646a",
+        "actions-20151208": "90d4b640d5d631dfad6a403723e520d7af46f96a",
+        "branch-3.10.x": "54346216ab548df315df66c9cb9579543ae38405",
+        "branch-4.x": "90d4b640d5d631dfad6a403723e520d7af46f96a",
+        "linux-3.10.y": "ec2a182801b584685b895faca21fe64c8185eab1",
+        "master": "59dbf6a4998e967eb9c6bdcc9b506c0d96acb26b",
+        "master-orig": "43656b71e384884f1716726940c1ca483840b3b5",
+        "merge-20160113": "f7a11d1ffaf7c710a60afb0868f28a05f202cf64"
+      }
+    },
+    {
+      "repo": "sparky-sbc/sparky-test",
+      "path": "kernel-RT/kernel/",
+      "revisions": {
+        "master": "bca02f75a18619905369835523808411713b1451"
+      }
+    },
+    {
+      "repo": "ivoszbg/linux-atm7051-3.4",
+      "revisions": {
+        "HEAD": "02c6a503e12ab1087aceffcaaf0ab67b85b5f431"
+      }
+    },
+    {
+      "other": "GitHub code search for 25 distinctive names; web search; Tinyhack article (its kernel lead, a Ko-fi post, returns HTTP 403 to automated fetches)"
+    },
+    {
+      "repo": "miaui-cfw/MiaUI-GPU-RG35XX",
+      "path": "src/kernel-rg35xx/",
+      "revisions": {
+        "main": "54342da5b43c14afd177f2deea5771459aea7efb"
+      },
+      "note": "Not a vendor tree: pinned s500_kernel plus nine reconstruction patches"
+    }
+  ],
+  "method": "git grep -w -F of exact names in .c/.h (and binary files) at each listed revision.",
+  "explained": {
+    "libcidop": {
+      "count": 20,
+      "names": [
+        "acts_create_cert",
+        "acts_verify_keybox",
+        "aes_crypt_cbc",
+        "aes_crypt_cfb128",
+        "aes_crypt_cfb8",
+        "aes_crypt_ctr",
+        "aes_crypt_ecb",
+        "aes_self_test",
+        "aes_setkey_dec",
+        "aes_setkey_enc",
+        "chipid_io_remap_init",
+        "handle_trans_cmd",
+        "ibonding_read",
+        "mktno_aux_read",
+        "owl_chipid_exit",
+        "owl_chipid_init",
+        "owl_chipid_ioctl",
+        "owl_chipid_open",
+        "owl_chipid_release",
+        "read_tsensor_refval"
+      ],
+      "note": "Defined in arch/arm/mach-owl/libcidop, a prebuilt ar archive (aes, asn1parse, bignum, ctr_drbg, drm_*, entropy, md, oid, rsa, sha256, chipid_op objects) present in the public trees; its Makefile line \"#obj-y += libcidop\" is commented out, so the release build linked it and the public config does not.",
+      "sha256": "8108252d5c67d9ab822fab297348b27e5e1a1fc44a33ccf686c57b6bab70e4bc"
+    },
+    "older_actions_bsp": {
+      "count": 6,
+      "names": [
+        "atc260x_poll_hard_onoff",
+        "hard_key_get_state",
+        "proc_upgrade_flag_init",
+        "upgrade_flag_proc_open",
+        "upgrade_flag_proc_show",
+        "upgrade_flag_proc_write"
+      ],
+      "note": "Present in arch/arm/mach-leopard/atc260x of the ATM7051 3.4 kernel: power-key polling and upgrade-flag proc code carried forward from an older Actions BSP."
+    }
+  },
+  "unexplained": {
+    "count": 96,
+    "groups": {
+      "acm": [
+        "acmmod_exit",
+        "acmmod_init"
+      ],
+      "board-allen": [
+        "allen_adjust_volume",
+        "allen_led_poll",
+        "asoc_earphone_poll",
+        "asoc_spi_cs",
+        "audio_input_mode_get",
+        "audio_input_mode_put",
+        "set_my_charg_led",
+        "show_led_test",
+        "show_moto",
+        "store_led_test",
+        "store_moto"
+      ],
+      "power-alarm": [
+        "atc260x_wakeup_flag_attr_shown",
+        "onoff_gpio_getval",
+        "owl_force_shutdown",
+        "owl_get_alarm_flag",
+        "owl_set_alarm_flag"
+      ],
+      "usb-gadget-descriptor-sysfs": [
+        "bDeviceClass_show",
+        "bDeviceClass_store",
+        "bDeviceProtocol_show",
+        "bDeviceProtocol_store",
+        "bDeviceSubClass_show",
+        "bDeviceSubClass_store",
+        "iManufacturer_show",
+        "iManufacturer_store",
+        "iProduct_show",
+        "iProduct_store",
+        "iSerial_show",
+        "iSerial_store",
+        "idProduct_show",
+        "idProduct_store",
+        "idVendor_show",
+        "idVendor_store"
+      ],
+      "other": [
+        "bcdDevice_show",
+        "bcdDevice_store",
+        "cma_activate_area_already_reaserved",
+        "hardkey_proc_open",
+        "hardkey_proc_show",
+        "init_work_handler",
+        "owl_get_dsi_gamma_val",
+        "read_current_uref",
+        "read_current_uref2"
+      ],
+      "bluetooth-pcm-audio": [
+        "bluetooth_pcm_audio_hw_params",
+        "bluetooth_pcm_audio_prepare",
+        "bluetooth_pcm_audio_set_dai_fmt",
+        "bluetooth_pcm_audio_set_dai_sysclk",
+        "bluetooth_pcm_dai_hw_free",
+        "bluetooth_pcm_exit",
+        "bluetooth_pcm_init",
+        "bluetooth_pcm_probe",
+        "bluetooth_pcm_remove",
+        "bta_test_init",
+        "bta_test_waiting_turn_over",
+        "codec_bluetooth_pcm_probe",
+        "codec_bluetooth_pcm_remove",
+        "hci_dev_do_open"
+      ],
+      "dwc3-overflow": [
+        "count_sg_urb_need_trbs",
+        "dwc3_actions_shutdown",
+        "dwc3_overflow_handler",
+        "dwc3_overflow_work_handler",
+        "stop_dwc3_overflow_work",
+        "stop_usb_status_delaywork"
+      ],
+      "drm-key": [
+        "drm_bytes_xor",
+        "drm_crc32",
+        "drm_enlarge_devicekey",
+        "drm_get_devicekey",
+        "drm_get_rootkey",
+        "drm_init_version"
+      ],
+      "jtag": [
+        "jtag_handler",
+        "owl_jtag_init",
+        "sysrq_change_jtag"
+      ],
+      "usb-stub-gadget": [
+        "stub_bulk_in_complete",
+        "stub_bulk_out_complete",
+        "stub_do_read_common",
+        "stub_do_write_common",
+        "stub_function_bind",
+        "stub_function_bind_config",
+        "stub_function_cleanup",
+        "stub_function_disable",
+        "stub_function_init",
+        "stub_function_set_alt",
+        "stub_function_setup",
+        "stub_function_unbind",
+        "stub_ioctl",
+        "stub_open",
+        "stub_read",
+        "stub_release",
+        "stub_req_get",
+        "stub_req_put",
+        "stub_request_free",
+        "stub_request_new",
+        "stub_send_ack",
+        "stub_start_in_transfer",
+        "stub_start_out_transfer",
+        "stub_write"
+      ]
+    }
+  },
+  "corroborating_strings": [
+    "release kernel debug messages prefixed \"allen--\" (e.g. \"allen--<%s> otg insert\", \"allen-- Entry SD/MMC module error reset\")",
+    "release U-Boot bootargs fragment \"allenS500=1\", absent from the pinned u-boot_s500 source"
+  ],
+  "conclusion": "The Koriki v1.0 kernel is built from a product BSP: the public Actions S500 3.10 tree plus the libcidop prebuilt archive, older Actions BSP code and about 96 functions of device-maker code (USB stub/upgrade gadget, gadget descriptor sysfs, Bluetooth PCM audio, dwc3 overflow handling, LED/motor/audio board code tagged \"allen\", JTAG switching, alarm/forced-shutdown). That product tree was not found in any public repository searched. Koriki 1.0.3.1 build #40 comes from the same product tree with a different configuration. The closest public approximation is MiaUI's reconstruction, which recovers 29 of the 96 functions.",
+  "limitations": "Absence from searched trees is not proof the tree is unpublished elsewhere. drm_* names in the unexplained set may come from libcidop members whose local symbols are stripped. Symbol names only; behaviour was not analysed.",
+  "koriki_1031_kernel": {
+    "build": "#40 Dec 13 2023",
+    "comparison_with_v1_0_build_75": {
+      "common": 47104,
+      "a_only": 819,
+      "b_only": 658,
+      "compared": 33178,
+      "identical": 33098,
+      "pct": 99.8
+    },
+    "absent122_present": 122,
+    "unexplained96_present": 96
+  },
+  "miaui_reconstruction": {
+    "patches": 9,
+    "config_sha256": "464bf96ae6b4e1fd3c28c3cdf0a03bc035ffbe0bdac3d98f8fe7e016d5a912d7",
+    "compiler": "Ubuntu GCC 4.9.3 (their script names Linaro 4.9.4)",
+    "result": {
+      "syms": 74396,
+      "common": 46945,
+      "release_only": 978,
+      "build_only": 3642,
+      "compared": 33093,
+      "identical": 29229,
+      "pct": 88.3,
+      "of_122_present": 29,
+      "of_96_present": 29,
+      "recovered_96": [
+        "acmmod_exit",
+        "acmmod_init",
+        "allen_adjust_volume",
+        "allen_led_poll",
+        "asoc_earphone_poll",
+        "bDeviceClass_show",
+        "bDeviceClass_store",
+        "bDeviceProtocol_show",
+        "bDeviceProtocol_store",
+        "bDeviceSubClass_show",
+        "bDeviceSubClass_store",
+        "bcdDevice_show",
+        "bcdDevice_store",
+        "iManufacturer_show",
+        "iManufacturer_store",
+        "iProduct_show",
+        "iProduct_store",
+        "iSerial_show",
+        "iSerial_store",
+        "idProduct_show",
+        "idProduct_store",
+        "idVendor_show",
+        "idVendor_store",
+        "init_work_handler",
+        "owl_force_shutdown",
+        "show_led_test",
+        "show_moto",
+        "store_led_test",
+        "store_moto"
+      ]
+    },
+    "defconfig_baseline": {
+      "syms": 72480,
+      "common": 46690,
+      "release_only": 1233,
+      "build_only": 1561,
+      "compared": 33008,
+      "identical": 29122,
+      "pct": 88.2,
+      "of_122_present": 0,
+      "of_96_present": 0,
+      "recovered_96": []
+    }
+  }
+}

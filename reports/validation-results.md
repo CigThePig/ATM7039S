@@ -19,3 +19,16 @@ Executed locally on 2026-11-22 for edition 0.2. No target hardware test ran.
 One pre-existing GPIO register alias and six shared/overlapping DT resource pairs remain as warnings. No new reset/access/width value was promoted into target register semantics. Related-chip values are labelled separately. Successful CI and static checks cannot establish silicon behavior or authorize live MMIO.
 
 The source/build command details are in [tools](../tools/README.md), [firmware analysis](firmware-analysis.md) and [build reproduction](build-reproduction.md). CI installs pinned optional parser dependencies and exercises generated synthetic fixtures without downloading firmware or accessing hardware. The delivered PR's Actions results are checked separately; this report does not label a local pass as a remote pass.
+
+## 2026-11-23 additions
+
+| Check | Result | Meaning |
+|---|---|---|
+| Unit suite | 102 passed | Adds capture script/parser, predictions, redaction, observation-ledger and kallsyms tests |
+| Koriki v1.0 re-acquisition | Download and expanded hashes match `acquisitions.json` | Same bytes as the original analysis |
+| Manifest regeneration | Existing disk and rootfs component records reproduced exactly; nine selected files added (init scripts, SimpleMenu config, boot config) | Extends, does not alter, earlier evidence |
+| Source audit, vendor kernel and U-Boot | All hashes and cited line ranges valid, including the two new MMC driver files | Other sources not re-cloned in this run |
+| Capture script | Runs under dash and under BusyBox-only applets; parser reports zero integrity errors on the resulting host capture | Script portability, not target behaviour |
+| Kernel build with GCC 4.9.3 | Pass; zImage, 61 modules, DTBs; not booted | Unmodified source builds; not byte-identical to release (BUILD-001) |
+| kallsyms extractor | All 72,480 build symbols match System.map | Validates recovered release symbol tables (FW-008, FW-009) |
+| Alpha 0.1 kernel rebuild (GCC 7.3.0) | Same Image size; 99.92% bytes identical; 128 code bytes differ | Public-source reference reproduced short of byte identity (BUILD-002) |

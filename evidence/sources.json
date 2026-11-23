@@ -178,5 +178,158 @@
     "examined": "2026-11-22",
     "license_status": "Toolchain not redistributed",
     "scope": "research-host cross compilation; not firmware evidence"
+  },
+  {
+    "id": "koriki-releases",
+    "url": "https://github.com/rg35xx-cfw/Koriki/releases",
+    "revision": "unpinned web page retrieved 2026-11-23",
+    "type": "release-index",
+    "examined": "2026-11-23",
+    "license_status": "Release notes read; no assets downloaded in this step",
+    "scope": "original-RG35XX CFW release history; firmware selection"
+  },
+  {
+    "id": "knulli-rg35xx",
+    "url": "https://knulli.org/devices/anbernic/rg35xx/",
+    "revision": "unpinned web page retrieved 2026-11-23",
+    "type": "project-documentation",
+    "examined": "2026-11-23",
+    "license_status": "Documentation read only",
+    "scope": "KNULLI support status for original RG35XX; firmware selection"
+  },
+  {
+    "id": "garlic-links",
+    "url": "https://www.black-seraph.com/",
+    "revision": "unpinned web page retrieved 2026-11-23",
+    "type": "project-documentation",
+    "examined": "2026-11-23",
+    "license_status": "Link page read only; GarlicOS 1.4.9 post not reachable (HTTP 403)",
+    "scope": "GarlicOS 1.4.9 distribution route; firmware selection"
+  },
+  {
+    "id": "anbernic-download",
+    "url": "https://win.anbernic.com/download/270.html",
+    "revision": "unpinned web page retrieved 2026-11-23",
+    "type": "vendor-download-page",
+    "examined": "2026-11-23",
+    "license_status": "Page read only; firmware not downloaded",
+    "scope": "Stock RG35XX firmware distribution; firmware selection"
+  },
+  {
+    "id": "minui-legacy",
+    "url": "https://github.com/shauninman/MinUI-Legacy-RG35XX/releases",
+    "revision": "unpinned web page retrieved 2026-11-23",
+    "type": "release-index",
+    "examined": "2026-11-23",
+    "license_status": "Release notes read only",
+    "scope": "MinUI original-RG35XX status; firmware selection"
+  },
+  {
+    "id": "ubuntu-gcc49-cross",
+    "url": "https://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-4.9-cross/",
+    "revision": "gcc-4.9-arm-linux-gnueabihf 4.9.3-13ubuntu2cross1 and binutils 2.26.1-1ubuntu1~16.04.8; package SHA-256 in evidence/build/kernel-gcc493.json",
+    "type": "host-toolchain",
+    "examined": "2026-11-23",
+    "license_status": "Toolchain not redistributed",
+    "scope": "research-host cross compilation; not firmware evidence"
+  },
+  {
+    "id": "lemaker-linux-actions",
+    "url": "https://github.com/LeMaker/linux-actions",
+    "revision": "branch heads in evidence/build/vendor-tree-search.json",
+    "type": "source-repository",
+    "examined": "2026-11-23",
+    "license_status": "GPL kernel source; searched only, nothing imported",
+    "scope": "Actions S500 3.10 kernel (LeMaker Guitar); vendor-tree search"
+  },
+  {
+    "id": "lemaker-android-actions",
+    "url": "https://github.com/LeMaker/android-actions",
+    "revision": "91fd670a2a9f13dcd5c1a10c3413cbad6b386d80 (kernel/ only)",
+    "type": "source-repository",
+    "examined": "2026-11-23",
+    "license_status": "GPL kernel source; searched only, nothing imported",
+    "scope": "Actions S500 Android BSP; vendor-tree search"
+  },
+  {
+    "id": "xapp-le-kernel",
+    "url": "https://github.com/xapp-le/kernel",
+    "revision": "branch heads in evidence/build/vendor-tree-search.json",
+    "type": "source-repository",
+    "examined": "2026-11-23",
+    "license_status": "GPL kernel source; searched only, nothing imported",
+    "scope": "Actions S500 SDK kernel named as origin of linux-yocto S500 patches; vendor-tree search"
+  },
+  {
+    "id": "sparky-test",
+    "url": "https://github.com/sparky-sbc/sparky-test",
+    "revision": "bca02f75a18619905369835523808411713b1451 (kernel-RT/kernel/ only)",
+    "type": "source-repository",
+    "examined": "2026-11-23",
+    "license_status": "GPL kernel source; searched only, nothing imported",
+    "scope": "S500 SBC kernel copy; vendor-tree search"
+  },
+  {
+    "id": "atm7051-kernel",
+    "url": "https://github.com/ivoszbg/linux-atm7051-3.4",
+    "revision": "02c6a503e12ab1087aceffcaaf0ab67b85b5f431",
+    "type": "source-repository",
+    "examined": "2026-11-23",
+    "license_status": "GPL kernel source; searched only, nothing imported",
+    "scope": "Older Actions ATM7051 3.4 BSP; vendor-tree search"
+  },
+  {
+    "id": "miaui-gpu-rg35xx",
+    "url": "https://github.com/miaui-cfw/MiaUI-GPU-RG35XX",
+    "revision": "54342da5b43c14afd177f2deea5771459aea7efb (src/kernel-rg35xx/)",
+    "type": "source-repository",
+    "examined": "2026-11-23",
+    "license_status": "Kernel patches and notes read; not imported",
+    "scope": "Independent RG35XX kernel reconstruction: pinned s500_kernel plus patches recovered from the running vendor kernel; project-reported boot notes"
+  },
+  {
+    "id": "gpu-dossier",
+    "url": "https://github.com/CigThePig/ATM7039S",
+    "revision": "Owner-supplied research dossier \"Original RG35XX GPU Enablement and ATM7039S Reverse Engineering\", 22 Nov 2026; not committed",
+    "type": "secondary-research",
+    "examined": "2026-11-23",
+    "license_status": "Owner-provided document; summarised only",
+    "scope": "Leads for GPU history, MiaUI and early Batocera releases; not primary evidence"
+  },
+  {
+    "id": "koriki-1031-release",
+    "url": "https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_batocera_rg35xx_20240105",
+    "revision": "koriki_batocera_rg35xx_20240105; exact content hashes in evidence/firmware/acquisitions.json",
+    "type": "firmware-release",
+    "examined": "2026-11-23",
+    "license_status": "Redistribution not established; metadata only; no firmware committed",
+    "scope": "Public original-RG35XX Koriki 1.0.3.1 boot bundle; second comparison kernel"
+  },
+  {
+    "id": "rg35xx-cfw-releases",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/releases",
+    "revision": "Release assets from rg35xx_retroarch_alpha_v0.1 to rg35xx_batocera_beta_v0.8.1; exact hashes in evidence/firmware/acquisitions.json",
+    "type": "firmware-release",
+    "examined": "2026-11-23",
+    "license_status": "Redistribution not established; metadata only; no firmware committed",
+    "scope": "Early original-RG35XX RetroArch/Batocera images (March-May 2023): kernel, DTB, U-Boot lineage"
+  },
+  {
+    "id": "buildroot-s500",
+    "url": "https://github.com/rg35xx-cfw/buildroot_s500",
+    "revision": "master 8cf4a7d6e8ae1843253b950de219eeb73e938874; rg35xx 126e6a033b770d8f12eaf1d6af21c63564c24d37",
+    "type": "source-repository",
+    "examined": "2026-11-23",
+    "license_status": "GPL build recipe; kernel patches used for a local build, not imported",
+    "scope": "Buildroot recipe and toolchain origin of the RetroArch alpha 0.1 / Batocera Lite alpha 0.2 kernels"
+  },
+  {
+    "id": "bootlin-gcc73",
+    "url": "https://toolchains.bootlin.com/downloads/releases/toolchains/armv7-eabihf/tarballs/armv7-eabihf--glibc--stable-2018.11-1.tar.bz2",
+    "revision": "armv7-eabihf--glibc--stable-2018.11-1; SHA-256 c8d4d3ca70442652e0e72f57ae6e878375640508f1e08de3152f63414c43b2e4",
+    "type": "host-toolchain",
+    "examined": "2026-11-23",
+    "license_status": "Toolchain not redistributed",
+    "scope": "research-host cross compilation (GCC 7.3.0, binutils 2.29.1); not firmware evidence"
   }
 ]

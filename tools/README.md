@@ -69,6 +69,17 @@ For the mainline S500 comparison, prepend `/dts-v1/;` to the pinned `arch/arm/bo
 
 Malformed/truncated FDTs, invalid reg geometry, unsupported flattened DTS syntax, duplicate properties, hash mismatches and stale generated files fail explicitly. Unit tests generate representative binary fixtures in memory, including valid/invalid uImages, FDTs and MBR entries, and also check differences against the real extracted board datasets. `unittest discover -s tests -v` and CI execute the tests without network or hardware access.
 
+## Runtime capture tools
+
+| Tool | Purpose | Deliberate limits |
+|---|---|---|
+| `device/capture.sh [PARENT]` | POSIX/BusyBox read-only collector for test V3; `--list` prints the allowlist | Fixed allowlist only; writes only its own output folder; no `/dev/mem`, I2C, power_supply, debugfs or writes |
+| `runtime_capture.py CAPTURE OUT` | Verifies item hashes, script version and allowlist; parses CPU/memory/storage/display/config/FDT; links kernel and DTB to catalogued firmware; CPU outcome hint | Hints are not findings; a capture describes one boot of one board |
+| `evidence/predictions.json` | Pre-registered outcomes for each V3 question; the parser may only return a declared outcome | Outcomes are hints for review, not findings |
+| `validate_observations.py` | JSON Schemas for sources/findings/contradictions/observations; observation-to-firmware/tool/summary links; hardware findings must cite observations | Called by `research.py validate`; checks records, not the truth of observations |
+
+Tests run the real script against a synthetic export tree (`ATM_CAPTURE_ROOT`) and check tampering, allowlist drift, unknown script versions, prediction outcomes, serial-number/MAC redaction and ledger links. See the [operator guide](../device/README.md).
+
 ## Full-image continuation tools
 
 See [firmware reproduction](../reports/firmware-analysis.md) for exact commands and pinned public inputs. Install optional dependencies in an isolated venv with `requirements-firmware.txt`; ordinary evidence validation and unit tests do not require network or firmware downloads. CI installs these dependencies to exercise a synthetic FAT image as well.
@@ -80,6 +91,7 @@ See [firmware reproduction](../reports/firmware-analysis.md) for exact commands 
 | `rootfs_catalogue.py IMAGE PLAN OUT [--extract DIR]` | Hash nested ext4 rootfs, selected regular inodes, ELF metadata | No mount, symlink output, recursive extraction, native execution or library loading |
 | `boot_payloads.py COMPONENT OUT` | Bounded internal gzip identification, expanded hashes/version strings | 64 MiB per stream, max 256 candidates; no claimed behavior from strings |
 | `arm_refs.py COMPONENT OUT --start N --end N` | A32 direct branches and PC-relative word literals | Offset coordinates; not a disassembler or code/data classifier; no Thumb support |
+| `kallsyms.py IMAGE OUT [--symbols FILE]` | Recover the 3.x absolute-address kallsyms table from a decompressed ARM Image; summary with name-set hash | Heuristic table location; validated against a build System.map; no Thumb/relative-base layouts; not a disassembler |
 | `validate_firmware.py` | Binary finding hash/range links and manifest integrity | Checks retained evidence, not hardware or availability of external inputs |
 
 The S500 CMU comparison fields are curated in `comparisons/cmu-fields.json` and applied by build_dataset.py without promoting target register reset/access values. Regeneration now preserves extra curated source/file provenance records; the previous builder would have silently dropped new records outside its fixed extraction list. This correction has a regression test.
