@@ -151,5 +151,32 @@
     "examined": "2026-11-22",
     "license_status": "All rights reserved; referenced, not redistributed",
     "scope": "S500 only; not authenticated as an ATM7039S manual"
+  },
+  {
+    "id": "koriki-v1.0-release",
+    "url": "https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0",
+    "revision": "koriki_rg35xx_v1.0; exact content hashes in evidence/firmware/acquisitions.json",
+    "type": "firmware-release",
+    "examined": "2026-11-22",
+    "license_status": "Redistribution not established; metadata only; no firmware committed",
+    "scope": "Public original-RG35XX Koriki v1.0 release bytes; not stock/Garlic or measured silicon"
+  },
+  {
+    "id": "koriki-v6c-release",
+    "url": "https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v0.9.1",
+    "revision": "koriki_rg35xx_v0.9.1; exact content hashes in evidence/firmware/acquisitions.json",
+    "type": "firmware-release",
+    "examined": "2026-11-22",
+    "license_status": "Redistribution not established; metadata only; no firmware committed",
+    "scope": "Public original-RG35XX V6C boot-fix archive; version-specific artifacts"
+  },
+  {
+    "id": "arm-toolchain8",
+    "url": "https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf.tar.xz",
+    "revision": "GNU Arm 8.3-2019.03; archive SHA-256 d4f6480ecaa99e977e3833cc8a8e1263f9eecd1ce2d022bb548a24c4f32670f5",
+    "type": "host-toolchain",
+    "examined": "2026-11-22",
+    "license_status": "Toolchain not redistributed",
+    "scope": "research-host cross compilation; not firmware evidence"
   }
 ]

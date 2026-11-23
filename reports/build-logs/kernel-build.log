@@ -1,0 +1,101 @@
+  GEN     <WORK>/kernel-build/Makefile
+scripts/kconfig/conf --silentoldconfig Kconfig
+drivers/mmc/host/Kconfig:397:warning: leading whitespace ignored
+  GEN     <WORK>/kernel-build/Makefile
+  WRAP    arch/arm/include/generated/asm/auxvec.h
+  WRAP    arch/arm/include/generated/asm/bitsperlong.h
+  WRAP    arch/arm/include/generated/asm/cputime.h
+  WRAP    arch/arm/include/generated/asm/current.h
+  WRAP    arch/arm/include/generated/asm/emergency-restart.h
+  WRAP    arch/arm/include/generated/asm/errno.h
+  WRAP    arch/arm/include/generated/asm/exec.h
+  WRAP    arch/arm/include/generated/asm/ioctl.h
+  WRAP    arch/arm/include/generated/asm/ipcbuf.h
+  WRAP    arch/arm/include/generated/asm/irq_regs.h
+  WRAP    arch/arm/include/generated/asm/kdebug.h
+  WRAP    arch/arm/include/generated/asm/local.h
+  WRAP    arch/arm/include/generated/asm/local64.h
+  WRAP    arch/arm/include/generated/asm/msgbuf.h
+  WRAP    arch/arm/include/generated/asm/param.h
+  WRAP    arch/arm/include/generated/asm/parport.h
+  WRAP    arch/arm/include/generated/asm/resource.h
+  WRAP    arch/arm/include/generated/asm/sections.h
+  WRAP    arch/arm/include/generated/asm/poll.h
+  WRAP    arch/arm/include/generated/asm/segment.h
+  WRAP    arch/arm/include/generated/asm/sembuf.h
+  WRAP    arch/arm/include/generated/asm/serial.h
+  WRAP    arch/arm/include/generated/asm/shmbuf.h
+  WRAP    arch/arm/include/generated/asm/siginfo.h
+  WRAP    arch/arm/include/generated/asm/sizes.h
+  WRAP    arch/arm/include/generated/asm/socket.h
+  CHK     include/generated/uapi/linux/version.h
+  WRAP    arch/arm/include/generated/asm/sockios.h
+  WRAP    arch/arm/include/generated/asm/termbits.h
+  WRAP    arch/arm/include/generated/asm/termios.h
+  WRAP    arch/arm/include/generated/asm/timex.h
+  WRAP    arch/arm/include/generated/asm/trace_clock.h
+  WRAP    arch/arm/include/generated/asm/types.h
+  UPD     include/generated/uapi/linux/version.h
+  WRAP    arch/arm/include/generated/asm/unaligned.h
+  CHK     include/generated/utsrelease.h
+  UPD     include/generated/utsrelease.h
+  Using <WORK>/kernel-input as source for kernel
+  HOSTCC  scripts/kallsyms
+  HOSTCC  scripts/dtc/checks.o
+  CC      scripts/mod/empty.o
+  HOSTCC  scripts/selinux/genheaders/genheaders
+  HOSTCC  scripts/mod/mk_elfconfig
+  CC      scripts/mod/devicetable-offsets.s
+In file included from <WORK>/kernel-input/include/linux/compiler.h:54,
+                 from <WORK>/kernel-input/include/uapi/linux/stddef.h:1,
+                 from <WORK>/kernel-input/include/linux/stddef.h:4,
+                 from <WORK>/kernel-input/include/uapi/linux/posix_types.h:4,
+                 from <WORK>/kernel-input/include/uapi/linux/types.h:13,
+                 from <WORK>/kernel-input/include/linux/types.h:5,
+                 from <WORK>/kernel-input/include/linux/mod_devicetable.h:11,
+                 from <WORK>/kernel-input/scripts/mod/devicetable-offsets.c:2:
+<WORK>/kernel-input/include/linux/compiler-gcc.h:103:1: fatal error: linux/compiler-gcc8.h: No such file or directory
+ #include gcc_header(__GNUC__)
+ ^~~~
+compilation terminated.
+make[3]: *** [<WORK>/kernel-input/scripts/mod/Makefile:35: scripts/mod/devicetable-offsets.s] Error 1
+make[2]: *** [<WORK>/kernel-input/scripts/Makefile.build:455: scripts/mod] Error 2
+make[2]: *** Waiting for unfinished jobs....
+  Generating include/generated/mach-types.h
+  HOSTCC  scripts/selinux/mdp/mdp
+  HOSTCC  scripts/dtc/data.o
+  CC      kernel/bounds.s
+  SHIPPED scripts/dtc/dtc-lexer.lex.c
+In file included from <WORK>/kernel-input/include/linux/compiler.h:54,
+                 from <WORK>/kernel-input/include/uapi/linux/stddef.h:1,
+                 from <WORK>/kernel-input/include/linux/stddef.h:4,
+                 from <WORK>/kernel-input/include/uapi/linux/posix_types.h:4,
+                 from <WORK>/kernel-input/include/uapi/linux/types.h:13,
+                 from <WORK>/kernel-input/include/linux/types.h:5,
+                 from <WORK>/kernel-input/include/linux/page-flags.h:8,
+                 from <WORK>/kernel-input/kernel/bounds.c:9:
+<WORK>/kernel-input/include/linux/compiler-gcc.h:103:1: fatal error: linux/compiler-gcc8.h: No such file or directory
+ #include gcc_header(__GNUC__)
+ ^~~~
+compilation terminated.
+  SHIPPED scripts/dtc/dtc-parser.tab.h
+make[2]: *** [<WORK>/kernel-input/./Kbuild:36: kernel/bounds.s] Error 1
+make[1]: *** [<WORK>/kernel-input/Makefile:851: prepare0] Error 2
+make[1]: *** Waiting for unfinished jobs....
+  SHIPPED scripts/dtc/dtc-parser.tab.c
+  HOSTCC  scripts/dtc/dtc.o
+  HOSTCC  scripts/dtc/flattree.o
+  HOSTCC  scripts/dtc/fstree.o
+  HOSTCC  scripts/dtc/livetree.o
+  HOSTCC  scripts/dtc/srcpos.o
+  HOSTCC  scripts/dtc/treesource.o
+  HOSTCC  scripts/dtc/util.o
+  HOSTCC  scripts/dtc/dtc-lexer.lex.o
+  HOSTCC  scripts/dtc/dtc-parser.tab.o
+  HOSTLD  scripts/dtc/dtc
+/usr/bin/ld: scripts/dtc/dtc-parser.tab.o:(.bss+0x50): multiple definition of `yylloc'; scripts/dtc/dtc-lexer.lex.o:(.bss+0x0): first defined here
+collect2: error: ld returned 1 exit status
+make[3]: *** [scripts/Makefile.host:127: scripts/dtc/dtc] Error 1
+make[2]: *** [<WORK>/kernel-input/scripts/Makefile.build:455: scripts/dtc] Error 2
+make[1]: *** [<WORK>/kernel-input/Makefile:534: scripts] Error 2
+make: *** [Makefile:131: sub-make] Error 2

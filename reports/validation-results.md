@@ -1,29 +1,21 @@
 # Validation results
 
-Executed locally on 2026-11-22. These are software/data checks; no target hardware test ran.
+Executed locally on 2026-11-22 for edition 0.2. No target hardware test ran.
 
-| Check | Result | Interpretation |
+| Check | Result | Meaning |
 |---|---|---|
-| Unit tests | 40 passed | Parsers, masks, malformed inputs, CRCs, bounds, source auditing, confidence and real extracted artifact comparisons |
-| Canonical schema/evidence validation | Pass, zero errors | Model shape, source identities and scope checks |
-| Generated reference freshness | Pass | Markdown/CSV/C constants derive from canonical JSON |
-| Source-file audit | 65 files / 2,198 references; zero errors | Exact SHA-256/byte size and cited path/line bounds |
-| Independent DTB decoding | Pass, zero normalized property differences | Vendor DTC versus custom decoder on the published GPU DTB |
-| Gist versus GPU DTB comparison | Nine changed nodes | Repeatable artifact differences, not independent hardware validation |
-| S500 numeric-resource comparison | 26 matching base pairs retained | Includes auxiliary resources and differing IRQs/sizes; no blanket compatibility claim |
-| Register catalogue | 51 DT tuples + 72 candidate base groups, 1,760 register symbols | Source coverage only; 260 S500-scoped bit-mask observations added where register offsets match |
-| HTML generation | Local edition builds | No website deployment; Mermaid source preserved in standalone HTML |
+| Unit suite with optional firmware dependencies | 66 passed | Existing parsers plus acquisition/bounds/FAT/gzip/A32/provenance/binary-evidence tests |
+| Canonical schema and evidence checks | Pass, zero errors | Includes new binary component hash/range links |
+| Register generation `--check` | Pass | Canonical register Markdown/CSV/C candidates are current |
+| Pinned source audit | 76 files / 2,244 references, zero errors | Byte hashes/sizes and exact cited source line bounds |
+| Full source dataset regeneration | Pass | Curated extra provenance and ten CMU fields survive rebuild |
+| Independent release DTB decoding | Zero normalized differences | Vendor DTC versus custom decoder; not target behavior |
+| GNU readelf versus pyelftools | Selected module metadata and library dependencies agree | Static ELF evidence only |
+| A32 reference inventory | Selected literal/branch references agree with Capstone inspection | No complete function/control-flow or physical-map proof |
+| Firmware gzip/image/component hashes | Verified | Exact identity of acquired release bytes; no manufacturer signature claim |
+| Kernel/U-Boot builds | Failed, logs retained | Host DTC/compiler compatibility blockers; no final boot outputs |
+| HTML generation | Pass | Searchable local reference; no website deployed |
 
-The independent DTC was compiled from the vendor kernel's shipped parser/lexer with host GCC, not from newly invented DTS interpretation rules. Exact commands are in `tools/README.md`. The mainline S500 comparison FDT was synthesized from the pinned upstream DTSI and is not a bootable RG35XX board description.
+One pre-existing GPIO register alias and six shared/overlapping DT resource pairs remain as warnings. No new reset/access/width value was promoted into target register semantics. Related-chip values are labelled separately. Successful CI and static checks cannot establish silicon behavior or authorize live MMIO.
 
-## Expected warnings retained
-
-The consistency checker reports one register alias at GPIO block offset `0x7c` (`PWM_CTL5` / `SPEED_SENSOR_CTL`) and six overlapping DT resource pairs. They involve shared CMU/GPIO/DMA resources referenced by NAND/watchdog/ISP and shared HDMI/CEC resources. Overlap is not automatically an error: several drivers may reference portions of one block. These warnings remain visible rather than being suppressed or resolved by guessing.
-
-No reset values or target electrical limits were filled from convention. Related-chip registers retain inferred applicability even when exact source extraction is verified. Passing tests cannot establish physical ATM7039S behavior, a valid boot sequence or safe arbitrary MMIO access.
-
-## Reproducibility checks
-
-The pinned-source downloader, independent source audit and source-derived dataset builder are included. The maintained source manifest records exact byte hashes so changed or substituted inputs fail verification. Repository clones are checked against pinned HEADs; file-only retrievals are checked against the manifest. No untrusted input is executed by these tools.
-
-GitHub Actions runs the offline checks and produces an HTML artifact. Its live status is available in the repository Actions page; a local pass is not presented as a remote CI pass until the corresponding run completes.
+The source/build command details are in [tools](../tools/README.md), [firmware analysis](firmware-analysis.md) and [build reproduction](build-reproduction.md). CI installs pinned optional parser dependencies and exercises generated synthetic fixtures without downloading firmware or accessing hardware. The delivered PR's Actions results are checked separately; this report does not label a local pass as a remote pass.

@@ -1,0 +1,138 @@
+{
+  "format_version": 1,
+  "source": "koriki-v1.0-release",
+  "image_sha256": "d5bd300740884d80faee2fd3ae70d91f86e6a316610c56efc0e1f7545539d6ae",
+  "container_path": "/BOOT/BATOCERA",
+  "components": [
+    {
+      "id": "pvrsrvkm.ko",
+      "path": "/lib/modules/3.10.37/kernel/drivers/gpu/pvr/eurasia_km_linux/pvrsrvkm.ko",
+      "inode": 2569,
+      "size": 258640,
+      "sha256": "578fca81480cc77b419701363a93d9b81e83d894a246423809d04c2d43946df4",
+      "elf": {
+        "machine": "EM_ARM",
+        "elf_class": 32,
+        "little_endian": true,
+        "type": "ET_REL",
+        "modinfo": [
+          "license=Dual MIT/GPL",
+          "author=Imagination Technologies Ltd. <gpl-support@imgtec.com>",
+          "license=Dual MIT/GPL",
+          "author=Imagination Technologies Ltd. <gpl-support@imgtec.com>",
+          "license=Dual MIT/GPL",
+          "author=Imagination Technologies Ltd. <gpl-support@imgtec.com>",
+          "alias=of:N*T*Cactions,atm7039c-gpu*",
+          "depends=drm",
+          "intree=Y",
+          "vermagic=3.10.37 SMP preempt mod_unload ARMv7 p2v8 "
+        ]
+      }
+    },
+    {
+      "id": "libEGL.so.1.14.3625561",
+      "path": "/usr/lib/libEGL.so.1.14.3625561",
+      "inode": 3432,
+      "size": 6360,
+      "sha256": "067d0c32c19ae5768cee4229e3b0142b7226105d038031eb0b836991c32499f4",
+      "elf": {
+        "machine": "EM_ARM",
+        "elf_class": 32,
+        "little_endian": true,
+        "type": "ET_DYN",
+        "needed": [
+          "libIMGegl.so",
+          "libc.so.6"
+        ]
+      }
+    },
+    {
+      "id": "libsrv_um.so.1.14.3625561",
+      "path": "/usr/lib/libsrv_um.so.1.14.3625561",
+      "inode": 4077,
+      "size": 182088,
+      "sha256": "1d31c289c5fca4a5ddc82317a63ae22b516356afb7ccdf7fdac9048b7c78e608",
+      "elf": {
+        "machine": "EM_ARM",
+        "elf_class": 32,
+        "little_endian": true,
+        "type": "ET_DYN",
+        "needed": [
+          "libdl.so.2",
+          "libpthread.so.0",
+          "librt.so.1",
+          "libdrm.so.2",
+          "libgcc_s.so.1",
+          "libc.so.6"
+        ]
+      }
+    },
+    {
+      "id": "libGLESv2.so.1.14.3625561",
+      "path": "/usr/lib/libGLESv2.so.1.14.3625561",
+      "inode": 3446,
+      "size": 408716,
+      "sha256": "533765244971cf68d9de92f9d9eb6adb60bd0335d665231d5a8d56ba041bf326",
+      "elf": {
+        "machine": "EM_ARM",
+        "elf_class": 32,
+        "little_endian": true,
+        "type": "ET_DYN",
+        "needed": [
+          "libsrv_um.so",
+          "libIMGegl.so",
+          "libm.so.6",
+          "libpthread.so.0",
+          "libc.so.6"
+        ]
+      }
+    },
+    {
+      "id": "libglslcompiler.so.1.14.3625561",
+      "path": "/usr/lib/libglslcompiler.so.1.14.3625561",
+      "inode": 3650,
+      "size": 212432,
+      "sha256": "56d31eb497126c6cfd5fd9d0c0fa783dc570d863638989cdf697915c33c2e050",
+      "elf": {
+        "machine": "EM_ARM",
+        "elf_class": 32,
+        "little_endian": true,
+        "type": "ET_DYN",
+        "needed": [
+          "libsrv_um.so",
+          "libusc.so",
+          "libm.so.6",
+          "libc.so.6"
+        ]
+      }
+    },
+    {
+      "id": "libusc.so.1.14.3625561",
+      "path": "/usr/lib/libusc.so.1.14.3625561",
+      "inode": 4117,
+      "size": 975752,
+      "sha256": "460e1e92c4261fd4df28358349e49dd17df5c74ead21e21d04bd7c42c8375d7e",
+      "elf": {
+        "machine": "EM_ARM",
+        "elf_class": 32,
+        "little_endian": true,
+        "type": "ET_DYN",
+        "needed": [
+          "libc.so.6"
+        ]
+      }
+    },
+    {
+      "id": "ddk-install.log",
+      "path": "/etc/powervr_ddk_install.log",
+      "inode": 211,
+      "size": 3198,
+      "sha256": "87206f0a159bfd6a89f6b9dc7e19f500dd17505c65eeafee6d63a4e1d1cdabf7"
+    }
+  ],
+  "container_size": 2411724800,
+  "container_sha256": "0283397edbbc639e92b6107a3771cdd4a1d1f7a0076e1d9461c7062b7f06cfe9",
+  "filesystem": "ext4",
+  "block_size": 4096,
+  "volume_name": "rootfs"
+}

@@ -41,3 +41,7 @@ flowchart TD
 ```
 
 Dependency edges describe engineering prerequisites, not strict Linux probe order. The practical route starts by preserving the proven early boot chain on a separately approved spare card, obtaining logging, then validating standard ARM blocks and conservative clocks before storage/display. Replacing every vendor component at once would remove the ability to localize failures.
+
+## Offline continuation evidence
+
+The [released component catalogue](firmware-analysis.md) now anchors one original-RG35XX release to real boot/kernel/rootfs bytes. [AFI reconstruction](../docs/afi-handoff.md) narrows the early handoff dependency but does not replace DDR initialization. [Build attempts](build-reproduction.md) reached recorded DTC/compiler blockers, with no completed kernel or U-Boot image. Ten S500 gate/reset fields and a UART divisor disagreement now inform the compatibility audit. No new mainline-support claim is made; Linux v6.12 remains the pinned comparison baseline.

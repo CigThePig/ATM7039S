@@ -49,7 +49,7 @@
       "KNULLI-001",
       "BOOT-002"
     ],
-    "status": "Do not label every original RG35XX firmware 4.9.170. Wiki table may be stale or incorrect.",
+    "status": "Do not label every original RG35XX firmware 4.9.170. Wiki table may be stale or incorrect. Acquired Koriki v1.0 header and expanded version string establish 3.10.37 for that release (FW-003).",
     "next_validation": "Read actual image uImage/module version strings; map release to artifact hashes."
   },
   {
@@ -88,5 +88,14 @@
     ],
     "status": "Use exact property values as source observations; do not convert comments to board wiring facts.",
     "next_validation": "Compile reviewed DTS and compare resulting DTB and runtime behavior."
+  },
+  {
+    "id": "C-UART-DIV",
+    "issue": "S500 manual UART0 nine-bit special divisor versus upstream eight-bit generic divider",
+    "findings": [
+      "CLK-005"
+    ],
+    "status": "Unresolved source/document discrepancy; ATM7039S applicability unknown",
+    "next_validation": "Inspect history and vendor serial/clock code; compare existing trustworthy baud-rate observations before any target test."
   }
 ]

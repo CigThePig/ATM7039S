@@ -155,7 +155,10 @@
                         "type": "string"
                       },
                       "scope": {
-                        "const": "S500-source"
+                        "enum": [
+                          "S500-source",
+                          "S500-manual-and-source"
+                        ]
                       },
                       "confidence": {
                         "const": "inferred"
@@ -166,12 +169,30 @@
                         "items": {
                           "type": "object",
                           "required": [
-                            "source",
-                            "path",
-                            "line_start"
+                            "source"
                           ],
-                          "additionalProperties": true
+                          "additionalProperties": true,
+                          "anyOf": [
+                            {
+                              "required": [
+                                "path",
+                                "line_start"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "section"
+                              ]
+                            }
+                          ]
                         }
+                      },
+                      "related_access": {
+                        "const": "read/write"
+                      },
+                      "related_reset": {
+                        "type": "integer",
+                        "minimum": 0
                       }
                     },
                     "additionalProperties": false

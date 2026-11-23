@@ -1,0 +1,250 @@
+{
+  "format_version": 1,
+  "source": "koriki-v1.0-release",
+  "release": "koriki_rg35xx_v1.0 / koriki-rg35xx-v1.0_20231112.img.gz",
+  "size": 4303355904,
+  "sha256": "d5bd300740884d80faee2fd3ae70d91f86e6a316610c56efc0e1f7545539d6ae",
+  "sector_size": 512,
+  "partitions": [
+    {
+      "index": 1,
+      "type": "0xc",
+      "bootable": true,
+      "start_lba": 16384,
+      "sectors": 6291456,
+      "offset": 8388608,
+      "size": 3221225472
+    },
+    {
+      "index": 2,
+      "type": "0x82",
+      "bootable": false,
+      "start_lba": 6307840,
+      "sectors": 1048576,
+      "offset": 3229614080,
+      "size": 536870912
+    },
+    {
+      "index": 3,
+      "type": "0x83",
+      "bootable": false,
+      "start_lba": 7356416,
+      "sectors": 1048576,
+      "offset": 3766484992,
+      "size": 536870912
+    }
+  ],
+  "components": [
+    {
+      "id": "early-region.bin",
+      "location": {
+        "kind": "disk-region",
+        "offset": 2097664,
+        "size": 1048064,
+        "boundary": "analysis window ending at U-Boot; not a proven loader length"
+      },
+      "size": 1048064,
+      "sha256": "904f92f60dbdf653f29b453899c459d1fff4cbe1ae7278ea98fa41cd2a3145df",
+      "mbr": null,
+      "candidates": []
+    },
+    {
+      "id": "u-boot.uimage",
+      "location": {
+        "kind": "disk-region",
+        "offset": 3145728,
+        "size": 726396,
+        "boundary": "format-declared"
+      },
+      "size": 726396,
+      "sha256": "814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd",
+      "mbr": null,
+      "candidates": [
+        {
+          "kind": "fdt",
+          "offset": 248448,
+          "valid": false,
+          "error": "unsupported FDT header"
+        },
+        {
+          "kind": "fdt",
+          "offset": 710112,
+          "valid": true,
+          "total_size": 16284
+        },
+        {
+          "kind": "uImage",
+          "offset": 0,
+          "valid": true,
+          "size": 726332,
+          "timestamp": 1677290965,
+          "os_id": 17,
+          "architecture_id": 2,
+          "image_type_id": 5,
+          "load": "0x5000000",
+          "entry": "0x5000040",
+          "name": "U-Boot 2015.04 for owl board",
+          "compression": 0,
+          "header_crc_ok": true,
+          "payload_crc_ok": true
+        }
+      ]
+    },
+    {
+      "id": "uImage",
+      "location": {
+        "kind": "fat-file",
+        "partition": 1,
+        "path": "/uImage"
+      },
+      "size": 5541472,
+      "sha256": "1b792401ae06904c85441a07f7e3b7fe32e80aef2a85211ef529fefee461f174",
+      "mbr": null,
+      "candidates": [
+        {
+          "kind": "uImage",
+          "offset": 0,
+          "valid": true,
+          "size": 5541408,
+          "timestamp": 1689625432,
+          "os_id": 5,
+          "architecture_id": 2,
+          "image_type_id": 2,
+          "load": "0x8000",
+          "entry": "0x8000",
+          "name": "Linux-3.10.37",
+          "compression": 0,
+          "header_crc_ok": true,
+          "payload_crc_ok": true
+        }
+      ]
+    },
+    {
+      "id": "adb_uImage",
+      "location": {
+        "kind": "fat-file",
+        "partition": 1,
+        "path": "/adb_uImage"
+      },
+      "size": 5540848,
+      "sha256": "cb24b7324dd9f7ae96620f1bdb91d8e0c9abd73c7a5157ef07c7af1368a0be3e",
+      "mbr": null,
+      "candidates": [
+        {
+          "kind": "uImage",
+          "offset": 0,
+          "valid": true,
+          "size": 5540784,
+          "timestamp": 1687372210,
+          "os_id": 5,
+          "architecture_id": 2,
+          "image_type_id": 2,
+          "load": "0x8000",
+          "entry": "0x8000",
+          "name": "Linux-3.10.37",
+          "compression": 0,
+          "header_crc_ok": true,
+          "payload_crc_ok": true
+        }
+      ]
+    },
+    {
+      "id": "kernel.dtb",
+      "location": {
+        "kind": "fat-file",
+        "partition": 1,
+        "path": "/KERNEL.DTB"
+      },
+      "size": 28111,
+      "sha256": "ad4b8b4dd98fbb95bde8854ff0bd9c2e870c3c0c21f27be0122c741f36686f0f",
+      "mbr": null,
+      "candidates": [
+        {
+          "kind": "fdt",
+          "offset": 0,
+          "valid": true,
+          "total_size": 28111
+        }
+      ]
+    },
+    {
+      "id": "2100mAh-gpu.dtb",
+      "location": {
+        "kind": "fat-file",
+        "partition": 1,
+        "path": "/2100mAh-gpu.dtb"
+      },
+      "size": 28059,
+      "sha256": "f56ab6313ddd13c935a3950696927e6dbbda0bc0426c0d579a3b213e969efacd",
+      "mbr": null,
+      "candidates": [
+        {
+          "kind": "fdt",
+          "offset": 0,
+          "valid": true,
+          "total_size": 28059
+        }
+      ]
+    },
+    {
+      "id": "2600mAh-gpu.dtb",
+      "location": {
+        "kind": "fat-file",
+        "partition": 1,
+        "path": "/2600mAh-gpu.dtb"
+      },
+      "size": 28161,
+      "sha256": "7be0ae8b4e3db74d8cf89017271397a36ee46aaa1c5b8ec556dd523de7682856",
+      "mbr": null,
+      "candidates": [
+        {
+          "kind": "fdt",
+          "offset": 0,
+          "valid": true,
+          "total_size": 28161
+        }
+      ]
+    },
+    {
+      "id": "ramdisk.img",
+      "location": {
+        "kind": "fat-file",
+        "partition": 1,
+        "path": "/RAMDISK.IMG"
+      },
+      "size": 3818481,
+      "sha256": "a64bfd03833d7b748dc4ef8121c3c8245c244993c3fccb97880cfa889ff788a9",
+      "mbr": null,
+      "candidates": [
+        {
+          "kind": "uImage",
+          "offset": 0,
+          "valid": true,
+          "size": 3818417,
+          "timestamp": 1699557427,
+          "os_id": 5,
+          "architecture_id": 2,
+          "image_type_id": 3,
+          "load": "0x0",
+          "entry": "0x0",
+          "name": "",
+          "compression": 0,
+          "header_crc_ok": true,
+          "payload_crc_ok": true
+        }
+      ]
+    },
+    {
+      "id": "uEnv.txt",
+      "location": {
+        "kind": "fat-file",
+        "partition": 1,
+        "path": "/uEnv.txt"
+      },
+      "size": 121,
+      "sha256": "1dd2ae2422c8d611a5e3fe3960fc5a37f050152f49bf5ec5160dc989a1297d4a",
+      "mbr": null,
+      "candidates": []
+    }
+  ]
+}

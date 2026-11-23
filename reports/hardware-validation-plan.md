@@ -15,3 +15,17 @@ The owner's working GarlicOS card and failing factory card are excluded. Do not 
 No recovery method is assumed for a bricked boot chain. Physical reset, service modes and recovery straps have not been documented sufficiently to justify risky writes. Read-only runtime observations should precede any separately approved spare-card experiment, and every result must name board revision, image hash and tool version.
 
 Specific unapproved exclusions: arbitrary `/dev/mem` access, `devmem`, register poking, PMIC reads/writes, `i2cdetect`, clock debug writes, regulator controls, destructive storage tests, no-card power experiments, bootloader flashing, opening/soldering or disabling thermal safeguards.
+
+## Questions narrowed by the offline firmware continuation
+
+No new hardware procedure was executed. Prefer existing public logs first.
+
+| Objective | Prerequisites and equipment | Minimal later procedure | Outcomes / effect on reference | Risk / recovery / capture |
+|---|---|---|---|---|
+| CPU discovery versus online policy | Explicit authorization; already booting, identified original RG35XX; existing normal shell/log access | Read cmdline, CPU possible/present/online/offline masks, cpuinfo and saved SMP initialization messages | Separates discovery/software cap from runtime policy; see cpu-topology.md | Low through ordinary exported files; no writes/reboots needed; save raw text with release/board ID |
+| Actual RAM and final handoff | Same; final DT exported by an existing kernel if available | Capture boot memory log, `/proc/iomem`, `/proc/meminfo`, final exported DT | Reconciles AFI size with reservations and usable memory; absence of export leaves gap | Low ordinary-file reads; no arbitrary AFI/MMIO dump; capture full context and hash DT |
+| Loaded GPU software versus bundled artifacts | Same; driver/log interfaces already available | Read module/version metadata and existing renderer logs; do not run new stress tools initially | Determines whether hash-identified bundled module/library set is actually used | Low read-only files; no services IOCTL experiment; preserve logs and loaded module identity |
+| Display ownership/timing | Existing logs/exported framebuffer or DRM metadata | Record current mode, format and memory resources through normal exported interfaces | Narrows panel mode/scanout ownership; cannot establish undocumented electrical timings | Low; do not alter modes/backlight/regulators; record missing interfaces |
+| Storage slot mapping | Existing mount table/sysfs and logs | Read block-device ancestry and MMC probe messages | Connects OS device names to controllers; no assumption based on mmcblk numbering alone | Low file reads; do not mount/write/benchmark cards; save ancestry and exact firmware hash |
+
+These procedures require separate owner authorization even if described as low risk. Existing access is a prerequisite, not permission to enable ADB, alter boot arguments or write another card. No procedure begins with raw MMIO, PMIC, clocks or CPU-online writes. Passive UART work still requires established pads/voltages and separate approval; no opening or soldering is implied.

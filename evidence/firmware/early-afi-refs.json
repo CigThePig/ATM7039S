@@ -1,0 +1,129 @@
+{
+  "size": 1048064,
+  "sha256": "904f92f60dbdf653f29b453899c459d1fff4cbe1ae7278ea98fa41cd2a3145df",
+  "range_start": 25856,
+  "range_end": 26064,
+  "coordinate_space": "component-relative bytes; A32 PC=instruction+8",
+  "references": [
+    {
+      "offset": 25872,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 0,
+      "literal_offset": 25964,
+      "value": 3020292864
+    },
+    {
+      "offset": 25880,
+      "kind": "branch-link",
+      "condition": 14,
+      "target_offset": 44876,
+      "target_in_component": true
+    },
+    {
+      "offset": 25884,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 1,
+      "literal_offset": 25968,
+      "value": 3020337451
+    },
+    {
+      "offset": 25892,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 0,
+      "literal_offset": 25964,
+      "value": 3020292864
+    },
+    {
+      "offset": 25896,
+      "kind": "branch-link",
+      "condition": 14,
+      "target_offset": 44900,
+      "target_in_component": true
+    },
+    {
+      "offset": 25900,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 6,
+      "literal_offset": 25972,
+      "value": 3020292096
+    },
+    {
+      "offset": 25904,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 3,
+      "literal_offset": 25976,
+      "value": 3020359724
+    },
+    {
+      "offset": 25908,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 2,
+      "literal_offset": 25980,
+      "value": 3020359728
+    },
+    {
+      "offset": 25920,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 0,
+      "literal_offset": 25984,
+      "value": 3020359732
+    },
+    {
+      "offset": 25948,
+      "kind": "literal-load",
+      "condition": 14,
+      "register": 0,
+      "literal_offset": 25988,
+      "value": 3020359712
+    },
+    {
+      "offset": 25952,
+      "kind": "branch-link",
+      "condition": 14,
+      "target_offset": 37248,
+      "target_in_component": true
+    },
+    {
+      "offset": 25996,
+      "kind": "branch-link",
+      "condition": 14,
+      "target_offset": 25840,
+      "target_in_component": true
+    },
+    {
+      "offset": 26008,
+      "kind": "branch",
+      "condition": 0,
+      "target_offset": 26052,
+      "target_in_component": true
+    },
+    {
+      "offset": 26020,
+      "kind": "branch",
+      "condition": 0,
+      "target_offset": 26052,
+      "target_in_component": true
+    },
+    {
+      "offset": 26036,
+      "kind": "branch",
+      "condition": 0,
+      "target_offset": 26052,
+      "target_in_component": true
+    },
+    {
+      "offset": 26060,
+      "kind": "branch",
+      "condition": 14,
+      "target_offset": 25856,
+      "target_in_component": true
+    }
+  ]
+}

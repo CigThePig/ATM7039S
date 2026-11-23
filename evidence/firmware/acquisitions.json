@@ -1,0 +1,22 @@
+[
+  {
+    "source": "koriki-v1.0-release",
+    "filename": "koriki-v1.0.img.gz",
+    "url": "https://github.com/rg35xx-cfw/Koriki/releases/download/koriki_rg35xx_v1.0/koriki-rg35xx-v1.0_20231112.img.gz",
+    "size": 935244267,
+    "sha256": "1ec91d71e28bffd865157844f87c4826ed8257c0ef417fd07538c1f7d57377ea",
+    "compression": "gzip",
+    "expanded_filename": "koriki-v1.0.img",
+    "expanded_size": 4303355904,
+    "expanded_sha256": "d5bd300740884d80faee2fd3ae70d91f86e6a316610c56efc0e1f7545539d6ae"
+  },
+  {
+    "source": "koriki-v6c-release",
+    "filename": "bootfix-v6c.zip",
+    "url": "https://github.com/rg35xx-cfw/Koriki/releases/download/koriki_rg35xx_v0.9.1/bootfix_for_revision_v6c.zip",
+    "size": 5522996,
+    "sha256": "d14273634264eaced0daa0f8b2d7160d21c6b0aeb35b8decee5553c5ec35617c",
+    "compression": "zip",
+    "expansion": "Select only the three manifest-listed files using a ZIP reader; never execute."
+  }
+]

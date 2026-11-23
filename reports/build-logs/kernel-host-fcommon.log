@@ -1,0 +1,56 @@
+  GEN     <WORK>/kernel-build/Makefile
+  CHK     include/generated/uapi/linux/version.h
+  CHK     include/generated/utsrelease.h
+  HOSTCC  scripts/basic/fixdep
+  Using <WORK>/kernel-input as source for kernel
+make[2]: 'include/generated/mach-types.h' is up to date.
+  CC      scripts/mod/empty.o
+  HOSTCC  scripts/dtc/checks.o
+  CC      kernel/bounds.s
+  HOSTCC  scripts/selinux/genheaders/genheaders
+In file included from <WORK>/kernel-input/include/linux/compiler.h:54,
+                 from <WORK>/kernel-input/include/uapi/linux/stddef.h:1,
+                 from <WORK>/kernel-input/include/linux/stddef.h:4,
+                 from <WORK>/kernel-input/include/uapi/linux/posix_types.h:4,
+                 from <WORK>/kernel-input/include/uapi/linux/types.h:13,
+                 from <WORK>/kernel-input/include/linux/types.h:5,
+                 from <WORK>/kernel-input/include/linux/page-flags.h:8,
+                 from <WORK>/kernel-input/kernel/bounds.c:9:
+<WORK>/kernel-input/include/linux/compiler-gcc.h:103:1: fatal error: linux/compiler-gcc8.h: No such file or directory
+ #include gcc_header(__GNUC__)
+ ^~~~
+compilation terminated.
+make[2]: *** [<WORK>/kernel-input/./Kbuild:36: kernel/bounds.s] Error 1
+make[1]: *** [<WORK>/kernel-input/Makefile:851: prepare0] Error 2
+make[1]: *** Waiting for unfinished jobs....
+  HOSTCC  scripts/dtc/data.o
+  HOSTCC  scripts/mod/mk_elfconfig
+  CC      scripts/mod/devicetable-offsets.s
+In file included from <WORK>/kernel-input/include/linux/compiler.h:54,
+                 from <WORK>/kernel-input/include/uapi/linux/stddef.h:1,
+                 from <WORK>/kernel-input/include/linux/stddef.h:4,
+                 from <WORK>/kernel-input/include/uapi/linux/posix_types.h:4,
+                 from <WORK>/kernel-input/include/uapi/linux/types.h:13,
+                 from <WORK>/kernel-input/include/linux/types.h:5,
+                 from <WORK>/kernel-input/include/linux/mod_devicetable.h:11,
+                 from <WORK>/kernel-input/scripts/mod/devicetable-offsets.c:2:
+<WORK>/kernel-input/include/linux/compiler-gcc.h:103:1: fatal error: linux/compiler-gcc8.h: No such file or directory
+ #include gcc_header(__GNUC__)
+ ^~~~
+compilation terminated.
+make[3]: *** [<WORK>/kernel-input/scripts/mod/Makefile:35: scripts/mod/devicetable-offsets.s] Error 1
+make[2]: *** [<WORK>/kernel-input/scripts/Makefile.build:455: scripts/mod] Error 2
+make[2]: *** Waiting for unfinished jobs....
+  HOSTCC  scripts/selinux/mdp/mdp
+  HOSTCC  scripts/dtc/dtc-lexer.lex.o
+  HOSTCC  scripts/dtc/dtc-parser.tab.o
+  HOSTCC  scripts/dtc/dtc.o
+  HOSTCC  scripts/dtc/flattree.o
+  HOSTCC  scripts/dtc/fstree.o
+  HOSTCC  scripts/dtc/livetree.o
+  HOSTCC  scripts/dtc/srcpos.o
+  HOSTCC  scripts/dtc/treesource.o
+  HOSTCC  scripts/dtc/util.o
+  HOSTLD  scripts/dtc/dtc
+make[1]: *** [<WORK>/kernel-input/Makefile:534: scripts] Error 2
+make: *** [Makefile:131: sub-make] Error 2

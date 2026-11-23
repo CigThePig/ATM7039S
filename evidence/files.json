@@ -519,5 +519,93 @@
     "raw_url": "https://gzhls.at/blob/ldb/9/a/e/c/e8dd47a7e48102d05772a88a11c09fc5d86e.pdf",
     "view_url": "https://gzhls.at/blob/ldb/9/a/e/c/e8dd47a7e48102d05772a88a11c09fc5d86e.pdf",
     "pages": 329
+  },
+  {
+    "source": "uboot",
+    "path": "arch/arm/include/asm/arch-owl/owl_afi.h",
+    "sha256": "b6b05362c120c50c0e53fa6bbcda846907f579e8698f56609f2c0482108d1aca",
+    "size": 1245,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/u-boot_s500/0a557e37a5274d40bcd357585d4bcd3b73619371/arch/arm/include/asm/arch-owl/owl_afi.h",
+    "view_url": "https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/arch/arm/include/asm/arch-owl/owl_afi.h"
+  },
+  {
+    "source": "uboot",
+    "path": "board/actions/owl/owl_boot_fdt.c",
+    "sha256": "265566b8c00d264d1c43cfa05d9ac1530285193e5de701e97d59c65f4b2da133",
+    "size": 5139,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/u-boot_s500/0a557e37a5274d40bcd357585d4bcd3b73619371/board/actions/owl/owl_boot_fdt.c",
+    "view_url": "https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/board/actions/owl/owl_boot_fdt.c"
+  },
+  {
+    "source": "uboot",
+    "path": "arch/arm/lib/bootm-fdt.c",
+    "sha256": "92bb1aa45c75ba6091fe74bd8d580f379dea3f393d8444d05540dd2fec9855f4",
+    "size": 1029,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/u-boot_s500/0a557e37a5274d40bcd357585d4bcd3b73619371/arch/arm/lib/bootm-fdt.c",
+    "view_url": "https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/arch/arm/lib/bootm-fdt.c"
+  },
+  {
+    "source": "uboot",
+    "path": "arch/arm/lib/board.c",
+    "sha256": "1b706576da0c2fbf6cf0ae3d8fd12b6b8746641f4cc2365e52e15baf2b956451",
+    "size": 17116,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/u-boot_s500/0a557e37a5274d40bcd357585d4bcd3b73619371/arch/arm/lib/board.c",
+    "view_url": "https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/arch/arm/lib/board.c"
+  },
+  {
+    "source": "uboot",
+    "path": "common/image-fdt.c",
+    "sha256": "2f4185617c4d4a64bd4ab9822f6a714209b2c8df912a8844566fc475af832c52",
+    "size": 13635,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/u-boot_s500/0a557e37a5274d40bcd357585d4bcd3b73619371/common/image-fdt.c",
+    "view_url": "https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/common/image-fdt.c"
+  },
+  {
+    "source": "batocera",
+    "path": "board/batocera/actions/rg35xx/post-image.sh",
+    "sha256": "64b41416e584a52f433818069b254cd11165049f575f0e7342c6f98540a9a50c",
+    "size": 727,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/batocera.linux/961d8abcea18017e6c6275c914f81f3b3d72c760/board/batocera/actions/rg35xx/post-image.sh",
+    "view_url": "https://github.com/rg35xx-cfw/batocera.linux/blob/961d8abcea18017e6c6275c914f81f3b3d72c760/board/batocera/actions/rg35xx/post-image.sh"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/gpu/pvr/eurasia_km_linux/services4/include/pvr_bridge.h",
+    "size": 74921,
+    "sha256": "c48cf6e4c5000ccf4edaf530c83905db10881cf288281045fa1efde209d2d902",
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/include/pvr_bridge.h",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/include/pvr_bridge.h"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/gpu/pvr/eurasia_km_linux/services4/include/sgx_bridge.h",
+    "size": 23167,
+    "sha256": "33448ba5d1c3d833e29198fadd4b7b0c1d181dcefdee1201d1da27c7a00b7612",
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/include/sgx_bridge.h",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/include/sgx_bridge.h"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/gpu/pvr/eurasia_km_linux/services4/include/env/linux/pvr_drm_shared.h",
+    "size": 3692,
+    "sha256": "2e43dddbdcb621231b1c49eb4e9942e3daa9b6830c9db6302200cbbc24bfca25",
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/include/env/linux/pvr_drm_shared.h",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/include/env/linux/pvr_drm_shared.h"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/gpu/pvr/eurasia_km_linux/services4/srvkm/env/linux/pvr_bridge_k.c",
+    "size": 14733,
+    "sha256": "03a42511cc467150008a2c35ab61e140a526904056877daee1fc24ede4868a9c",
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/srvkm/env/linux/pvr_bridge_k.c",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/srvkm/env/linux/pvr_bridge_k.c"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/gpu/pvr/eurasia_km_linux/services4/srvkm/env/linux/pvr_drm.h",
+    "size": 7190,
+    "sha256": "77fd294746305d6b29ad711b5338315cff0c9ff81d744dffbaafeaed8d803158",
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/srvkm/env/linux/pvr_drm.h",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/srvkm/env/linux/pvr_drm.h"
   }
 ]

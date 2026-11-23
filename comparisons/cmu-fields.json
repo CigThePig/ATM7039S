@@ -1,0 +1,242 @@
+[
+  {
+    "register": "CMU_DEVCLKEN0",
+    "field": {
+      "name": "S500_GPIO_GATE",
+      "mask": 262144,
+      "meaning": "S500 interface clock gate; target compatibility unverified",
+      "scope": "S500-manual-and-source",
+      "confidence": "inferred",
+      "related_access": "read/write",
+      "related_reset": 1,
+      "evidence": [
+        {
+          "source": "s500-pdf",
+          "section": "PDF page 91; printed page 75; CMU_DEVCLKEN0 / GPIO"
+        },
+        {
+          "source": "linux",
+          "path": "drivers/clk/actions/owl-s500.c",
+          "line_start": 187,
+          "line_end": 187
+        }
+      ]
+    }
+  },
+  {
+    "register": "CMU_DEVCLKEN1",
+    "field": {
+      "name": "S500_UART0_GATE",
+      "mask": 64,
+      "meaning": "S500 interface clock gate; target compatibility unverified",
+      "scope": "S500-manual-and-source",
+      "confidence": "inferred",
+      "related_access": "read/write",
+      "related_reset": 0,
+      "evidence": [
+        {
+          "source": "s500-pdf",
+          "section": "PDF page 92; printed page 76; CMU_DEVCLKEN1 / UART0"
+        },
+        {
+          "source": "linux",
+          "path": "drivers/clk/actions/owl-s500.c",
+          "line_start": 333,
+          "line_end": 333
+        }
+      ]
+    }
+  },
+  {
+    "register": "CMU_DEVCLKEN1",
+    "field": {
+      "name": "S500_UART1_GATE",
+      "mask": 128,
+      "meaning": "S500 interface clock gate; target compatibility unverified",
+      "scope": "S500-manual-and-source",
+      "confidence": "inferred",
+      "related_access": "read/write",
+      "related_reset": 0,
+      "evidence": [
+        {
+          "source": "s500-pdf",
+          "section": "PDF page 92; printed page 76; CMU_DEVCLKEN1 / UART1"
+        },
+        {
+          "source": "linux",
+          "path": "drivers/clk/actions/owl-s500.c",
+          "line_start": 339,
+          "line_end": 339
+        }
+      ]
+    }
+  },
+  {
+    "register": "CMU_DEVCLKEN1",
+    "field": {
+      "name": "S500_UART2_GATE",
+      "mask": 256,
+      "meaning": "S500 interface clock gate; target compatibility unverified",
+      "scope": "S500-manual-and-source",
+      "confidence": "inferred",
+      "related_access": "read/write",
+      "related_reset": 0,
+      "evidence": [
+        {
+          "source": "s500-pdf",
+          "section": "PDF page 92; printed page 76; CMU_DEVCLKEN1 / UART2"
+        },
+        {
+          "source": "linux",
+          "path": "drivers/clk/actions/owl-s500.c",
+          "line_start": 345,
+          "line_end": 345
+        }
+      ]
+    }
+  },
+  {
+    "register": "CMU_DEVCLKEN1",
+    "field": {
+      "name": "S500_UART6_GATE",
+      "mask": 262144,
+      "meaning": "S500 interface clock gate; target compatibility unverified",
+      "scope": "S500-manual-and-source",
+      "confidence": "inferred",
+      "related_access": "read/write",
+      "related_reset": 0,
+      "evidence": [
+        {
+          "source": "s500-pdf",
+          "section": "PDF page 92; printed page 76; CMU_DEVCLKEN1 / UART6"
+        },
+        {
+          "source": "linux",
+          "path": "drivers/clk/actions/owl-s500.c",
+          "line_start": 369,
+          "line_end": 369
+        }
+      ]
+    }
+  },
+  {
+    "register": "CMU_DEVRST0",
+    "field": {
+      "name": "S500_GPIO_RESET",
+      "mask": 32768,
+      "meaning": "S500 active-low reset control; target compatibility unverified",
+      "scope": "S500-manual-and-source",
+      "confidence": "inferred",
+      "related_access": "read/write",
+      "related_reset": 1,
+      "evidence": [
+        {
+          "source": "s500-pdf",
+          "section": "PDF page 93; printed page 77; CMU_DEVRST0 / GPIO"
+        },
+        {
+          "source": "linux",
+          "path": "drivers/clk/actions/owl-s500.c",
+          "line_start": 547,
+          "line_end": 547
+        }
+      ]
+    }
+  },
+  {
+    "register": "CMU_DEVRST1",
+    "field": {
+      "name": "S500_UART0_RESET",
+      "mask": 32,
+      "meaning": "S500 active-low reset control; target compatibility unverified",
+      "scope": "S500-manual-and-source",
+      "confidence": "inferred",
+      "related_access": "read/write",
+      "related_reset": 1,
+      "evidence": [
+        {
+          "source": "s500-pdf",
+          "section": "PDF page 93; printed page 77; CMU_DEVRST1 / UART0"
+        },
+        {
+          "source": "linux",
+          "path": "drivers/clk/actions/owl-s500.c",
+          "line_start": 561,
+          "line_end": 561
+        }
+      ]
+    }
+  },
+  {
+    "register": "CMU_DEVRST1",
+    "field": {
+      "name": "S500_UART1_RESET",
+      "mask": 64,
+      "meaning": "S500 active-low reset control; target compatibility unverified",
+      "scope": "S500-manual-and-source",
+      "confidence": "inferred",
+      "related_access": "read/write",
+      "related_reset": 1,
+      "evidence": [
+        {
+          "source": "s500-pdf",
+          "section": "PDF page 93; printed page 77; CMU_DEVRST1 / UART1"
+        },
+        {
+          "source": "linux",
+          "path": "drivers/clk/actions/owl-s500.c",
+          "line_start": 562,
+          "line_end": 562
+        }
+      ]
+    }
+  },
+  {
+    "register": "CMU_DEVRST1",
+    "field": {
+      "name": "S500_UART2_RESET",
+      "mask": 128,
+      "meaning": "S500 active-low reset control; target compatibility unverified",
+      "scope": "S500-manual-and-source",
+      "confidence": "inferred",
+      "related_access": "read/write",
+      "related_reset": 1,
+      "evidence": [
+        {
+          "source": "s500-pdf",
+          "section": "PDF page 93; printed page 77; CMU_DEVRST1 / UART2"
+        },
+        {
+          "source": "linux",
+          "path": "drivers/clk/actions/owl-s500.c",
+          "line_start": 563,
+          "line_end": 563
+        }
+      ]
+    }
+  },
+  {
+    "register": "CMU_DEVRST1",
+    "field": {
+      "name": "S500_UART6_RESET",
+      "mask": 16,
+      "meaning": "S500 active-low reset control; target compatibility unverified",
+      "scope": "S500-manual-and-source",
+      "confidence": "inferred",
+      "related_access": "read/write",
+      "related_reset": 1,
+      "evidence": [
+        {
+          "source": "s500-pdf",
+          "section": "PDF page 93; printed page 77; CMU_DEVRST1 / UART6"
+        },
+        {
+          "source": "linux",
+          "path": "drivers/clk/actions/owl-s500.c",
+          "line_start": 560,
+          "line_end": 560
+        }
+      ]
+    }
+  }
+]

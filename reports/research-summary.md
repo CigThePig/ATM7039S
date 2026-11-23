@@ -1,3 +1,7 @@
+# First-edition results (historical baseline)
+
+This report records edition 0.1. For current continuation results, including a full acquired image and release-specific AFI evidence, see [edition 0.2 engineering report](offline-continuation.md). Counts and uncompleted work below describe the earlier baseline.
+
 # Session results and technical conclusions
 
 This is a coherent research foundation, not completion of a silicon reference manual. No hardware access occurred. The owner's working/failing cards were excluded. The original repository was already public; visibility was preserved, and only original research artifacts/tools were prepared for commits.

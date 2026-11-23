@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-22",
+  "hardware_executed": false,
+  "host_gcc": "gcc (Debian 14.2.0-19) 14.2.0",
+  "host_make": "GNU Make 4.4.1",
+  "cross_compiler": "arm-linux-gnueabihf-gcc (GNU Toolchain for the A-profile Architecture 8.3-2019.03 (arm-rel-8.36)) 8.3.0",
+  "toolchain_archive_sha256": "d4f6480ecaa99e977e3833cc8a8e1263f9eecd1ce2d022bb548a24c4f32670f5",
+  "attempts": [
+    {
+      "source": "kernel",
+      "revision": "81cc77b59250341b9abe90ed4188cde7b7aa1eeb",
+      "config_sha256": "cf62d709a348fb28366c9b7f7669a9cc5f892f42ac2883e1407dea938925ecf7",
+      "configure_exit_code": 0,
+      "image_build_exit_code": 2,
+      "final_image_produced": false,
+      "logs": [
+        {
+          "path": "reports/build-logs/kernel-configure.log",
+          "sha256": "73ec4107885ddf4586a38f851fc1a899574c227777090a0ff94be97d60ccb285"
+        },
+        {
+          "path": "reports/build-logs/kernel-build.log",
+          "sha256": "f7355257f6736cf75055f81317f78b5c76d470b41a33bc74d3eccc97de0d177a"
+        },
+        {
+          "path": "reports/build-logs/kernel-host-fcommon.log",
+          "sha256": "e2403ae9c9d0a585e0cb658bc47d7525450b6bd0e2923367af944b11b9ffce39"
+        }
+      ]
+    },
+    {
+      "source": "uboot",
+      "revision": "0a557e37a5274d40bcd357585d4bcd3b73619371",
+      "config_sha256": "8973f308860e76469252cc59fb7ee2f3c5d73c1f7b8749e2cebfc0ff2af2e227",
+      "configure_exit_code": 0,
+      "image_build_exit_code": 2,
+      "final_image_produced": false,
+      "logs": [
+        {
+          "path": "reports/build-logs/uboot-configure.log",
+          "sha256": "300d3a9650371c40dde16addd6569e4573c4c1393ae26c91e6087ad9170f2aff"
+        },
+        {
+          "path": "reports/build-logs/uboot-build.log",
+          "sha256": "3a20dd2c1ead57a10beab84a65d0a6a027394476cc00d496d937230349b50218"
+        }
+      ]
+    }
+  ]
+}

@@ -759,9 +759,19 @@ Interrupt cells (raw): `[]`. Dependencies: Unknown on ATM7039S; consult vendor c
 | CMU_GPU3DCLK | `0x90` | unknown | unknown | unknown | inferred / related-ATM7039-header | 64 |
 | CMU_CORECTL | `0x9c` | unknown | unknown | unknown | inferred / related-ATM7039-header | 65 |
 | CMU_DEVCLKEN0 | `0xa0` | unknown | unknown | unknown | inferred / related-ATM7039-header | 66 |
+| ↳ S500_GPIO_GATE | mask `0x40000` | — | unknown on target | unknown | inferred / S500-manual-and-source |  |
 | CMU_DEVCLKEN1 | `0xa4` | unknown | unknown | unknown | inferred / related-ATM7039-header | 67 |
+| ↳ S500_UART0_GATE | mask `0x40` | — | unknown on target | unknown | inferred / S500-manual-and-source |  |
+| ↳ S500_UART1_GATE | mask `0x80` | — | unknown on target | unknown | inferred / S500-manual-and-source |  |
+| ↳ S500_UART2_GATE | mask `0x100` | — | unknown on target | unknown | inferred / S500-manual-and-source |  |
+| ↳ S500_UART6_GATE | mask `0x40000` | — | unknown on target | unknown | inferred / S500-manual-and-source |  |
 | CMU_DEVRST0 | `0xa8` | unknown | unknown | unknown | inferred / related-ATM7039-header | 68 |
+| ↳ S500_GPIO_RESET | mask `0x8000` | — | unknown on target | unknown | inferred / S500-manual-and-source |  |
 | CMU_DEVRST1 | `0xac` | unknown | unknown | unknown | inferred / related-ATM7039-header | 69 |
+| ↳ S500_UART0_RESET | mask `0x20` | — | unknown on target | unknown | inferred / S500-manual-and-source |  |
+| ↳ S500_UART1_RESET | mask `0x40` | — | unknown on target | unknown | inferred / S500-manual-and-source |  |
+| ↳ S500_UART2_RESET | mask `0x80` | — | unknown on target | unknown | inferred / S500-manual-and-source |  |
+| ↳ S500_UART6_RESET | mask `0x10` | — | unknown on target | unknown | inferred / S500-manual-and-source |  |
 | CMU_UART3CLK | `0xb0` | unknown | unknown | unknown | inferred / related-ATM7039-header | 70 |
 | CMU_UART4CLK | `0xb4` | unknown | unknown | unknown | inferred / related-ATM7039-header | 71 |
 | CMU_UART5CLK | `0xb8` | unknown | unknown | unknown | inferred / related-ATM7039-header | 72 |

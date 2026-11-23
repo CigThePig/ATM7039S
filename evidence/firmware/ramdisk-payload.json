@@ -1,0 +1,15 @@
+{
+  "size": 3818481,
+  "sha256": "a64bfd03833d7b748dc4ef8121c3c8245c244993c3fccb97880cfa889ff788a9",
+  "gzip_streams": [
+    {
+      "offset": 64,
+      "compressed_size": 3818417,
+      "size": 7133184,
+      "sha256": "be75e1cbf3c92f3779d6d80c09ea97380be78b116794cc23c7ee2188469a276c",
+      "gzip_crc_valid": true,
+      "linux_version_strings": [],
+      "cpio_newc_magic": true
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+# AFI producer and memory handoff
+
+Evidence: BOOT-004, BOOT-005, MEM-004, FW-002. This analysis concerns **Koriki v1.0 for the original RG35XX**, not every ATM7039S firmware. Addresses below are firmware-visible addresses, not established physical mappings.
+
+## Coordinates and reproducibility
+
+The acquisition plan and component hashes are in [the firmware catalogue](../evidence/firmware/koriki-v1.0.json). `early-region.bin` is a selected disk window beginning at `0x200200` and ending at `0x300000`. Its SHA-256 is `904f92f60dbdf653f29b453899c459d1fff4cbe1ae7278ea98fa41cd2a3145df`. The boundary includes padding/other material and **does not establish the loader's true size**.
+
+Early offsets in this chapter are relative to that window. U-Boot offsets are relative to its **payload**, excluding the 64-byte uImage header. Add `0x40` for offsets within `u-boot.uimage`, or `0x300040` for offsets in the disk image. Mixing these coordinate spaces creates misleading cross-references.
+
+A32 instructions were inspected with Capstone 5.0.6 and independently checked for PC-relative loads and direct branch targets with [arm_refs.py](../tools/arm_refs.py). The committed inventories record numeric references rather than redistributing decompiled code. Instruction decoding is static evidence, not evidence that a particular path executed.
+
+## Recovered interface
+
+The pinned U-Boot `arch/arm/include/asm/arch-owl/owl_afi.h:5–15` defines this layout, and release-binary consumers agree:
+
+| AFI offset | Size | Source name | Early producer observation | U-Boot consumer start |
+|---|---:|---|---|---:|
+| `+0x00` | 4 bytes | magic | Clears the 16-byte structure, then copies three `AFI` bytes | all getters |
+| `+0x04` | 1 | boot_mode | Stores saved argument r0 | `0x4194` |
+| `+0x05` | 1 | boot_dev | Stores saved argument r1 | `0x41c8` |
+| `+0x06` | 1 | uart_index | Low byte read from `0xb407082c` | `0x41fc` |
+| `+0x07` | 1 | uart_pad | Low byte read from `0xb4070830` | `0x4230` |
+| `+0x08` | 4 | uart_baudrate | Word read from `0xb4070834` | `0x4264` |
+| `+0x0c` | 4 | ddr_size | Result of helper `0x9180` | `0x429c` |
+
+The routine at `0x6500` loads `0xb4060300` for its clear/copy calls, then `0xb4060000` as a base for stores at `+0x304..30c`. The helper routines at `0xaf4c` and `0xaf64` implement byte fill and byte copy loops. Their behavior was inspected, rather than inferred solely from call signatures. The magic source literal is `0xb406b12b`; the matching bytes occur at window offset `0xb12b`. This supports a **local code/data address hypothesis** of window base `0xb4060000`, not a complete MMU/physical-memory map.
+
+The caller at `0x6588..65cc` derives a boot-device code and tail-branches to `0x6500`. It supplies mode zero on this path. Other paths and actual reset entry have not been exhaustively recovered.
+
+## Size encoding and limits
+
+The producer calls helper `0x9180` with `r0=0xb4070820`. That helper combines input bytes `+2` and `+3` little-endian and shifts the result left 20 bits. The result is stored at AFI `+0x0c`. This establishes the static conversion `((byte3 << 8) | byte2) << 20` in 32-bit arithmetic, consistent with converting a MiB quantity into bytes.
+
+It does **not** establish the runtime value, capacity-detection algorithm, DDR width, rank count or usable Linux memory. Bytes at an analogous offset in the disk window are not a runtime memory capture. The producer of the `0xb4070820` parameter block and its relationship to DDR training remain open.
+
+The source `board/actions/owl/owl.c:39–49` calls `owl_get_ddr_size()`, accepts values at least 8 MiB, and otherwise falls back to `CONFIG_SYS_SDRAM_SIZE`. `include/configs/s500.h:72–75` defines 496 MiB with a 16 MiB reservation comment. These are **source-build policy**, not a measurement of this release or the handheld. The function named `dram_init` here selects a size; it does not itself implement DDR training.
+
+The source's `owl_afi_init()` returns zero while its copy/default code is inside `#if 0`. The getters read the handoff location directly and have separate fallback values. Do not describe this disabled block as an executed AFI initialization stage.
+
+## Handoff model
+
+```mermaid
+flowchart TD
+  P["Runtime parameter block: producer unknown"] --> S["Size helper: MiB quantity to bytes"]
+  M["Caller boot-mode and device arguments"] --> A["Early routine writes 16-byte AFI"]
+  S --> A
+  A --> G["U-Boot AFI getters"]
+  G --> R["RAM-size selection and fallback"]
+  G --> C["Console and boot-device policy"]
+  R --> D["Final kernel memory description: still to trace"]
+```
+
+Solid edges represent inspected data dependencies, not a measured execution trace. Generic ARM memory-bank/FDT fixup source is available in `arch/arm/lib/bootm-fdt.c`; proving the release's final DT and reservations still needs further binary tracing or an existing trustworthy runtime capture.
+
+## Next questions
+
+1. Trace the initialization of `0xb4070820` and distinguish configured capacity from detected capacity.
+2. Establish early-region entry/relocation and address translation before naming SRAM/ROM regions.
+3. Recover DDR controller writes, training decisions and error paths around the initialization diagnostics. Strings alone do not establish their implementation.
+4. Trace release U-Boot memory-bank construction and FDT changes; reconcile its `0x05000000` header with the source configuration's `0x08000040` text base.
+5. Compare a separately acquired stock/Garlic image before extending these observations to those releases.

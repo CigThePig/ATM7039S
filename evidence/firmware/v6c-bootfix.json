@@ -1,0 +1,25 @@
+{
+  "source": "koriki-v6c-release",
+  "size": 5522996,
+  "sha256": "d14273634264eaced0daa0f8b2d7160d21c6b0aeb35b8decee5553c5ec35617c",
+  "components": [
+    {
+      "id": "v6c-uImage",
+      "archive_path": "bootfix_for_revision_v6c/uImage",
+      "size": 5541472,
+      "sha256": "1b792401ae06904c85441a07f7e3b7fe32e80aef2a85211ef529fefee461f174"
+    },
+    {
+      "id": "v6c-kernel.dtb",
+      "archive_path": "bootfix_for_revision_v6c/kernel.dtb",
+      "size": 28077,
+      "sha256": "c14a5f3e74f2910ba6210bbbb983ab5bb6bb463e3fe7ecae7faab1e09480a3db"
+    },
+    {
+      "id": "v6c-README.TXT",
+      "archive_path": "bootfix_for_revision_v6c/README.TXT",
+      "size": 291,
+      "sha256": "51c1bee653bd24e3b6d0abb65b5a778ff7a45ac0193303655d14a239604135f4"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 A source-controlled research foundation for the Actions ATM7039S, using the **original 2022–2023 Anbernic RG35XX** as the board reference. Newer H700-based RG35XX models are outside scope.
 
-**Status: research edition 0.1, 2026-11-22.** This is a partial manual backed by source evidence, not a complete silicon specification or tested operating-system port. No handheld, SD card, live hardware register or power setting was accessed. No firmware/library/manual binaries are redistributed. The repository was already public when this work began; its visibility was preserved.
+**Status: research edition 0.2, 2026-11-22.** This is a partial manual backed by source evidence, not a complete silicon specification or tested operating-system port. No handheld, SD card, live hardware register or power setting was accessed. No firmware/library/manual binaries are redistributed. The repository was already public when this work began; its visibility was preserved.
 
 ## Start here
 
@@ -10,6 +10,8 @@ A source-controlled research foundation for the Actions ATM7039S, using the **or
 - [Research summary](reports/research-summary.md): answers to the project's ten technical questions and work not completed.
 - [Source catalogue](evidence/catalogue.md) and [findings ledger](evidence/findings.md): exact revisions, paths, line ranges, hashes, confidence and limitations.
 - [Coverage matrix](reports/coverage-matrix.md), [knowledge gaps](reports/knowledge-gaps.md) and [next investigations](reports/next-investigations.md).
+
+[Offline continuation engineering report](reports/offline-continuation.md): released firmware, AFI writer/consumers, CPU topology, CMU fields, graphics ABI and recorded build blockers.
 
 ## What is established
 
@@ -21,11 +23,11 @@ This edition records:
 |---|---|
 | 51 DT resource tuples | Software declarations; includes shared/auxiliary resources |
 | 72 candidate header base groups / 1,760 register symbols | Explicit ATM7039-labelled source definitions; ATM7039S applicability inferred |
-| 35 findings / 9 contradictions | Confidence and source scope retained |
-| 17 sources / 65 hashed files | Pinned input provenance, not 65 independent hardware measurements |
+| 46 findings / 10 contradictions | Confidence and source scope retained |
+| 20 sources / 76 hashed files | Pinned input provenance, not independent hardware measurements |
 | 9 changed DT nodes | Gist versus published 2100mAh GPU DTB |
 | 26 matching numeric resource pairs | Against mainline S500; not 26 proven compatible peripherals |
-| 2 public binary components inspected | DTB and historical module; no whole release image analyzed |
+| Full Koriki v1.0 image + V6C boot fix | Hash-identified boot components and selected nested-rootfs binaries; no firmware redistributed |
 
 A manufacturer-branded **329-page S500 document** was found and catalogued, with an [inspection guide](reports/related-manual.md). It is not an ATM7039S manual. SGX544 research from reMESA was also located and attributed; its maintainer distinguishes research from a demonstrated independent SGX544 renderer.
 

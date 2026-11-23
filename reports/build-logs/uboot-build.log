@@ -1,0 +1,26 @@
+  GEN     ./Makefile
+scripts/kconfig/conf --silentoldconfig Kconfig
+  CHK     include/config.h
+  GEN     include/autoconf.mk
+  GEN     include/autoconf.mk.dep
+In file included from <WORK>/uboot-input/include/linux/compiler.h:54,
+                 from <WORK>/uboot-input/include/part_efi.h:16,
+                 from <WORK>/uboot-input/include/part.h:180,
+                 from <WORK>/uboot-input/include/common.h:80:
+<WORK>/uboot-input/include/linux/compiler-gcc.h:114:1: fatal error: linux/compiler-gcc8.h: No such file or directory
+ #include gcc_header(__GNUC__)
+ ^~~~
+compilation terminated.
+In file included from <WORK>/uboot-input/include/linux/compiler.h:54,
+                 from <WORK>/uboot-input/include/part_efi.h:16,
+                 from <WORK>/uboot-input/include/part.h:180,
+                 from <WORK>/uboot-input/include/common.h:80:
+<WORK>/uboot-input/include/linux/compiler-gcc.h:114:1: fatal error: linux/compiler-gcc8.h: No such file or directory
+ #include gcc_header(__GNUC__)
+ ^~~~
+compilation terminated.
+make[2]: *** [<WORK>/uboot-input/scripts/Makefile.autoconf:47: include/autoconf.mk.dep] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[2]: *** [<WORK>/uboot-input/scripts/Makefile.autoconf:71: include/autoconf.mk] Error 1
+make[1]: *** No rule to make target 'include/config/auto.conf', needed by 'include/config/uboot.release'.  Stop.
+make: *** [Makefile:145: sub-make] Error 2

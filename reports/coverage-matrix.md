@@ -35,3 +35,17 @@ There are 35 claim records, nine contradiction records, two statically analyzed 
 ## Adequacy for developers
 
 The foundation is adequate for finding source-observed resource addresses, locating candidate register offsets and existing drivers, tracing dependencies, and repeating the extraction. It is not yet adequate for a safe full driver rewrite, DDR initialization, PMIC programming or full mainline bring-up without further evidence. No subsystem is claimed to have a complete ATM7039S programmer's reference.
+
+## Edition 0.2 continuation coverage
+
+| Area | Added evidence | Still incomplete |
+|---|---|---|
+| Firmware | Full Koriki v1.0 image, primary MBR, selected boot/rootfs catalogue, V6C comparison | Stock/Garlic acquisition, all filesystem content, encrypted/other formats |
+| Early boot | AFI writer, consumer offsets, size encoding and source comparison | Reset/ROM mapping, DDR training, parameter-block producer, final memory fixups |
+| CPU | Release cmdline/DT context added to competing-explanation report | Final runtime masks, SCU count and successful secondary startup |
+| Registers | Ten S500 gate/reset fields; UART divisor discrepancy | Target semantics/reset/access; complete CMU/PLL/power dependencies |
+| Graphics | Hash-identified module/library set and source bridge map | Actual loaded pair, complete commands/sync/ISA/compiler/display ownership |
+| Builds | Pinned toolchain, configuration attempts and actual failure logs | Completed kernel/U-Boot outputs and exact historical reproduction |
+| Automation | Streaming acquisition/catalogues, nested ext4/ELF metadata, A32 references, bounded gzip, binary-evidence links | Full Ghidra workflow and source-history automation |
+
+Counts describe evidence products only: 46 findings, ten contradictions, 20 sources, 76 hashed files and 270 related-chip field observations. No percentage of silicon documentation or complete-subsystem status is implied.
