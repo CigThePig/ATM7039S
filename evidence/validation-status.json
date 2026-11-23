@@ -1,0 +1,15 @@
+{
+  "session": "2026-11-22",
+  "hardware_tests_executed": [],
+  "whole_firmware_images_analyzed": [],
+  "public_components_analyzed": [
+    "2100mAh-gpu.dtb",
+    "gpio_keys_polled.ko"
+  ],
+  "independent_check": "Built vendor DTC locally; FDT-to-DTS round trip comparison has zero property differences.",
+  "pending": [
+    "Known-provenance stock and Garlic boot images",
+    "Runtime final DT and CPU topology",
+    "Actual ATM7039S register semantics and reset values"
+  ]
+}

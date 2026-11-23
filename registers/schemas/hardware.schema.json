@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "target",
+    "hardware_validated",
+    "blocks"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "target": {
+      "const": "ATM7039S"
+    },
+    "hardware_validated": {
+      "const": false
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "base",
+          "size",
+          "scope",
+          "status",
+          "interrupts_raw",
+          "dependencies",
+          "evidence",
+          "registers",
+          "notes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "base": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "size": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "minimum": 0
+          },
+          "scope": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "interrupts_raw": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "dependencies": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "source"
+              ],
+              "properties": {
+                "source": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "registers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "offset",
+                "width",
+                "access",
+                "reset",
+                "fields",
+                "confidence",
+                "scope",
+                "hardware_validated",
+                "evidence"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "offset": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "width": {
+                  "enum": [
+                    null,
+                    8,
+                    16,
+                    32,
+                    64
+                  ]
+                },
+                "access": {
+                  "enum": [
+                    "unknown",
+                    "read",
+                    "write",
+                    "read/write",
+                    "write-one-to-clear"
+                  ]
+                },
+                "reset": {
+                  "type": [
+                    "null",
+                    "integer"
+                  ]
+                },
+                "fields": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "name",
+                      "mask",
+                      "meaning",
+                      "scope",
+                      "confidence",
+                      "evidence"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "mask": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "meaning": {
+                        "type": "string"
+                      },
+                      "scope": {
+                        "const": "S500-source"
+                      },
+                      "confidence": {
+                        "const": "inferred"
+                      },
+                      "evidence": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "source",
+                            "path",
+                            "line_start"
+                          ],
+                          "additionalProperties": true
+                        }
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "confidence": {
+                  "enum": [
+                    "verified",
+                    "strongly-supported",
+                    "inferred",
+                    "speculative",
+                    "unknown"
+                  ]
+                },
+                "scope": {
+                  "type": "string"
+                },
+                "hardware_validated": {
+                  "type": "boolean"
+                },
+                "evidence": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "source"
+                    ],
+                    "properties": {
+                      "source": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": true
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

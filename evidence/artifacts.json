@@ -1,0 +1,60 @@
+[
+  {
+    "size": 28059,
+    "sha256": "f56ab6313ddd13c935a3950696927e6dbbda0bc0426c0d579a3b213e969efacd",
+    "mbr": null,
+    "candidates": [
+      {
+        "kind": "fdt",
+        "offset": 0,
+        "valid": true,
+        "total_size": 28059
+      }
+    ],
+    "source": "batocera",
+    "source_revision": "961d8abcea18017e6c6275c914f81f3b3d72c760",
+    "original_filename": "2100mAh-gpu.dtb",
+    "path": "board/batocera/actions/rg35xx/2100mAh-gpu.dtb",
+    "acquired": "2026-11-22",
+    "device": "RG35XX original-labelled repository path; no hardware execution",
+    "version": "repository snapshot, not a firmware release version",
+    "redistribution": "not included; rights not independently cleared",
+    "identified_components": "FDT",
+    "partition_layout": "not applicable: standalone component"
+  },
+  {
+    "size": 7928,
+    "sha256": "b498012d24e0011d13f7f90a2ad22588678d3cbd711db7546f8f944cb479fe8f",
+    "mbr": null,
+    "candidates": [
+      {
+        "kind": "elf",
+        "offset": 0,
+        "valid": true,
+        "elf_class": 1,
+        "machine": 40,
+        "validation": "identity only; not executable validation"
+      }
+    ],
+    "source": "batocera",
+    "source_revision": "961d8abcea18017e6c6275c914f81f3b3d72c760",
+    "original_filename": "gpio_keys_polled.ko",
+    "path": "board/batocera/actions/rg35xx/old_overlay/fsoverlay/userdata/system/modules/gpio_keys_polled.ko",
+    "acquired": "2026-11-22",
+    "device": "RG35XX original-labelled repository path; no hardware execution",
+    "version": "repository snapshot, not a firmware release version",
+    "redistribution": "not included; rights not independently cleared",
+    "identified_components": "ARM relocatable kernel module",
+    "partition_layout": "not applicable: standalone component",
+    "module_metadata": [
+      " alias=platform:gpio-keys-polled",
+      " description=Polled GPIO Buttons driver",
+      " author=Gabor Juhos <juhosg@openwrt.org>",
+      " license=GPL v2",
+      " alias=of:N*T*Cgpio-keys-polled*",
+      " depends=",
+      " intree=Y",
+      " vermagic=3.10.37 SMP preempt mod_unload ARMv7 p2v8 "
+    ]
+  }
+]

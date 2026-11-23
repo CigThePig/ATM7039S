@@ -1,0 +1,92 @@
+[
+  {
+    "id": "C-CPU",
+    "issue": "Two CPU DT nodes versus manufacturer quad-core product claim",
+    "findings": [
+      "DT-002",
+      "ID-001",
+      "CPU-001",
+      "CPU-002"
+    ],
+    "status": "Unresolved physical topology; SCU-based initialization and powersave are possible software explanations, not a measured resolution.",
+    "next_validation": "Obtain known-provenance boot log, /proc/cmdline and CPU possible/present/online masks; inspect SCU only under later authorization."
+  },
+  {
+    "id": "C-RAM",
+    "issue": "Zero memory DT resource versus owner/reference 256MB specification",
+    "findings": [
+      "MEM-001",
+      "MEM-002",
+      "MEM-003"
+    ],
+    "status": "Placeholder does not disprove installed RAM; early loader fixup and AFI are candidates.",
+    "next_validation": "Trace exact bootloader binary and final runtime DT; collect passive boot logs."
+  },
+  {
+    "id": "C-USB",
+    "issue": "Vendor USB2_BASE 0xb02b8000 versus gist legacy blocks 0xb0600000/0xb0700000",
+    "findings": [
+      "MAP-001",
+      "USB-001"
+    ],
+    "status": "Do not alias or choose one by name. May be different blocks/platform generations.",
+    "next_validation": "Trace controller implementation and compare known-provenance running firmware resource mappings."
+  },
+  {
+    "id": "C-GPU",
+    "issue": "GPU disabled in gist, enabled in published DTB",
+    "findings": [
+      "GPU-001"
+    ],
+    "status": "Resolved as artifact difference only; actual acceleration untested.",
+    "next_validation": "Match DTB to image hash, module/userspace versions and recorded renderer."
+  },
+  {
+    "id": "C-KERNEL",
+    "issue": "Vendor 3.10.37 source/module versus wiki table saying BSP 4.9.170",
+    "findings": [
+      "ART-001",
+      "KNULLI-001",
+      "BOOT-002"
+    ],
+    "status": "Do not label every original RG35XX firmware 4.9.170. Wiki table may be stale or incorrect.",
+    "next_validation": "Read actual image uImage/module version strings; map release to artifact hashes."
+  },
+  {
+    "id": "C-KNULLI",
+    "issue": "Historical WIP release announcements versus current unsupported wiki",
+    "findings": [
+      "KNULLI-001"
+    ],
+    "status": "Temporal difference retained; no current support guarantee.",
+    "next_validation": "Inspect release-specific build configuration and assets."
+  },
+  {
+    "id": "C-DDR",
+    "issue": "2013 manufacturer table says 60 bit DDR; launch and later table say 64-bit for ATM7039",
+    "findings": [
+      "ID-003"
+    ],
+    "status": "Apparent source error preserved. S variant separately documented as 32-bit.",
+    "next_validation": "Seek manufacturer electrical manual or independent bus-layout evidence."
+  },
+  {
+    "id": "C-OMAP",
+    "issue": "OMAP glue fallback constants versus DT GPU resource",
+    "findings": [
+      "GPU-004"
+    ],
+    "status": "Dynamic platform-resource branch explains why OMAP fallback constants cannot be copied into target map.",
+    "next_validation": "Confirm active preprocessor options and inspect compiled module."
+  },
+  {
+    "id": "C-PIN",
+    "issue": "Board source has contradictory inherited GPIO comments and duplicate LCD power properties",
+    "findings": [
+      "GPIO-001",
+      "LCD-001"
+    ],
+    "status": "Use exact property values as source observations; do not convert comments to board wiring facts.",
+    "next_validation": "Compile reviewed DTS and compare resulting DTB and runtime behavior."
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "size": 28059,
+  "sha256": "f56ab6313ddd13c935a3950696927e6dbbda0bc0426c0d579a3b213e969efacd",
+  "mbr": null,
+  "candidates": [
+    {
+      "kind": "fdt",
+      "offset": 0,
+      "valid": true,
+      "total_size": 28059
+    }
+  ]
+}

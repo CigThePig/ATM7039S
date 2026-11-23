@@ -1,0 +1,926 @@
+[
+  {
+    "id": "ID-001",
+    "subsystem": "identification",
+    "claim": "Actions 2015 Form 20-F separately lists ATM7039S: quad core up to 1.6 GHz, SGX544, 32-bit DDR up to 533 MHz, BGA359, 28 nm, introduced December 2014.",
+    "confidence": "verified",
+    "scope": "manufacturer-statement",
+    "evidence": [
+      {
+        "source": "sec2015",
+        "section": "Products and Technology / SoC product table / ATM7039S row"
+      }
+    ],
+    "supporting_evidence": [
+      "sec2015"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Manufacturer product claims; not a measurement of RG35XX clock, package marking or silicon revision.",
+    "related_findings": []
+  },
+  {
+    "id": "ID-002",
+    "subsystem": "identification",
+    "claim": "ATM7039 and ATM7039S have separate manufacturer product entries; naming similarity does not prove register or package compatibility.",
+    "confidence": "verified",
+    "scope": "manufacturer-statement",
+    "evidence": [
+      {
+        "source": "sec2015",
+        "section": "SoC product table / ATM7039 and ATM7039S rows"
+      }
+    ],
+    "supporting_evidence": [
+      "sec2015"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "ATM7039C and ATM7059A silicon equivalence remains unestablished.",
+    "related_findings": []
+  },
+  {
+    "id": "ID-003",
+    "subsystem": "identification",
+    "claim": "2013 filing writes 60 bit DDR for ATM7039, whereas the later table and 2013 launch describe 64-bit DRAM.",
+    "confidence": "verified",
+    "scope": "source-contradiction",
+    "evidence": [
+      {
+        "source": "sec2013",
+        "section": "SoC product table / ATM7039 row"
+      },
+      {
+        "source": "sec2015",
+        "section": "SoC product table"
+      },
+      {
+        "source": "actions-launch",
+        "section": "ATM7039 announcement"
+      }
+    ],
+    "supporting_evidence": [
+      "sec2013",
+      "sec2015",
+      "actions-launch"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Preserve the apparent typo rather than correct the historical source silently. Not ATM7039S bus-width evidence.",
+    "related_findings": []
+  },
+  {
+    "id": "DT-001",
+    "subsystem": "device-tree",
+    "claim": "The gist root declares actions,gs705a and actions,atm7059a; model is Actions GS705A board.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "gist",
+        "path": "rg35xx.dts",
+        "line_start": 6,
+        "line_end": 8
+      }
+    ],
+    "supporting_evidence": [
+      "gist"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "These are source text observations, not chip identification on Ross\u2019s device.",
+    "related_findings": []
+  },
+  {
+    "id": "DT-002",
+    "subsystem": "cpu",
+    "claim": "The gist and the examined 2100mAh GPU DTB both describe cpu@0 and cpu@1 as arm,cortex-a9.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "gist",
+        "path": "rg35xx.dts",
+        "line_start": 61,
+        "line_end": 78
+      },
+      {
+        "source": "batocera",
+        "path": "board/batocera/actions/rg35xx/2100mAh-gpu.dtb",
+        "binary_sha256": "f56ab6313ddd13c935a3950696927e6dbbda0bc0426c0d579a3b213e969efacd",
+        "node": "/cpus"
+      }
+    ],
+    "supporting_evidence": [
+      "gist",
+      "batocera"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Neither artifact proves the physical core count or active CPU count. Public gist extraction method is not documented.",
+    "related_findings": []
+  },
+  {
+    "id": "CPU-001",
+    "subsystem": "cpu",
+    "claim": "The RG35XX vendor kernel configuration enables SMP and CONFIG_NR_CPUS=4.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/configs/rg35xx_atm7039_defconfig",
+        "line_start": 387,
+        "line_end": 402
+      }
+    ],
+    "supporting_evidence": [
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Compile-time limit does not prove that four cores are active.",
+    "related_findings": []
+  },
+  {
+    "id": "CPU-002",
+    "subsystem": "cpu",
+    "claim": "Vendor owl_smp_init_cpus reads the SCU core count, clips it to nr_cpu_ids, and forces ncores=2 when the powersave early parameter is set; powersave defaults false.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/mach-owl/platsmp-owl.c",
+        "line_start": 202,
+        "line_end": 248
+      }
+    ],
+    "supporting_evidence": [
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Explains a possible software mechanism, not proof it ran in stock or GarlicOS. Need runtime SCU/boot log and command line.",
+    "related_findings": []
+  },
+  {
+    "id": "MEM-001",
+    "subsystem": "memory",
+    "claim": "Both examined RG35XX tree artifacts have /memory reg=<0 0>.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "gist",
+        "path": "rg35xx.dts",
+        "line_start": 56,
+        "line_end": 59
+      },
+      {
+        "source": "batocera",
+        "path": "board/batocera/actions/rg35xx/2100mAh-gpu.dtb",
+        "node": "/memory"
+      }
+    ],
+    "supporting_evidence": [
+      "gist",
+      "batocera"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "A placeholder cannot establish DRAM base/size or explain exactly how stock firmware patches memory.",
+    "related_findings": []
+  },
+  {
+    "id": "MEM-002",
+    "subsystem": "memory",
+    "claim": "The related vendor kernel reserves physical 0..0x3fff for DDR DQS training and allocates framebuffer/kinfo/ION areas using runtime memory limits.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/mach-owl/common-owl.c",
+        "line_start": 220,
+        "line_end": 288
+      }
+    ],
+    "supporting_evidence": [
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Source behaviour is known; exact runtime addresses on ATM7039S are not measured.",
+    "related_findings": []
+  },
+  {
+    "id": "MEM-003",
+    "subsystem": "memory",
+    "claim": "Related S500 U-Boot obtains DDR size through an AFI structure at source address 0xB4060300, checking the AFI magic.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "uboot",
+        "path": "board/actions/owl/owl_afi.c",
+        "line_start": 8,
+        "line_end": 71
+      },
+      {
+        "source": "uboot",
+        "path": "board/actions/owl/owl.c",
+        "line_start": 35,
+        "line_end": 55
+      }
+    ],
+    "supporting_evidence": [
+      "uboot",
+      "uboot"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Address is a source pointer in this boot environment, not a newly verified physical MMIO or ROM region.",
+    "related_findings": []
+  },
+  {
+    "id": "MAP-001",
+    "subsystem": "register-map",
+    "claim": "The vendor header explicitly labels itself ATM7039 Spec Version V1.10; its base+offset definitions are related-chip candidates for ATM7039S.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
+        "line_start": 1,
+        "line_end": 8
+      }
+    ],
+    "supporting_evidence": [
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Timestamp and revision comment are unauthenticated; numerical extraction establishes source content only.",
+    "related_findings": []
+  },
+  {
+    "id": "IRQ-001",
+    "subsystem": "interrupts",
+    "claim": "The gist describes a Cortex-A9 GIC at distributor 0xb0021000 and CPU interface 0xb0020100.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "gist",
+        "path": "rg35xx.dts",
+        "line_start": 80,
+        "line_end": 87
+      }
+    ],
+    "supporting_evidence": [
+      "gist"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "GIC SPI indexes are not Linux virtual IRQs. Decode only with the correct controller binding.",
+    "related_findings": []
+  },
+  {
+    "id": "CLK-001",
+    "subsystem": "clocks",
+    "claim": "Vendor header and upstream S500 clock driver agree on named CMU offsets including COREPLL 0x00, DDRPLL 0x08, GPU3DCLK 0x90 and reset/gate offsets 0xa0..0xac.",
+    "confidence": "strongly-supported",
+    "scope": "cross-source-layout",
+    "evidence": [
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
+        "line_start": 27,
+        "line_end": 91
+      },
+      {
+        "source": "linux",
+        "path": "drivers/clk/actions/owl-s500.c",
+        "line_start": 31,
+        "line_end": 86
+      }
+    ],
+    "supporting_evidence": [
+      "vendor-kernel",
+      "linux"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Agreement may share vendor ancestry; compatible semantics, analog limits and ATM7039S safe rates are not proven.",
+    "related_findings": []
+  },
+  {
+    "id": "MMC-001",
+    "subsystem": "storage",
+    "claim": "The gist declares MMC0 at 0xb0230000, MMC1 at 0xb0234000 and MMC2 at 0xb0238000; 0 and 2 are okay, 1 disabled.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "gist",
+        "path": "rg35xx.dts",
+        "line_start": 604,
+        "line_end": 643
+      }
+    ],
+    "supporting_evidence": [
+      "gist"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Slot-to-controller correspondence needs driver/runtime confirmation; card_detect_gpios uses a vendor property.",
+    "related_findings": []
+  },
+  {
+    "id": "MMC-002",
+    "subsystem": "storage",
+    "claim": "Upstream S500 tree uses the same three MMC base addresses and SPI IRQ indexes 42,43,44 as the gist.",
+    "confidence": "strongly-supported",
+    "scope": "cross-source-layout",
+    "evidence": [
+      {
+        "source": "linux",
+        "path": "arch/arm/boot/dts/actions/owl-s500.dtsi",
+        "line_start": 295,
+        "line_end": 325
+      },
+      {
+        "source": "gist",
+        "path": "rg35xx.dts",
+        "line_start": 604,
+        "line_end": 643
+      }
+    ],
+    "supporting_evidence": [
+      "linux",
+      "gist"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Driver reuse remains a candidate: DMA request routing, reset, voltage, delay tuning and card detection need validation.",
+    "related_findings": []
+  },
+  {
+    "id": "USB-001",
+    "subsystem": "usb",
+    "claim": "The gist declares disabled legacy USB regions at 0xb0600000 and 0xb0700000 and an enabled atm7059tc-usb node at 0xb0400000 with an additional region at 0xb040cd00.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "gist",
+        "path": "rg35xx.dts",
+        "line_start": 646,
+        "line_end": 675
+      }
+    ],
+    "supporting_evidence": [
+      "gist"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Names and status are board software evidence; do not infer connector USB3 speed or host capability from the related DWC3 code.",
+    "related_findings": []
+  },
+  {
+    "id": "GPIO-001",
+    "subsystem": "gpio",
+    "claim": "Gist GPIO resource is 0xb01b0000/0x40; vendor header additionally names MFP controls at +0x40..0x4c, pulls at +0x60..0x68 and GPIO interrupts from +0x204.",
+    "confidence": "strongly-supported",
+    "scope": "cross-source-layout",
+    "evidence": [
+      {
+        "source": "gist",
+        "path": "rg35xx.dts",
+        "line_start": 540,
+        "line_end": 550
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
+        "line_start": 2077,
+        "line_end": 2149
+      }
+    ],
+    "supporting_evidence": [
+      "gist",
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "The resource is not an exhaustive map. Numeric GPIO IDs do not identify package balls.",
+    "related_findings": []
+  },
+  {
+    "id": "PMIC-001",
+    "subsystem": "power",
+    "claim": "The gist places an actions,atc2603c device at I2C address 0x65 under I2C1, with regulator, power, gauge, audio and RTC child functions.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "gist",
+        "path": "rg35xx.dts",
+        "line_start": 249,
+        "line_end": 455
+      }
+    ],
+    "supporting_evidence": [
+      "gist"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Not independent confirmation of the fitted PMIC, board revision, or safe register access. The I2C address is not CPU MMIO.",
+    "related_findings": []
+  },
+  {
+    "id": "LCD-001",
+    "subsystem": "display",
+    "claim": "The gist describes RGB LCD at 0xb02a0000, a 640x480p60-labelled mode, explicit timings and panel-control GPIO properties.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "gist",
+        "path": "rg35xx.dts",
+        "line_start": 1143,
+        "line_end": 1181
+      }
+    ],
+    "supporting_evidence": [
+      "gist"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "The mode label and requested refresh are not measurements. Vendor pixclock units must be checked before deriving frequency.",
+    "related_findings": []
+  },
+  {
+    "id": "GPU-001",
+    "subsystem": "gpu",
+    "claim": "Gist GPU node uses actions,atm7039c-gpu at 0xb0300000/0x10000, SPI index 3, status disabled; published 2100mAh DTB sets okay.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "gist",
+        "path": "rg35xx.dts",
+        "line_start": 1201,
+        "line_end": 1207
+      },
+      {
+        "source": "batocera",
+        "path": "board/batocera/actions/rg35xx/2100mAh-gpu.dtb",
+        "node": "/gpu@b0300000"
+      }
+    ],
+    "supporting_evidence": [
+      "gist",
+      "batocera"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Enabling a DT node does not independently demonstrate functional acceleration.",
+    "related_findings": []
+  },
+  {
+    "id": "GPU-002",
+    "subsystem": "gpu",
+    "claim": "Selected Linux GPU branch configures SGXCORE=544, SGX_CORE_REV=115 and MP core count 1.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/gpu/pvr/eurasia_km_linux/config_kernel.h",
+        "line_start": 1,
+        "line_end": 25
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/configs/rg35xx_atm7039_defconfig",
+        "line_start": 2240,
+        "line_end": 2241
+      }
+    ],
+    "supporting_evidence": [
+      "vendor-kernel",
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Build target, not a hardware ID read. The sibling eurasia_km subtree has a different DDK version and must not be mistaken for the selected branch.",
+    "related_findings": []
+  },
+  {
+    "id": "GPU-003",
+    "subsystem": "gpu",
+    "claim": "The selected eurasia_km_linux pvrversion.h identifies DDK 1.14 build 3625561; config_kernel.mk selects PVR_SYSTEM=omap.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/gpu/pvr/eurasia_km_linux/include4/pvrversion.h",
+        "line_start": 51,
+        "line_end": 64
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/gpu/pvr/eurasia_km_linux/config_kernel.mk",
+        "line_start": 1,
+        "line_end": 8
+      }
+    ],
+    "supporting_evidence": [
+      "vendor-kernel",
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "ABI compatibility with stock/Garlic userspace was not tested.",
+    "related_findings": []
+  },
+  {
+    "id": "GPU-004",
+    "subsystem": "gpu",
+    "claim": "The OMAP-named glue defines dynamic platform resources, taking register base and IRQ from platform APIs in the corresponding code branch.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/gpu/pvr/eurasia_km_linux/services4/system/omap/syslocal.h",
+        "line_start": 65,
+        "line_end": 75
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/gpu/pvr/eurasia_km_linux/services4/system/omap/sysconfig.c",
+        "line_start": 200,
+        "line_end": 238
+      }
+    ],
+    "supporting_evidence": [
+      "vendor-kernel",
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Hard-coded OMAP fallback address 0x56000000 is not an ATM7039S GPU base.",
+    "related_findings": []
+  },
+  {
+    "id": "GPU-005",
+    "subsystem": "gpu",
+    "claim": "The inspected upstream Linux v6.12 DRM_POWERVR targets Series 6 and later and depends on ARM64. It is not SGX544 support.",
+    "confidence": "verified",
+    "scope": "upstream-support",
+    "evidence": [
+      {
+        "source": "linux",
+        "path": "drivers/gpu/drm/imagination/Kconfig",
+        "line_start": 1,
+        "line_end": 18
+      }
+    ],
+    "supporting_evidence": [
+      "linux"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Pinned release assessment; does not establish that every experimental SGX project is unsuitable.",
+    "related_findings": []
+  },
+  {
+    "id": "GPU-006",
+    "subsystem": "licensing",
+    "claim": "Selected PowerVR sysconfig.c carries explicit Dual MIT/GPLv2 licensing; userspace package separately installs binaries from cubieboard6_ubuntu_gpu_drivers.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/gpu/pvr/eurasia_km_linux/services4/system/omap/sysconfig.c",
+        "line_start": 1,
+        "line_end": 43
+      },
+      {
+        "source": "batocera",
+        "path": "package/batocera/gpu/powervr-sgx544-driver/powervr-sgx544-driver.mk",
+        "line_start": 1,
+        "line_end": 30
+      }
+    ],
+    "supporting_evidence": [
+      "vendor-kernel",
+      "batocera"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Do not infer a license for every DDK file or redistributed userspace binary from this one notice.",
+    "related_findings": []
+  },
+  {
+    "id": "BOOT-001",
+    "subsystem": "boot",
+    "claim": "Examined Batocera genimage configuration places bootloader.img at image offset 0x200200, u-boot-dtb.img at 0x300000 and first FAT partition at 0x800000.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "batocera",
+        "path": "board/batocera/actions/rg35xx/genimage.cfg",
+        "line_start": 43,
+        "line_end": 59
+      }
+    ],
+    "supporting_evidence": [
+      "batocera"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "File-image offsets, not CPU addresses or verified ROM search rules. Recipe does not prove these exact files were shipped.",
+    "related_findings": []
+  },
+  {
+    "id": "BOOT-002",
+    "subsystem": "boot",
+    "claim": "The same branch builds a kernel from rg35xx-cfw/s500_kernel origin/rg35xx and requests rg35xx_atm7039 DTS; U-Boot package pins a buildable source revision.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "batocera",
+        "path": "configs/batocera-rg35xx.board",
+        "line_start": 60,
+        "line_end": 96
+      },
+      {
+        "source": "batocera",
+        "path": "package/batocera/boot/uboot-rg35xx/uboot-rg35xx.mk",
+        "line_start": 1,
+        "line_end": 21
+      }
+    ],
+    "supporting_evidence": [
+      "batocera",
+      "batocera"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Build recipe inspected; full cross build and boot not performed. Source U-Boot build does not account for separate early bootloader.img.",
+    "related_findings": []
+  },
+  {
+    "id": "BOOT-003",
+    "subsystem": "boot",
+    "claim": "Stock researcher reports FAT uImage plus ramdisk.img, Android-style /init and init.rc, loadapp.sh and dmenu launcher chain.",
+    "confidence": "strongly-supported",
+    "scope": "reported-firmware",
+    "evidence": [
+      {
+        "source": "tinyhack",
+        "section": "Stock RG35XX boot sequence"
+      },
+      {
+        "source": "stock-demo",
+        "path": "menu.c",
+        "line_start": 55,
+        "line_end": 100
+      }
+    ],
+    "supporting_evidence": [
+      "tinyhack",
+      "stock-demo"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Reported sequence; demo corroborates application environment only, not independent ROM/bootloader execution.",
+    "related_findings": []
+  },
+  {
+    "id": "INPUT-001",
+    "subsystem": "input",
+    "claim": "Demo source discovers the input device by EVIOCGNAME matching gpio-keys-polled and creates a reader thread.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "stock-demo",
+        "path": "menu.c",
+        "line_start": 55,
+        "line_end": 100
+      },
+      {
+        "source": "stock-demo",
+        "path": "menu.c",
+        "line_start": 460,
+        "line_end": 480
+      }
+    ],
+    "supporting_evidence": [
+      "stock-demo",
+      "stock-demo"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Static application-source observation, not proof that every firmware uses the same event numbers.",
+    "related_findings": []
+  },
+  {
+    "id": "ART-001",
+    "subsystem": "firmware",
+    "claim": "Historical gpio_keys_polled.ko metadata reports GPL v2 and vermagic 3.10.37 SMP preempt mod_unload ARMv7 p2v8.",
+    "confidence": "verified",
+    "scope": "software-observation",
+    "evidence": [
+      {
+        "source": "batocera",
+        "path": "board/batocera/actions/rg35xx/old_overlay/fsoverlay/userdata/system/modules/gpio_keys_polled.ko",
+        "section": ".modinfo; see evidence/artifacts.json"
+      }
+    ],
+    "supporting_evidence": [
+      "batocera"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Historical bundled module; does not identify current KNULLI or the user\u2019s Garlic kernel. Module metadata is not source/license-compliance verification.",
+    "related_findings": []
+  },
+  {
+    "id": "KNULLI-001",
+    "subsystem": "linux-support",
+    "claim": "Current inspected KNULLI wiki marks original RG35XX unsupported while describing stock boot/kernel dependencies and an incomplete source-built alternative.",
+    "confidence": "verified",
+    "scope": "project-documentation",
+    "evidence": [
+      {
+        "source": "knulli-wiki",
+        "path": "docs/devices/anbernic/rg35xx.md",
+        "line_start": 1,
+        "line_end": 29
+      }
+    ],
+    "supporting_evidence": [
+      "knulli-wiki"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Current wiki source at pinned revision; prose is internally mixed with historical feature claims.",
+    "related_findings": []
+  },
+  {
+    "id": "FAMILY-001",
+    "subsystem": "family",
+    "claim": "Pinned mainline S500 describes Cortex-A9; S700 and S900 describe Cortex-A53; these are distinct programming targets.",
+    "confidence": "verified",
+    "scope": "source-comparison",
+    "evidence": [
+      {
+        "source": "linux",
+        "path": "arch/arm/boot/dts/actions/owl-s500.dtsi",
+        "line_start": 27,
+        "line_end": 59
+      },
+      {
+        "source": "linux",
+        "path": "arch/arm64/boot/dts/actions/s700.dtsi",
+        "line_start": 15,
+        "line_end": 65
+      },
+      {
+        "source": "linux",
+        "path": "arch/arm64/boot/dts/actions/s900.dtsi",
+        "line_start": 15,
+        "line_end": 70
+      }
+    ],
+    "supporting_evidence": [
+      "linux",
+      "linux",
+      "linux"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Shared Owl driver families do not establish identical clocks, resets, DMA descriptors or GPU generations.",
+    "related_findings": []
+  },
+  {
+    "id": "GAP-001",
+    "subsystem": "documentation",
+    "claim": "No authenticated complete ATM7039S technical reference manual or package pinout was located in the public searches performed this session.",
+    "confidence": "unknown",
+    "scope": "search-result",
+    "evidence": [
+      {
+        "source": "sec2015",
+        "section": "Product table, not reference manual"
+      },
+      {
+        "source": "tinyhack",
+        "section": "Kernel part"
+      }
+    ],
+    "supporting_evidence": [
+      "sec2015",
+      "tinyhack"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Search coverage is finite; absence is not proof that no public manual exists. See reports/source-discovery.md.",
+    "related_findings": []
+  },
+  {
+    "id": "MANUAL-001",
+    "subsystem": "documentation",
+    "claim": "Retrieved related S500 document identifies v1.4, 2015-07-17 and contains 329 PDF pages. It is not an ATM7039S manual.",
+    "confidence": "verified",
+    "scope": "source-observation",
+    "evidence": [
+      {
+        "source": "s500-pdf",
+        "section": "title; metadata; printed pages 62\u201365,114\u2013125"
+      }
+    ],
+    "supporting_evidence": [
+      "s500-pdf"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Manufacturer-branded mirrored artifact; authenticity not cryptographically established; no target equivalence.",
+    "related_findings": []
+  },
+  {
+    "id": "GPU-007",
+    "subsystem": "gpu",
+    "claim": "Pinned reMESA README states SGX544 remains research without demonstrated independent submission/rendering, distinct from SGX535 work.",
+    "confidence": "verified",
+    "scope": "source-observation",
+    "evidence": [
+      {
+        "source": "remesa",
+        "path": "README.md",
+        "line_start": 35,
+        "line_end": 45
+      },
+      {
+        "source": "sgx544-history",
+        "path": "README.md",
+        "line_start": 1,
+        "line_end": 7
+      }
+    ],
+    "supporting_evidence": [
+      "remesa",
+      "sgx544-history"
+    ],
+    "contradictory_evidence": [],
+    "validation": "static-inspection",
+    "hardware_validated": false,
+    "limitations": "Maintainer-reported status; no independent renderer testing, no ATM7039S integration shown.",
+    "related_findings": []
+  }
+]

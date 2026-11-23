@@ -1,0 +1,523 @@
+[
+  {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
+    "sha256": "8350d5a078d0063b8827f4a22aa77aeaec5858f080ddcd4d27c7f6411b8378ee",
+    "size": 149260,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/include/mach/regs_map-atm7039.h"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "Makefile",
+    "sha256": "edc7b2d285368220633c1e5343d59a648ac11ddf107f508641c80ff610c38286",
+    "size": 49021,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/Makefile",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/Makefile"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "COPYING",
+    "sha256": "af8067302947c01fd9eee72befa54c7e3ef8a48fecde7fd71277f2290b2bf0f7",
+    "size": 18693,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/COPYING",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/COPYING"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "arch/arm/boot/dts/rg35xx_atm7039.dts",
+    "sha256": "f16585a4e76bd82d5dd966c9d57bb3475ee0cb31f318517aec791d187ccfec2c",
+    "size": 33083,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/boot/dts/rg35xx_atm7039.dts",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/boot/dts/rg35xx_atm7039.dts"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "arch/arm/boot/dts/actduino.dtsi",
+    "sha256": "1fff2dedbab032d0fa48dbd6e8dc39c2ae3d15c8c24d26dd1c4cd938db860e1b",
+    "size": 7773,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/boot/dts/actduino.dtsi",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/boot/dts/actduino.dtsi"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "arch/arm/configs/rg35xx_atm7039_defconfig",
+    "sha256": "f362f841faa4e8c479f0bc899c22854fc79fb200cc3cf21f28e2a7ac71d7fa6c",
+    "size": 94528,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/configs/rg35xx_atm7039_defconfig",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/configs/rg35xx_atm7039_defconfig"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/common-owl.c",
+    "sha256": "e5847706e35949212717a88579969b48e913e1f7fb6356a6c907232b5c24ec81",
+    "size": 11286,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/common-owl.c",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/common-owl.c"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/platsmp-owl.c",
+    "sha256": "c22b36464c4443fe3ce1363155af7a6481b80219776c0f6e90d7df15183765de",
+    "size": 5734,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/platsmp-owl.c",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/platsmp-owl.c"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/clocktree-atm7059.c",
+    "sha256": "10dd7f54954a3df40e334bd2d9ca662e1599be8d2225c260966a0a6664e2aa4a",
+    "size": 159594,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/clocktree-atm7059.c",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/clocktree-atm7059.c"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+    "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+    "size": 63480,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/pinctrl_data-atm7059.c",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/pinctrl_data-atm7059.c"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/gpu/pvr/eurasia_km_linux/config_kernel.h",
+    "sha256": "f86f37991c8e4dc00830321506b31e5eff48c6bcd583b0e73d208a2f7b16634b",
+    "size": 1531,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/config_kernel.h",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/config_kernel.h"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/gpu/pvr/eurasia_km/include4/pvrversion.h",
+    "sha256": "810d96047709197653e13a492b8c2a04e8e1b053be0b7e02511113001e9b3641",
+    "size": 3320,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km/include4/pvrversion.h",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km/include4/pvrversion.h"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/gpu/pvr/eurasia_km_linux/include4/pvrversion.h",
+    "sha256": "7b805525867ef6f06d8007e733f89c5290de6fa501041e011dac8edfc0fc4189",
+    "size": 3313,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/include4/pvrversion.h",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/include4/pvrversion.h"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/gpu/pvr/eurasia_km_linux/config_kernel.mk",
+    "sha256": "652a11bc74b01318d1edcacc3b8cc123d371280412f3c93ee255c412194ba93b",
+    "size": 283,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/config_kernel.mk",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/config_kernel.mk"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/gpu/pvr/eurasia_km_linux/services4/system/omap/syslocal.h",
+    "sha256": "43440613770f7fda0b4a5994a9960045c8d308ac0024c2c9c655d8743238d070",
+    "size": 7922,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/system/omap/syslocal.h",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/system/omap/syslocal.h"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/gpu/pvr/eurasia_km_linux/services4/system/omap/sysconfig.c",
+    "sha256": "0fcbe0ed20260c5943d0b4a81aa798f3ff4c0bf90a955929c712d8ffabf03aaa",
+    "size": 37308,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/system/omap/sysconfig.c",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/system/omap/sysconfig.c"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/gpu/pvr/eurasia_km_linux/services4/system/omap/sysconfig.h",
+    "sha256": "5a2a826df31d9c79be6e9ce33555bc059de993755d2bda442bb2ca054e4e3c69",
+    "size": 3727,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/system/omap/sysconfig.h",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/gpu/pvr/eurasia_km_linux/services4/system/omap/sysconfig.h"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/video/owl/dss/de_atm7059.c",
+    "sha256": "394f7473eeb8aeeecde88732433f0871c48f1da0994aa54ecb0866ea6aab8e07",
+    "size": 30836,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/video/owl/dss/de_atm7059.c",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/video/owl/dss/de_atm7059.c"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/video/owl/displays/lcdc/lcdchw.c",
+    "sha256": "9c5f91ffbb6867aa052c9f674aed94511946cb39b903bb3542af096b6fb50200",
+    "size": 29165,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/video/owl/displays/lcdc/lcdchw.c",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/video/owl/displays/lcdc/lcdchw.c"
+  },
+  {
+    "source": "uboot",
+    "path": "Makefile",
+    "sha256": "4730c9ef2755689c3244b54abb883b0b272854e098c2b0d8b32e40b2c503e654",
+    "size": 50551,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/u-boot_s500/0a557e37a5274d40bcd357585d4bcd3b73619371/Makefile",
+    "view_url": "https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/Makefile"
+  },
+  {
+    "source": "uboot",
+    "path": "Licenses/README",
+    "sha256": "4be19e2d40258be3d3f8a31647e519506f462178e344088c35966a54e54f0182",
+    "size": 3682,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/u-boot_s500/0a557e37a5274d40bcd357585d4bcd3b73619371/Licenses/README",
+    "view_url": "https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/Licenses/README"
+  },
+  {
+    "source": "uboot",
+    "path": "board/actions/owl/owl.c",
+    "sha256": "024c24fa382819300eceb09cec20b1f57b2cc40842b6604b6d2bb4ffa4477651",
+    "size": 2766,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/u-boot_s500/0a557e37a5274d40bcd357585d4bcd3b73619371/board/actions/owl/owl.c",
+    "view_url": "https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/board/actions/owl/owl.c"
+  },
+  {
+    "source": "uboot",
+    "path": "board/actions/owl/owl_afi.c",
+    "sha256": "005df6456aa43adc47c77b96e43985e00ace621ea66ee9b723f53068e48e0ef5",
+    "size": 1708,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/u-boot_s500/0a557e37a5274d40bcd357585d4bcd3b73619371/board/actions/owl/owl_afi.c",
+    "view_url": "https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/board/actions/owl/owl_afi.c"
+  },
+  {
+    "source": "uboot",
+    "path": "arch/arm/include/asm/arch-owl/owl_mmc.h",
+    "sha256": "6ba073dd220c9b881a2199926981092bc5f538bf0a2483f09c17c4cd2e19ed8f",
+    "size": 6772,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/u-boot_s500/0a557e37a5274d40bcd357585d4bcd3b73619371/arch/arm/include/asm/arch-owl/owl_mmc.h",
+    "view_url": "https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/arch/arm/include/asm/arch-owl/owl_mmc.h"
+  },
+  {
+    "source": "uboot",
+    "path": "arch/arm/cpu/armv7/owl/owl_clk.c",
+    "sha256": "f231dbddcdf2a6e5995807e27fad8d0752cb5a750881bb035b8f7dadf5193843",
+    "size": 4756,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/u-boot_s500/0a557e37a5274d40bcd357585d4bcd3b73619371/arch/arm/cpu/armv7/owl/owl_clk.c",
+    "view_url": "https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/arch/arm/cpu/armv7/owl/owl_clk.c"
+  },
+  {
+    "source": "uboot",
+    "path": "include/configs/s500.h",
+    "sha256": "fa7e69a20e40887d8a6f84a418eafd10463f5738d08a82093b063ddb21e96e1d",
+    "size": 9194,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/u-boot_s500/0a557e37a5274d40bcd357585d4bcd3b73619371/include/configs/s500.h",
+    "view_url": "https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/include/configs/s500.h"
+  },
+  {
+    "source": "batocera",
+    "path": "board/batocera/actions/rg35xx/2100mAh-gpu.dtb",
+    "sha256": "f56ab6313ddd13c935a3950696927e6dbbda0bc0426c0d579a3b213e969efacd",
+    "size": 28059,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/batocera.linux/961d8abcea18017e6c6275c914f81f3b3d72c760/board/batocera/actions/rg35xx/2100mAh-gpu.dtb",
+    "view_url": "https://github.com/rg35xx-cfw/batocera.linux/blob/961d8abcea18017e6c6275c914f81f3b3d72c760/board/batocera/actions/rg35xx/2100mAh-gpu.dtb"
+  },
+  {
+    "source": "batocera",
+    "path": "board/batocera/actions/rg35xx/old_overlay/fsoverlay/userdata/system/modules/gpio_keys_polled.ko",
+    "sha256": "b498012d24e0011d13f7f90a2ad22588678d3cbd711db7546f8f944cb479fe8f",
+    "size": 7928,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/batocera.linux/961d8abcea18017e6c6275c914f81f3b3d72c760/board/batocera/actions/rg35xx/old_overlay/fsoverlay/userdata/system/modules/gpio_keys_polled.ko",
+    "view_url": "https://github.com/rg35xx-cfw/batocera.linux/blob/961d8abcea18017e6c6275c914f81f3b3d72c760/board/batocera/actions/rg35xx/old_overlay/fsoverlay/userdata/system/modules/gpio_keys_polled.ko"
+  },
+  {
+    "source": "batocera",
+    "path": "board/batocera/actions/rg35xx/genimage.cfg",
+    "sha256": "796ad146d6ab55c361f19409a8346dde0b04b8667ace0331ff54d6ad8bf065ac",
+    "size": 2291,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/batocera.linux/961d8abcea18017e6c6275c914f81f3b3d72c760/board/batocera/actions/rg35xx/genimage.cfg",
+    "view_url": "https://github.com/rg35xx-cfw/batocera.linux/blob/961d8abcea18017e6c6275c914f81f3b3d72c760/board/batocera/actions/rg35xx/genimage.cfg"
+  },
+  {
+    "source": "batocera",
+    "path": "board/batocera/actions/rg35xx/create-boot-script.sh",
+    "sha256": "a1b141fab864f71fe656b9dbefa5d705bca5fdb476646bef6df57a7446d13a7b",
+    "size": 1613,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/batocera.linux/961d8abcea18017e6c6275c914f81f3b3d72c760/board/batocera/actions/rg35xx/create-boot-script.sh",
+    "view_url": "https://github.com/rg35xx-cfw/batocera.linux/blob/961d8abcea18017e6c6275c914f81f3b3d72c760/board/batocera/actions/rg35xx/create-boot-script.sh"
+  },
+  {
+    "source": "batocera",
+    "path": "board/batocera/actions/rg35xx/uEnv.txt",
+    "sha256": "1dd2ae2422c8d611a5e3fe3960fc5a37f050152f49bf5ec5160dc989a1297d4a",
+    "size": 121,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/batocera.linux/961d8abcea18017e6c6275c914f81f3b3d72c760/board/batocera/actions/rg35xx/uEnv.txt",
+    "view_url": "https://github.com/rg35xx-cfw/batocera.linux/blob/961d8abcea18017e6c6275c914f81f3b3d72c760/board/batocera/actions/rg35xx/uEnv.txt"
+  },
+  {
+    "source": "batocera",
+    "path": "configs/batocera-rg35xx.board",
+    "sha256": "27f1c8055d393f31d278f91f746a3f99aa2cb4aac401ac7afff620162d0f3577",
+    "size": 5460,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/batocera.linux/961d8abcea18017e6c6275c914f81f3b3d72c760/configs/batocera-rg35xx.board",
+    "view_url": "https://github.com/rg35xx-cfw/batocera.linux/blob/961d8abcea18017e6c6275c914f81f3b3d72c760/configs/batocera-rg35xx.board"
+  },
+  {
+    "source": "batocera",
+    "path": "package/batocera/boot/uboot-rg35xx/uboot-rg35xx.mk",
+    "sha256": "8b523355e75f5c8a1c2b75cb2dbbb44fc30dcd49836c95b71a4ff6c5329e5c64",
+    "size": 780,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/batocera.linux/961d8abcea18017e6c6275c914f81f3b3d72c760/package/batocera/boot/uboot-rg35xx/uboot-rg35xx.mk",
+    "view_url": "https://github.com/rg35xx-cfw/batocera.linux/blob/961d8abcea18017e6c6275c914f81f3b3d72c760/package/batocera/boot/uboot-rg35xx/uboot-rg35xx.mk"
+  },
+  {
+    "source": "batocera",
+    "path": "package/batocera/gpu/powervr-sgx544-driver/powervr-sgx544-driver.mk",
+    "sha256": "bcedf3ccc73bbf0aff51f88640d05a48ad6722289c17652809276b40e77bba71",
+    "size": 1263,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/batocera.linux/961d8abcea18017e6c6275c914f81f3b3d72c760/package/batocera/gpu/powervr-sgx544-driver/powervr-sgx544-driver.mk",
+    "view_url": "https://github.com/rg35xx-cfw/batocera.linux/blob/961d8abcea18017e6c6275c914f81f3b3d72c760/package/batocera/gpu/powervr-sgx544-driver/powervr-sgx544-driver.mk"
+  },
+  {
+    "source": "linux",
+    "path": "arch/arm/boot/dts/actions/owl-s500.dtsi",
+    "sha256": "a59b69f57111f3e0d09275e99dcf0ce2b41b261ea8d28805eeb8e4d7d482b025",
+    "size": 8817,
+    "raw_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/arch/arm/boot/dts/actions/owl-s500.dtsi",
+    "view_url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/arch/arm/boot/dts/actions/owl-s500.dtsi"
+  },
+  {
+    "source": "linux",
+    "path": "arch/arm64/boot/dts/actions/s700.dtsi",
+    "sha256": "bdc14b25ed15f57011b82b15357b7b2f188d248f9ed5e6325dae3548b100a37a",
+    "size": 6553,
+    "raw_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/arch/arm64/boot/dts/actions/s700.dtsi",
+    "view_url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/arch/arm64/boot/dts/actions/s700.dtsi"
+  },
+  {
+    "source": "linux",
+    "path": "arch/arm64/boot/dts/actions/s900.dtsi",
+    "sha256": "39f1a1fac7adcec124e15aa36fa8b255e19f8f199b1201388a8351cb45bc5b84",
+    "size": 8254,
+    "raw_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/arch/arm64/boot/dts/actions/s900.dtsi",
+    "view_url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/arch/arm64/boot/dts/actions/s900.dtsi"
+  },
+  {
+    "source": "linux",
+    "path": "drivers/clk/actions/owl-s500.c",
+    "sha256": "5a47a5eb6eec1481d4657d1857e657326f404ea0760a29263650f6896306bacf",
+    "size": 22306,
+    "raw_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/drivers/clk/actions/owl-s500.c",
+    "view_url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/clk/actions/owl-s500.c"
+  },
+  {
+    "source": "linux",
+    "path": "drivers/pinctrl/actions/pinctrl-s500.c",
+    "sha256": "db0a7d31fd2a4d0b9eea9278c326b21e9b5bdfb5b3d9fe28a120b44b5196f489",
+    "size": 51220,
+    "raw_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/drivers/pinctrl/actions/pinctrl-s500.c",
+    "view_url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/pinctrl/actions/pinctrl-s500.c"
+  },
+  {
+    "source": "linux",
+    "path": "drivers/dma/owl-dma.c",
+    "sha256": "2e25aff4ceb39548208ef24ef61b7f929ee5852f8e2569cba6307f8a15457d73",
+    "size": 32441,
+    "raw_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/drivers/dma/owl-dma.c",
+    "view_url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/dma/owl-dma.c"
+  },
+  {
+    "source": "linux",
+    "path": "drivers/mmc/host/owl-mmc.c",
+    "sha256": "30b341c159ee868eb519030dd96ab3affdeb545f1889d2382179c7a3d1298603",
+    "size": 18107,
+    "raw_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/drivers/mmc/host/owl-mmc.c",
+    "view_url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/mmc/host/owl-mmc.c"
+  },
+  {
+    "source": "linux",
+    "path": "drivers/tty/serial/owl-uart.c",
+    "sha256": "7cccb782faa9c7b5eddc902bbcf8b9d4c5c612337b3cb8042ef1e103f744d0a8",
+    "size": 18311,
+    "raw_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/drivers/tty/serial/owl-uart.c",
+    "view_url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/tty/serial/owl-uart.c"
+  },
+  {
+    "source": "linux",
+    "path": "drivers/i2c/busses/i2c-owl.c",
+    "sha256": "234cd122bdfab35b503adce1069f1a53e83411ac3fd50ae57c0cb30057806895",
+    "size": 13666,
+    "raw_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/drivers/i2c/busses/i2c-owl.c",
+    "view_url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/i2c/busses/i2c-owl.c"
+  },
+  {
+    "source": "linux",
+    "path": "drivers/clocksource/timer-owl.c",
+    "sha256": "d7b95192ee1b6d31d9ed569578ea839f60f259b5a555000c690516284a9d4795",
+    "size": 4170,
+    "raw_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/drivers/clocksource/timer-owl.c",
+    "view_url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/clocksource/timer-owl.c"
+  },
+  {
+    "source": "linux",
+    "path": "drivers/gpu/drm/imagination/Kconfig",
+    "sha256": "7182b9eecc0172ab1825abf9cf44e743ffc614429d65d8467b806de2fcaeebe6",
+    "size": 536,
+    "raw_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/drivers/gpu/drm/imagination/Kconfig",
+    "view_url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/gpu/drm/imagination/Kconfig"
+  },
+  {
+    "source": "linux",
+    "path": "drivers/pmdomain/actions/owl-sps.c",
+    "sha256": "f9a15eee2ed8a8927fa481d204469a7273fa508a1d8669fa274c2acd9635d8f0",
+    "size": 6427,
+    "raw_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/drivers/pmdomain/actions/owl-sps.c",
+    "view_url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/pmdomain/actions/owl-sps.c"
+  },
+  {
+    "source": "knulli-wiki",
+    "path": "docs/devices/anbernic/rg35xx.md",
+    "sha256": "4ccee2db4bd5051d23317e3181eb8c017bf7abaf14ef80c19485dc8ce4cf5056",
+    "size": 1054,
+    "raw_url": "https://raw.githubusercontent.com/knulli-cfw/knulli.org/314b26f1822c8531bed8a9cea72028b229b4436e/docs/devices/anbernic/rg35xx.md",
+    "view_url": "https://github.com/knulli-cfw/knulli.org/blob/314b26f1822c8531bed8a9cea72028b229b4436e/docs/devices/anbernic/rg35xx.md"
+  },
+  {
+    "source": "stock-demo",
+    "path": "README.md",
+    "sha256": "9eb36851f9668a0b15c84e5293fe94b899d9579d07b28f53d74bd0a45633c3ad",
+    "size": 120,
+    "raw_url": "https://raw.githubusercontent.com/yohanes/rg35xx-stock-sdl-demo/8dbe95d60558740893a57593d792e388c0932ba9/README.md",
+    "view_url": "https://github.com/yohanes/rg35xx-stock-sdl-demo/blob/8dbe95d60558740893a57593d792e388c0932ba9/README.md"
+  },
+  {
+    "source": "stock-demo",
+    "path": "Makefile",
+    "sha256": "81b426318fe4d0601ec42f5ef61f81ee733516b96d4b7ae79ec18d081222fc7b",
+    "size": 208,
+    "raw_url": "https://raw.githubusercontent.com/yohanes/rg35xx-stock-sdl-demo/8dbe95d60558740893a57593d792e388c0932ba9/Makefile",
+    "view_url": "https://github.com/yohanes/rg35xx-stock-sdl-demo/blob/8dbe95d60558740893a57593d792e388c0932ba9/Makefile"
+  },
+  {
+    "source": "stock-demo",
+    "path": "menu.c",
+    "sha256": "0179e784951bc04b095e304a244979e3d365f34bf087d739181ad3eff50156b2",
+    "size": 12144,
+    "raw_url": "https://raw.githubusercontent.com/yohanes/rg35xx-stock-sdl-demo/8dbe95d60558740893a57593d792e388c0932ba9/menu.c",
+    "view_url": "https://github.com/yohanes/rg35xx-stock-sdl-demo/blob/8dbe95d60558740893a57593d792e388c0932ba9/menu.c"
+  },
+  {
+    "source": "stock-demo",
+    "path": "ADB_ON.sh",
+    "sha256": "c3178a831bed4a34a3fbe3a03f9ea7f940c3f60e285050411b022be199beef60",
+    "size": 1331,
+    "raw_url": "https://raw.githubusercontent.com/yohanes/rg35xx-stock-sdl-demo/8dbe95d60558740893a57593d792e388c0932ba9/ADB_ON.sh",
+    "view_url": "https://github.com/yohanes/rg35xx-stock-sdl-demo/blob/8dbe95d60558740893a57593d792e388c0932ba9/ADB_ON.sh"
+  },
+  {
+    "source": "cfw-wiki",
+    "path": "1_Introduction.md",
+    "sha256": "51def998d82e892ec60517b0f6fe504a4d8368cc10d478cece989b9cebca502b",
+    "size": 527,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/rg35xx-cfw.github.io/1dc0a87ee27a9d6216678929bcc54eee87f281f9/1_Introduction.md",
+    "view_url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/blob/1dc0a87ee27a9d6216678929bcc54eee87f281f9/1_Introduction.md"
+  },
+  {
+    "source": "cfw-wiki",
+    "path": "_docs/00_general/2_status.md",
+    "sha256": "9805700ed7c087b6515d6ff4918e7cff7620b663dad484b5e41d594b874aef72",
+    "size": 728,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/rg35xx-cfw.github.io/1dc0a87ee27a9d6216678929bcc54eee87f281f9/_docs/00_general/2_status.md",
+    "view_url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io/blob/1dc0a87ee27a9d6216678929bcc54eee87f281f9/_docs/00_general/2_status.md"
+  },
+  {
+    "source": "buildroot",
+    "path": "README",
+    "sha256": "3c28bda2aa7aef006c772e3edf1128be456251712dbc9d9415529fe60a549f71",
+    "size": 1075,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/buildroot/798ba21c01ceb8ab1a5a4ae6986e0b77d5d8f7aa/README",
+    "view_url": "https://github.com/rg35xx-cfw/buildroot/blob/798ba21c01ceb8ab1a5a4ae6986e0b77d5d8f7aa/README"
+  },
+  {
+    "source": "remesa",
+    "path": "README.md",
+    "sha256": "b58174bc7120dc2eeda5959109a91da5ffc5868202329f8efeb92ec276633a06",
+    "size": 12907,
+    "raw_url": "https://raw.githubusercontent.com/reMESA-devgroup/reMESA/845f385cd61aa17042f9426ec8306b4386005c24/README.md",
+    "view_url": "https://github.com/reMESA-devgroup/reMESA/blob/845f385cd61aa17042f9426ec8306b4386005c24/README.md"
+  },
+  {
+    "source": "remesa",
+    "path": "LICENSE",
+    "sha256": "5647ee22472ccdcd3dc4c2b50e60b84b87a070c8018715c42febbf69e909cafe",
+    "size": 1061,
+    "raw_url": "https://raw.githubusercontent.com/reMESA-devgroup/reMESA/845f385cd61aa17042f9426ec8306b4386005c24/LICENSE",
+    "view_url": "https://github.com/reMESA-devgroup/reMESA/blob/845f385cd61aa17042f9426ec8306b4386005c24/LICENSE"
+  },
+  {
+    "source": "remesa",
+    "path": "projects/sgx544/README.md",
+    "sha256": "73cad406eb625670e2eb58a1e840a11e156fdefaa15716b6654fcc931d90dff6",
+    "size": 2663,
+    "raw_url": "https://raw.githubusercontent.com/reMESA-devgroup/reMESA/845f385cd61aa17042f9426ec8306b4386005c24/projects/sgx544/README.md",
+    "view_url": "https://github.com/reMESA-devgroup/reMESA/blob/845f385cd61aa17042f9426ec8306b4386005c24/projects/sgx544/README.md"
+  },
+  {
+    "source": "remesa",
+    "path": "projects/sgx544/docs/FINDINGS.md",
+    "sha256": "e54e1e745917a6e9e6a73723d3830aa16715e1695b87ef684d0aa05ab42ec5c4",
+    "size": 3012,
+    "raw_url": "https://raw.githubusercontent.com/reMESA-devgroup/reMESA/845f385cd61aa17042f9426ec8306b4386005c24/projects/sgx544/docs/FINDINGS.md",
+    "view_url": "https://github.com/reMESA-devgroup/reMESA/blob/845f385cd61aa17042f9426ec8306b4386005c24/projects/sgx544/docs/FINDINGS.md"
+  },
+  {
+    "source": "remesa",
+    "path": "projects/sgx544/docs/ROADMAP.md",
+    "sha256": "ee52783a11dc33e767575951b649f5041bb761d0604ff6fd0de08e789b62604e",
+    "size": 1011,
+    "raw_url": "https://raw.githubusercontent.com/reMESA-devgroup/reMESA/845f385cd61aa17042f9426ec8306b4386005c24/projects/sgx544/docs/ROADMAP.md",
+    "view_url": "https://github.com/reMESA-devgroup/reMESA/blob/845f385cd61aa17042f9426ec8306b4386005c24/projects/sgx544/docs/ROADMAP.md"
+  },
+  {
+    "source": "sgx544-history",
+    "path": "README.md",
+    "sha256": "32d018035fe6872197db976f7d03cdc8ae9aca720c02e85ae79bef524d67f142",
+    "size": 495,
+    "raw_url": "https://raw.githubusercontent.com/reMESA-devgroup/SGX544-reMESA/4c1e3095e73a506bfc48bd77041d35da0d1231e6/README.md",
+    "view_url": "https://github.com/reMESA-devgroup/SGX544-reMESA/blob/4c1e3095e73a506bfc48bd77041d35da0d1231e6/README.md"
+  },
+  {
+    "source": "sgx544-history",
+    "path": "LICENSE",
+    "sha256": "6eb2c89fd5fa477d96d60f1cb889a5d8e31781374381e4485eeff33d4ab414c5",
+    "size": 1069,
+    "raw_url": "https://raw.githubusercontent.com/reMESA-devgroup/SGX544-reMESA/4c1e3095e73a506bfc48bd77041d35da0d1231e6/LICENSE",
+    "view_url": "https://github.com/reMESA-devgroup/SGX544-reMESA/blob/4c1e3095e73a506bfc48bd77041d35da0d1231e6/LICENSE"
+  },
+  {
+    "source": "koriki",
+    "path": "README.md",
+    "sha256": "70a0d0fb6f43007a53700d11be20c23f880690c2bba72a21cbe977aa0ddfac25",
+    "size": 4863,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/Koriki/26f47799202530c89edadd2dc9faa4ffcab0960e/README.md",
+    "view_url": "https://github.com/rg35xx-cfw/Koriki/blob/26f47799202530c89edadd2dc9faa4ffcab0960e/README.md"
+  },
+  {
+    "source": "koriki",
+    "path": "generate_release.sh",
+    "sha256": "855ec6fe66e488109281ffe29d2424abfc1d74c88613da3287ac0323674dd75c",
+    "size": 141,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/Koriki/26f47799202530c89edadd2dc9faa4ffcab0960e/generate_release.sh",
+    "view_url": "https://github.com/rg35xx-cfw/Koriki/blob/26f47799202530c89edadd2dc9faa4ffcab0960e/generate_release.sh"
+  },
+  {
+    "source": "gist",
+    "path": "rg35xx.dts",
+    "sha256": "461c8ab23414e469f5a9dfa6480ef583eba076647f6d4db584047757a8d16b47",
+    "size": 32188,
+    "raw_url": "https://gist.githubusercontent.com/macromorgan/0491c853fcd28dc093945220348192c0/raw/d5c388f54dd687637a6331b8a611e84e25deff9a/rg35xx.dts",
+    "view_url": "https://gist.github.com/macromorgan/0491c853fcd28dc093945220348192c0"
+  },
+  {
+    "source": "s500-pdf",
+    "path": "s500-datasheet.pdf",
+    "sha256": "a5f62420efc54e1ca6f0de638ea5e0ba0e7708abedef10c2378a0a3e5a9aa236",
+    "size": 12352406,
+    "raw_url": "https://gzhls.at/blob/ldb/9/a/e/c/e8dd47a7e48102d05772a88a11c09fc5d86e.pdf",
+    "view_url": "https://gzhls.at/blob/ldb/9/a/e/c/e8dd47a7e48102d05772a88a11c09fc5d86e.pdf",
+    "pages": 329
+  }
+]

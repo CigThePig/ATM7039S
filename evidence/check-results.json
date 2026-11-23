@@ -1,0 +1,22 @@
+{
+  "date": "2026-11-22",
+  "validation": {
+    "errors": [],
+    "warnings": [
+      "register alias ('candidate:GPIO_MFP_PWM_BASE', 124)",
+      "overlap (review shared resources): dt:/twd-watchdog@b0020600:1 / dt:/nand@b0210000:1",
+      "overlap (review shared resources): dt:/gpio@b01b0000:0 / dt:/nand@b0210000:2",
+      "overlap (review shared resources): dt:/pwm@b01b0050:0 / dt:/nand@b0210000:2",
+      "overlap (review shared resources): dt:/isp@b0270000:1 / dt:/nand@b0210000:1",
+      "overlap (review shared resources): dt:/hdmi@b02c0000:0 / dt:/hdmi_cec@b02c011c:0",
+      "overlap (review shared resources): dt:/nand@b0210000:3 / dt:/dma@b0260000:0"
+    ],
+    "blocks": 123,
+    "registers": 1760,
+    "findings": 35
+  },
+  "hardware_tests": 0,
+  "independent_dtc_property_differences": 0,
+  "unit_tests": 40,
+  "unit_tests_passed": true
+}

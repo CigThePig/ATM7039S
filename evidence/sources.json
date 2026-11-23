@@ -1,0 +1,155 @@
+[
+  {
+    "id": "vendor-kernel",
+    "url": "https://github.com/rg35xx-cfw/s500_kernel",
+    "revision": "81cc77b59250341b9abe90ed4188cde7b7aa1eeb",
+    "type": "source-repository",
+    "examined": "2026-11-22",
+    "license_status": "file-specific; see reports/licensing.md",
+    "scope": "related-chip source"
+  },
+  {
+    "id": "uboot",
+    "url": "https://github.com/rg35xx-cfw/u-boot_s500",
+    "revision": "0a557e37a5274d40bcd357585d4bcd3b73619371",
+    "type": "source-repository",
+    "examined": "2026-11-22",
+    "license_status": "file-specific; see reports/licensing.md",
+    "scope": "related-chip source"
+  },
+  {
+    "id": "batocera",
+    "url": "https://github.com/rg35xx-cfw/batocera.linux",
+    "revision": "961d8abcea18017e6c6275c914f81f3b3d72c760",
+    "type": "source-repository",
+    "examined": "2026-11-22",
+    "license_status": "file-specific; see reports/licensing.md",
+    "scope": "project history and configuration"
+  },
+  {
+    "id": "linux",
+    "url": "https://github.com/torvalds/linux",
+    "revision": "adc218676eef25575469234709c2d87185ca223a",
+    "type": "source-repository",
+    "examined": "2026-11-22",
+    "license_status": "file-specific; see reports/licensing.md",
+    "scope": "related-chip source"
+  },
+  {
+    "id": "knulli-wiki",
+    "url": "https://github.com/knulli-cfw/knulli.org",
+    "revision": "314b26f1822c8531bed8a9cea72028b229b4436e",
+    "type": "source-repository",
+    "examined": "2026-11-22",
+    "license_status": "file-specific; see reports/licensing.md",
+    "scope": "project history and configuration"
+  },
+  {
+    "id": "stock-demo",
+    "url": "https://github.com/yohanes/rg35xx-stock-sdl-demo",
+    "revision": "8dbe95d60558740893a57593d792e388c0932ba9",
+    "type": "source-repository",
+    "examined": "2026-11-22",
+    "license_status": "file-specific; see reports/licensing.md",
+    "scope": "project history and configuration"
+  },
+  {
+    "id": "cfw-wiki",
+    "url": "https://github.com/rg35xx-cfw/rg35xx-cfw.github.io",
+    "revision": "1dc0a87ee27a9d6216678929bcc54eee87f281f9",
+    "type": "source-repository",
+    "examined": "2026-11-22",
+    "license_status": "file-specific; see reports/licensing.md",
+    "scope": "project history and configuration"
+  },
+  {
+    "id": "buildroot",
+    "url": "https://github.com/rg35xx-cfw/buildroot",
+    "revision": "798ba21c01ceb8ab1a5a4ae6986e0b77d5d8f7aa",
+    "type": "source-repository",
+    "examined": "2026-11-22",
+    "license_status": "file-specific; see reports/licensing.md",
+    "scope": "project history and configuration"
+  },
+  {
+    "id": "remesa",
+    "url": "https://github.com/reMESA-devgroup/reMESA",
+    "revision": "845f385cd61aa17042f9426ec8306b4386005c24",
+    "type": "source-repository",
+    "examined": "2026-11-22",
+    "license_status": "file-specific; see reports/licensing.md",
+    "scope": "project history and configuration"
+  },
+  {
+    "id": "sgx544-history",
+    "url": "https://github.com/reMESA-devgroup/SGX544-reMESA",
+    "revision": "4c1e3095e73a506bfc48bd77041d35da0d1231e6",
+    "type": "source-repository",
+    "examined": "2026-11-22",
+    "license_status": "file-specific; see reports/licensing.md",
+    "scope": "project history and configuration"
+  },
+  {
+    "id": "koriki",
+    "url": "https://github.com/rg35xx-cfw/Koriki",
+    "revision": "26f47799202530c89edadd2dc9faa4ffcab0960e",
+    "type": "source-repository",
+    "examined": "2026-11-22",
+    "license_status": "file-specific; see reports/licensing.md",
+    "scope": "project history and configuration"
+  },
+  {
+    "id": "gist",
+    "url": "https://gist.github.com/macromorgan/0491c853fcd28dc093945220348192c0",
+    "revision": "7783b472fce9256d91e3d8d331f6dd8cd8aeb8d6",
+    "type": "flattened-device-tree",
+    "examined": "2026-11-22",
+    "license_status": "No license established; original source not redistributed",
+    "scope": "public RG35XX-labelled software artifact; extraction provenance not established"
+  },
+  {
+    "id": "sec2015",
+    "url": "https://www.sec.gov/Archives/edgar/data/1342068/000114420416096913/v436680_20f.htm",
+    "revision": "2015 Form 20-F, filed 2016",
+    "type": "manufacturer-filing",
+    "examined": "2026-11-22",
+    "license_status": "Referenced, not copied",
+    "scope": "manufacturer product table; not electrical characterization"
+  },
+  {
+    "id": "sec2013",
+    "url": "https://www.sec.gov/Archives/edgar/data/1342068/000114420414024402/v374190_20f.htm",
+    "revision": "2013 Form 20-F, filed 2014",
+    "type": "manufacturer-filing",
+    "examined": "2026-11-22",
+    "license_status": "Referenced, not copied",
+    "scope": "ATM7039, not S variant"
+  },
+  {
+    "id": "tinyhack",
+    "url": "https://tinyhack.com/2023/12/31/reverse-engineering-rg35xx-stock-firmware/",
+    "revision": "article dated 2023-12-31; accessed 2026-11-22",
+    "type": "researcher-report",
+    "examined": "2026-11-22",
+    "license_status": "Referenced; independently paraphrased",
+    "scope": "reported stock firmware observations, not independently reproduced boot"
+  },
+  {
+    "id": "actions-launch",
+    "url": "https://www.prnewswire.com/news-releases/actions-semiconductor-launches-high-performance-owl-series-chipset-225168632.html",
+    "revision": "2013-09-25",
+    "type": "manufacturer-announcement",
+    "examined": "2026-11-22",
+    "license_status": "Referenced only",
+    "scope": "ATM7039 announcement, not ATM7039S"
+  },
+  {
+    "id": "s500-pdf",
+    "url": "https://gzhls.at/blob/ldb/9/a/e/c/e8dd47a7e48102d05772a88a11c09fc5d86e.pdf",
+    "revision": "S500 datasheet v1.4 dated 2015-07-17; mirrored manufacturer-branded document",
+    "type": "related-chip-manual",
+    "examined": "2026-11-22",
+    "license_status": "All rights reserved; referenced, not redistributed",
+    "scope": "S500 only; not authenticated as an ATM7039S manual"
+  }
+]

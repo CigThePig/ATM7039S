@@ -1,0 +1,2786 @@
+[
+  {
+    "source": "linux",
+    "path": "drivers/clk/actions/owl-s500.c",
+    "definitions": [
+      {
+        "name": "CMU_COREPLL",
+        "expression": "(0x0000)",
+        "value": 0,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 31
+      },
+      {
+        "name": "CMU_DEVPLL",
+        "expression": "(0x0004)",
+        "value": 4,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 32
+      },
+      {
+        "name": "CMU_DDRPLL",
+        "expression": "(0x0008)",
+        "value": 8,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 33
+      },
+      {
+        "name": "CMU_NANDPLL",
+        "expression": "(0x000C)",
+        "value": 12,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 34
+      },
+      {
+        "name": "CMU_DISPLAYPLL",
+        "expression": "(0x0010)",
+        "value": 16,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 35
+      },
+      {
+        "name": "CMU_AUDIOPLL",
+        "expression": "(0x0014)",
+        "value": 20,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 36
+      },
+      {
+        "name": "CMU_TVOUTPLL",
+        "expression": "(0x0018)",
+        "value": 24,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 37
+      },
+      {
+        "name": "CMU_BUSCLK",
+        "expression": "(0x001C)",
+        "value": 28,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 38
+      },
+      {
+        "name": "CMU_SENSORCLK",
+        "expression": "(0x0020)",
+        "value": 32,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 39
+      },
+      {
+        "name": "CMU_LCDCLK",
+        "expression": "(0x0024)",
+        "value": 36,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 40
+      },
+      {
+        "name": "CMU_DSICLK",
+        "expression": "(0x0028)",
+        "value": 40,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 41
+      },
+      {
+        "name": "CMU_CSICLK",
+        "expression": "(0x002C)",
+        "value": 44,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 42
+      },
+      {
+        "name": "CMU_DECLK",
+        "expression": "(0x0030)",
+        "value": 48,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 43
+      },
+      {
+        "name": "CMU_BISPCLK",
+        "expression": "(0x0034)",
+        "value": 52,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 44
+      },
+      {
+        "name": "CMU_BUSCLK1",
+        "expression": "(0x0038)",
+        "value": 56,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 45
+      },
+      {
+        "name": "CMU_VDECLK",
+        "expression": "(0x0040)",
+        "value": 64,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 46
+      },
+      {
+        "name": "CMU_VCECLK",
+        "expression": "(0x0044)",
+        "value": 68,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 47
+      },
+      {
+        "name": "CMU_NANDCCLK",
+        "expression": "(0x004C)",
+        "value": 76,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 48
+      },
+      {
+        "name": "CMU_SD0CLK",
+        "expression": "(0x0050)",
+        "value": 80,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 49
+      },
+      {
+        "name": "CMU_SD1CLK",
+        "expression": "(0x0054)",
+        "value": 84,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 50
+      },
+      {
+        "name": "CMU_SD2CLK",
+        "expression": "(0x0058)",
+        "value": 88,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 51
+      },
+      {
+        "name": "CMU_UART0CLK",
+        "expression": "(0x005C)",
+        "value": 92,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 52
+      },
+      {
+        "name": "CMU_UART1CLK",
+        "expression": "(0x0060)",
+        "value": 96,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 53
+      },
+      {
+        "name": "CMU_UART2CLK",
+        "expression": "(0x0064)",
+        "value": 100,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 54
+      },
+      {
+        "name": "CMU_PWM4CLK",
+        "expression": "(0x0068)",
+        "value": 104,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 55
+      },
+      {
+        "name": "CMU_PWM5CLK",
+        "expression": "(0x006C)",
+        "value": 108,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 56
+      },
+      {
+        "name": "CMU_PWM0CLK",
+        "expression": "(0x0070)",
+        "value": 112,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 57
+      },
+      {
+        "name": "CMU_PWM1CLK",
+        "expression": "(0x0074)",
+        "value": 116,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 58
+      },
+      {
+        "name": "CMU_PWM2CLK",
+        "expression": "(0x0078)",
+        "value": 120,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 59
+      },
+      {
+        "name": "CMU_PWM3CLK",
+        "expression": "(0x007C)",
+        "value": 124,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 60
+      },
+      {
+        "name": "CMU_USBPLL",
+        "expression": "(0x0080)",
+        "value": 128,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 61
+      },
+      {
+        "name": "CMU_ETHERNETPLL",
+        "expression": "(0x0084)",
+        "value": 132,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 62
+      },
+      {
+        "name": "CMU_CVBSPLL",
+        "expression": "(0x0088)",
+        "value": 136,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 63
+      },
+      {
+        "name": "CMU_LENSCLK",
+        "expression": "(0x008C)",
+        "value": 140,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 64
+      },
+      {
+        "name": "CMU_GPU3DCLK",
+        "expression": "(0x0090)",
+        "value": 144,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 65
+      },
+      {
+        "name": "CMU_CORECTL",
+        "expression": "(0x009C)",
+        "value": 156,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 66
+      },
+      {
+        "name": "CMU_DEVCLKEN0",
+        "expression": "(0x00A0)",
+        "value": 160,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 67
+      },
+      {
+        "name": "CMU_DEVCLKEN1",
+        "expression": "(0x00A4)",
+        "value": 164,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 68
+      },
+      {
+        "name": "CMU_DEVRST0",
+        "expression": "(0x00A8)",
+        "value": 168,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 69
+      },
+      {
+        "name": "CMU_DEVRST1",
+        "expression": "(0x00AC)",
+        "value": 172,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 70
+      },
+      {
+        "name": "CMU_UART3CLK",
+        "expression": "(0x00B0)",
+        "value": 176,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 71
+      },
+      {
+        "name": "CMU_UART4CLK",
+        "expression": "(0x00B4)",
+        "value": 180,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 72
+      },
+      {
+        "name": "CMU_UART5CLK",
+        "expression": "(0x00B8)",
+        "value": 184,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 73
+      },
+      {
+        "name": "CMU_UART6CLK",
+        "expression": "(0x00BC)",
+        "value": 188,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 74
+      },
+      {
+        "name": "CMU_SSCLK",
+        "expression": "(0x00C0)",
+        "value": 192,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 75
+      },
+      {
+        "name": "CMU_DIGITALDEBUG",
+        "expression": "(0x00D0)",
+        "value": 208,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 76
+      },
+      {
+        "name": "CMU_ANALOGDEBUG",
+        "expression": "(0x00D4)",
+        "value": 212,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 77
+      },
+      {
+        "name": "CMU_COREPLLDEBUG",
+        "expression": "(0x00D8)",
+        "value": 216,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 78
+      },
+      {
+        "name": "CMU_DEVPLLDEBUG",
+        "expression": "(0x00DC)",
+        "value": 220,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 79
+      },
+      {
+        "name": "CMU_DDRPLLDEBUG",
+        "expression": "(0x00E0)",
+        "value": 224,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 80
+      },
+      {
+        "name": "CMU_NANDPLLDEBUG",
+        "expression": "(0x00E4)",
+        "value": 228,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 81
+      },
+      {
+        "name": "CMU_DISPLAYPLLDEBUG",
+        "expression": "(0x00E8)",
+        "value": 232,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 82
+      },
+      {
+        "name": "CMU_TVOUTPLLDEBUG",
+        "expression": "(0x00EC)",
+        "value": 236,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 83
+      },
+      {
+        "name": "CMU_DEEPCOLORPLLDEBUG",
+        "expression": "(0x00F4)",
+        "value": 244,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 84
+      },
+      {
+        "name": "CMU_AUDIOPLL_ETHPLLDEBUG",
+        "expression": "(0x00F8)",
+        "value": 248,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 85
+      },
+      {
+        "name": "CMU_CVBSPLLDEBUG",
+        "expression": "(0x00FC)",
+        "value": 252,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 86
+      },
+      {
+        "name": "OWL_S500_COREPLL_DELAY",
+        "expression": "(150)",
+        "value": 150,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 88
+      },
+      {
+        "name": "OWL_S500_DDRPLL_DELAY",
+        "expression": "(63)",
+        "value": 63,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 89
+      },
+      {
+        "name": "OWL_S500_DEVPLL_DELAY",
+        "expression": "(28)",
+        "value": 28,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 90
+      },
+      {
+        "name": "OWL_S500_NANDPLL_DELAY",
+        "expression": "(44)",
+        "value": 44,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 91
+      },
+      {
+        "name": "OWL_S500_DISPLAYPLL_DELAY",
+        "expression": "(57)",
+        "value": 57,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 92
+      },
+      {
+        "name": "OWL_S500_ETHERNETPLL_DELAY",
+        "expression": "(25)",
+        "value": 25,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 93
+      },
+      {
+        "name": "OWL_S500_AUDIOPLL_DELAY",
+        "expression": "(100)",
+        "value": 100,
+        "source": "drivers/clk/actions/owl-s500.c",
+        "line": 94
+      }
+    ],
+    "unresolved": []
+  },
+  {
+    "source": "linux",
+    "path": "drivers/pinctrl/actions/pinctrl-s500.c",
+    "definitions": [
+      {
+        "name": "MFCTL0",
+        "expression": "(0x0040)",
+        "value": 64,
+        "source": "drivers/pinctrl/actions/pinctrl-s500.c",
+        "line": 17
+      },
+      {
+        "name": "MFCTL1",
+        "expression": "(0x0044)",
+        "value": 68,
+        "source": "drivers/pinctrl/actions/pinctrl-s500.c",
+        "line": 18
+      },
+      {
+        "name": "MFCTL2",
+        "expression": "(0x0048)",
+        "value": 72,
+        "source": "drivers/pinctrl/actions/pinctrl-s500.c",
+        "line": 19
+      },
+      {
+        "name": "MFCTL3",
+        "expression": "(0x004C)",
+        "value": 76,
+        "source": "drivers/pinctrl/actions/pinctrl-s500.c",
+        "line": 20
+      },
+      {
+        "name": "PAD_PULLCTL0",
+        "expression": "(0x0060)",
+        "value": 96,
+        "source": "drivers/pinctrl/actions/pinctrl-s500.c",
+        "line": 21
+      },
+      {
+        "name": "PAD_PULLCTL1",
+        "expression": "(0x0064)",
+        "value": 100,
+        "source": "drivers/pinctrl/actions/pinctrl-s500.c",
+        "line": 22
+      },
+      {
+        "name": "PAD_PULLCTL2",
+        "expression": "(0x0068)",
+        "value": 104,
+        "source": "drivers/pinctrl/actions/pinctrl-s500.c",
+        "line": 23
+      },
+      {
+        "name": "PAD_ST0",
+        "expression": "(0x006C)",
+        "value": 108,
+        "source": "drivers/pinctrl/actions/pinctrl-s500.c",
+        "line": 24
+      },
+      {
+        "name": "PAD_ST1",
+        "expression": "(0x0070)",
+        "value": 112,
+        "source": "drivers/pinctrl/actions/pinctrl-s500.c",
+        "line": 25
+      },
+      {
+        "name": "PAD_CTL",
+        "expression": "(0x0074)",
+        "value": 116,
+        "source": "drivers/pinctrl/actions/pinctrl-s500.c",
+        "line": 26
+      },
+      {
+        "name": "PAD_DRV0",
+        "expression": "(0x0080)",
+        "value": 128,
+        "source": "drivers/pinctrl/actions/pinctrl-s500.c",
+        "line": 27
+      },
+      {
+        "name": "PAD_DRV1",
+        "expression": "(0x0084)",
+        "value": 132,
+        "source": "drivers/pinctrl/actions/pinctrl-s500.c",
+        "line": 28
+      },
+      {
+        "name": "PAD_DRV2",
+        "expression": "(0x0088)",
+        "value": 136,
+        "source": "drivers/pinctrl/actions/pinctrl-s500.c",
+        "line": 29
+      }
+    ],
+    "unresolved": [
+      {
+        "name": "NUM_GPIOS",
+        "expression": "(_GPIOE(3) + 1)",
+        "line": 37
+      },
+      {
+        "name": "DNAND_DQS",
+        "expression": "_GPIOA(12)",
+        "line": 40
+      },
+      {
+        "name": "DNAND_DQSN",
+        "expression": "_GPIOA(13)",
+        "line": 41
+      },
+      {
+        "name": "ETH_TXD0",
+        "expression": "_GPIOA(14)",
+        "line": 42
+      },
+      {
+        "name": "ETH_TXD1",
+        "expression": "_GPIOA(15)",
+        "line": 43
+      },
+      {
+        "name": "ETH_TXEN",
+        "expression": "_GPIOA(16)",
+        "line": 44
+      },
+      {
+        "name": "ETH_RXER",
+        "expression": "_GPIOA(17)",
+        "line": 45
+      },
+      {
+        "name": "ETH_CRS_DV",
+        "expression": "_GPIOA(18)",
+        "line": 46
+      },
+      {
+        "name": "ETH_RXD1",
+        "expression": "_GPIOA(19)",
+        "line": 47
+      },
+      {
+        "name": "ETH_RXD0",
+        "expression": "_GPIOA(20)",
+        "line": 48
+      },
+      {
+        "name": "ETH_REF_CLK",
+        "expression": "_GPIOA(21)",
+        "line": 49
+      },
+      {
+        "name": "ETH_MDC",
+        "expression": "_GPIOA(22)",
+        "line": 50
+      },
+      {
+        "name": "ETH_MDIO",
+        "expression": "_GPIOA(23)",
+        "line": 51
+      },
+      {
+        "name": "SIRQ0",
+        "expression": "_GPIOA(24)",
+        "line": 52
+      },
+      {
+        "name": "SIRQ1",
+        "expression": "_GPIOA(25)",
+        "line": 53
+      },
+      {
+        "name": "SIRQ2",
+        "expression": "_GPIOA(26)",
+        "line": 54
+      },
+      {
+        "name": "I2S_D0",
+        "expression": "_GPIOA(27)",
+        "line": 55
+      },
+      {
+        "name": "I2S_BCLK0",
+        "expression": "_GPIOA(28)",
+        "line": 56
+      },
+      {
+        "name": "I2S_LRCLK0",
+        "expression": "_GPIOA(29)",
+        "line": 57
+      },
+      {
+        "name": "I2S_MCLK0",
+        "expression": "_GPIOA(30)",
+        "line": 58
+      },
+      {
+        "name": "I2S_D1",
+        "expression": "_GPIOA(31)",
+        "line": 59
+      },
+      {
+        "name": "I2S_BCLK1",
+        "expression": "_GPIOB(0)",
+        "line": 61
+      },
+      {
+        "name": "I2S_LRCLK1",
+        "expression": "_GPIOB(1)",
+        "line": 62
+      },
+      {
+        "name": "I2S_MCLK1",
+        "expression": "_GPIOB(2)",
+        "line": 63
+      },
+      {
+        "name": "KS_IN0",
+        "expression": "_GPIOB(3)",
+        "line": 64
+      },
+      {
+        "name": "KS_IN1",
+        "expression": "_GPIOB(4)",
+        "line": 65
+      },
+      {
+        "name": "KS_IN2",
+        "expression": "_GPIOB(5)",
+        "line": 66
+      },
+      {
+        "name": "KS_IN3",
+        "expression": "_GPIOB(6)",
+        "line": 67
+      },
+      {
+        "name": "KS_OUT0",
+        "expression": "_GPIOB(7)",
+        "line": 68
+      },
+      {
+        "name": "KS_OUT1",
+        "expression": "_GPIOB(8)",
+        "line": 69
+      },
+      {
+        "name": "KS_OUT2",
+        "expression": "_GPIOB(9)",
+        "line": 70
+      },
+      {
+        "name": "LVDS_OEP",
+        "expression": "_GPIOB(10)",
+        "line": 71
+      },
+      {
+        "name": "LVDS_OEN",
+        "expression": "_GPIOB(11)",
+        "line": 72
+      },
+      {
+        "name": "LVDS_ODP",
+        "expression": "_GPIOB(12)",
+        "line": 73
+      },
+      {
+        "name": "LVDS_ODN",
+        "expression": "_GPIOB(13)",
+        "line": 74
+      },
+      {
+        "name": "LVDS_OCP",
+        "expression": "_GPIOB(14)",
+        "line": 75
+      },
+      {
+        "name": "LVDS_OCN",
+        "expression": "_GPIOB(15)",
+        "line": 76
+      },
+      {
+        "name": "LVDS_OBP",
+        "expression": "_GPIOB(16)",
+        "line": 77
+      },
+      {
+        "name": "LVDS_OBN",
+        "expression": "_GPIOB(17)",
+        "line": 78
+      },
+      {
+        "name": "LVDS_OAP",
+        "expression": "_GPIOB(18)",
+        "line": 79
+      },
+      {
+        "name": "LVDS_OAN",
+        "expression": "_GPIOB(19)",
+        "line": 80
+      },
+      {
+        "name": "LVDS_EEP",
+        "expression": "_GPIOB(20)",
+        "line": 81
+      },
+      {
+        "name": "LVDS_EEN",
+        "expression": "_GPIOB(21)",
+        "line": 82
+      },
+      {
+        "name": "LVDS_EDP",
+        "expression": "_GPIOB(22)",
+        "line": 83
+      },
+      {
+        "name": "LVDS_EDN",
+        "expression": "_GPIOB(23)",
+        "line": 84
+      },
+      {
+        "name": "LVDS_ECP",
+        "expression": "_GPIOB(24)",
+        "line": 85
+      },
+      {
+        "name": "LVDS_ECN",
+        "expression": "_GPIOB(25)",
+        "line": 86
+      },
+      {
+        "name": "LVDS_EBP",
+        "expression": "_GPIOB(26)",
+        "line": 87
+      },
+      {
+        "name": "LVDS_EBN",
+        "expression": "_GPIOB(27)",
+        "line": 88
+      },
+      {
+        "name": "LVDS_EAP",
+        "expression": "_GPIOB(28)",
+        "line": 89
+      },
+      {
+        "name": "LVDS_EAN",
+        "expression": "_GPIOB(29)",
+        "line": 90
+      },
+      {
+        "name": "LCD0_D18",
+        "expression": "_GPIOB(30)",
+        "line": 91
+      },
+      {
+        "name": "LCD0_D17",
+        "expression": "_GPIOB(31)",
+        "line": 92
+      },
+      {
+        "name": "DSI_DP3",
+        "expression": "_GPIOC(0)",
+        "line": 94
+      },
+      {
+        "name": "DSI_DN3",
+        "expression": "_GPIOC(1)",
+        "line": 95
+      },
+      {
+        "name": "DSI_DP1",
+        "expression": "_GPIOC(2)",
+        "line": 96
+      },
+      {
+        "name": "DSI_DN1",
+        "expression": "_GPIOC(3)",
+        "line": 97
+      },
+      {
+        "name": "DSI_CP",
+        "expression": "_GPIOC(4)",
+        "line": 98
+      },
+      {
+        "name": "DSI_CN",
+        "expression": "_GPIOC(5)",
+        "line": 99
+      },
+      {
+        "name": "DSI_DP0",
+        "expression": "_GPIOC(6)",
+        "line": 100
+      },
+      {
+        "name": "DSI_DN0",
+        "expression": "_GPIOC(7)",
+        "line": 101
+      },
+      {
+        "name": "DSI_DP2",
+        "expression": "_GPIOC(8)",
+        "line": 102
+      },
+      {
+        "name": "DSI_DN2",
+        "expression": "_GPIOC(9)",
+        "line": 103
+      },
+      {
+        "name": "SD0_D0",
+        "expression": "_GPIOC(10)",
+        "line": 104
+      },
+      {
+        "name": "SD0_D1",
+        "expression": "_GPIOC(11)",
+        "line": 105
+      },
+      {
+        "name": "SD0_D2",
+        "expression": "_GPIOC(12)",
+        "line": 106
+      },
+      {
+        "name": "SD0_D3",
+        "expression": "_GPIOC(13)",
+        "line": 107
+      },
+      {
+        "name": "SD1_D0",
+        "expression": "_GPIOC(14)",
+        "line": 108
+      },
+      {
+        "name": "SD1_D1",
+        "expression": "_GPIOC(15)",
+        "line": 109
+      },
+      {
+        "name": "SD1_D2",
+        "expression": "_GPIOC(16)",
+        "line": 110
+      },
+      {
+        "name": "SD1_D3",
+        "expression": "_GPIOC(17)",
+        "line": 111
+      },
+      {
+        "name": "SD0_CMD",
+        "expression": "_GPIOC(18)",
+        "line": 112
+      },
+      {
+        "name": "SD0_CLK",
+        "expression": "_GPIOC(19)",
+        "line": 113
+      },
+      {
+        "name": "SD1_CMD",
+        "expression": "_GPIOC(20)",
+        "line": 114
+      },
+      {
+        "name": "SD1_CLK",
+        "expression": "_GPIOC(21)",
+        "line": 115
+      },
+      {
+        "name": "SPI0_SCLK",
+        "expression": "_GPIOC(22)",
+        "line": 116
+      },
+      {
+        "name": "SPI0_SS",
+        "expression": "_GPIOC(23)",
+        "line": 117
+      },
+      {
+        "name": "SPI0_MISO",
+        "expression": "_GPIOC(24)",
+        "line": 118
+      },
+      {
+        "name": "SPI0_MOSI",
+        "expression": "_GPIOC(25)",
+        "line": 119
+      },
+      {
+        "name": "UART0_RX",
+        "expression": "_GPIOC(26)",
+        "line": 120
+      },
+      {
+        "name": "UART0_TX",
+        "expression": "_GPIOC(27)",
+        "line": 121
+      },
+      {
+        "name": "I2C0_SCLK",
+        "expression": "_GPIOC(28)",
+        "line": 122
+      },
+      {
+        "name": "I2C0_SDATA",
+        "expression": "_GPIOC(29)",
+        "line": 123
+      },
+      {
+        "name": "SENSOR0_PCLK",
+        "expression": "_GPIOC(31)",
+        "line": 124
+      },
+      {
+        "name": "SENSOR0_CKOUT",
+        "expression": "_GPIOD(10)",
+        "line": 126
+      },
+      {
+        "name": "DNAND_ALE",
+        "expression": "_GPIOD(12)",
+        "line": 127
+      },
+      {
+        "name": "DNAND_CLE",
+        "expression": "_GPIOD(13)",
+        "line": 128
+      },
+      {
+        "name": "DNAND_CEB0",
+        "expression": "_GPIOD(14)",
+        "line": 129
+      },
+      {
+        "name": "DNAND_CEB1",
+        "expression": "_GPIOD(15)",
+        "line": 130
+      },
+      {
+        "name": "DNAND_CEB2",
+        "expression": "_GPIOD(16)",
+        "line": 131
+      },
+      {
+        "name": "DNAND_CEB3",
+        "expression": "_GPIOD(17)",
+        "line": 132
+      },
+      {
+        "name": "UART2_RX",
+        "expression": "_GPIOD(18)",
+        "line": 133
+      },
+      {
+        "name": "UART2_TX",
+        "expression": "_GPIOD(19)",
+        "line": 134
+      },
+      {
+        "name": "UART2_RTSB",
+        "expression": "_GPIOD(20)",
+        "line": 135
+      },
+      {
+        "name": "UART2_CTSB",
+        "expression": "_GPIOD(21)",
+        "line": 136
+      },
+      {
+        "name": "UART3_RX",
+        "expression": "_GPIOD(22)",
+        "line": 137
+      },
+      {
+        "name": "UART3_TX",
+        "expression": "_GPIOD(23)",
+        "line": 138
+      },
+      {
+        "name": "UART3_RTSB",
+        "expression": "_GPIOD(24)",
+        "line": 139
+      },
+      {
+        "name": "UART3_CTSB",
+        "expression": "_GPIOD(25)",
+        "line": 140
+      },
+      {
+        "name": "PCM1_IN",
+        "expression": "_GPIOD(28)",
+        "line": 141
+      },
+      {
+        "name": "PCM1_CLK",
+        "expression": "_GPIOD(29)",
+        "line": 142
+      },
+      {
+        "name": "PCM1_SYNC",
+        "expression": "_GPIOD(30)",
+        "line": 143
+      },
+      {
+        "name": "PCM1_OUT",
+        "expression": "_GPIOD(31)",
+        "line": 144
+      },
+      {
+        "name": "I2C1_SCLK",
+        "expression": "_GPIOE(0)",
+        "line": 146
+      },
+      {
+        "name": "I2C1_SDATA",
+        "expression": "_GPIOE(1)",
+        "line": 147
+      },
+      {
+        "name": "I2C2_SCLK",
+        "expression": "_GPIOE(2)",
+        "line": 148
+      },
+      {
+        "name": "I2C2_SDATA",
+        "expression": "_GPIOE(3)",
+        "line": 149
+      },
+      {
+        "name": "CSI_DN0",
+        "expression": "_PIN(0)",
+        "line": 151
+      },
+      {
+        "name": "CSI_DP0",
+        "expression": "_PIN(1)",
+        "line": 152
+      },
+      {
+        "name": "CSI_DN1",
+        "expression": "_PIN(2)",
+        "line": 153
+      },
+      {
+        "name": "CSI_DP1",
+        "expression": "_PIN(3)",
+        "line": 154
+      },
+      {
+        "name": "CSI_CN",
+        "expression": "_PIN(4)",
+        "line": 155
+      },
+      {
+        "name": "CSI_CP",
+        "expression": "_PIN(5)",
+        "line": 156
+      },
+      {
+        "name": "CSI_DN2",
+        "expression": "_PIN(6)",
+        "line": 157
+      },
+      {
+        "name": "CSI_DP2",
+        "expression": "_PIN(7)",
+        "line": 158
+      },
+      {
+        "name": "CSI_DN3",
+        "expression": "_PIN(8)",
+        "line": 159
+      },
+      {
+        "name": "CSI_DP3",
+        "expression": "_PIN(9)",
+        "line": 160
+      },
+      {
+        "name": "DNAND_D0",
+        "expression": "_PIN(10)",
+        "line": 162
+      },
+      {
+        "name": "DNAND_D1",
+        "expression": "_PIN(11)",
+        "line": 163
+      },
+      {
+        "name": "DNAND_D2",
+        "expression": "_PIN(12)",
+        "line": 164
+      },
+      {
+        "name": "DNAND_D3",
+        "expression": "_PIN(13)",
+        "line": 165
+      },
+      {
+        "name": "DNAND_D4",
+        "expression": "_PIN(14)",
+        "line": 166
+      },
+      {
+        "name": "DNAND_D5",
+        "expression": "_PIN(15)",
+        "line": 167
+      },
+      {
+        "name": "DNAND_D6",
+        "expression": "_PIN(16)",
+        "line": 168
+      },
+      {
+        "name": "DNAND_D7",
+        "expression": "_PIN(17)",
+        "line": 169
+      },
+      {
+        "name": "DNAND_WRB",
+        "expression": "_PIN(18)",
+        "line": 170
+      },
+      {
+        "name": "DNAND_RDB",
+        "expression": "_PIN(19)",
+        "line": 171
+      },
+      {
+        "name": "DNAND_RDBN",
+        "expression": "_PIN(20)",
+        "line": 172
+      },
+      {
+        "name": "DNAND_RB",
+        "expression": "_PIN(21)",
+        "line": 173
+      },
+      {
+        "name": "PORB",
+        "expression": "_PIN(22)",
+        "line": 175
+      },
+      {
+        "name": "CLKO_25M",
+        "expression": "_PIN(23)",
+        "line": 176
+      },
+      {
+        "name": "BSEL",
+        "expression": "_PIN(24)",
+        "line": 177
+      },
+      {
+        "name": "PKG0",
+        "expression": "_PIN(25)",
+        "line": 178
+      },
+      {
+        "name": "PKG1",
+        "expression": "_PIN(26)",
+        "line": 179
+      },
+      {
+        "name": "PKG2",
+        "expression": "_PIN(27)",
+        "line": 180
+      },
+      {
+        "name": "PKG3",
+        "expression": "_PIN(28)",
+        "line": 181
+      },
+      {
+        "name": "_FIRSTPAD",
+        "expression": "_GPIOA(0)",
+        "line": 183
+      },
+      {
+        "name": "_LASTPAD",
+        "expression": "PKG3",
+        "line": 184
+      },
+      {
+        "name": "NUM_PADS",
+        "expression": "(_PIN(28) + 1)",
+        "line": 185
+      }
+    ]
+  },
+  {
+    "source": "linux",
+    "path": "drivers/dma/owl-dma.c",
+    "definitions": [
+      {
+        "name": "OWL_DMA_FRAME_MAX_LENGTH",
+        "expression": "0xfffff",
+        "value": 1048575,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 29
+      },
+      {
+        "name": "OWL_DMA_IRQ_PD0",
+        "expression": "0x00",
+        "value": 0,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 32
+      },
+      {
+        "name": "OWL_DMA_IRQ_PD1",
+        "expression": "0x04",
+        "value": 4,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 33
+      },
+      {
+        "name": "OWL_DMA_IRQ_PD2",
+        "expression": "0x08",
+        "value": 8,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 34
+      },
+      {
+        "name": "OWL_DMA_IRQ_PD3",
+        "expression": "0x0C",
+        "value": 12,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 35
+      },
+      {
+        "name": "OWL_DMA_IRQ_EN0",
+        "expression": "0x10",
+        "value": 16,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 36
+      },
+      {
+        "name": "OWL_DMA_IRQ_EN1",
+        "expression": "0x14",
+        "value": 20,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 37
+      },
+      {
+        "name": "OWL_DMA_IRQ_EN2",
+        "expression": "0x18",
+        "value": 24,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 38
+      },
+      {
+        "name": "OWL_DMA_IRQ_EN3",
+        "expression": "0x1C",
+        "value": 28,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 39
+      },
+      {
+        "name": "OWL_DMA_SECURE_ACCESS_CTL",
+        "expression": "0x20",
+        "value": 32,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 40
+      },
+      {
+        "name": "OWL_DMA_NIC_QOS",
+        "expression": "0x24",
+        "value": 36,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 41
+      },
+      {
+        "name": "OWL_DMA_DBGSEL",
+        "expression": "0x28",
+        "value": 40,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 42
+      },
+      {
+        "name": "OWL_DMA_IDLE_STAT",
+        "expression": "0x2C",
+        "value": 44,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 43
+      },
+      {
+        "name": "OWL_DMAX_MODE",
+        "expression": "0x00",
+        "value": 0,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 47
+      },
+      {
+        "name": "OWL_DMAX_SOURCE",
+        "expression": "0x04",
+        "value": 4,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 48
+      },
+      {
+        "name": "OWL_DMAX_DESTINATION",
+        "expression": "0x08",
+        "value": 8,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 49
+      },
+      {
+        "name": "OWL_DMAX_FRAME_LEN",
+        "expression": "0x0C",
+        "value": 12,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 50
+      },
+      {
+        "name": "OWL_DMAX_FRAME_CNT",
+        "expression": "0x10",
+        "value": 16,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 51
+      },
+      {
+        "name": "OWL_DMAX_REMAIN_FRAME_CNT",
+        "expression": "0x14",
+        "value": 20,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 52
+      },
+      {
+        "name": "OWL_DMAX_REMAIN_CNT",
+        "expression": "0x18",
+        "value": 24,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 53
+      },
+      {
+        "name": "OWL_DMAX_SOURCE_STRIDE",
+        "expression": "0x1C",
+        "value": 28,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 54
+      },
+      {
+        "name": "OWL_DMAX_DESTINATION_STRIDE",
+        "expression": "0x20",
+        "value": 32,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 55
+      },
+      {
+        "name": "OWL_DMAX_START",
+        "expression": "0x24",
+        "value": 36,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 56
+      },
+      {
+        "name": "OWL_DMAX_PAUSE",
+        "expression": "0x28",
+        "value": 40,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 57
+      },
+      {
+        "name": "OWL_DMAX_CHAINED_CTL",
+        "expression": "0x2C",
+        "value": 44,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 58
+      },
+      {
+        "name": "OWL_DMAX_CONSTANT",
+        "expression": "0x30",
+        "value": 48,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 59
+      },
+      {
+        "name": "OWL_DMAX_LINKLIST_CTL",
+        "expression": "0x34",
+        "value": 52,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 60
+      },
+      {
+        "name": "OWL_DMAX_NEXT_DESCRIPTOR",
+        "expression": "0x38",
+        "value": 56,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 61
+      },
+      {
+        "name": "OWL_DMAX_CURRENT_DESCRIPTOR_NUM",
+        "expression": "0x3C",
+        "value": 60,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 62
+      },
+      {
+        "name": "OWL_DMAX_INT_CTL",
+        "expression": "0x40",
+        "value": 64,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 63
+      },
+      {
+        "name": "OWL_DMAX_INT_STATUS",
+        "expression": "0x44",
+        "value": 68,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 64
+      },
+      {
+        "name": "OWL_DMAX_CURRENT_SOURCE_POINTER",
+        "expression": "0x48",
+        "value": 72,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 65
+      },
+      {
+        "name": "OWL_DMAX_CURRENT_DESTINATION_POINTER",
+        "expression": "0x4C",
+        "value": 76,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 66
+      },
+      {
+        "name": "OWL_DMA_MODE_CB",
+        "expression": "BIT(23)",
+        "value": 8388608,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 87
+      },
+      {
+        "name": "OWL_DMA_MODE_CFE",
+        "expression": "BIT(29)",
+        "value": 536870912,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 91
+      },
+      {
+        "name": "OWL_DMA_MODE_LME",
+        "expression": "BIT(30)",
+        "value": 1073741824,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 92
+      },
+      {
+        "name": "OWL_DMA_MODE_CME",
+        "expression": "BIT(31)",
+        "value": 2147483648,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 93
+      },
+      {
+        "name": "OWL_DMA_LLC_SUSPEND",
+        "expression": "BIT(16)",
+        "value": 65536,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 104
+      },
+      {
+        "name": "OWL_DMA_INTCTL_BLOCK",
+        "expression": "BIT(0)",
+        "value": 1,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 107
+      },
+      {
+        "name": "OWL_DMA_INTCTL_SUPER_BLOCK",
+        "expression": "BIT(1)",
+        "value": 2,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 108
+      },
+      {
+        "name": "OWL_DMA_INTCTL_FRAME",
+        "expression": "BIT(2)",
+        "value": 4,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 109
+      },
+      {
+        "name": "OWL_DMA_INTCTL_HALF_FRAME",
+        "expression": "BIT(3)",
+        "value": 8,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 110
+      },
+      {
+        "name": "OWL_DMA_INTCTL_LAST_FRAME",
+        "expression": "BIT(4)",
+        "value": 16,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 111
+      },
+      {
+        "name": "OWL_DMA_INTSTAT_BLOCK",
+        "expression": "BIT(0)",
+        "value": 1,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 114
+      },
+      {
+        "name": "OWL_DMA_INTSTAT_SUPER_BLOCK",
+        "expression": "BIT(1)",
+        "value": 2,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 115
+      },
+      {
+        "name": "OWL_DMA_INTSTAT_FRAME",
+        "expression": "BIT(2)",
+        "value": 4,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 116
+      },
+      {
+        "name": "OWL_DMA_INTSTAT_HALF_FRAME",
+        "expression": "BIT(3)",
+        "value": 8,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 117
+      },
+      {
+        "name": "OWL_DMA_INTSTAT_LAST_FRAME",
+        "expression": "BIT(4)",
+        "value": 16,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 118
+      },
+      {
+        "name": "FCNT_VAL",
+        "expression": "0x1",
+        "value": 1,
+        "source": "drivers/dma/owl-dma.c",
+        "line": 125
+      }
+    ],
+    "unresolved": [
+      {
+        "name": "OWL_DMA_MODE_ST_DEV",
+        "expression": "OWL_DMA_MODE_ST(0)",
+        "line": 71
+      },
+      {
+        "name": "OWL_DMA_MODE_ST_DCU",
+        "expression": "OWL_DMA_MODE_ST(2)",
+        "line": 72
+      },
+      {
+        "name": "OWL_DMA_MODE_ST_SRAM",
+        "expression": "OWL_DMA_MODE_ST(3)",
+        "line": 73
+      },
+      {
+        "name": "OWL_DMA_MODE_DT_DEV",
+        "expression": "OWL_DMA_MODE_DT(0)",
+        "line": 75
+      },
+      {
+        "name": "OWL_DMA_MODE_DT_DCU",
+        "expression": "OWL_DMA_MODE_DT(2)",
+        "line": 76
+      },
+      {
+        "name": "OWL_DMA_MODE_DT_SRAM",
+        "expression": "OWL_DMA_MODE_DT(3)",
+        "line": 77
+      },
+      {
+        "name": "OWL_DMA_MODE_SAM_CONST",
+        "expression": "OWL_DMA_MODE_SAM(0)",
+        "line": 79
+      },
+      {
+        "name": "OWL_DMA_MODE_SAM_INC",
+        "expression": "OWL_DMA_MODE_SAM(1)",
+        "line": 80
+      },
+      {
+        "name": "OWL_DMA_MODE_SAM_STRIDE",
+        "expression": "OWL_DMA_MODE_SAM(2)",
+        "line": 81
+      },
+      {
+        "name": "OWL_DMA_MODE_DAM_CONST",
+        "expression": "OWL_DMA_MODE_DAM(0)",
+        "line": 83
+      },
+      {
+        "name": "OWL_DMA_MODE_DAM_INC",
+        "expression": "OWL_DMA_MODE_DAM(1)",
+        "line": 84
+      },
+      {
+        "name": "OWL_DMA_MODE_DAM_STRIDE",
+        "expression": "OWL_DMA_MODE_DAM(2)",
+        "line": 85
+      },
+      {
+        "name": "OWL_DMA_MODE_NDDBW_32BIT",
+        "expression": "OWL_DMA_MODE_NDDBW(0)",
+        "line": 89
+      },
+      {
+        "name": "OWL_DMA_MODE_NDDBW_8BIT",
+        "expression": "OWL_DMA_MODE_NDDBW(1)",
+        "line": 90
+      },
+      {
+        "name": "OWL_DMA_LLC_SAV_INC",
+        "expression": "OWL_DMA_LLC_SAV(0)",
+        "line": 97
+      },
+      {
+        "name": "OWL_DMA_LLC_SAV_LOAD_NEXT",
+        "expression": "OWL_DMA_LLC_SAV(1)",
+        "line": 98
+      },
+      {
+        "name": "OWL_DMA_LLC_SAV_LOAD_PREV",
+        "expression": "OWL_DMA_LLC_SAV(2)",
+        "line": 99
+      },
+      {
+        "name": "OWL_DMA_LLC_DAV_INC",
+        "expression": "OWL_DMA_LLC_DAV(0)",
+        "line": 101
+      },
+      {
+        "name": "OWL_DMA_LLC_DAV_LOAD_NEXT",
+        "expression": "OWL_DMA_LLC_DAV(1)",
+        "line": 102
+      },
+      {
+        "name": "OWL_DMA_LLC_DAV_LOAD_PREV",
+        "expression": "OWL_DMA_LLC_DAV(2)",
+        "line": 103
+      }
+    ]
+  },
+  {
+    "source": "linux",
+    "path": "drivers/mmc/host/owl-mmc.c",
+    "definitions": [
+      {
+        "name": "OWL_REG_SD_EN",
+        "expression": "0x0000",
+        "value": 0,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 28
+      },
+      {
+        "name": "OWL_REG_SD_CTL",
+        "expression": "0x0004",
+        "value": 4,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 29
+      },
+      {
+        "name": "OWL_REG_SD_STATE",
+        "expression": "0x0008",
+        "value": 8,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 30
+      },
+      {
+        "name": "OWL_REG_SD_CMD",
+        "expression": "0x000c",
+        "value": 12,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 31
+      },
+      {
+        "name": "OWL_REG_SD_ARG",
+        "expression": "0x0010",
+        "value": 16,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 32
+      },
+      {
+        "name": "OWL_REG_SD_RSPBUF0",
+        "expression": "0x0014",
+        "value": 20,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 33
+      },
+      {
+        "name": "OWL_REG_SD_RSPBUF1",
+        "expression": "0x0018",
+        "value": 24,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 34
+      },
+      {
+        "name": "OWL_REG_SD_RSPBUF2",
+        "expression": "0x001c",
+        "value": 28,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 35
+      },
+      {
+        "name": "OWL_REG_SD_RSPBUF3",
+        "expression": "0x0020",
+        "value": 32,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 36
+      },
+      {
+        "name": "OWL_REG_SD_RSPBUF4",
+        "expression": "0x0024",
+        "value": 36,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 37
+      },
+      {
+        "name": "OWL_REG_SD_DAT",
+        "expression": "0x0028",
+        "value": 40,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 38
+      },
+      {
+        "name": "OWL_REG_SD_BLK_SIZE",
+        "expression": "0x002c",
+        "value": 44,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 39
+      },
+      {
+        "name": "OWL_REG_SD_BLK_NUM",
+        "expression": "0x0030",
+        "value": 48,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 40
+      },
+      {
+        "name": "OWL_REG_SD_BUF_SIZE",
+        "expression": "0x0034",
+        "value": 52,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 41
+      },
+      {
+        "name": "OWL_SD_EN_RANE",
+        "expression": "BIT(31)",
+        "value": 2147483648,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 44
+      },
+      {
+        "name": "OWL_SD_EN_S18EN",
+        "expression": "BIT(12)",
+        "value": 4096,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 46
+      },
+      {
+        "name": "OWL_SD_EN_RESE",
+        "expression": "BIT(10)",
+        "value": 1024,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 47
+      },
+      {
+        "name": "OWL_SD_EN_DAT1_S",
+        "expression": "BIT(9)",
+        "value": 512,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 48
+      },
+      {
+        "name": "OWL_SD_EN_CLK_S",
+        "expression": "BIT(8)",
+        "value": 256,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 49
+      },
+      {
+        "name": "OWL_SD_ENABLE",
+        "expression": "BIT(7)",
+        "value": 128,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 50
+      },
+      {
+        "name": "OWL_SD_EN_BSEL",
+        "expression": "BIT(6)",
+        "value": 64,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 51
+      },
+      {
+        "name": "OWL_SD_EN_SDIOEN",
+        "expression": "BIT(3)",
+        "value": 8,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 52
+      },
+      {
+        "name": "OWL_SD_EN_DDREN",
+        "expression": "BIT(2)",
+        "value": 4,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 53
+      },
+      {
+        "name": "OWL_SD_CTL_TOUTEN",
+        "expression": "BIT(31)",
+        "value": 2147483648,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 57
+      },
+      {
+        "name": "OWL_SD_CTL_DELAY_MSK",
+        "expression": "GENMASK(23, 16)",
+        "value": 16711680,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 59
+      },
+      {
+        "name": "OWL_SD_CTL_CMDLEN",
+        "expression": "BIT(13)",
+        "value": 8192,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 62
+      },
+      {
+        "name": "OWL_SD_CTL_SCC",
+        "expression": "BIT(12)",
+        "value": 4096,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 63
+      },
+      {
+        "name": "OWL_SD_CTL_TS",
+        "expression": "BIT(7)",
+        "value": 128,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 65
+      },
+      {
+        "name": "OWL_SD_CTL_LBE",
+        "expression": "BIT(6)",
+        "value": 64,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 66
+      },
+      {
+        "name": "OWL_SD_CTL_C7EN",
+        "expression": "BIT(5)",
+        "value": 32,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 67
+      },
+      {
+        "name": "OWL_SD_DELAY_LOW_CLK",
+        "expression": "0x0f",
+        "value": 15,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 70
+      },
+      {
+        "name": "OWL_SD_DELAY_MID_CLK",
+        "expression": "0x0a",
+        "value": 10,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 71
+      },
+      {
+        "name": "OWL_SD_DELAY_HIGH_CLK",
+        "expression": "0x09",
+        "value": 9,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 72
+      },
+      {
+        "name": "OWL_SD_RDELAY_DDR50",
+        "expression": "0x0a",
+        "value": 10,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 73
+      },
+      {
+        "name": "OWL_SD_WDELAY_DDR50",
+        "expression": "0x08",
+        "value": 8,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 74
+      },
+      {
+        "name": "OWL_SD_STATE_DAT1BS",
+        "expression": "BIT(18)",
+        "value": 262144,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 77
+      },
+      {
+        "name": "OWL_SD_STATE_SDIOB_P",
+        "expression": "BIT(17)",
+        "value": 131072,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 78
+      },
+      {
+        "name": "OWL_SD_STATE_SDIOB_EN",
+        "expression": "BIT(16)",
+        "value": 65536,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 79
+      },
+      {
+        "name": "OWL_SD_STATE_TOUTE",
+        "expression": "BIT(15)",
+        "value": 32768,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 80
+      },
+      {
+        "name": "OWL_SD_STATE_BAEP",
+        "expression": "BIT(14)",
+        "value": 16384,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 81
+      },
+      {
+        "name": "OWL_SD_STATE_MEMRDY",
+        "expression": "BIT(12)",
+        "value": 4096,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 82
+      },
+      {
+        "name": "OWL_SD_STATE_CMDS",
+        "expression": "BIT(11)",
+        "value": 2048,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 83
+      },
+      {
+        "name": "OWL_SD_STATE_DAT1AS",
+        "expression": "BIT(10)",
+        "value": 1024,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 84
+      },
+      {
+        "name": "OWL_SD_STATE_SDIOA_P",
+        "expression": "BIT(9)",
+        "value": 512,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 85
+      },
+      {
+        "name": "OWL_SD_STATE_SDIOA_EN",
+        "expression": "BIT(8)",
+        "value": 256,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 86
+      },
+      {
+        "name": "OWL_SD_STATE_DAT0S",
+        "expression": "BIT(7)",
+        "value": 128,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 87
+      },
+      {
+        "name": "OWL_SD_STATE_TEIE",
+        "expression": "BIT(6)",
+        "value": 64,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 88
+      },
+      {
+        "name": "OWL_SD_STATE_TEI",
+        "expression": "BIT(5)",
+        "value": 32,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 89
+      },
+      {
+        "name": "OWL_SD_STATE_CLNR",
+        "expression": "BIT(4)",
+        "value": 16,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 90
+      },
+      {
+        "name": "OWL_SD_STATE_CLC",
+        "expression": "BIT(3)",
+        "value": 8,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 91
+      },
+      {
+        "name": "OWL_SD_STATE_WC16ER",
+        "expression": "BIT(2)",
+        "value": 4,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 92
+      },
+      {
+        "name": "OWL_SD_STATE_RC16ER",
+        "expression": "BIT(1)",
+        "value": 2,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 93
+      },
+      {
+        "name": "OWL_SD_STATE_CRC7ER",
+        "expression": "BIT(0)",
+        "value": 1,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 94
+      },
+      {
+        "name": "OWL_CMD_TIMEOUT_MS",
+        "expression": "30000",
+        "value": 30000,
+        "source": "drivers/mmc/host/owl-mmc.c",
+        "line": 96
+      }
+    ],
+    "unresolved": []
+  },
+  {
+    "source": "linux",
+    "path": "drivers/tty/serial/owl-uart.c",
+    "definitions": [
+      {
+        "name": "OWL_UART_PORT_NUM",
+        "expression": "7",
+        "value": 7,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 24
+      },
+      {
+        "name": "OWL_UART_CTL",
+        "expression": "0x000",
+        "value": 0,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 27
+      },
+      {
+        "name": "OWL_UART_RXDAT",
+        "expression": "0x004",
+        "value": 4,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 28
+      },
+      {
+        "name": "OWL_UART_TXDAT",
+        "expression": "0x008",
+        "value": 8,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 29
+      },
+      {
+        "name": "OWL_UART_STAT",
+        "expression": "0x00c",
+        "value": 12,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 30
+      },
+      {
+        "name": "OWL_UART_CTL_DWLS_MASK",
+        "expression": "GENMASK(1, 0)",
+        "value": 3,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 32
+      },
+      {
+        "name": "OWL_UART_CTL_DWLS_5BITS",
+        "expression": "(0x0 << 0)",
+        "value": 0,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 33
+      },
+      {
+        "name": "OWL_UART_CTL_DWLS_6BITS",
+        "expression": "(0x1 << 0)",
+        "value": 1,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 34
+      },
+      {
+        "name": "OWL_UART_CTL_DWLS_7BITS",
+        "expression": "(0x2 << 0)",
+        "value": 2,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 35
+      },
+      {
+        "name": "OWL_UART_CTL_DWLS_8BITS",
+        "expression": "(0x3 << 0)",
+        "value": 3,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 36
+      },
+      {
+        "name": "OWL_UART_CTL_STPS_2BITS",
+        "expression": "BIT(2)",
+        "value": 4,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 37
+      },
+      {
+        "name": "OWL_UART_CTL_PRS_MASK",
+        "expression": "GENMASK(6, 4)",
+        "value": 112,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 38
+      },
+      {
+        "name": "OWL_UART_CTL_PRS_NONE",
+        "expression": "(0x0 << 4)",
+        "value": 0,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 39
+      },
+      {
+        "name": "OWL_UART_CTL_PRS_ODD",
+        "expression": "(0x4 << 4)",
+        "value": 64,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 40
+      },
+      {
+        "name": "OWL_UART_CTL_PRS_MARK",
+        "expression": "(0x5 << 4)",
+        "value": 80,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 41
+      },
+      {
+        "name": "OWL_UART_CTL_PRS_EVEN",
+        "expression": "(0x6 << 4)",
+        "value": 96,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 42
+      },
+      {
+        "name": "OWL_UART_CTL_PRS_SPACE",
+        "expression": "(0x7 << 4)",
+        "value": 112,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 43
+      },
+      {
+        "name": "OWL_UART_CTL_AFE",
+        "expression": "BIT(12)",
+        "value": 4096,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 44
+      },
+      {
+        "name": "OWL_UART_CTL_TRFS_TX",
+        "expression": "BIT(14)",
+        "value": 16384,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 45
+      },
+      {
+        "name": "OWL_UART_CTL_EN",
+        "expression": "BIT(15)",
+        "value": 32768,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 46
+      },
+      {
+        "name": "OWL_UART_CTL_RXDE",
+        "expression": "BIT(16)",
+        "value": 65536,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 47
+      },
+      {
+        "name": "OWL_UART_CTL_TXDE",
+        "expression": "BIT(17)",
+        "value": 131072,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 48
+      },
+      {
+        "name": "OWL_UART_CTL_RXIE",
+        "expression": "BIT(18)",
+        "value": 262144,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 49
+      },
+      {
+        "name": "OWL_UART_CTL_TXIE",
+        "expression": "BIT(19)",
+        "value": 524288,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 50
+      },
+      {
+        "name": "OWL_UART_CTL_LBEN",
+        "expression": "BIT(20)",
+        "value": 1048576,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 51
+      },
+      {
+        "name": "OWL_UART_STAT_RIP",
+        "expression": "BIT(0)",
+        "value": 1,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 53
+      },
+      {
+        "name": "OWL_UART_STAT_TIP",
+        "expression": "BIT(1)",
+        "value": 2,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 54
+      },
+      {
+        "name": "OWL_UART_STAT_RXER",
+        "expression": "BIT(2)",
+        "value": 4,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 55
+      },
+      {
+        "name": "OWL_UART_STAT_TFER",
+        "expression": "BIT(3)",
+        "value": 8,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 56
+      },
+      {
+        "name": "OWL_UART_STAT_RXST",
+        "expression": "BIT(4)",
+        "value": 16,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 57
+      },
+      {
+        "name": "OWL_UART_STAT_RFEM",
+        "expression": "BIT(5)",
+        "value": 32,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 58
+      },
+      {
+        "name": "OWL_UART_STAT_TFFU",
+        "expression": "BIT(6)",
+        "value": 64,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 59
+      },
+      {
+        "name": "OWL_UART_STAT_CTSS",
+        "expression": "BIT(7)",
+        "value": 128,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 60
+      },
+      {
+        "name": "OWL_UART_STAT_RTSS",
+        "expression": "BIT(8)",
+        "value": 256,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 61
+      },
+      {
+        "name": "OWL_UART_STAT_TFES",
+        "expression": "BIT(10)",
+        "value": 1024,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 62
+      },
+      {
+        "name": "OWL_UART_STAT_TRFL_MASK",
+        "expression": "GENMASK(16, 11)",
+        "value": 129024,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 63
+      },
+      {
+        "name": "OWL_UART_STAT_UTBB",
+        "expression": "BIT(17)",
+        "value": 131072,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 64
+      },
+      {
+        "name": "OWL_UART_POLL_USEC",
+        "expression": "5",
+        "value": 5,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 66
+      },
+      {
+        "name": "OWL_UART_TIMEOUT_USEC",
+        "expression": "10000",
+        "value": 10000,
+        "source": "drivers/tty/serial/owl-uart.c",
+        "line": 67
+      }
+    ],
+    "unresolved": [
+      {
+        "name": "OWL_UART_DEV_NAME",
+        "expression": "\"ttyOWL\"",
+        "line": 25
+      },
+      {
+        "name": "OWL_UART_CONSOLE",
+        "expression": "(&owl_uart_console)",
+        "line": 616
+      },
+      {
+        "name": "OWL_UART_CONSOLE",
+        "expression": "NULL",
+        "line": 618
+      }
+    ]
+  },
+  {
+    "source": "linux",
+    "path": "drivers/i2c/busses/i2c-owl.c",
+    "definitions": [
+      {
+        "name": "OWL_I2C_REG_CTL",
+        "expression": "0x0000",
+        "value": 0,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 23
+      },
+      {
+        "name": "OWL_I2C_REG_CLKDIV",
+        "expression": "0x0004",
+        "value": 4,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 24
+      },
+      {
+        "name": "OWL_I2C_REG_STAT",
+        "expression": "0x0008",
+        "value": 8,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 25
+      },
+      {
+        "name": "OWL_I2C_REG_ADDR",
+        "expression": "0x000C",
+        "value": 12,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 26
+      },
+      {
+        "name": "OWL_I2C_REG_TXDAT",
+        "expression": "0x0010",
+        "value": 16,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 27
+      },
+      {
+        "name": "OWL_I2C_REG_RXDAT",
+        "expression": "0x0014",
+        "value": 20,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 28
+      },
+      {
+        "name": "OWL_I2C_REG_CMD",
+        "expression": "0x0018",
+        "value": 24,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 29
+      },
+      {
+        "name": "OWL_I2C_REG_FIFOCTL",
+        "expression": "0x001C",
+        "value": 28,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 30
+      },
+      {
+        "name": "OWL_I2C_REG_FIFOSTAT",
+        "expression": "0x0020",
+        "value": 32,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 31
+      },
+      {
+        "name": "OWL_I2C_REG_DATCNT",
+        "expression": "0x0024",
+        "value": 36,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 32
+      },
+      {
+        "name": "OWL_I2C_REG_RCNT",
+        "expression": "0x0028",
+        "value": 40,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 33
+      },
+      {
+        "name": "OWL_I2C_CTL_RB",
+        "expression": "BIT(1)",
+        "value": 2,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 36
+      },
+      {
+        "name": "OWL_I2C_CTL_IRQE",
+        "expression": "BIT(5)",
+        "value": 32,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 42
+      },
+      {
+        "name": "OWL_I2C_CTL_EN",
+        "expression": "BIT(7)",
+        "value": 128,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 43
+      },
+      {
+        "name": "OWL_I2C_CTL_AE",
+        "expression": "BIT(8)",
+        "value": 256,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 44
+      },
+      {
+        "name": "OWL_I2C_CTL_SHSM",
+        "expression": "BIT(10)",
+        "value": 1024,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 45
+      },
+      {
+        "name": "OWL_I2C_STAT_RACK",
+        "expression": "BIT(0)",
+        "value": 1,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 50
+      },
+      {
+        "name": "OWL_I2C_STAT_BEB",
+        "expression": "BIT(1)",
+        "value": 2,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 51
+      },
+      {
+        "name": "OWL_I2C_STAT_IRQP",
+        "expression": "BIT(2)",
+        "value": 4,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 52
+      },
+      {
+        "name": "OWL_I2C_STAT_LAB",
+        "expression": "BIT(3)",
+        "value": 8,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 53
+      },
+      {
+        "name": "OWL_I2C_STAT_STPD",
+        "expression": "BIT(4)",
+        "value": 16,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 54
+      },
+      {
+        "name": "OWL_I2C_STAT_STAD",
+        "expression": "BIT(5)",
+        "value": 32,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 55
+      },
+      {
+        "name": "OWL_I2C_STAT_BBB",
+        "expression": "BIT(6)",
+        "value": 64,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 56
+      },
+      {
+        "name": "OWL_I2C_STAT_TCB",
+        "expression": "BIT(7)",
+        "value": 128,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 57
+      },
+      {
+        "name": "OWL_I2C_STAT_LBST",
+        "expression": "BIT(8)",
+        "value": 256,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 58
+      },
+      {
+        "name": "OWL_I2C_STAT_SAMB",
+        "expression": "BIT(9)",
+        "value": 512,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 59
+      },
+      {
+        "name": "OWL_I2C_STAT_SRGC",
+        "expression": "BIT(10)",
+        "value": 1024,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 60
+      },
+      {
+        "name": "OWL_I2C_CMD_SBE",
+        "expression": "BIT(0)",
+        "value": 1,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 63
+      },
+      {
+        "name": "OWL_I2C_CMD_RBE",
+        "expression": "BIT(4)",
+        "value": 16,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 64
+      },
+      {
+        "name": "OWL_I2C_CMD_DE",
+        "expression": "BIT(8)",
+        "value": 256,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 65
+      },
+      {
+        "name": "OWL_I2C_CMD_NS",
+        "expression": "BIT(9)",
+        "value": 512,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 66
+      },
+      {
+        "name": "OWL_I2C_CMD_SE",
+        "expression": "BIT(10)",
+        "value": 1024,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 67
+      },
+      {
+        "name": "OWL_I2C_CMD_MSS",
+        "expression": "BIT(11)",
+        "value": 2048,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 68
+      },
+      {
+        "name": "OWL_I2C_CMD_WRS",
+        "expression": "BIT(12)",
+        "value": 4096,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 69
+      },
+      {
+        "name": "OWL_I2C_CMD_SECL",
+        "expression": "BIT(15)",
+        "value": 32768,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 70
+      },
+      {
+        "name": "OWL_I2C_FIFOCTL_NIB",
+        "expression": "BIT(0)",
+        "value": 1,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 76
+      },
+      {
+        "name": "OWL_I2C_FIFOCTL_RFR",
+        "expression": "BIT(1)",
+        "value": 2,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 77
+      },
+      {
+        "name": "OWL_I2C_FIFOCTL_TFR",
+        "expression": "BIT(2)",
+        "value": 4,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 78
+      },
+      {
+        "name": "OWL_I2C_FIFOSTAT_CECB",
+        "expression": "BIT(0)",
+        "value": 1,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 81
+      },
+      {
+        "name": "OWL_I2C_FIFOSTAT_RNB",
+        "expression": "BIT(1)",
+        "value": 2,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 82
+      },
+      {
+        "name": "OWL_I2C_FIFOSTAT_RFE",
+        "expression": "BIT(2)",
+        "value": 4,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 83
+      },
+      {
+        "name": "OWL_I2C_FIFOSTAT_TFF",
+        "expression": "BIT(5)",
+        "value": 32,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 84
+      },
+      {
+        "name": "OWL_I2C_FIFOSTAT_TFD",
+        "expression": "GENMASK(23, 16)",
+        "value": 16711680,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 85
+      },
+      {
+        "name": "OWL_I2C_FIFOSTAT_RFD",
+        "expression": "GENMASK(15, 8)",
+        "value": 65280,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 86
+      },
+      {
+        "name": "OWL_I2C_TIMEOUT_MS",
+        "expression": "(4 * 1000)",
+        "value": 4000,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 89
+      },
+      {
+        "name": "OWL_I2C_MAX_RETRIES",
+        "expression": "50",
+        "value": 50,
+        "source": "drivers/i2c/busses/i2c-owl.c",
+        "line": 92
+      }
+    ],
+    "unresolved": [
+      {
+        "name": "OWL_I2C_CTL_GBCC_NONE",
+        "expression": "OWL_I2C_CTL_GBCC(0)",
+        "line": 38
+      },
+      {
+        "name": "OWL_I2C_CTL_GBCC_START",
+        "expression": "OWL_I2C_CTL_GBCC(1)",
+        "line": 39
+      },
+      {
+        "name": "OWL_I2C_CTL_GBCC_STOP",
+        "expression": "OWL_I2C_CTL_GBCC(2)",
+        "line": 40
+      },
+      {
+        "name": "OWL_I2C_CTL_GBCC_RSTART",
+        "expression": "OWL_I2C_CTL_GBCC(3)",
+        "line": 41
+      },
+      {
+        "name": "OWL_I2C_TIMEOUT",
+        "expression": "msecs_to_jiffies(OWL_I2C_TIMEOUT_MS)",
+        "line": 90
+      }
+    ]
+  },
+  {
+    "source": "linux",
+    "path": "drivers/clocksource/timer-owl.c",
+    "definitions": [
+      {
+        "name": "OWL_Tx_CTL",
+        "expression": "0x0",
+        "value": 0,
+        "source": "drivers/clocksource/timer-owl.c",
+        "line": 22
+      },
+      {
+        "name": "OWL_Tx_CMP",
+        "expression": "0x4",
+        "value": 4,
+        "source": "drivers/clocksource/timer-owl.c",
+        "line": 23
+      },
+      {
+        "name": "OWL_Tx_VAL",
+        "expression": "0x8",
+        "value": 8,
+        "source": "drivers/clocksource/timer-owl.c",
+        "line": 24
+      },
+      {
+        "name": "OWL_Tx_CTL_PD",
+        "expression": "BIT(0)",
+        "value": 1,
+        "source": "drivers/clocksource/timer-owl.c",
+        "line": 26
+      },
+      {
+        "name": "OWL_Tx_CTL_INTEN",
+        "expression": "BIT(1)",
+        "value": 2,
+        "source": "drivers/clocksource/timer-owl.c",
+        "line": 27
+      },
+      {
+        "name": "OWL_Tx_CTL_EN",
+        "expression": "BIT(2)",
+        "value": 4,
+        "source": "drivers/clocksource/timer-owl.c",
+        "line": 28
+      }
+    ],
+    "unresolved": []
+  },
+  {
+    "source": "linux",
+    "path": "drivers/pmdomain/actions/owl-sps.c",
+    "definitions": [],
+    "unresolved": []
+  }
+]

@@ -1,0 +1,5096 @@
+{
+  "nodes": [
+    {
+      "path": "/",
+      "line": 3,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          1
+        ],
+        "compatible": [
+          "actions,gs705a",
+          "actions,atm7059a"
+        ],
+        "interrupt-parent": [
+          1
+        ],
+        "model": [
+          "Actions GS705A board"
+        ]
+      }
+    },
+    {
+      "path": "/chosen",
+      "line": 10,
+      "properties": {
+        "bootargs": [
+          "earlyprintk clk_ignore_unused selinux=0"
+        ]
+      }
+    },
+    {
+      "path": "/aliases",
+      "line": 14,
+      "properties": {
+        "serial0": [
+          "/serial@b0120000"
+        ],
+        "serial1": [
+          "/serial@b0122000"
+        ],
+        "serial2": [
+          "/serial@b0124000"
+        ],
+        "serial3": [
+          "/serial@b0126000"
+        ],
+        "serial4": [
+          "/serial@b0128000"
+        ],
+        "serial5": [
+          "/serial@b012a000"
+        ],
+        "serial6": [
+          "/serial@b012c000"
+        ],
+        "i2c0": [
+          "/i2c@b0170000"
+        ],
+        "i2c1": [
+          "/i2c@b0174000"
+        ],
+        "i2c2": [
+          "/i2c@b0178000"
+        ],
+        "i2c3": [
+          "/i2c@b017c000"
+        ],
+        "spi0": [
+          "/spi@b0200000"
+        ],
+        "spi1": [
+          "/spi@b0204000"
+        ],
+        "spi2": [
+          "/spi@b0208000"
+        ],
+        "spi3": [
+          "/spi@b020c000"
+        ],
+        "dcdc1": [
+          "/i2c@b0174000/atc2603c@65/dcdc1"
+        ],
+        "dcdc2": [
+          "/i2c@b0174000/atc2603c@65/dcdc2"
+        ],
+        "dcdc3": [
+          "/i2c@b0174000/atc2603c@65/dcdc3"
+        ],
+        "dcdc4": [
+          "/i2c@b0174000/atc2603c@65/dcdc4"
+        ],
+        "ldo1": [
+          "/i2c@b0174000/atc2603c@65/ldo1"
+        ],
+        "ldo2": [
+          "/i2c@b0174000/atc2603c@65/ldo2"
+        ],
+        "ldo3": [
+          "/i2c@b0174000/atc2603c@65/ldo3"
+        ],
+        "ldo4": [
+          "/i2c@b0174000/atc2603c@65/ldo4"
+        ],
+        "ldo5": [
+          "/i2c@b0174000/atc2603c@65/ldo5"
+        ],
+        "ldo6": [
+          "/i2c@b0174000/atc2603c@65/ldo6"
+        ],
+        "ldo7": [
+          "/i2c@b0174000/atc2603c@65/ldo7"
+        ],
+        "ldo8": [
+          "/i2c@b0174000/atc2603c@65/ldo8"
+        ],
+        "ldo9": [
+          "/i2c@b0174000/atc2603c@65/ldo9"
+        ],
+        "ldo10": [
+          "/i2c@b0174000/atc2603c@65/ldo10"
+        ],
+        "ldo11": [
+          "/i2c@b0174000/atc2603c@65/ldo11"
+        ],
+        "switch1": [
+          "/i2c@b0174000/atc2603c@65/switch1"
+        ],
+        "switch2": [
+          "/i2c@b0174000/atc2603c@65/switch2"
+        ],
+        "isp0": [
+          "/isp@b0270000"
+        ],
+        "sdboot": [
+          "/mmc@b0230000"
+        ],
+        "mmc0": [
+          "/mmc@b0230000"
+        ],
+        "mmc1": [
+          "/mmc@b0234000"
+        ],
+        "mmc2": [
+          "/mmc@b0238000"
+        ],
+        "usb0": [
+          "/usb@b0600000"
+        ],
+        "usb1": [
+          "/usb@b0700000"
+        ]
+      }
+    },
+    {
+      "path": "/memory",
+      "line": 56,
+      "properties": {
+        "device_type": [
+          "memory"
+        ],
+        "reg": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "path": "/cpus",
+      "line": 61,
+      "properties": {
+        "#size-cells": [
+          0
+        ],
+        "#address-cells": [
+          1
+        ]
+      }
+    },
+    {
+      "path": "/cpus/cpu@0",
+      "line": 65,
+      "properties": {
+        "device_type": [
+          "cpu"
+        ],
+        "compatible": [
+          "arm,cortex-a9"
+        ],
+        "reg": [
+          0
+        ],
+        "transition-latency": [
+          61036
+        ],
+        "cpuvdd-supply": [
+          2
+        ]
+      }
+    },
+    {
+      "path": "/cpus/cpu@1",
+      "line": 73,
+      "properties": {
+        "device_type": [
+          "cpu"
+        ],
+        "compatible": [
+          "arm,cortex-a9"
+        ],
+        "reg": [
+          1
+        ]
+      }
+    },
+    {
+      "path": "/interrupt-controller@b0021000",
+      "line": 80,
+      "properties": {
+        "compatible": [
+          "arm,cortex-a9-gic"
+        ],
+        "interrupt-controller": true,
+        "#interrupt-cells": [
+          3
+        ],
+        "reg": [
+          2952925184,
+          4096,
+          2952921344,
+          256
+        ],
+        "linux,phandle": [
+          1
+        ],
+        "phandle": [
+          1
+        ]
+      }
+    },
+    {
+      "path": "/pmu",
+      "line": 89,
+      "properties": {
+        "compatible": [
+          "arm,cortex-a9-pmu"
+        ],
+        "interrupts": [
+          0,
+          4,
+          4,
+          0,
+          5,
+          4,
+          0,
+          6,
+          4,
+          0,
+          7,
+          4
+        ]
+      }
+    },
+    {
+      "path": "/cache-controller@b0022000",
+      "line": 94,
+      "properties": {
+        "compatible": [
+          "arm,pl310-cache"
+        ],
+        "reg": [
+          2952929280,
+          4096
+        ],
+        "cache-unified": true,
+        "cache-level": [
+          2
+        ],
+        "interrupts": [
+          0,
+          55,
+          4
+        ],
+        "arm,tag-latency": [
+          3,
+          3,
+          2
+        ],
+        "arm,data-latency": [
+          5,
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "path": "/twd-watchdog@b0020600",
+      "line": 104,
+      "properties": {
+        "compatible": [
+          "actions,atm7059-wdt"
+        ],
+        "reg": [
+          2952922624,
+          256,
+          2954231808,
+          32
+        ],
+        "interrupts": [
+          1,
+          14,
+          3841
+        ],
+        "wd_type": [
+          "soft"
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/serial@b0120000",
+      "line": 112,
+      "properties": {
+        "compatible": [
+          "actions,owl-uart",
+          "actions,owl-uart-irc"
+        ],
+        "reg": [
+          2953969664,
+          8192
+        ],
+        "interrupts": [
+          0,
+          29,
+          4
+        ],
+        "clock-frequency": [
+          48000000
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          3
+        ],
+        "status": [
+          "okay"
+        ]
+      }
+    },
+    {
+      "path": "/serial@b0122000",
+      "line": 122,
+      "properties": {
+        "compatible": [
+          "actions,owl-uart"
+        ],
+        "reg": [
+          2953977856,
+          8192
+        ],
+        "interrupts": [
+          0,
+          30,
+          4
+        ],
+        "clock-frequency": [
+          48000000
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          4
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/serial@b0124000",
+      "line": 132,
+      "properties": {
+        "compatible": [
+          "actions,owl-uart"
+        ],
+        "reg": [
+          2953986048,
+          8192
+        ],
+        "interrupts": [
+          0,
+          31,
+          4
+        ],
+        "clock-frequency": [
+          48000000
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          5
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/serial@b0126000",
+      "line": 142,
+      "properties": {
+        "compatible": [
+          "actions,owl-uart"
+        ],
+        "reg": [
+          2953994240,
+          8192
+        ],
+        "interrupts": [
+          0,
+          32,
+          4
+        ],
+        "clock-frequency": [
+          48000000
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          6
+        ],
+        "status": [
+          "okay"
+        ]
+      }
+    },
+    {
+      "path": "/serial@b0128000",
+      "line": 152,
+      "properties": {
+        "compatible": [
+          "actions,owl-uart"
+        ],
+        "reg": [
+          2954002432,
+          8192
+        ],
+        "interrupts": [
+          0,
+          33,
+          4
+        ],
+        "clock-frequency": [
+          48000000
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          7
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/serial@b012a000",
+      "line": 162,
+      "properties": {
+        "compatible": [
+          "actions,owl-uart"
+        ],
+        "reg": [
+          2954010624,
+          8192
+        ],
+        "interrupts": [
+          0,
+          34,
+          4
+        ],
+        "clock-frequency": [
+          48000000
+        ],
+        "status": [
+          "okay"
+        ]
+      }
+    },
+    {
+      "path": "/serial@b012c000",
+      "line": 170,
+      "properties": {
+        "compatible": [
+          "actions,owl-uart"
+        ],
+        "reg": [
+          2954018816,
+          8192
+        ],
+        "interrupts": [
+          0,
+          35,
+          4
+        ],
+        "clock-frequency": [
+          48000000
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          8
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0170000",
+      "line": 180,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,owl-i2c"
+        ],
+        "reg": [
+          2954297344,
+          16384
+        ],
+        "interrupts": [
+          0,
+          25,
+          4
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000",
+      "line": 188,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,owl-i2c"
+        ],
+        "reg": [
+          2954313728,
+          16384
+        ],
+        "interrupts": [
+          0,
+          26,
+          4
+        ],
+        "i2c_num": [
+          1
+        ],
+        "clock-frequency": [
+          400000
+        ],
+        "status": [
+          "okay"
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          9
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65",
+      "line": 200,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c"
+        ],
+        "reg": [
+          101
+        ],
+        "interrupt-parent": [
+          10
+        ],
+        "interrupts": [
+          2,
+          4
+        ],
+        "interrupt-controller": true,
+        "#interrupt-cells": [
+          1
+        ],
+        "losc_32k_output_enable": [
+          1
+        ],
+        "losc_32k_output_voltage": [
+          31
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/pm",
+      "line": 210,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-pm"
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/onoff",
+      "line": 214,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-onoff"
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/atc260x-pwm",
+      "line": 218,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-pwm"
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/rtc",
+      "line": 222,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-rtc"
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/atc260x_gpio",
+      "line": 226,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-gpio"
+        ],
+        "gpio-controller": true,
+        "#gpio-cells": [
+          2
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/atc260x_sgpio",
+      "line": 232,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-sgpio"
+        ],
+        "gpio-controller": true,
+        "#gpio-cells": [
+          2
+        ],
+        "interrupt-controller": true,
+        "#interrupt-cells": [
+          2
+        ],
+        "linux,phandle": [
+          31
+        ],
+        "phandle": [
+          31
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/atc260x-adckeypad",
+      "line": 242,
+      "properties": {
+        "keymapsize": [
+          4
+        ],
+        "filter_dep": [
+          3
+        ],
+        "variance": [
+          10
+        ],
+        "poll_interval": [
+          10
+        ],
+        "left_adc_val": [
+          0,
+          90,
+          175,
+          270
+        ],
+        "right_adc_val": [
+          30,
+          120,
+          220,
+          320
+        ],
+        "key_val": [
+          102,
+          139,
+          115,
+          114
+        ],
+        "adc_channel_name": [
+          "AUX0"
+        ],
+        "compatible": [
+          "actions,atc2603c-adckeypad"
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/atc260x-audio",
+      "line": 255,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-audio"
+        ],
+        "status": [
+          "okay"
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          11
+        ],
+        "earphone_detect_gpios": [
+          12,
+          28,
+          0
+        ],
+        "speaker_en_gpios": [
+          12,
+          40,
+          1
+        ],
+        "earphone_output_mode": [
+          1
+        ],
+        "mic_num": [
+          1
+        ],
+        "mic0_gain": [
+          7,
+          7
+        ],
+        "speaker_gain": [
+          180,
+          180
+        ],
+        "earphone_gain": [
+          190,
+          190
+        ],
+        "mic_mode": [
+          1
+        ],
+        "earphone_detect_method": [
+          3
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/atc260x-hwmon",
+      "line": 271,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-hwmon"
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/atc260x-power",
+      "line": 275,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-power"
+        ],
+        "bl_on_usb_pc_max_charge_current": [
+          100
+        ],
+        "bl_off_usb_pc_max_charge_current": [
+          500
+        ],
+        "bl_on_usb_adp_max_charge_current": [
+          1000
+        ],
+        "bl_off_usb_adp_max_charge_current": [
+          1200
+        ],
+        "bl_on_wall_adp_max_charge_current": [
+          1000
+        ],
+        "bl_off_wall_adp_max_charge_current": [
+          1200
+        ],
+        "bl_on_voltage_diff": [
+          350
+        ],
+        "bl_off_voltage_diff": [
+          400
+        ],
+        "support_adaptor_type": [
+          1
+        ],
+        "usb_adapter_as_ac": [
+          0
+        ],
+        "boot_cap_threshold": [
+          3
+        ],
+        "ext_dcdc_exist": [
+          0
+        ],
+        "pwms": [
+          13,
+          2,
+          500000,
+          1
+        ],
+        "pwm-names": [
+          "ext_moto"
+        ],
+        "ext_charger_exist": [
+          0
+        ],
+        "charger_led_exist": [
+          1
+        ],
+        "inner_charger_led_ctl": [
+          12,
+          22,
+          0
+        ],
+        "low_power_led_ctl": [
+          12,
+          21,
+          1
+        ],
+        "work_led_ctl": [
+          12,
+          18,
+          1
+        ],
+        "myotg_id": [
+          12,
+          106,
+          0
+        ],
+        "otg_1_ctl": [
+          12,
+          23,
+          0
+        ],
+        "otg_2_ctl": [
+          12,
+          95,
+          0
+        ],
+        "no_screen": [
+          1
+        ],
+        "temp_ctl_enable": [
+          0
+        ],
+        "temp_shutdown_low": [
+          1005
+        ],
+        "temp_stop_low": [
+          0
+        ],
+        "temp_shutdown_high": [
+          50
+        ],
+        "temp_stop_high": [
+          45
+        ],
+        "temp_diff_restart": [
+          2
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/atc260x-cap-gauge",
+      "line": 308,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-cap-gauge"
+        ],
+        "capacity": [
+          2100
+        ],
+        "icm_available": [
+          1
+        ],
+        "icm_ohm_val": [
+          20
+        ],
+        "taper_voltage": [
+          4200
+        ],
+        "taper_current": [
+          300
+        ],
+        "min_over_chg_protect_voltage": [
+          4275
+        ],
+        "ch_resistor": [
+          120
+        ],
+        "disch_resistor": [
+          180
+        ],
+        "terminal_voltage": [
+          3450
+        ],
+        "suspend_current": [
+          1400
+        ],
+        "shutdown_current": [
+          50
+        ],
+        "print_switch": [
+          0
+        ],
+        "log_switch": [
+          0
+        ],
+        "ocv_soc_00": [
+          3477,
+          3534,
+          3591,
+          3624,
+          3637,
+          3649,
+          3661,
+          3667,
+          3673,
+          3677
+        ],
+        "ocv_soc_10": [
+          3682,
+          3685,
+          3690,
+          3693,
+          3700,
+          3706,
+          3712,
+          3716,
+          3722,
+          3728
+        ],
+        "ocv_soc_20": [
+          3732,
+          3736,
+          3739,
+          3744,
+          3747,
+          3751,
+          3755,
+          3758,
+          3761,
+          3765
+        ],
+        "ocv_soc_30": [
+          3768,
+          3771,
+          3775,
+          3777,
+          3782,
+          3784,
+          3788,
+          3791,
+          3793,
+          3794
+        ],
+        "ocv_soc_40": [
+          3800,
+          3801,
+          3804,
+          3807,
+          3812,
+          3815,
+          3819,
+          3823,
+          3825,
+          3830
+        ],
+        "ocv_soc_50": [
+          3834,
+          3838,
+          3841,
+          3845,
+          3850,
+          3854,
+          3858,
+          3864,
+          3870,
+          3874
+        ],
+        "ocv_soc_60": [
+          3880,
+          3889,
+          3895,
+          3902,
+          3908,
+          3916,
+          3926,
+          3933,
+          3940,
+          3947
+        ],
+        "ocv_soc_70": [
+          3954,
+          3961,
+          3968,
+          3972,
+          3979,
+          3985,
+          3992,
+          3997,
+          4005,
+          4012
+        ],
+        "ocv_soc_80": [
+          4019,
+          4028,
+          4036,
+          4046,
+          4054,
+          4061,
+          4068,
+          4075,
+          4084,
+          4090
+        ],
+        "ocv_soc_90": [
+          4099,
+          4107,
+          4115,
+          4126,
+          4132,
+          4141,
+          4152,
+          4160,
+          4170,
+          4180
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/atc260x-backup",
+      "line": 335,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-backup"
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/dcdc1",
+      "line": 340,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-dcdc1",
+          "actions,atc2603c-dcdc"
+        ],
+        "regulator-name": [
+          "dcdc1"
+        ],
+        "regulator-min-microvolt": [
+          700000
+        ],
+        "regulator-max-microvolt": [
+          1400000
+        ],
+        "regulator-always-on": true,
+        "linux,phandle": [
+          2
+        ],
+        "phandle": [
+          2
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/dcdc2",
+      "line": 350,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-dcdc2",
+          "actions,atc2603c-dcdc"
+        ],
+        "regulator-name": [
+          "dcdc2"
+        ],
+        "regulator-min-microvolt": [
+          1300000
+        ],
+        "regulator-max-microvolt": [
+          2200000
+        ],
+        "regulator-always-on": true
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/dcdc3",
+      "line": 358,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-dcdc3",
+          "actions,atc2603c-dcdc"
+        ],
+        "regulator-name": [
+          "dcdc3"
+        ],
+        "regulator-min-microvolt": [
+          2600000
+        ],
+        "regulator-max-microvolt": [
+          3300000
+        ],
+        "regulator-always-on": true
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/dcdc4",
+      "line": 366,
+      "properties": {
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/dcdc5",
+      "line": 370,
+      "properties": {
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/ldo1",
+      "line": 374,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-ldo1",
+          "actions,atc2603c-ldo"
+        ],
+        "regulator-name": [
+          "ldo1"
+        ],
+        "regulator-min-microvolt": [
+          2800000
+        ],
+        "regulator-max-microvolt": [
+          2800000
+        ],
+        "regulator-always-on": true
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/ldo2",
+      "line": 382,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-ldo2",
+          "actions,atc2603c-ldo"
+        ],
+        "regulator-name": [
+          "ldo2"
+        ],
+        "regulator-min-microvolt": [
+          2600000
+        ],
+        "regulator-max-microvolt": [
+          3300000
+        ],
+        "regulator-always-on": true
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/ldo3",
+      "line": 390,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-ldo3",
+          "actions,atc2603c-ldo"
+        ],
+        "regulator-name": [
+          "ldo3"
+        ],
+        "regulator-min-microvolt": [
+          1500000
+        ],
+        "regulator-max-microvolt": [
+          2000000
+        ],
+        "regulator-always-on": true
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/ldo4",
+      "line": 398,
+      "properties": {
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/ldo5",
+      "line": 402,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-ldo5",
+          "actions,atc2603c-ldo"
+        ],
+        "regulator-name": [
+          "ldo5"
+        ],
+        "regulator-min-microvolt": [
+          3100000
+        ],
+        "regulator-max-microvolt": [
+          3300000
+        ],
+        "regulator-suspend-off": true
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/ldo6",
+      "line": 410,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-ldo6",
+          "actions,atc2603c-ldo"
+        ],
+        "regulator-name": [
+          "ldo6"
+        ],
+        "regulator-min-microvolt": [
+          700000
+        ],
+        "regulator-max-microvolt": [
+          1400000
+        ],
+        "regulator-always-on": true
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/ldo7",
+      "line": 418,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-ldo7",
+          "actions,atc2603c-ldo"
+        ],
+        "regulator-name": [
+          "ldo7"
+        ],
+        "regulator-min-microvolt": [
+          1800000
+        ],
+        "regulator-max-microvolt": [
+          1800000
+        ],
+        "regulator-suspend-off": true
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/ldo8",
+      "line": 426,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-ldo8",
+          "actions,atc2603c-ldo"
+        ],
+        "regulator-name": [
+          "ldo8"
+        ],
+        "regulator-min-microvolt": [
+          2300000
+        ],
+        "regulator-max-microvolt": [
+          3300000
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/ldo9",
+      "line": 433,
+      "properties": {
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/ldo10",
+      "line": 437,
+      "properties": {
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/ldo11",
+      "line": 441,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-ldo11",
+          "actions,atc2603c-ldo"
+        ],
+        "regulator-name": [
+          "ldo11"
+        ],
+        "regulator-min-microvolt": [
+          2600000
+        ],
+        "regulator-max-microvolt": [
+          3300000
+        ],
+        "regulator-always-on": true
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/switch1",
+      "line": 449,
+      "properties": {
+        "compatible": [
+          "actions,atc2603c-switch1",
+          "actions,atc2603c-switch"
+        ],
+        "regulator-name": [
+          "switch1"
+        ],
+        "regulator-min-microvolt": [
+          3100000
+        ],
+        "regulator-max-microvolt": [
+          3300000
+        ],
+        "regulator-always-on": true
+      }
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65/switch2",
+      "line": 457,
+      "properties": {
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0178000",
+      "line": 463,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,owl-i2c"
+        ],
+        "reg": [
+          2954330112,
+          16384
+        ],
+        "interrupts": [
+          0,
+          27,
+          4
+        ],
+        "i2c_num": [
+          2
+        ],
+        "clock-frequency": [
+          400000
+        ],
+        "status": [
+          "okay"
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          14
+        ],
+        "linux,phandle": [
+          29
+        ],
+        "phandle": [
+          29
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b0178000/hdmi_read_edid@30",
+      "line": 477,
+      "properties": {
+        "compatible": [
+          "actions,hdmi_read_edid"
+        ],
+        "reg": [
+          48
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b017c000",
+      "line": 483,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,owl-i2c"
+        ],
+        "reg": [
+          2954346496,
+          16384
+        ],
+        "interrupts": [
+          0,
+          28,
+          4
+        ],
+        "i2c_num": [
+          3
+        ],
+        "clock-frequency": [
+          400000
+        ],
+        "status": [
+          "disabled"
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          15
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b017c000/eg2801_eeprom@14",
+      "line": 495,
+      "properties": {
+        "compatible": [
+          "actions,eg2801_eeprom"
+        ],
+        "reg": [
+          20
+        ]
+      }
+    },
+    {
+      "path": "/i2c@b017c000/eg2801_ram@55",
+      "line": 500,
+      "properties": {
+        "compatible": [
+          "actions,eg2801_ram"
+        ],
+        "reg": [
+          85
+        ]
+      }
+    },
+    {
+      "path": "/spi@b0200000",
+      "line": 506,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,owl-spi"
+        ],
+        "reg": [
+          2954887168,
+          16384
+        ],
+        "interrupts": [
+          0,
+          19,
+          4
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/spi@b0204000",
+      "line": 515,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,owl-spi"
+        ],
+        "reg": [
+          2954903552,
+          16384
+        ],
+        "interrupts": [
+          0,
+          20,
+          4
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/spi@b0208000",
+      "line": 524,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,owl-spi"
+        ],
+        "reg": [
+          2954919936,
+          16384
+        ],
+        "interrupts": [
+          0,
+          21,
+          4
+        ]
+      }
+    },
+    {
+      "path": "/spi@b020c000",
+      "line": 532,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,owl-spi"
+        ],
+        "reg": [
+          2954936320,
+          16384
+        ],
+        "interrupts": [
+          0,
+          22,
+          4
+        ]
+      }
+    },
+    {
+      "path": "/gpio@b01b0000",
+      "line": 540,
+      "properties": {
+        "compatible": [
+          "actions,atm7059a-gpio"
+        ],
+        "reg": [
+          2954559488,
+          64
+        ],
+        "interrupts": [
+          0,
+          36,
+          4,
+          0,
+          37,
+          4,
+          0,
+          38,
+          4,
+          0,
+          39,
+          4,
+          0,
+          40,
+          4
+        ],
+        "#gpio-cells": [
+          2
+        ],
+        "gpio-controller": true,
+        "#interrupt-cells": [
+          2
+        ],
+        "interrupt-controller": true,
+        "status": [
+          "okay"
+        ],
+        "linux,phandle": [
+          12
+        ],
+        "phandle": [
+          12
+        ]
+      }
+    },
+    {
+      "path": "/sirq@b01b0200",
+      "line": 553,
+      "properties": {
+        "compatible": [
+          "actions,owl-sirq"
+        ],
+        "reg": [
+          2954560000,
+          4
+        ],
+        "interrupts": [
+          0,
+          13,
+          4,
+          0,
+          14,
+          4,
+          0,
+          15,
+          4
+        ],
+        "#interrupt-cells": [
+          2
+        ],
+        "interrupt-controller": true,
+        "linux,phandle": [
+          10
+        ],
+        "phandle": [
+          10
+        ]
+      }
+    },
+    {
+      "path": "/pwm@b01b0050",
+      "line": 563,
+      "properties": {
+        "compatible": [
+          "actions,atm7059a-pwm"
+        ],
+        "reg": [
+          2954559568,
+          16
+        ],
+        "#pwm-cells": [
+          3
+        ],
+        "linux,phandle": [
+          13
+        ],
+        "phandle": [
+          13
+        ]
+      }
+    },
+    {
+      "path": "/pwm@b01b0050/pwm0",
+      "line": 570,
+      "properties": {
+        "id": [
+          0
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          16
+        ]
+      }
+    },
+    {
+      "path": "/pwm@b01b0050/pwm1",
+      "line": 576,
+      "properties": {
+        "id": [
+          1
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          17
+        ]
+      }
+    },
+    {
+      "path": "/pwm@b01b0050/pwm2",
+      "line": 582,
+      "properties": {
+        "id": [
+          2
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          18
+        ]
+      }
+    },
+    {
+      "path": "/pwm@b01b0050/pwm3",
+      "line": 588,
+      "properties": {
+        "id": [
+          3
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          19
+        ]
+      }
+    },
+    {
+      "path": "/ethernet@b0310000",
+      "line": 595,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,owl-ethernet"
+        ],
+        "reg": [
+          2956001280,
+          65536
+        ]
+      }
+    },
+    {
+      "path": "/mmc@b0230000",
+      "line": 602,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,owl-mmc"
+        ],
+        "reg": [
+          2955083776,
+          56
+        ],
+        "pinctrl-names": [
+          "default",
+          "share_uart2_5"
+        ],
+        "pinctrl-0": [
+          20
+        ],
+        "pinctrl-1": [
+          21
+        ],
+        "card_type": [
+          "memory"
+        ],
+        "card_detect_mode": [
+          "gpio"
+        ],
+        "card_detect_gpios": [
+          12,
+          41,
+          0
+        ],
+        "interrupts": [
+          0,
+          42,
+          4
+        ],
+        "status": [
+          "okay"
+        ],
+        "sd_vcc": [
+          "switch1"
+        ],
+        "sdio3_0_not_supported": true
+      }
+    },
+    {
+      "path": "/mmc@b0234000",
+      "line": 619,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,owl-mmc"
+        ],
+        "reg": [
+          2955100160,
+          56
+        ],
+        "interrupts": [
+          0,
+          43,
+          4
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          22
+        ],
+        "card_type": [
+          "wifi"
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/mmc@b0238000",
+      "line": 631,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,owl-mmc"
+        ],
+        "reg": [
+          2955116544,
+          56
+        ],
+        "interrupts": [
+          0,
+          44,
+          4
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          23
+        ],
+        "card_type": [
+          "memory"
+        ],
+        "card_detect_mode": [
+          "command"
+        ],
+        "status": [
+          "okay"
+        ]
+      }
+    },
+    {
+      "path": "/usb@b0600000",
+      "line": 644,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,owl-usb-2.0-0"
+        ],
+        "reg": [
+          2959081472,
+          4096
+        ],
+        "interrupts": [
+          0,
+          24,
+          4
+        ],
+        "status": [
+          "disabled"
+        ],
+        "port0_host_plug_detect": [
+          3
+        ]
+      }
+    },
+    {
+      "path": "/usb@b0700000",
+      "line": 654,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,owl-usb-2.0-1"
+        ],
+        "reg": [
+          2960130048,
+          4096
+        ],
+        "interrupts": [
+          0,
+          61,
+          4
+        ],
+        "status": [
+          "disabled"
+        ],
+        "port1_host_plug_detect": [
+          3
+        ]
+      }
+    },
+    {
+      "path": "/usb@b0400000",
+      "line": 664,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "compatible": [
+          "actions,atm7059tc-usb"
+        ],
+        "reg": [
+          2956984320,
+          52480,
+          2957036800,
+          89
+        ],
+        "interrupts": [
+          0,
+          23,
+          4
+        ],
+        "usb_serialnumber_config": [
+          1
+        ],
+        "usb_hs_output_strength": [
+          2
+        ],
+        "status": [
+          "okay"
+        ]
+      }
+    },
+    {
+      "path": "/isp@b0270000",
+      "line": 675,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          1
+        ],
+        "compatible": [
+          "actions,owl-isp"
+        ],
+        "reg": [
+          2955345920,
+          1024,
+          2954231840,
+          4
+        ],
+        "interrupts": [
+          0,
+          12,
+          4
+        ],
+        "avdd-src": [
+          "regulator"
+        ],
+        "avdd-regulator": [
+          "ldo1"
+        ],
+        "avdd-regulator-scope": [
+          2800000,
+          2810000
+        ],
+        "dvdd-gpios": [
+          12,
+          57,
+          0
+        ],
+        "sensors": [
+          "rear"
+        ],
+        "pwdn-rear-gpios": [
+          12,
+          73,
+          0
+        ],
+        "pwdn-front-gpios": [
+          12,
+          70,
+          0
+        ],
+        "rear-reset-gpios": [
+          12,
+          114,
+          1
+        ],
+        "status": [
+          "disabled"
+        ],
+        "linux,phandle": [
+          28
+        ],
+        "phandle": [
+          28
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040",
+      "line": 694,
+      "properties": {
+        "compatible": [
+          "actions,atm7059a-pinctrl"
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          24
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/pinctrl_default",
+      "line": 699,
+      "properties": {
+        "linux,phandle": [
+          24
+        ],
+        "phandle": [
+          24
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial0_default",
+      "line": 704,
+      "properties": {}
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial0_default/serial_0",
+      "line": 706,
+      "properties": {
+        "actions,groups": [
+          "mfp2_2_0",
+          "mfp3_21_19"
+        ],
+        "actions,function": [
+          "uart0"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial0_d",
+      "line": 712,
+      "properties": {
+        "linux,phandle": [
+          3
+        ],
+        "phandle": [
+          3
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial0_d/serial_d",
+      "line": 716,
+      "properties": {
+        "actions,groups": [
+          "mfp2_22",
+          "mfp2_23"
+        ],
+        "actions,function": [
+          "uart0"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial1_default",
+      "line": 722,
+      "properties": {
+        "linux,phandle": [
+          4
+        ],
+        "phandle": [
+          4
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial1_default/serial_1",
+      "line": 726,
+      "properties": {
+        "actions,groups": [
+          "mfp2_13_11"
+        ],
+        "actions,function": [
+          "uart1"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial2_default",
+      "line": 732,
+      "properties": {
+        "linux,phandle": [
+          5
+        ],
+        "phandle": [
+          5
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial2_default/serial_2",
+      "line": 736,
+      "properties": {
+        "actions,groups": [
+          "mfp2_23",
+          "mfp2_22",
+          "uart2_dummy"
+        ],
+        "actions,function": [
+          "uart2"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial3_default",
+      "line": 742,
+      "properties": {
+        "linux,phandle": [
+          6
+        ],
+        "phandle": [
+          6
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial3_default/serial_3",
+      "line": 746,
+      "properties": {
+        "actions,groups": [
+          "mfp2_21",
+          "mfp2_20",
+          "uart3_dummy"
+        ],
+        "actions,function": [
+          "uart3"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial4_default",
+      "line": 752,
+      "properties": {
+        "linux,phandle": [
+          7
+        ],
+        "phandle": [
+          7
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial4_default/serial_4",
+      "line": 756,
+      "properties": {
+        "actions,groups": [
+          "uart4_dummy"
+        ],
+        "actions,function": [
+          "uart4"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial5_default",
+      "line": 762,
+      "properties": {}
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial5_default/serial_5",
+      "line": 764,
+      "properties": {
+        "actions,groups": [
+          "mfp2_19_17",
+          "mfp2_16_14"
+        ],
+        "actions,function": [
+          "uart5"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial6_default",
+      "line": 770,
+      "properties": {
+        "linux,phandle": [
+          8
+        ],
+        "phandle": [
+          8
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/serial6_default/serial_6",
+      "line": 774,
+      "properties": {
+        "actions,groups": [
+          "mfp0_18_16_eth_txd0",
+          "mfp0_18_16_eth_txd1"
+        ],
+        "actions,function": [
+          "uart6"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/ethernet_default",
+      "line": 780,
+      "properties": {}
+    },
+    {
+      "path": "/pinctrl@b01b0040/ethernet_default/ethernet_smi",
+      "line": 782,
+      "properties": {
+        "actions,groups": [
+          "eth_smi_dummy"
+        ],
+        "actions,function": [
+          "eth_rmii"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/ethernet_default/ethernet_rmii_txd01",
+      "line": 787,
+      "properties": {
+        "actions,groups": [
+          "mfp0_18_16_eth_txd0",
+          "mfp0_18_16_eth_txd1"
+        ],
+        "actions,function": [
+          "eth_rmii"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/ethernet_default/ethernet_rmii_txen_rxer",
+      "line": 792,
+      "properties": {
+        "actions,groups": [
+          "mfp0_15_13_rmii_txen",
+          "mfp0_15_13_rmii_rxen"
+        ],
+        "actions,function": [
+          "eth_rmii"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/ethernet_default/ethernet_rmii_crs_dv",
+      "line": 797,
+      "properties": {
+        "actions,groups": [
+          "mfp0_22_20"
+        ],
+        "actions,function": [
+          "eth_rmii"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/ethernet_default/ethernet_rmii_rxd10",
+      "line": 802,
+      "properties": {
+        "actions,groups": [
+          "mfp0_10_8_rmii_rxd1",
+          "mfp0_10_8_rmii_rxd0"
+        ],
+        "actions,function": [
+          "eth_rmii"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/ethernet_default/ethernet_rmii_ref_clk",
+      "line": 807,
+      "properties": {
+        "actions,groups": [
+          "mfp0_7_6"
+        ],
+        "actions,function": [
+          "eth_rmii"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc_share_uart",
+      "line": 813,
+      "properties": {
+        "linux,phandle": [
+          21
+        ],
+        "phandle": [
+          21
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc_share_uart/sd0_mfp_cmd_clk",
+      "line": 817,
+      "properties": {
+        "actions,groups": [
+          "mfp2_8_7",
+          "mfp2_6_5"
+        ],
+        "actions,function": [
+          "sd0"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc_share_uart/sd0_pull_d0_d3_cmd",
+      "line": 822,
+      "properties": {
+        "actions,pins": [
+          "P_SD0_CMD"
+        ],
+        "actions,pull": [
+          2
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc_share_uart/sd0_pull_clk",
+      "line": 827,
+      "properties": {
+        "actions,pins": [
+          "P_SD0_CLK"
+        ],
+        "actions,pull": [
+          0
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc_share_uart/sd0_d0_d3_cmd_clk_paddrv",
+      "line": 832,
+      "properties": {
+        "actions,groups": [
+          "paddrv1_19_18",
+          "paddrv1_17_16"
+        ],
+        "actions,paddrv": [
+          1
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc_share_uart/serial_5",
+      "line": 837,
+      "properties": {
+        "actions,groups": [
+          "mfp2_19_17",
+          "mfp2_16_14"
+        ],
+        "actions,function": [
+          "uart5"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc0_default",
+      "line": 843,
+      "properties": {
+        "linux,phandle": [
+          20
+        ],
+        "phandle": [
+          20
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc0_default/sd0_mfp_d0_d3_cmd_clk",
+      "line": 847,
+      "properties": {
+        "actions,groups": [
+          "mfp2_19_17",
+          "mfp2_16_14",
+          "mfp2_13_11",
+          "mfp2_8_7",
+          "mfp2_6_5"
+        ],
+        "actions,function": [
+          "sd0"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc0_default/sd0_pull_d0_d3_cmd",
+      "line": 852,
+      "properties": {
+        "actions,pins": [
+          "P_SD0_D0",
+          "P_SD0_D1",
+          "P_SD0_D2",
+          "P_SD0_D3",
+          "P_SD0_CMD"
+        ],
+        "actions,pull": [
+          2
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc0_default/sd0_pull_clk",
+      "line": 857,
+      "properties": {
+        "actions,pins": [
+          "P_SD0_CLK"
+        ],
+        "actions,pull": [
+          0
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc0_default/sd0_d0_d3_cmd_clk_paddrv",
+      "line": 862,
+      "properties": {
+        "actions,groups": [
+          "paddrv1_23_22",
+          "paddrv1_19_18",
+          "paddrv1_17_16"
+        ],
+        "actions,paddrv": [
+          1
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc1_default",
+      "line": 868,
+      "properties": {
+        "linux,phandle": [
+          22
+        ],
+        "phandle": [
+          22
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc1_default/sd1_mfp_d0_d3_cmd_clk",
+      "line": 872,
+      "properties": {
+        "actions,groups": [
+          "mfp2_10_9",
+          "mfp2_4_3",
+          "sd1_dummy"
+        ],
+        "actions,function": [
+          "sd1"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc1_default/sd1_pull_d0_d3_cmd",
+      "line": 877,
+      "properties": {
+        "actions,pins": [
+          "P_SD1_D0",
+          "P_SD1_D1",
+          "P_SD1_D2",
+          "P_SD1_D3",
+          "P_SD1_CMD"
+        ],
+        "actions,pull": [
+          2
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc1_default/sd1_d0_d3_cmd_clk_paddrv",
+      "line": 882,
+      "properties": {
+        "actions,groups": [
+          "paddrv1_21_20",
+          "paddrv1_15_14",
+          "paddrv1_13_12"
+        ],
+        "actions,paddrv": [
+          1
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc2_default",
+      "line": 888,
+      "properties": {
+        "linux,phandle": [
+          23
+        ],
+        "phandle": [
+          23
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc2_default/sd2_mfp_d0_d3_cmd_clk",
+      "line": 892,
+      "properties": {
+        "actions,groups": [
+          "mfp3_3"
+        ],
+        "actions,function": [
+          "sd2"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/mmc2_default/sd2_pull_d0_d3_cmd",
+      "line": 897,
+      "properties": {
+        "actions,pins": [
+          "P_DNAND_D0",
+          "P_DNAND_D1",
+          "P_DNAND_D2",
+          "P_DNAND_D3",
+          "P_DNAND_D4",
+          "P_DNAND_D5",
+          "P_DNAND_D6",
+          "P_DNAND_D7",
+          "P_DNAND_RDBN"
+        ],
+        "actions,pull": [
+          2
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/isp0_csi_dvp",
+      "line": 903,
+      "properties": {
+        "linux,phandle": [
+          30
+        ],
+        "phandle": [
+          30
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/isp0_csi_dvp/isp0_csi_dvp_mfp",
+      "line": 907,
+      "properties": {
+        "actions,groups": [
+          "mfp3_29_28",
+          "mfp3_23_22",
+          "mfp3_15_14",
+          "mfp3_13_12"
+        ],
+        "actions,function": [
+          "sens0"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/isp0_csi_dvp/sens0_clk_out_pdrv",
+      "line": 912,
+      "properties": {
+        "actions,groups": [
+          "paddrv2_13_12"
+        ],
+        "actions,paddrv": [
+          0
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/isp0_csi_mipi",
+      "line": 918,
+      "properties": {}
+    },
+    {
+      "path": "/pinctrl@b01b0040/isp0_csi_mipi/isp0_csi_mipi_mfp",
+      "line": 920,
+      "properties": {
+        "actions,groups": [
+          "mfp3_29_28",
+          "mfp3_15_14"
+        ],
+        "actions,function": [
+          "mipi_csi"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/isp0_csi_mipi/isp0_csi_mipi_clkout_mfp",
+      "line": 925,
+      "properties": {
+        "actions,groups": [
+          "mfp3_23_22"
+        ],
+        "actions,function": [
+          "sens0"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/spi0_dsi_d",
+      "line": 931,
+      "properties": {}
+    },
+    {
+      "path": "/pinctrl@b01b0040/spi0_dsi_d/spi0_mfp",
+      "line": 933,
+      "properties": {
+        "actions,groups": [
+          "mfp1_9_7",
+          "mfp1_20_19",
+          "mfp1_18_17",
+          "mfp2_26_24"
+        ],
+        "actions,function": [
+          "spi0"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/spi0_dsi_d/spi0_paddrv",
+      "line": 938,
+      "properties": {
+        "actions,groups": [
+          "paddrv1_25_24"
+        ],
+        "actions,paddrv": [
+          2
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c0_default",
+      "line": 944,
+      "properties": {}
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c0_default/i2c0_default_mfp",
+      "line": 946,
+      "properties": {
+        "actions,groups": [
+          "mfp3_18_16"
+        ],
+        "actions,function": [
+          "i2c0"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c0_default/i2c0_default_paddrv",
+      "line": 951,
+      "properties": {
+        "actions,groups": [
+          "paddrv2_24_23"
+        ],
+        "actions,paddrv": [
+          0
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c0_default/i2c0_default_pull_up",
+      "line": 956,
+      "properties": {
+        "actions,pins": [
+          "P_I2C0_SCLK",
+          "P_I2C0_SDATA"
+        ],
+        "actions,pull": [
+          2
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c0_over_uart0",
+      "line": 962,
+      "properties": {}
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c0_over_uart0/i2c0_over_uart0_mfp",
+      "line": 964,
+      "properties": {
+        "actions,groups": [
+          "mfp2_2_0",
+          "mfp3_21_19"
+        ],
+        "actions,function": [
+          "i2c0"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c0_over_uart0/i2c0_over_uart0_paddrv",
+      "line": 969,
+      "properties": {
+        "actions,groups": [
+          "paddrv2_31_30",
+          "paddrv2_29_28"
+        ],
+        "actions,paddrv": [
+          0
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c0_over_uart0/i2c0_over_uart0_pull_up",
+      "line": 974,
+      "properties": {
+        "actions,pins": [
+          "P_UART0_RX",
+          "P_UART0_TX"
+        ],
+        "actions,pull": [
+          2
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c1_default",
+      "line": 980,
+      "properties": {
+        "linux,phandle": [
+          9
+        ],
+        "phandle": [
+          9
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c1_default/i2c1_default_mfp",
+      "line": 984,
+      "properties": {
+        "actions,groups": [
+          "i2c1_dummy"
+        ],
+        "actions,function": [
+          "i2c1"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c1_default/i2c1_default_paddrv",
+      "line": 989,
+      "properties": {
+        "actions,groups": [
+          "paddrv2_22_21"
+        ],
+        "actions,paddrv": [
+          0
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c1_default/i2c1_default_pull_up",
+      "line": 994,
+      "properties": {
+        "actions,pins": [
+          "P_I2C1_SCLK",
+          "P_I2C1_SDATA"
+        ],
+        "actions,pull": [
+          0
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c2_default",
+      "line": 1000,
+      "properties": {
+        "linux,phandle": [
+          14
+        ],
+        "phandle": [
+          14
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c2_default/i2c2_default_mfp",
+      "line": 1004,
+      "properties": {
+        "actions,groups": [
+          "i2c2_dummy"
+        ],
+        "actions,function": [
+          "i2c2"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c2_default/i2c2_default_paddrv",
+      "line": 1009,
+      "properties": {
+        "actions,groups": [
+          "paddrv2_22_21"
+        ],
+        "actions,paddrv": [
+          0
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c2_default/i2c2_default_pull_up",
+      "line": 1014,
+      "properties": {
+        "actions,pins": [
+          "P_I2C2_SCLK",
+          "P_I2C2_SDATA"
+        ],
+        "actions,pull": [
+          2
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c3_over_spi0",
+      "line": 1020,
+      "properties": {
+        "linux,phandle": [
+          15
+        ],
+        "phandle": [
+          15
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c3_over_spi0/i2c3_over_spi0_mfp",
+      "line": 1024,
+      "properties": {
+        "actions,groups": [
+          "mfp1_4_3"
+        ],
+        "actions,function": [
+          "i2c3"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c3_over_spi0/i2c3_over_spi0_paddrv",
+      "line": 1029,
+      "properties": {
+        "actions,groups": [
+          "paddrv1_11_10"
+        ],
+        "actions,paddrv": [
+          1
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2c3_over_spi0/i2c3_over_spi0_pull_up",
+      "line": 1034,
+      "properties": {
+        "actions,pins": [
+          "P_SPI0_SCLK",
+          "P_SPI0_MOSI"
+        ],
+        "actions,pull": [
+          0
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/spi0_default",
+      "line": 1040,
+      "properties": {}
+    },
+    {
+      "path": "/pinctrl@b01b0040/spi0_default/spi0_mfp",
+      "line": 1042,
+      "properties": {
+        "actions,groups": [
+          "mfp1_2_0",
+          "mfp1_4_3"
+        ],
+        "actions,function": [
+          "spi0"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/spi2_nand_d",
+      "line": 1048,
+      "properties": {
+        "linux,phandle": [
+          27
+        ],
+        "phandle": [
+          27
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/spi2_nand_d/spi2_mfp",
+      "line": 1052,
+      "properties": {
+        "actions,groups": [
+          "mfp3_2"
+        ],
+        "actions,function": [
+          "spi2"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/pwm0_default",
+      "line": 1058,
+      "properties": {
+        "linux,phandle": [
+          16
+        ],
+        "phandle": [
+          16
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/pwm0_default/pwm0_mfp",
+      "line": 1062,
+      "properties": {
+        "actions,groups": [
+          "mfp1_31_29_ks_in2"
+        ],
+        "actions,function": [
+          "pwm0"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/pwm1_default",
+      "line": 1068,
+      "properties": {
+        "linux,phandle": [
+          17
+        ],
+        "phandle": [
+          17
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/pwm1_default/pwm1_mfp",
+      "line": 1072,
+      "properties": {
+        "actions,groups": [
+          "mfp1_28_26_ks_in3"
+        ],
+        "actions,function": [
+          "pwm1"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/pwm2_default",
+      "line": 1078,
+      "properties": {
+        "linux,phandle": [
+          18
+        ],
+        "phandle": [
+          18
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/pwm2_default/pwm2_mfp",
+      "line": 1082,
+      "properties": {
+        "actions,groups": [
+          "mfp1_28_26_ks_out0"
+        ],
+        "actions,function": [
+          "pwm2"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/pwm3_default",
+      "line": 1088,
+      "properties": {
+        "linux,phandle": [
+          19
+        ],
+        "phandle": [
+          19
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/pwm3_default/pwm3_mfp",
+      "line": 1092,
+      "properties": {
+        "actions,groups": [
+          "mfp1_28_26_ks_out1"
+        ],
+        "actions,function": [
+          "pwm3"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/lvds_default",
+      "line": 1098,
+      "properties": {}
+    },
+    {
+      "path": "/pinctrl@b01b0040/lvds_default/lvds_mux",
+      "line": 1100,
+      "properties": {
+        "actions,groups": [
+          "mfp1_22_21",
+          "mfp1_6_5",
+          "mfp2_28_27"
+        ],
+        "actions,function": [
+          "lvds"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2s0_default",
+      "line": 1106,
+      "properties": {
+        "linux,phandle": [
+          11
+        ],
+        "phandle": [
+          11
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/i2s0_default/i2s0_default_mfp",
+      "line": 1110,
+      "properties": {
+        "actions,groups": [
+          "mfp0_2_1_i2s0",
+          "mfp0_4_3",
+          "mfp0_5"
+        ],
+        "actions,function": [
+          "i2s0"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/rgb_default",
+      "line": 1116,
+      "properties": {
+        "linux,phandle": [
+          25
+        ],
+        "phandle": [
+          25
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/rgb_default/rgb_mux",
+      "line": 1120,
+      "properties": {
+        "actions,groups": [
+          "mfp0_25_23",
+          "mfp1_16_14",
+          "mfp1_22_21",
+          "mfp1_13_12",
+          "mfp1_11_10",
+          "mfp1_6_5",
+          "mfp2_30_29",
+          "mfp2_28_27"
+        ],
+        "actions,function": [
+          "lcd0"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/pcm0_spi0",
+      "line": 1126,
+      "properties": {}
+    },
+    {
+      "path": "/pinctrl@b01b0040/pcm0_spi0/pcm0_spi0_mfp",
+      "line": 1128,
+      "properties": {
+        "actions,groups": [
+          "mfp1_2_0",
+          "mfp1_4_3"
+        ],
+        "actions,function": [
+          "pcm0"
+        ]
+      }
+    },
+    {
+      "path": "/pinctrl@b01b0040/dsi_default",
+      "line": 1134,
+      "properties": {}
+    },
+    {
+      "path": "/pinctrl@b01b0040/dsi_default/dsi_mux",
+      "line": 1136,
+      "properties": {
+        "actions,groups": [
+          "mfp1_20_19",
+          "mfp1_18_17",
+          "mfp1_13_12",
+          "mfp1_11_10",
+          "mfp1_9_7",
+          "mfp2_30_29"
+        ],
+        "actions,function": [
+          "dsi"
+        ]
+      }
+    },
+    {
+      "path": "/lcd0@b02a0000",
+      "line": 1143,
+      "properties": {
+        "compatible": [
+          "actions,owl-lcd"
+        ],
+        "reg": [
+          2955542528,
+          524
+        ],
+        "interrupts": [
+          0,
+          45,
+          4
+        ],
+        "status": [
+          "okay"
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          25
+        ],
+        "lcd_power_gpios": [
+          12,
+          36,
+          0
+        ],
+        "lcd_reset_gpios": [
+          12,
+          35,
+          0
+        ],
+        "lcd_spics_gpios": [
+          12,
+          17,
+          1
+        ],
+        "lcd_spiclk_gpios": [
+          12,
+          120,
+          1
+        ],
+        "lcd_spidat_gpios": [
+          12,
+          121,
+          1
+        ],
+        "port_type": [
+          "rgb"
+        ],
+        "data_width": [
+          0
+        ],
+        "videomode-0": [
+          26
+        ],
+        "vsync_inversion": [
+          1
+        ],
+        "hsync_inversion": [
+          1
+        ],
+        "dclk_inversion": [
+          1
+        ],
+        "lde_inversion": [
+          0
+        ],
+        "lightness": [
+          128
+        ],
+        "saturation": [
+          7
+        ],
+        "contrast": [
+          5
+        ]
+      }
+    },
+    {
+      "path": "/lcd0@b02a0000/mode@640x480p60",
+      "line": 1166,
+      "properties": {
+        "refresh": [
+          60
+        ],
+        "xres": [
+          640
+        ],
+        "yres": [
+          480
+        ],
+        "pixclock": [
+          50000
+        ],
+        "left_margin": [
+          16
+        ],
+        "right_margin": [
+          20
+        ],
+        "upper_margin": [
+          15
+        ],
+        "lower_margin": [
+          5
+        ],
+        "hsync_len": [
+          30
+        ],
+        "vsync_len": [
+          2
+        ],
+        "vmode": [
+          0
+        ],
+        "linux,phandle": [
+          26
+        ],
+        "phandle": [
+          26
+        ]
+      }
+    },
+    {
+      "path": "/dsi@b0220000",
+      "line": 1183,
+      "properties": {
+        "compatible": [
+          "actions,owl-dsi"
+        ],
+        "reg": [
+          2955018240,
+          140
+        ],
+        "interrupts": [
+          0,
+          51,
+          4
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/backlight",
+      "line": 1190,
+      "properties": {
+        "compatible": [
+          "actions,owl-pwm-backlight"
+        ],
+        "pwms": [
+          13,
+          0,
+          50000,
+          0
+        ],
+        "total_steps": [
+          1024
+        ],
+        "min_brightness": [
+          0
+        ],
+        "max_brightness": [
+          1024
+        ],
+        "dft_brightness": [
+          400
+        ],
+        "delay_bf_pwm": [
+          200
+        ],
+        "delay_af_pwm": [
+          10
+        ]
+      }
+    },
+    {
+      "path": "/gpu@b0300000",
+      "line": 1201,
+      "properties": {
+        "compatible": [
+          "actions,atm7039c-gpu"
+        ],
+        "reg": [
+          2955935744,
+          65536
+        ],
+        "interrupts": [
+          0,
+          3,
+          4
+        ],
+        "normal_value": [
+          2
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/vde@b0280000",
+      "line": 1209,
+      "properties": {
+        "compatible": [
+          "actions,atm7059a-vde"
+        ],
+        "reg": [
+          2955411456,
+          264
+        ],
+        "interrupts": [
+          0,
+          50,
+          4
+        ]
+      }
+    },
+    {
+      "path": "/vce@b0288000",
+      "line": 1215,
+      "properties": {
+        "compatible": [
+          "actions,atm7059a-vce"
+        ],
+        "reg": [
+          2955444224,
+          148
+        ],
+        "interrupts": [
+          0,
+          49,
+          4
+        ]
+      }
+    },
+    {
+      "path": "/hdmi@b02c0000",
+      "line": 1221,
+      "properties": {
+        "compatible": [
+          "actions,atm7059a-hdmi"
+        ],
+        "reg": [
+          2955673600,
+          352
+        ],
+        "status": [
+          "okay"
+        ],
+        "hdcp_onoff": [
+          0
+        ],
+        "channel_invert": [
+          0
+        ],
+        "bit_invert": [
+          0
+        ],
+        "hotplugable": [
+          1
+        ],
+        "bootable": [
+          1
+        ],
+        "i2cbus": [
+          2
+        ],
+        "bootrotate": [
+          0
+        ],
+        "default_resolution": [
+          "1280x720p-60"
+        ]
+      }
+    },
+    {
+      "path": "/hdmi_cec@b02c011c",
+      "line": 1235,
+      "properties": {
+        "compatible": [
+          "actions,atm7059a-hdmi-cec"
+        ],
+        "reg": [
+          2955673600,
+          352
+        ]
+      }
+    },
+    {
+      "path": "/cvbs@b02b0000",
+      "line": 1240,
+      "properties": {
+        "compatible": [
+          "actions,atm7059a-cvbs"
+        ],
+        "reg": [
+          2955608064,
+          128
+        ],
+        "default_mode": [
+          "PAL"
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/de@b02e0000",
+      "line": 1247,
+      "properties": {
+        "compatible": [
+          "actions,atm7059a-de"
+        ],
+        "reg": [
+          2955804672,
+          4110,
+          2958033160,
+          4
+        ]
+      }
+    },
+    {
+      "path": "/nand@b0210000",
+      "line": 1252,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          1
+        ],
+        "compatible": [
+          "actions,atm7059a-nand"
+        ],
+        "reg": [
+          2954952704,
+          180,
+          2954231808,
+          252,
+          2954559488,
+          144,
+          2955280384,
+          3328
+        ],
+        "interrupts": [
+          0,
+          41,
+          4
+        ]
+      }
+    },
+    {
+      "path": "/dma@b0260000",
+      "line": 1260,
+      "properties": {
+        "compatible": [
+          "actions,owl-dma"
+        ],
+        "reg": [
+          2955280384,
+          3328
+        ],
+        "interrupts": [
+          0,
+          57,
+          4,
+          0,
+          58,
+          4,
+          0,
+          59,
+          4,
+          0,
+          60,
+          4
+        ]
+      }
+    },
+    {
+      "path": "/thermal",
+      "line": 1266,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          1
+        ],
+        "compatible": [
+          "actions,atm7059a-thermal"
+        ],
+        "reg": [
+          2954559720,
+          8
+        ]
+      }
+    },
+    {
+      "path": "/reserved",
+      "line": 1273,
+      "properties": {}
+    },
+    {
+      "path": "/reserved/tiny",
+      "line": 1275,
+      "properties": {
+        "fb_heap_size": [
+          9
+        ],
+        "kinfo_heap_size": [
+          1
+        ],
+        "carveout_heap_size": [
+          0
+        ],
+        "dma_heap_size": [
+          32
+        ]
+      }
+    },
+    {
+      "path": "/reserved/normal",
+      "line": 1282,
+      "properties": {
+        "fb_heap_size": [
+          8
+        ],
+        "kinfo_heap_size": [
+          1
+        ],
+        "carveout_heap_size": [
+          64
+        ],
+        "dma_heap_size": [
+          128
+        ]
+      }
+    },
+    {
+      "path": "/dual_logo",
+      "line": 1290,
+      "properties": {
+        "value": [
+          0
+        ]
+      }
+    },
+    {
+      "path": "/spinand@b0208000",
+      "line": 1294,
+      "properties": {
+        "compatible": [
+          "actions,atm7059a-spinand"
+        ],
+        "clock-frequency": [
+          50000000
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          27
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/gl5203-audio-i2s",
+      "line": 1302,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          1
+        ],
+        "compatible": [
+          "actions,owl-audio-i2s"
+        ],
+        "reg": [
+          2953838592,
+          52,
+          2953904128,
+          32784
+        ],
+        "pcm": [
+          0
+        ]
+      }
+    },
+    {
+      "path": "/usb@b02b8000",
+      "line": 1310,
+      "properties": {
+        "vbus-src": [
+          "gpio"
+        ],
+        "vbus-regulator": [
+          "LDO1"
+        ],
+        "regulator-scope": [
+          3300000,
+          3500000
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/monitor",
+      "line": 1317,
+      "properties": {
+        "compatible": [
+          "actions,atm7059tc-usbmonitor"
+        ],
+        "detect_type": [
+          3
+        ],
+        "idpin_type": [
+          0
+        ],
+        "vbus_type": [
+          2
+        ],
+        "vbus_otg_en_gpios": [
+          12,
+          78,
+          0
+        ],
+        "status": [
+          "okay"
+        ]
+      }
+    },
+    {
+      "path": "/isp-sensor",
+      "line": 1326,
+      "properties": {
+        "compatible": [
+          "sensor_common"
+        ],
+        "rear_bus_type": [
+          "dvp"
+        ],
+        "front_bus_type": [
+          "dvp"
+        ],
+        "rear_data_type": [
+          "yuv"
+        ],
+        "front_data_type": [
+          "yuv"
+        ],
+        "host": [
+          28
+        ],
+        "rear_channel": [
+          0
+        ],
+        "front_channel": [
+          0
+        ],
+        "i2c_adapter": [
+          29
+        ],
+        "pinctrl-names": [
+          "default"
+        ],
+        "pinctrl-0": [
+          30
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/sensor-detect",
+      "line": 1341,
+      "properties": {
+        "compatible": [
+          "sensor_detect"
+        ],
+        "status": [
+          "disabled"
+        ],
+        "hot_plugin_enable": [
+          0
+        ]
+      }
+    },
+    {
+      "path": "/sensor-detect/sensor_detect_list",
+      "line": 1346,
+      "properties": {
+        "gc0308": [
+          1
+        ],
+        "gc0328": [
+          1
+        ],
+        "gc0329": [
+          1
+        ],
+        "gc0312": [
+          1
+        ],
+        "gc2035": [
+          1
+        ],
+        "gc2145": [
+          1
+        ],
+        "gc2155": [
+          1
+        ],
+        "hi708": [
+          1
+        ],
+        "hi257": [
+          1
+        ],
+        "ov2686": [
+          1
+        ],
+        "ov5640": [
+          1
+        ],
+        "sp0718": [
+          1
+        ],
+        "sp0a19": [
+          1
+        ],
+        "sp2519": [
+          1
+        ],
+        "siv121du": [
+          1
+        ],
+        "soc5140": [
+          1
+        ]
+      }
+    },
+    {
+      "path": "/matrix_keypad@0",
+      "line": 1366,
+      "properties": {
+        "compatible": [
+          "gpio-matrix-keypad"
+        ],
+        "status": [
+          "disabled"
+        ],
+        "debounce-delay-ms": [
+          20
+        ],
+        "col-scan-delay-us": [
+          10
+        ],
+        "row-gpios": [
+          12,
+          45,
+          0,
+          12,
+          46,
+          0
+        ],
+        "col-gpios": [
+          12,
+          50,
+          0,
+          12,
+          51,
+          0,
+          12,
+          48,
+          0,
+          12,
+          47,
+          0
+        ],
+        "linux,keymap": [
+          139,
+          65694,
+          131231,
+          196713,
+          16777344,
+          16842871,
+          16908408,
+          16973945
+        ]
+      }
+    },
+    {
+      "path": "/framebuffer",
+      "line": 1376,
+      "properties": {
+        "compatible": [
+          "actions,framebuffer"
+        ],
+        "def_display": [
+          "lcd"
+        ],
+        "xres": [
+          640
+        ],
+        "yres": [
+          480
+        ],
+        "bpp": [
+          4
+        ],
+        "mode": [
+          1
+        ]
+      }
+    },
+    {
+      "path": "/vibrator",
+      "line": 1385,
+      "properties": {
+        "compatible": [
+          "actions,vibrator"
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/wifi_bt_power_ctl",
+      "line": 1390,
+      "properties": {
+        "compatible": [
+          "wifi,bt,power,ctl"
+        ],
+        "wifi_bt_power_gpios": [
+          31,
+          5,
+          0
+        ],
+        "wifi_vol_range": [
+          3300000,
+          3300000
+        ],
+        "wifi_en_gpios": [
+          12,
+          90,
+          0
+        ],
+        "bt_en_gpios": [
+          12,
+          91,
+          0
+        ],
+        "wifi_wakeup_host_gpios": [
+          12,
+          115,
+          0
+        ]
+      }
+    },
+    {
+      "path": "/gsensor_detect",
+      "line": 1399,
+      "properties": {
+        "compatible": [
+          "owl-gsensor-detect"
+        ],
+        "status": [
+          "disabled"
+        ],
+        "i2c_adapter_id": [
+          2
+        ]
+      }
+    },
+    {
+      "path": "/gsensor_detect/gsensor_detect_list",
+      "line": 1404,
+      "properties": {
+        "compatible": [
+          "gsensor_detect_list"
+        ],
+        "afa750": [
+          0
+        ],
+        "bma220": [
+          0
+        ],
+        "bma222": [
+          1
+        ],
+        "bma250": [
+          0
+        ],
+        "dmard10": [
+          0
+        ],
+        "kxtj9": [
+          0
+        ],
+        "lis3dh": [
+          0
+        ],
+        "mc3210": [
+          0
+        ],
+        "mc3230": [
+          0
+        ],
+        "mc3232": [
+          1
+        ],
+        "mc3236": [
+          1
+        ],
+        "mma7660": [
+          0
+        ],
+        "mma8452": [
+          0
+        ],
+        "stk8312": [
+          1
+        ],
+        "stk8313": [
+          1
+        ]
+      }
+    },
+    {
+      "path": "/ctp_detect",
+      "line": 1424,
+      "properties": {
+        "compatible": [
+          "owl-ctp-detect"
+        ],
+        "status": [
+          "disabled"
+        ],
+        "i2c_adapter_id": [
+          1
+        ],
+        "tp_vcc": [
+          "ldo5"
+        ],
+        "reset_gpios": [
+          12,
+          35,
+          1
+        ],
+        "interrupt-parent": [
+          10
+        ],
+        "interrupts": [
+          0,
+          4
+        ],
+        "vol_range": [
+          3100000,
+          3110000
+        ]
+      }
+    },
+    {
+      "path": "/ctp_detect/ctp_detect_list",
+      "line": 1434,
+      "properties": {
+        "compatible": [
+          "ctp_detect_list"
+        ],
+        "ICN83XX": [
+          0
+        ],
+        "GSLX6X0": [
+          1
+        ],
+        "FT52-406": [
+          0
+        ],
+        "FT5606": [
+          0
+        ],
+        "GT813": [
+          0
+        ],
+        "AW5206": [
+          0
+        ],
+        "AW5209": [
+          0
+        ],
+        "CT36X": [
+          0
+        ],
+        "HL3X06": [
+          0
+        ],
+        "ILITEK": [
+          0
+        ],
+        "ili2672": [
+          0
+        ],
+        "ft5x06": [
+          0
+        ],
+        "MT395": [
+          0
+        ],
+        "NT1100X": [
+          0
+        ],
+        "SSD254X": [
+          0
+        ]
+      }
+    },
+    {
+      "path": "/pcm-audio",
+      "line": 1454,
+      "properties": {
+        "compatible": [
+          "actions,pcm-audio"
+        ],
+        "status": [
+          "okay"
+        ]
+      }
+    }
+  ],
+  "reservations": [],
+  "ranges": [
+    {
+      "path": "/memory",
+      "index": 0,
+      "address": 0,
+      "size": 0,
+      "address_space": "parent-bus",
+      "line": 56,
+      "compatible": [],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/cpus/cpu@0",
+      "index": 0,
+      "address": 0,
+      "size": null,
+      "address_space": "parent-bus",
+      "line": 65,
+      "compatible": [
+        "arm,cortex-a9"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/cpus/cpu@1",
+      "index": 0,
+      "address": 1,
+      "size": null,
+      "address_space": "parent-bus",
+      "line": 73,
+      "compatible": [
+        "arm,cortex-a9"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/interrupt-controller@b0021000",
+      "index": 0,
+      "address": 2952925184,
+      "size": 4096,
+      "address_space": "parent-bus",
+      "line": 80,
+      "compatible": [
+        "arm,cortex-a9-gic"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/interrupt-controller@b0021000",
+      "index": 1,
+      "address": 2952921344,
+      "size": 256,
+      "address_space": "parent-bus",
+      "line": 80,
+      "compatible": [
+        "arm,cortex-a9-gic"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/cache-controller@b0022000",
+      "index": 0,
+      "address": 2952929280,
+      "size": 4096,
+      "address_space": "parent-bus",
+      "line": 94,
+      "compatible": [
+        "arm,pl310-cache"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        55,
+        4
+      ]
+    },
+    {
+      "path": "/twd-watchdog@b0020600",
+      "index": 0,
+      "address": 2952922624,
+      "size": 256,
+      "address_space": "parent-bus",
+      "line": 104,
+      "compatible": [
+        "actions,atm7059-wdt"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        1,
+        14,
+        3841
+      ]
+    },
+    {
+      "path": "/twd-watchdog@b0020600",
+      "index": 1,
+      "address": 2954231808,
+      "size": 32,
+      "address_space": "parent-bus",
+      "line": 104,
+      "compatible": [
+        "actions,atm7059-wdt"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        1,
+        14,
+        3841
+      ]
+    },
+    {
+      "path": "/serial@b0120000",
+      "index": 0,
+      "address": 2953969664,
+      "size": 8192,
+      "address_space": "parent-bus",
+      "line": 112,
+      "compatible": [
+        "actions,owl-uart",
+        "actions,owl-uart-irc"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        29,
+        4
+      ]
+    },
+    {
+      "path": "/serial@b0122000",
+      "index": 0,
+      "address": 2953977856,
+      "size": 8192,
+      "address_space": "parent-bus",
+      "line": 122,
+      "compatible": [
+        "actions,owl-uart"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        30,
+        4
+      ]
+    },
+    {
+      "path": "/serial@b0124000",
+      "index": 0,
+      "address": 2953986048,
+      "size": 8192,
+      "address_space": "parent-bus",
+      "line": 132,
+      "compatible": [
+        "actions,owl-uart"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        31,
+        4
+      ]
+    },
+    {
+      "path": "/serial@b0126000",
+      "index": 0,
+      "address": 2953994240,
+      "size": 8192,
+      "address_space": "parent-bus",
+      "line": 142,
+      "compatible": [
+        "actions,owl-uart"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        32,
+        4
+      ]
+    },
+    {
+      "path": "/serial@b0128000",
+      "index": 0,
+      "address": 2954002432,
+      "size": 8192,
+      "address_space": "parent-bus",
+      "line": 152,
+      "compatible": [
+        "actions,owl-uart"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        33,
+        4
+      ]
+    },
+    {
+      "path": "/serial@b012a000",
+      "index": 0,
+      "address": 2954010624,
+      "size": 8192,
+      "address_space": "parent-bus",
+      "line": 162,
+      "compatible": [
+        "actions,owl-uart"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        34,
+        4
+      ]
+    },
+    {
+      "path": "/serial@b012c000",
+      "index": 0,
+      "address": 2954018816,
+      "size": 8192,
+      "address_space": "parent-bus",
+      "line": 170,
+      "compatible": [
+        "actions,owl-uart"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        35,
+        4
+      ]
+    },
+    {
+      "path": "/i2c@b0170000",
+      "index": 0,
+      "address": 2954297344,
+      "size": 16384,
+      "address_space": "parent-bus",
+      "line": 180,
+      "compatible": [
+        "actions,owl-i2c"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        25,
+        4
+      ]
+    },
+    {
+      "path": "/i2c@b0174000",
+      "index": 0,
+      "address": 2954313728,
+      "size": 16384,
+      "address_space": "parent-bus",
+      "line": 188,
+      "compatible": [
+        "actions,owl-i2c"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        26,
+        4
+      ]
+    },
+    {
+      "path": "/i2c@b0174000/atc2603c@65",
+      "index": 0,
+      "address": 101,
+      "size": null,
+      "address_space": "parent-bus",
+      "line": 200,
+      "compatible": [
+        "actions,atc2603c"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        2,
+        4
+      ]
+    },
+    {
+      "path": "/i2c@b0178000",
+      "index": 0,
+      "address": 2954330112,
+      "size": 16384,
+      "address_space": "parent-bus",
+      "line": 463,
+      "compatible": [
+        "actions,owl-i2c"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        27,
+        4
+      ]
+    },
+    {
+      "path": "/i2c@b0178000/hdmi_read_edid@30",
+      "index": 0,
+      "address": 48,
+      "size": null,
+      "address_space": "parent-bus",
+      "line": 477,
+      "compatible": [
+        "actions,hdmi_read_edid"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/i2c@b017c000",
+      "index": 0,
+      "address": 2954346496,
+      "size": 16384,
+      "address_space": "parent-bus",
+      "line": 483,
+      "compatible": [
+        "actions,owl-i2c"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        28,
+        4
+      ]
+    },
+    {
+      "path": "/i2c@b017c000/eg2801_eeprom@14",
+      "index": 0,
+      "address": 20,
+      "size": null,
+      "address_space": "parent-bus",
+      "line": 495,
+      "compatible": [
+        "actions,eg2801_eeprom"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/i2c@b017c000/eg2801_ram@55",
+      "index": 0,
+      "address": 85,
+      "size": null,
+      "address_space": "parent-bus",
+      "line": 500,
+      "compatible": [
+        "actions,eg2801_ram"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/spi@b0200000",
+      "index": 0,
+      "address": 2954887168,
+      "size": 16384,
+      "address_space": "parent-bus",
+      "line": 506,
+      "compatible": [
+        "actions,owl-spi"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        19,
+        4
+      ]
+    },
+    {
+      "path": "/spi@b0204000",
+      "index": 0,
+      "address": 2954903552,
+      "size": 16384,
+      "address_space": "parent-bus",
+      "line": 515,
+      "compatible": [
+        "actions,owl-spi"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        20,
+        4
+      ]
+    },
+    {
+      "path": "/spi@b0208000",
+      "index": 0,
+      "address": 2954919936,
+      "size": 16384,
+      "address_space": "parent-bus",
+      "line": 524,
+      "compatible": [
+        "actions,owl-spi"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        21,
+        4
+      ]
+    },
+    {
+      "path": "/spi@b020c000",
+      "index": 0,
+      "address": 2954936320,
+      "size": 16384,
+      "address_space": "parent-bus",
+      "line": 532,
+      "compatible": [
+        "actions,owl-spi"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        22,
+        4
+      ]
+    },
+    {
+      "path": "/gpio@b01b0000",
+      "index": 0,
+      "address": 2954559488,
+      "size": 64,
+      "address_space": "parent-bus",
+      "line": 540,
+      "compatible": [
+        "actions,atm7059a-gpio"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        36,
+        4,
+        0,
+        37,
+        4,
+        0,
+        38,
+        4,
+        0,
+        39,
+        4,
+        0,
+        40,
+        4
+      ]
+    },
+    {
+      "path": "/sirq@b01b0200",
+      "index": 0,
+      "address": 2954560000,
+      "size": 4,
+      "address_space": "parent-bus",
+      "line": 553,
+      "compatible": [
+        "actions,owl-sirq"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        13,
+        4,
+        0,
+        14,
+        4,
+        0,
+        15,
+        4
+      ]
+    },
+    {
+      "path": "/pwm@b01b0050",
+      "index": 0,
+      "address": 2954559568,
+      "size": 16,
+      "address_space": "parent-bus",
+      "line": 563,
+      "compatible": [
+        "actions,atm7059a-pwm"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/ethernet@b0310000",
+      "index": 0,
+      "address": 2956001280,
+      "size": 65536,
+      "address_space": "parent-bus",
+      "line": 595,
+      "compatible": [
+        "actions,owl-ethernet"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/mmc@b0230000",
+      "index": 0,
+      "address": 2955083776,
+      "size": 56,
+      "address_space": "parent-bus",
+      "line": 602,
+      "compatible": [
+        "actions,owl-mmc"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        42,
+        4
+      ]
+    },
+    {
+      "path": "/mmc@b0234000",
+      "index": 0,
+      "address": 2955100160,
+      "size": 56,
+      "address_space": "parent-bus",
+      "line": 619,
+      "compatible": [
+        "actions,owl-mmc"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        43,
+        4
+      ]
+    },
+    {
+      "path": "/mmc@b0238000",
+      "index": 0,
+      "address": 2955116544,
+      "size": 56,
+      "address_space": "parent-bus",
+      "line": 631,
+      "compatible": [
+        "actions,owl-mmc"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        44,
+        4
+      ]
+    },
+    {
+      "path": "/usb@b0600000",
+      "index": 0,
+      "address": 2959081472,
+      "size": 4096,
+      "address_space": "parent-bus",
+      "line": 644,
+      "compatible": [
+        "actions,owl-usb-2.0-0"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        24,
+        4
+      ]
+    },
+    {
+      "path": "/usb@b0700000",
+      "index": 0,
+      "address": 2960130048,
+      "size": 4096,
+      "address_space": "parent-bus",
+      "line": 654,
+      "compatible": [
+        "actions,owl-usb-2.0-1"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        61,
+        4
+      ]
+    },
+    {
+      "path": "/usb@b0400000",
+      "index": 0,
+      "address": 2956984320,
+      "size": 52480,
+      "address_space": "parent-bus",
+      "line": 664,
+      "compatible": [
+        "actions,atm7059tc-usb"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        23,
+        4
+      ]
+    },
+    {
+      "path": "/usb@b0400000",
+      "index": 1,
+      "address": 2957036800,
+      "size": 89,
+      "address_space": "parent-bus",
+      "line": 664,
+      "compatible": [
+        "actions,atm7059tc-usb"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        23,
+        4
+      ]
+    },
+    {
+      "path": "/isp@b0270000",
+      "index": 0,
+      "address": 2955345920,
+      "size": 1024,
+      "address_space": "parent-bus",
+      "line": 675,
+      "compatible": [
+        "actions,owl-isp"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        12,
+        4
+      ]
+    },
+    {
+      "path": "/isp@b0270000",
+      "index": 1,
+      "address": 2954231840,
+      "size": 4,
+      "address_space": "parent-bus",
+      "line": 675,
+      "compatible": [
+        "actions,owl-isp"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        12,
+        4
+      ]
+    },
+    {
+      "path": "/lcd0@b02a0000",
+      "index": 0,
+      "address": 2955542528,
+      "size": 524,
+      "address_space": "parent-bus",
+      "line": 1143,
+      "compatible": [
+        "actions,owl-lcd"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        45,
+        4
+      ]
+    },
+    {
+      "path": "/dsi@b0220000",
+      "index": 0,
+      "address": 2955018240,
+      "size": 140,
+      "address_space": "parent-bus",
+      "line": 1183,
+      "compatible": [
+        "actions,owl-dsi"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        51,
+        4
+      ]
+    },
+    {
+      "path": "/gpu@b0300000",
+      "index": 0,
+      "address": 2955935744,
+      "size": 65536,
+      "address_space": "parent-bus",
+      "line": 1201,
+      "compatible": [
+        "actions,atm7039c-gpu"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        3,
+        4
+      ]
+    },
+    {
+      "path": "/vde@b0280000",
+      "index": 0,
+      "address": 2955411456,
+      "size": 264,
+      "address_space": "parent-bus",
+      "line": 1209,
+      "compatible": [
+        "actions,atm7059a-vde"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        50,
+        4
+      ]
+    },
+    {
+      "path": "/vce@b0288000",
+      "index": 0,
+      "address": 2955444224,
+      "size": 148,
+      "address_space": "parent-bus",
+      "line": 1215,
+      "compatible": [
+        "actions,atm7059a-vce"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        49,
+        4
+      ]
+    },
+    {
+      "path": "/hdmi@b02c0000",
+      "index": 0,
+      "address": 2955673600,
+      "size": 352,
+      "address_space": "parent-bus",
+      "line": 1221,
+      "compatible": [
+        "actions,atm7059a-hdmi"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/hdmi_cec@b02c011c",
+      "index": 0,
+      "address": 2955673600,
+      "size": 352,
+      "address_space": "parent-bus",
+      "line": 1235,
+      "compatible": [
+        "actions,atm7059a-hdmi-cec"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/cvbs@b02b0000",
+      "index": 0,
+      "address": 2955608064,
+      "size": 128,
+      "address_space": "parent-bus",
+      "line": 1240,
+      "compatible": [
+        "actions,atm7059a-cvbs"
+      ],
+      "status": "disabled",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/de@b02e0000",
+      "index": 0,
+      "address": 2955804672,
+      "size": 4110,
+      "address_space": "parent-bus",
+      "line": 1247,
+      "compatible": [
+        "actions,atm7059a-de"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/de@b02e0000",
+      "index": 1,
+      "address": 2958033160,
+      "size": 4,
+      "address_space": "parent-bus",
+      "line": 1247,
+      "compatible": [
+        "actions,atm7059a-de"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/nand@b0210000",
+      "index": 0,
+      "address": 2954952704,
+      "size": 180,
+      "address_space": "parent-bus",
+      "line": 1252,
+      "compatible": [
+        "actions,atm7059a-nand"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        41,
+        4
+      ]
+    },
+    {
+      "path": "/nand@b0210000",
+      "index": 1,
+      "address": 2954231808,
+      "size": 252,
+      "address_space": "parent-bus",
+      "line": 1252,
+      "compatible": [
+        "actions,atm7059a-nand"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        41,
+        4
+      ]
+    },
+    {
+      "path": "/nand@b0210000",
+      "index": 2,
+      "address": 2954559488,
+      "size": 144,
+      "address_space": "parent-bus",
+      "line": 1252,
+      "compatible": [
+        "actions,atm7059a-nand"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        41,
+        4
+      ]
+    },
+    {
+      "path": "/nand@b0210000",
+      "index": 3,
+      "address": 2955280384,
+      "size": 3328,
+      "address_space": "parent-bus",
+      "line": 1252,
+      "compatible": [
+        "actions,atm7059a-nand"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        41,
+        4
+      ]
+    },
+    {
+      "path": "/dma@b0260000",
+      "index": 0,
+      "address": 2955280384,
+      "size": 3328,
+      "address_space": "parent-bus",
+      "line": 1260,
+      "compatible": [
+        "actions,owl-dma"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        57,
+        4,
+        0,
+        58,
+        4,
+        0,
+        59,
+        4,
+        0,
+        60,
+        4
+      ]
+    },
+    {
+      "path": "/thermal",
+      "index": 0,
+      "address": 2954559720,
+      "size": 8,
+      "address_space": "parent-bus",
+      "line": 1266,
+      "compatible": [
+        "actions,atm7059a-thermal"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/gl5203-audio-i2s",
+      "index": 0,
+      "address": 2953838592,
+      "size": 52,
+      "address_space": "parent-bus",
+      "line": 1302,
+      "compatible": [
+        "actions,owl-audio-i2s"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/gl5203-audio-i2s",
+      "index": 1,
+      "address": 2953904128,
+      "size": 32784,
+      "address_space": "parent-bus",
+      "line": 1302,
+      "compatible": [
+        "actions,owl-audio-i2s"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    }
+  ],
+  "input_sha256": "461c8ab23414e469f5a9dfa6480ef583eba076647f6d4db584047757a8d16b47"
+}

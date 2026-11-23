@@ -1,0 +1,1690 @@
+{
+  "total_size": 6426,
+  "reservations": [],
+  "nodes": [
+    {
+      "path": "/",
+      "offset": 64,
+      "properties": {
+        "compatible": [
+          "actions,s500"
+        ],
+        "interrupt-parent": [
+          1
+        ],
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          1
+        ]
+      }
+    },
+    {
+      "path": "/aliases",
+      "offset": 152,
+      "properties": {}
+    },
+    {
+      "path": "/chosen",
+      "offset": 168,
+      "properties": {}
+    },
+    {
+      "path": "/cpus",
+      "offset": 184,
+      "properties": {
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ]
+      }
+    },
+    {
+      "path": "/cpus/cpu@0",
+      "offset": 228,
+      "properties": {
+        "device_type": [
+          "cpu"
+        ],
+        "compatible": [
+          "arm,cortex-a9"
+        ],
+        "reg": [
+          0
+        ],
+        "enable-method": {
+          "bytes": "616374696f6e732c733530302d736d7000"
+        },
+        "linux,phandle": [
+          3
+        ],
+        "phandle": [
+          3
+        ]
+      }
+    },
+    {
+      "path": "/cpus/cpu@1",
+      "offset": 368,
+      "properties": {
+        "device_type": [
+          "cpu"
+        ],
+        "compatible": [
+          "arm,cortex-a9"
+        ],
+        "reg": [
+          1
+        ],
+        "enable-method": {
+          "bytes": "616374696f6e732c733530302d736d7000"
+        },
+        "linux,phandle": [
+          4
+        ],
+        "phandle": [
+          4
+        ]
+      }
+    },
+    {
+      "path": "/cpus/cpu@2",
+      "offset": 508,
+      "properties": {
+        "device_type": [
+          "cpu"
+        ],
+        "compatible": [
+          "arm,cortex-a9"
+        ],
+        "reg": [
+          2
+        ],
+        "enable-method": {
+          "bytes": "616374696f6e732c733530302d736d7000"
+        },
+        "power-domains": [
+          2,
+          3
+        ],
+        "linux,phandle": [
+          5
+        ],
+        "phandle": [
+          5
+        ]
+      }
+    },
+    {
+      "path": "/cpus/cpu@3",
+      "offset": 668,
+      "properties": {
+        "device_type": [
+          "cpu"
+        ],
+        "compatible": [
+          "arm,cortex-a9"
+        ],
+        "reg": [
+          3
+        ],
+        "enable-method": {
+          "bytes": "616374696f6e732c733530302d736d7000"
+        },
+        "power-domains": [
+          2,
+          4
+        ],
+        "linux,phandle": [
+          6
+        ],
+        "phandle": [
+          6
+        ]
+      }
+    },
+    {
+      "path": "/arm-pmu",
+      "offset": 832,
+      "properties": {
+        "compatible": [
+          "arm,cortex-a9-pmu"
+        ],
+        "interrupts": [
+          0,
+          4,
+          4,
+          0,
+          5,
+          4,
+          0,
+          6,
+          4,
+          0,
+          7,
+          4
+        ],
+        "interrupt-affinity": [
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    {
+      "path": "/hosc",
+      "offset": 968,
+      "properties": {
+        "compatible": [
+          "fixed-clock"
+        ],
+        "clock-frequency": [
+          24000000
+        ],
+        "#clock-cells": [
+          0
+        ],
+        "linux,phandle": [
+          8
+        ],
+        "phandle": [
+          8
+        ]
+      }
+    },
+    {
+      "path": "/losc",
+      "offset": 1072,
+      "properties": {
+        "compatible": [
+          "fixed-clock"
+        ],
+        "clock-frequency": [
+          32768
+        ],
+        "#clock-cells": [
+          0
+        ],
+        "linux,phandle": [
+          9
+        ],
+        "phandle": [
+          9
+        ]
+      }
+    },
+    {
+      "path": "/soc",
+      "offset": 1172,
+      "properties": {
+        "compatible": [
+          "simple-bus"
+        ],
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          1
+        ],
+        "ranges": true
+      }
+    },
+    {
+      "path": "/soc/scu@b0020000",
+      "offset": 1260,
+      "properties": {
+        "compatible": [
+          "arm,cortex-a9-scu"
+        ],
+        "reg": [
+          2952921088,
+          256
+        ]
+      }
+    },
+    {
+      "path": "/soc/timer@b0020200",
+      "offset": 1336,
+      "properties": {
+        "compatible": [
+          "arm,cortex-a9-global-timer"
+        ],
+        "reg": [
+          2952921600,
+          256
+        ],
+        "interrupts": [
+          1,
+          11,
+          3841
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/timer@b0020600",
+      "offset": 1468,
+      "properties": {
+        "compatible": [
+          "arm,cortex-a9-twd-timer"
+        ],
+        "reg": [
+          2952922624,
+          32
+        ],
+        "interrupts": [
+          1,
+          13,
+          3841
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/wdt@b0020620",
+      "offset": 1596,
+      "properties": {
+        "compatible": [
+          "arm,cortex-a9-twd-wdt"
+        ],
+        "reg": [
+          2952922656,
+          224
+        ],
+        "interrupts": [
+          1,
+          14,
+          3841
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/interrupt-controller@b0021000",
+      "offset": 1740,
+      "properties": {
+        "compatible": [
+          "arm,cortex-a9-gic"
+        ],
+        "reg": [
+          2952925184,
+          4096,
+          2952921344,
+          256
+        ],
+        "interrupt-controller": true,
+        "#interrupt-cells": [
+          3
+        ],
+        "linux,phandle": [
+          1
+        ],
+        "phandle": [
+          1
+        ]
+      }
+    },
+    {
+      "path": "/soc/cache-controller@b0022000",
+      "offset": 1896,
+      "properties": {
+        "compatible": [
+          "arm,pl310-cache"
+        ],
+        "reg": [
+          2952929280,
+          4096
+        ],
+        "cache-unified": true,
+        "cache-level": [
+          2
+        ],
+        "interrupts": [
+          0,
+          55,
+          4
+        ],
+        "arm,tag-latency": [
+          3,
+          3,
+          2
+        ],
+        "arm,data-latency": [
+          5,
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "path": "/soc/serial@b0120000",
+      "offset": 2068,
+      "properties": {
+        "compatible": [
+          "actions,s500-uart",
+          "actions,owl-uart"
+        ],
+        "reg": [
+          2953969664,
+          8192
+        ],
+        "interrupts": [
+          0,
+          29,
+          4
+        ],
+        "clocks": [
+          7,
+          38
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/serial@b0122000",
+      "offset": 2228,
+      "properties": {
+        "compatible": [
+          "actions,s500-uart",
+          "actions,owl-uart"
+        ],
+        "reg": [
+          2953977856,
+          8192
+        ],
+        "interrupts": [
+          0,
+          30,
+          4
+        ],
+        "clocks": [
+          7,
+          39
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/serial@b0124000",
+      "offset": 2388,
+      "properties": {
+        "compatible": [
+          "actions,s500-uart",
+          "actions,owl-uart"
+        ],
+        "reg": [
+          2953986048,
+          8192
+        ],
+        "interrupts": [
+          0,
+          31,
+          4
+        ],
+        "clocks": [
+          7,
+          40
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/serial@b0126000",
+      "offset": 2548,
+      "properties": {
+        "compatible": [
+          "actions,s500-uart",
+          "actions,owl-uart"
+        ],
+        "reg": [
+          2953994240,
+          8192
+        ],
+        "interrupts": [
+          0,
+          32,
+          4
+        ],
+        "clocks": [
+          7,
+          41
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/serial@b0128000",
+      "offset": 2708,
+      "properties": {
+        "compatible": [
+          "actions,s500-uart",
+          "actions,owl-uart"
+        ],
+        "reg": [
+          2954002432,
+          8192
+        ],
+        "interrupts": [
+          0,
+          33,
+          4
+        ],
+        "clocks": [
+          7,
+          42
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/serial@b012a000",
+      "offset": 2868,
+      "properties": {
+        "compatible": [
+          "actions,s500-uart",
+          "actions,owl-uart"
+        ],
+        "reg": [
+          2954010624,
+          8192
+        ],
+        "interrupts": [
+          0,
+          34,
+          4
+        ],
+        "clocks": [
+          7,
+          43
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/serial@b012c000",
+      "offset": 3028,
+      "properties": {
+        "compatible": [
+          "actions,s500-uart",
+          "actions,owl-uart"
+        ],
+        "reg": [
+          2954018816,
+          8192
+        ],
+        "interrupts": [
+          0,
+          35,
+          4
+        ],
+        "clocks": [
+          7,
+          44
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/clock-controller@b0160000",
+      "offset": 3200,
+      "properties": {
+        "compatible": [
+          "actions,s500-cmu"
+        ],
+        "reg": [
+          2954231808,
+          32768
+        ],
+        "clocks": [
+          8,
+          9
+        ],
+        "#clock-cells": [
+          1
+        ],
+        "#reset-cells": [
+          1
+        ],
+        "linux,phandle": [
+          7
+        ],
+        "phandle": [
+          7
+        ]
+      }
+    },
+    {
+      "path": "/soc/i2c@b0170000",
+      "offset": 3360,
+      "properties": {
+        "compatible": [
+          "actions,s500-i2c"
+        ],
+        "reg": [
+          2954297344,
+          16384
+        ],
+        "clocks": [
+          7,
+          19
+        ],
+        "interrupts": [
+          0,
+          25,
+          4
+        ],
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/i2c@b0174000",
+      "offset": 3536,
+      "properties": {
+        "compatible": [
+          "actions,s500-i2c"
+        ],
+        "reg": [
+          2954313728,
+          16384
+        ],
+        "clocks": [
+          7,
+          20
+        ],
+        "interrupts": [
+          0,
+          26,
+          4
+        ],
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/i2c@b0178000",
+      "offset": 3712,
+      "properties": {
+        "compatible": [
+          "actions,s500-i2c"
+        ],
+        "reg": [
+          2954330112,
+          16384
+        ],
+        "clocks": [
+          7,
+          21
+        ],
+        "interrupts": [
+          0,
+          27,
+          4
+        ],
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/i2c@b017c000",
+      "offset": 3888,
+      "properties": {
+        "compatible": [
+          "actions,s500-i2c"
+        ],
+        "reg": [
+          2954346496,
+          16384
+        ],
+        "clocks": [
+          7,
+          22
+        ],
+        "interrupts": [
+          0,
+          28,
+          4
+        ],
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/interrupt-controller@b01b0200",
+      "offset": 4080,
+      "properties": {
+        "compatible": [
+          "actions,s500-sirq"
+        ],
+        "reg": [
+          2954560000,
+          4
+        ],
+        "interrupt-controller": true,
+        "#interrupt-cells": [
+          2
+        ],
+        "interrupts": [
+          0,
+          13,
+          4,
+          0,
+          14,
+          4,
+          0,
+          15,
+          4
+        ]
+      }
+    },
+    {
+      "path": "/soc/timer@b0168000",
+      "offset": 4232,
+      "properties": {
+        "compatible": [
+          "actions,s500-timer"
+        ],
+        "reg": [
+          2954264576,
+          32768
+        ],
+        "interrupts": [
+          0,
+          8,
+          4,
+          0,
+          9,
+          4,
+          0,
+          10,
+          4,
+          0,
+          11,
+          4
+        ],
+        "interrupt-names": [
+          "2hz0",
+          "2hz1",
+          "timer0",
+          "timer1"
+        ]
+      }
+    },
+    {
+      "path": "/soc/power-controller@b01b0100",
+      "offset": 4416,
+      "properties": {
+        "compatible": [
+          "actions,s500-sps"
+        ],
+        "reg": [
+          2954559744,
+          256
+        ],
+        "#power-domain-cells": [
+          1
+        ],
+        "linux,phandle": [
+          2
+        ],
+        "phandle": [
+          2
+        ]
+      }
+    },
+    {
+      "path": "/soc/pinctrl@b01b0000",
+      "offset": 4544,
+      "properties": {
+        "compatible": [
+          "actions,s500-pinctrl"
+        ],
+        "reg": [
+          2954559488,
+          64,
+          2954559552,
+          16,
+          2954559584,
+          24,
+          2954559616,
+          12
+        ],
+        "clocks": [
+          7,
+          55
+        ],
+        "gpio-controller": true,
+        "gpio-ranges": [
+          10,
+          0,
+          0,
+          132
+        ],
+        "#gpio-cells": [
+          2
+        ],
+        "interrupt-controller": true,
+        "#interrupt-cells": [
+          2
+        ],
+        "interrupts": [
+          0,
+          36,
+          4,
+          0,
+          37,
+          4,
+          0,
+          38,
+          4,
+          0,
+          39,
+          4,
+          0,
+          40,
+          4
+        ],
+        "linux,phandle": [
+          10
+        ],
+        "phandle": [
+          10
+        ]
+      }
+    },
+    {
+      "path": "/soc/dma-controller@b0260000",
+      "offset": 4864,
+      "properties": {
+        "compatible": [
+          "actions,s500-dma"
+        ],
+        "reg": [
+          2955280384,
+          3328
+        ],
+        "interrupts": [
+          0,
+          57,
+          4,
+          0,
+          58,
+          4,
+          0,
+          59,
+          4,
+          0,
+          60,
+          4
+        ],
+        "#dma-cells": [
+          1
+        ],
+        "dma-channels": [
+          12
+        ],
+        "dma-requests": [
+          46
+        ],
+        "clocks": [
+          7,
+          57
+        ],
+        "power-domains": [
+          2,
+          5
+        ],
+        "linux,phandle": [
+          11
+        ],
+        "phandle": [
+          11
+        ]
+      }
+    },
+    {
+      "path": "/soc/mmc@b0230000",
+      "offset": 5120,
+      "properties": {
+        "compatible": [
+          "actions,s500-mmc",
+          "actions,owl-mmc"
+        ],
+        "reg": [
+          2955083776,
+          56
+        ],
+        "interrupts": [
+          0,
+          42,
+          4
+        ],
+        "clocks": [
+          7,
+          29
+        ],
+        "resets": [
+          7,
+          4
+        ],
+        "dmas": [
+          11,
+          2
+        ],
+        "dma-names": [
+          "mmc"
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/mmc@b0234000",
+      "offset": 5336,
+      "properties": {
+        "compatible": [
+          "actions,s500-mmc",
+          "actions,owl-mmc"
+        ],
+        "reg": [
+          2955100160,
+          56
+        ],
+        "interrupts": [
+          0,
+          43,
+          4
+        ],
+        "clocks": [
+          7,
+          30
+        ],
+        "resets": [
+          7,
+          5
+        ],
+        "dmas": [
+          11,
+          3
+        ],
+        "dma-names": [
+          "mmc"
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/mmc@b0238000",
+      "offset": 5552,
+      "properties": {
+        "compatible": [
+          "actions,s500-mmc",
+          "actions,owl-mmc"
+        ],
+        "reg": [
+          2955116544,
+          56
+        ],
+        "interrupts": [
+          0,
+          44,
+          4
+        ],
+        "clocks": [
+          7,
+          31
+        ],
+        "resets": [
+          7,
+          9
+        ],
+        "dmas": [
+          11,
+          4
+        ],
+        "dma-names": [
+          "mmc"
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    },
+    {
+      "path": "/soc/ethernet@b0310000",
+      "offset": 5772,
+      "properties": {
+        "compatible": [
+          "actions,s500-emac",
+          "actions,owl-emac"
+        ],
+        "reg": [
+          2956001280,
+          65536
+        ],
+        "interrupts": [
+          0,
+          0,
+          4
+        ],
+        "clocks": [
+          7,
+          59,
+          7,
+          54
+        ],
+        "clock-names": [
+          "eth",
+          "rmii"
+        ],
+        "resets": [
+          7,
+          43
+        ],
+        "status": [
+          "disabled"
+        ]
+      }
+    }
+  ],
+  "ranges": [
+    {
+      "path": "/cpus/cpu@0",
+      "index": 0,
+      "address": 0,
+      "size": null,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "arm,cortex-a9"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/cpus/cpu@1",
+      "index": 0,
+      "address": 1,
+      "size": null,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "arm,cortex-a9"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/cpus/cpu@2",
+      "index": 0,
+      "address": 2,
+      "size": null,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "arm,cortex-a9"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/cpus/cpu@3",
+      "index": 0,
+      "address": 3,
+      "size": null,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "arm,cortex-a9"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/soc/scu@b0020000",
+      "index": 0,
+      "address": 2952921088,
+      "size": 256,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "arm,cortex-a9-scu"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/soc/timer@b0020200",
+      "index": 0,
+      "address": 2952921600,
+      "size": 256,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "arm,cortex-a9-global-timer"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        1,
+        11,
+        3841
+      ]
+    },
+    {
+      "path": "/soc/timer@b0020600",
+      "index": 0,
+      "address": 2952922624,
+      "size": 32,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "arm,cortex-a9-twd-timer"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        1,
+        13,
+        3841
+      ]
+    },
+    {
+      "path": "/soc/wdt@b0020620",
+      "index": 0,
+      "address": 2952922656,
+      "size": 224,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "arm,cortex-a9-twd-wdt"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        1,
+        14,
+        3841
+      ]
+    },
+    {
+      "path": "/soc/interrupt-controller@b0021000",
+      "index": 0,
+      "address": 2952925184,
+      "size": 4096,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "arm,cortex-a9-gic"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/soc/interrupt-controller@b0021000",
+      "index": 1,
+      "address": 2952921344,
+      "size": 256,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "arm,cortex-a9-gic"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/soc/cache-controller@b0022000",
+      "index": 0,
+      "address": 2952929280,
+      "size": 4096,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "arm,pl310-cache"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        55,
+        4
+      ]
+    },
+    {
+      "path": "/soc/serial@b0120000",
+      "index": 0,
+      "address": 2953969664,
+      "size": 8192,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-uart",
+        "actions,owl-uart"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        29,
+        4
+      ]
+    },
+    {
+      "path": "/soc/serial@b0122000",
+      "index": 0,
+      "address": 2953977856,
+      "size": 8192,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-uart",
+        "actions,owl-uart"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        30,
+        4
+      ]
+    },
+    {
+      "path": "/soc/serial@b0124000",
+      "index": 0,
+      "address": 2953986048,
+      "size": 8192,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-uart",
+        "actions,owl-uart"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        31,
+        4
+      ]
+    },
+    {
+      "path": "/soc/serial@b0126000",
+      "index": 0,
+      "address": 2953994240,
+      "size": 8192,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-uart",
+        "actions,owl-uart"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        32,
+        4
+      ]
+    },
+    {
+      "path": "/soc/serial@b0128000",
+      "index": 0,
+      "address": 2954002432,
+      "size": 8192,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-uart",
+        "actions,owl-uart"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        33,
+        4
+      ]
+    },
+    {
+      "path": "/soc/serial@b012a000",
+      "index": 0,
+      "address": 2954010624,
+      "size": 8192,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-uart",
+        "actions,owl-uart"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        34,
+        4
+      ]
+    },
+    {
+      "path": "/soc/serial@b012c000",
+      "index": 0,
+      "address": 2954018816,
+      "size": 8192,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-uart",
+        "actions,owl-uart"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        35,
+        4
+      ]
+    },
+    {
+      "path": "/soc/clock-controller@b0160000",
+      "index": 0,
+      "address": 2954231808,
+      "size": 32768,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-cmu"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/soc/i2c@b0170000",
+      "index": 0,
+      "address": 2954297344,
+      "size": 16384,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-i2c"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        25,
+        4
+      ]
+    },
+    {
+      "path": "/soc/i2c@b0174000",
+      "index": 0,
+      "address": 2954313728,
+      "size": 16384,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-i2c"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        26,
+        4
+      ]
+    },
+    {
+      "path": "/soc/i2c@b0178000",
+      "index": 0,
+      "address": 2954330112,
+      "size": 16384,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-i2c"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        27,
+        4
+      ]
+    },
+    {
+      "path": "/soc/i2c@b017c000",
+      "index": 0,
+      "address": 2954346496,
+      "size": 16384,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-i2c"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        28,
+        4
+      ]
+    },
+    {
+      "path": "/soc/interrupt-controller@b01b0200",
+      "index": 0,
+      "address": 2954560000,
+      "size": 4,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-sirq"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        13,
+        4,
+        0,
+        14,
+        4,
+        0,
+        15,
+        4
+      ]
+    },
+    {
+      "path": "/soc/timer@b0168000",
+      "index": 0,
+      "address": 2954264576,
+      "size": 32768,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-timer"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        8,
+        4,
+        0,
+        9,
+        4,
+        0,
+        10,
+        4,
+        0,
+        11,
+        4
+      ]
+    },
+    {
+      "path": "/soc/power-controller@b01b0100",
+      "index": 0,
+      "address": 2954559744,
+      "size": 256,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-sps"
+      ],
+      "status": "okay",
+      "interrupts_raw": []
+    },
+    {
+      "path": "/soc/pinctrl@b01b0000",
+      "index": 0,
+      "address": 2954559488,
+      "size": 64,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-pinctrl"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        36,
+        4,
+        0,
+        37,
+        4,
+        0,
+        38,
+        4,
+        0,
+        39,
+        4,
+        0,
+        40,
+        4
+      ]
+    },
+    {
+      "path": "/soc/pinctrl@b01b0000",
+      "index": 1,
+      "address": 2954559552,
+      "size": 16,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-pinctrl"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        36,
+        4,
+        0,
+        37,
+        4,
+        0,
+        38,
+        4,
+        0,
+        39,
+        4,
+        0,
+        40,
+        4
+      ]
+    },
+    {
+      "path": "/soc/pinctrl@b01b0000",
+      "index": 2,
+      "address": 2954559584,
+      "size": 24,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-pinctrl"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        36,
+        4,
+        0,
+        37,
+        4,
+        0,
+        38,
+        4,
+        0,
+        39,
+        4,
+        0,
+        40,
+        4
+      ]
+    },
+    {
+      "path": "/soc/pinctrl@b01b0000",
+      "index": 3,
+      "address": 2954559616,
+      "size": 12,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-pinctrl"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        36,
+        4,
+        0,
+        37,
+        4,
+        0,
+        38,
+        4,
+        0,
+        39,
+        4,
+        0,
+        40,
+        4
+      ]
+    },
+    {
+      "path": "/soc/dma-controller@b0260000",
+      "index": 0,
+      "address": 2955280384,
+      "size": 3328,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-dma"
+      ],
+      "status": "okay",
+      "interrupts_raw": [
+        0,
+        57,
+        4,
+        0,
+        58,
+        4,
+        0,
+        59,
+        4,
+        0,
+        60,
+        4
+      ]
+    },
+    {
+      "path": "/soc/mmc@b0230000",
+      "index": 0,
+      "address": 2955083776,
+      "size": 56,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-mmc",
+        "actions,owl-mmc"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        42,
+        4
+      ]
+    },
+    {
+      "path": "/soc/mmc@b0234000",
+      "index": 0,
+      "address": 2955100160,
+      "size": 56,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-mmc",
+        "actions,owl-mmc"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        43,
+        4
+      ]
+    },
+    {
+      "path": "/soc/mmc@b0238000",
+      "index": 0,
+      "address": 2955116544,
+      "size": 56,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-mmc",
+        "actions,owl-mmc"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        44,
+        4
+      ]
+    },
+    {
+      "path": "/soc/ethernet@b0310000",
+      "index": 0,
+      "address": 2956001280,
+      "size": 65536,
+      "address_space": "parent-bus",
+      "line": null,
+      "compatible": [
+        "actions,s500-emac",
+        "actions,owl-emac"
+      ],
+      "status": "disabled",
+      "interrupts_raw": [
+        0,
+        0,
+        4
+      ]
+    }
+  ],
+  "input_sha256": "c2dc135cfff83086ef0a23f35fb659f970e8245216577d2cb075934f6e05a224"
+}

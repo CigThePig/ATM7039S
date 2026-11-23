@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+site/
+inputs/
+*.img
+*.dtb
+*.ko
+*.so
+*.tar*
+*.zip

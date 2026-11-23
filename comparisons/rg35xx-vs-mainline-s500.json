@@ -1,0 +1,595 @@
+[
+  {
+    "base": "0xb0021000",
+    "left_path": "/interrupt-controller@b0021000",
+    "right_path": "/soc/interrupt-controller@b0021000",
+    "left_size": 4096,
+    "right_size": 4096,
+    "left_irq": [],
+    "right_irq": [],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0020100",
+    "left_path": "/interrupt-controller@b0021000",
+    "right_path": "/soc/interrupt-controller@b0021000",
+    "left_size": 256,
+    "right_size": 256,
+    "left_irq": [],
+    "right_irq": [],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0022000",
+    "left_path": "/cache-controller@b0022000",
+    "right_path": "/soc/cache-controller@b0022000",
+    "left_size": 4096,
+    "right_size": 4096,
+    "left_irq": [
+      0,
+      55,
+      4
+    ],
+    "right_irq": [
+      0,
+      55,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0020600",
+    "left_path": "/twd-watchdog@b0020600",
+    "right_path": "/soc/timer@b0020600",
+    "left_size": 256,
+    "right_size": 32,
+    "left_irq": [
+      1,
+      14,
+      3841
+    ],
+    "right_irq": [
+      1,
+      13,
+      3841
+    ],
+    "irq_cells_equal": false,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0160000",
+    "left_path": "/twd-watchdog@b0020600",
+    "right_path": "/soc/clock-controller@b0160000",
+    "left_size": 32,
+    "right_size": 32768,
+    "left_irq": [
+      1,
+      14,
+      3841
+    ],
+    "right_irq": [],
+    "irq_cells_equal": false,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0120000",
+    "left_path": "/serial@b0120000",
+    "right_path": "/soc/serial@b0120000",
+    "left_size": 8192,
+    "right_size": 8192,
+    "left_irq": [
+      0,
+      29,
+      4
+    ],
+    "right_irq": [
+      0,
+      29,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0122000",
+    "left_path": "/serial@b0122000",
+    "right_path": "/soc/serial@b0122000",
+    "left_size": 8192,
+    "right_size": 8192,
+    "left_irq": [
+      0,
+      30,
+      4
+    ],
+    "right_irq": [
+      0,
+      30,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0124000",
+    "left_path": "/serial@b0124000",
+    "right_path": "/soc/serial@b0124000",
+    "left_size": 8192,
+    "right_size": 8192,
+    "left_irq": [
+      0,
+      31,
+      4
+    ],
+    "right_irq": [
+      0,
+      31,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0126000",
+    "left_path": "/serial@b0126000",
+    "right_path": "/soc/serial@b0126000",
+    "left_size": 8192,
+    "right_size": 8192,
+    "left_irq": [
+      0,
+      32,
+      4
+    ],
+    "right_irq": [
+      0,
+      32,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0128000",
+    "left_path": "/serial@b0128000",
+    "right_path": "/soc/serial@b0128000",
+    "left_size": 8192,
+    "right_size": 8192,
+    "left_irq": [
+      0,
+      33,
+      4
+    ],
+    "right_irq": [
+      0,
+      33,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb012a000",
+    "left_path": "/serial@b012a000",
+    "right_path": "/soc/serial@b012a000",
+    "left_size": 8192,
+    "right_size": 8192,
+    "left_irq": [
+      0,
+      34,
+      4
+    ],
+    "right_irq": [
+      0,
+      34,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb012c000",
+    "left_path": "/serial@b012c000",
+    "right_path": "/soc/serial@b012c000",
+    "left_size": 8192,
+    "right_size": 8192,
+    "left_irq": [
+      0,
+      35,
+      4
+    ],
+    "right_irq": [
+      0,
+      35,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0170000",
+    "left_path": "/i2c@b0170000",
+    "right_path": "/soc/i2c@b0170000",
+    "left_size": 16384,
+    "right_size": 16384,
+    "left_irq": [
+      0,
+      25,
+      4
+    ],
+    "right_irq": [
+      0,
+      25,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0174000",
+    "left_path": "/i2c@b0174000",
+    "right_path": "/soc/i2c@b0174000",
+    "left_size": 16384,
+    "right_size": 16384,
+    "left_irq": [
+      0,
+      26,
+      4
+    ],
+    "right_irq": [
+      0,
+      26,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0178000",
+    "left_path": "/i2c@b0178000",
+    "right_path": "/soc/i2c@b0178000",
+    "left_size": 16384,
+    "right_size": 16384,
+    "left_irq": [
+      0,
+      27,
+      4
+    ],
+    "right_irq": [
+      0,
+      27,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb017c000",
+    "left_path": "/i2c@b017c000",
+    "right_path": "/soc/i2c@b017c000",
+    "left_size": 16384,
+    "right_size": 16384,
+    "left_irq": [
+      0,
+      28,
+      4
+    ],
+    "right_irq": [
+      0,
+      28,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb01b0000",
+    "left_path": "/gpio@b01b0000",
+    "right_path": "/soc/pinctrl@b01b0000",
+    "left_size": 64,
+    "right_size": 64,
+    "left_irq": [
+      0,
+      36,
+      4,
+      0,
+      37,
+      4,
+      0,
+      38,
+      4,
+      0,
+      39,
+      4,
+      0,
+      40,
+      4
+    ],
+    "right_irq": [
+      0,
+      36,
+      4,
+      0,
+      37,
+      4,
+      0,
+      38,
+      4,
+      0,
+      39,
+      4,
+      0,
+      40,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb01b0200",
+    "left_path": "/sirq@b01b0200",
+    "right_path": "/soc/interrupt-controller@b01b0200",
+    "left_size": 4,
+    "right_size": 4,
+    "left_irq": [
+      0,
+      13,
+      4,
+      0,
+      14,
+      4,
+      0,
+      15,
+      4
+    ],
+    "right_irq": [
+      0,
+      13,
+      4,
+      0,
+      14,
+      4,
+      0,
+      15,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0310000",
+    "left_path": "/ethernet@b0310000",
+    "right_path": "/soc/ethernet@b0310000",
+    "left_size": 65536,
+    "right_size": 65536,
+    "left_irq": [],
+    "right_irq": [
+      0,
+      0,
+      4
+    ],
+    "irq_cells_equal": false,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0230000",
+    "left_path": "/mmc@b0230000",
+    "right_path": "/soc/mmc@b0230000",
+    "left_size": 56,
+    "right_size": 56,
+    "left_irq": [
+      0,
+      42,
+      4
+    ],
+    "right_irq": [
+      0,
+      42,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0234000",
+    "left_path": "/mmc@b0234000",
+    "right_path": "/soc/mmc@b0234000",
+    "left_size": 56,
+    "right_size": 56,
+    "left_irq": [
+      0,
+      43,
+      4
+    ],
+    "right_irq": [
+      0,
+      43,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0238000",
+    "left_path": "/mmc@b0238000",
+    "right_path": "/soc/mmc@b0238000",
+    "left_size": 56,
+    "right_size": 56,
+    "left_irq": [
+      0,
+      44,
+      4
+    ],
+    "right_irq": [
+      0,
+      44,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0160000",
+    "left_path": "/nand@b0210000",
+    "right_path": "/soc/clock-controller@b0160000",
+    "left_size": 252,
+    "right_size": 32768,
+    "left_irq": [
+      0,
+      41,
+      4
+    ],
+    "right_irq": [],
+    "irq_cells_equal": false,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb01b0000",
+    "left_path": "/nand@b0210000",
+    "right_path": "/soc/pinctrl@b01b0000",
+    "left_size": 144,
+    "right_size": 64,
+    "left_irq": [
+      0,
+      41,
+      4
+    ],
+    "right_irq": [
+      0,
+      36,
+      4,
+      0,
+      37,
+      4,
+      0,
+      38,
+      4,
+      0,
+      39,
+      4,
+      0,
+      40,
+      4
+    ],
+    "irq_cells_equal": false,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0260000",
+    "left_path": "/nand@b0210000",
+    "right_path": "/soc/dma-controller@b0260000",
+    "left_size": 3328,
+    "right_size": 3328,
+    "left_irq": [
+      0,
+      41,
+      4
+    ],
+    "right_irq": [
+      0,
+      57,
+      4,
+      0,
+      58,
+      4,
+      0,
+      59,
+      4,
+      0,
+      60,
+      4
+    ],
+    "irq_cells_equal": false,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  },
+  {
+    "base": "0xb0260000",
+    "left_path": "/dma@b0260000",
+    "right_path": "/soc/dma-controller@b0260000",
+    "left_size": 3328,
+    "right_size": 3328,
+    "left_irq": [
+      0,
+      57,
+      4,
+      0,
+      58,
+      4,
+      0,
+      59,
+      4,
+      0,
+      60,
+      4
+    ],
+    "right_irq": [
+      0,
+      57,
+      4,
+      0,
+      58,
+      4,
+      0,
+      59,
+      4,
+      0,
+      60,
+      4
+    ],
+    "irq_cells_equal": true,
+    "confidence": "inferred",
+    "conclusion": "matching numeric resource; compatibility unverified",
+    "translation": "caller must establish identity CPU bus mappings"
+  }
+]
