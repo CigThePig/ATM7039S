@@ -32,6 +32,7 @@ DMESG = """[    0.000000] Booting Linux on physical CPU 0x0
 [    0.050000] CPU1: Booted secondary processor
 [    0.060000] SMP: Total of 2 processors activated (4800.00 BogoMIPS).
 [    1.200000] mmc0: new high speed SDHC card at address 0007
+[    2.000000] usb0: MAC 02:11:22:33:44:55
 """.format(version=KORIKI_VERSION)
 
 CPUINFO = """processor\t: 0
@@ -55,12 +56,14 @@ def fixture(base):
     """A synthetic RG35XX-like export tree; values are illustrative, not measurements."""
     files = {
         'proc/version': KORIKI_VERSION + '\n',
-        'proc/cmdline': 'earlyprintk clk_ignore_unused selinux=0 init=/init\n',
+        'proc/cmdline': 'console=ttyS5 earlyprintk clk_ignore_unused selinux=0 init=/init boot_dev=sd2 androidboot.serialno=SECRET123\n',
+        'proc/partitions': 'major minor  #blocks  name\n\n 179        0   15558144 mmcblk0\n 179        1    3145728 mmcblk0p1\n',
         'proc/cpuinfo': CPUINFO,
         'proc/meminfo': 'MemTotal:         238328 kB\nMemFree:          100000 kB\n',
         'proc/iomem': IOMEM,
         'proc/modules': 'pvrsrvkm 258640 3 - Live 0xbf000000 (O)\n',
         'proc/mounts': '/dev/mmcblk0p1 /boot vfat ro 0 0\n',
+        'proc/pvr/version': 'Version 1.14.3625561\n',
         'sys/devices/system/cpu/kernel_max': '3\n',
         'sys/devices/system/cpu/possible': '0-1\n',
         'sys/devices/system/cpu/present': '0-1\n',
@@ -69,7 +72,7 @@ def fixture(base):
         'sys/class/graphics/fb0/virtual_size': '640,960\n',
         '.cmd/dmesg': DMESG,
         '.cmd/uname': 'Linux RG35XX 3.10.37 #75 SMP PREEMPT armv7l GNU/Linux\n',
-        '.cmd/block-links': 'lrwxrwxrwx 1 root root 0 Jan 1 00:00 mmcblk0 -> ../devices/b0230000.mmc/mmc_host/mmc0/mmc0:0007/block/mmcblk0\n',
+        '.cmd/block-links': 'lrwxrwxrwx 1 root root 0 Jan 1 00:00 mmcblk0 -> ../devices/b0238000.mmc/mmc_host/mmc0/emmc_boot_card/block/mmcblk0\n',
     }
     for rel, content in files.items():
         p = base / rel
@@ -119,9 +122,31 @@ class CaptureScriptTests(unittest.TestCase):
         self.assertTrue(s['release_link']['kernel_version_matches'])
         self.assertIn('fixture', ' '.join(result['capture']['warnings']))
 
+    def test_predictions_evaluated(self):
+        p = {x['id']: x for x in rc.parse(self.capture)['predictions']}
+        self.assertEqual(p['P-CPU']['outcome'], 'software-cap')
+        self.assertEqual(p['P-CONSOLE']['outcome'], 'enabled-uart')
+        self.assertEqual(p['P-BOOTDEV']['outcome'], 'boot-card-on-b0238000')
+        self.assertEqual(p['P-BOOTDEV']['values']['boot_dev'], 'sd2')
+        self.assertEqual(p['P-NAND']['outcome'], 'removable-only')
+        self.assertEqual(p['P-RAM']['outcome'], 'ram-256mib-class')
+        self.assertEqual(p['P-KERNEL']['outcome'], 'uimage-build')
+        self.assertEqual(p['P-KCONFIG']['outcome'], 'nr-cpus-4')
+        self.assertEqual(p['P-GPU']['outcome'], 'pvr-loaded')
+        declared = {x['id']: {o['id'] for o in x['outcomes']} for x in json.loads((ROOT / 'evidence/predictions.json').read_text())}
+        self.assertEqual(set(p), set(declared))
+
+    def test_summary_redacts_serial_and_mac(self):
+        result = rc.parse(self.capture)
+        text = json.dumps(result)
+        self.assertNotIn('SECRET123', text)
+        self.assertNotIn('02:11:22:33:44:55', text)
+        self.assertTrue(result['summary']['privacy']['serialno_in_cmdline'])
+        self.assertIn('SECRET123', (self.capture / 'items/cmdline.out').read_text())
+
     def test_missing_items_are_reported_not_fatal(self):
         files = {f['id']: f['status'] for f in rc.parse(self.capture)['capture']['files']}
-        self.assertEqual(files['pvr-version'], 'missing')
+        self.assertEqual(files['batocera-version'], 'missing')
         self.assertEqual(files['fdt'], 'ok')
 
     def test_tampered_item_detected(self):
@@ -193,6 +218,24 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(rc.cpu_hint(dict(base, online=[0, 1, 2, 3], scu_ncores=4))['outcome'], 'four-online')
         self.assertEqual(rc.cpu_hint(dict(possible=[0])) ['outcome'], 'incomplete')
 
+    def test_prediction_edge_outcomes(self):
+        self.assertEqual(rc._p_console({'cmdline': rc.cmdline('console=ttyS2,115200')})[0], 'disabled-uart')
+        self.assertEqual(rc._p_console({'cmdline': rc.cmdline('quiet')})[0], 'no-console')
+        self.assertEqual(rc._p_console({'cmdline': rc.cmdline('console=ttyS0 console=tty1')})[0], 'multiple')
+        self.assertEqual(rc._p_nand({'storage': {'partitions': 'major minor #blocks name\n\n 31 0 1024 nand0\n'}})[0], 'other-block-device')
+        self.assertEqual(rc._p_ram({'memory': {'iomem': rc.iomem('00000000-1effffff : System RAM\n')}})[0], 'ram-512mib-class')
+        self.assertEqual(rc._p_ram({'memory': {'iomem': rc.iomem('00000000-00000000 : System RAM\n')}})[0], 'not-evaluable')
+
+    def test_undeclared_outcome_rejected(self):
+        saved = rc.EVALUATORS['P-GPU']
+        rc.EVALUATORS['P-GPU'] = lambda s: ('maybe', {})
+        try:
+            with self.assertRaisesRegex(ValueError, 'undeclared'):
+                rc.evaluate_predictions({'modules': [], 'cpu': {}, 'cpu_hint': {'outcome': 'incomplete'},
+                                         'release_link': {'kernel_version_matches': []}})
+        finally:
+            rc.EVALUATORS['P-GPU'] = saved
+
     def test_dmesg_without_timestamps(self):
         r = rc.dmesg('Linux version x\nSMP: Total of 2 processors activated.\n')
         self.assertEqual(r['smp_activated'], 2)
@@ -220,7 +263,7 @@ OBS = {
     'device': {'model': 'Anbernic RG35XX (original, ATM7039S)', 'board_revision': 'unknown'},
     'firmware': {'source': 'koriki-v1.0-release', 'image_sha256': KORIKI['sha256'], 'boot_kernel': 'uImage', 'modifications': ['capture.sh copied to roms/ports']},
     'media': {'description': 'spare 16 GB card', 'excluded_owner_card': False},
-    'procedure': {'tool': 'device/capture.sh', 'tool_sha256': hashlib.sha256(SCRIPT.read_bytes()).hexdigest(), 'launch': 'Ports menu'},
+    'procedure': {'tool': 'device/capture.sh', 'tool_sha256': hashlib.sha256(SCRIPT.read_bytes()).hexdigest(), 'launch': 'SimpleMenu GAMES list'},
     'capture': {'manifest_sha256': '', 'summary': 'evidence/observations/OBS-001.json', 'raw_location': 'owner archive'},
     'result': 'test record', 'limitations': 'test record',
 }
@@ -278,7 +321,7 @@ class ObservationLedgerTests(unittest.TestCase):
 
     def test_missing_capture_item(self):
         f = self.finding()
-        f['evidence'][0]['item'] = 'pvr-version'
+        f['evidence'][0]['item'] = 'batocera-version'
         self.assertTrue(any('capture item' in e for e in self.write(findings_extra=f)))
 
     def test_uncatalogued_image(self):
@@ -297,6 +340,16 @@ class ObservationLedgerTests(unittest.TestCase):
         self.summary['capture']['fixture_root'] = '/tmp/x'
         (self.root / 'evidence/observations/OBS-001.json').write_text(json.dumps(self.summary))
         self.assertTrue(any('fixture' in e for e in self.write()))
+
+    def test_prediction_references_checked(self):
+        p = self.root / 'evidence/predictions.json'
+        preds = json.loads(p.read_text())
+        preds[0]['findings'].append('CPU-999')
+        preds[1]['capture_items'].append('dev-mem')
+        p.write_text(json.dumps(preds))
+        errors = self.write()
+        self.assertTrue(any('unknown finding CPU-999' in e for e in errors))
+        self.assertTrue(any('dev-mem not in allowlist' in e for e in errors))
 
     def test_script_change_requires_version_bump(self):
         p = self.root / 'device/capture.sh'

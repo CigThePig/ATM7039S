@@ -63,7 +63,7 @@
         "properties": {
           "tool": {"type": "string"},
           "tool_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-          "launch": {"type": "string", "description": "How the tool was started, e.g. 'Ports menu' or 'adb shell'."},
+          "launch": {"type": "string", "description": "How the tool was started, e.g. 'SimpleMenu GAMES list (roms/ports)' or 'adb shell'."},
           "deviations": {"type": "array", "items": {"type": "string"}}
         }
       },

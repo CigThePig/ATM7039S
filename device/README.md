@@ -23,17 +23,18 @@ Use a new or spare microSD card. Never use the owner's GarlicOS card or the fail
    python tools/acquire_firmware.py koriki-v1.0-release /path/to/inputs --expand
    ```
 2. Write `/path/to/inputs/koriki-v1.0.img` to the spare card with a raw imaging tool such as balenaEtcher (which verifies the write) or `dd`. Double-check the target disk first.
-3. Boot the handheld once with the card to confirm it starts normally, then power off from the menu.
-4. On the computer, copy `device/capture.sh` into the card's `roms/ports/` folder. A file name like `ATM7039S-capture.sh` makes it easy to find in the menu. If no `roms/ports/` folder is visible from the computer, stop and use the ADB route below instead of guessing a location.
-5. Record the SHA-256 of the `capture.sh` you copied. It must match an entry in `capture-versions.json`.
+3. Read [spare-card-risk.md](../reports/spare-card-risk.md). Leave the **TF2 slot empty**: Koriki mounts and writes to any card there, and would then look for the script on that card. Boot on battery with no charging cable, and leave the `overclocking` setting unset.
+4. Boot once with the card and power off from the menu. On first boot Koriki grows partition 3 to fill the card and formats it as a FAT32 partition labelled `SHARE`, which becomes `/userdata` (FW-005). The card's first partition (boot files) and the new `SHARE` partition are then both readable from a computer.
+5. On the computer, open the `SHARE` partition and create the folder `roms/ports/` if it does not exist. Copy `device/capture.sh` into it, for example as `ATM7039S-capture.sh`. Koriki v1.0's SimpleMenu lists `.sh` files from `/userdata/roms/ports/` under **GAMES** in its "apps and games" section group (UI-001).
+6. Record the SHA-256 of the `capture.sh` you copied. It must match an entry in `capture-versions.json`.
 
 ## Running it
 
-1. Insert the card, boot, open the **Ports** menu, and launch the capture script. It takes a few seconds. Batocera may briefly show a black screen and then return to the menu.
+1. Insert the card, boot, switch SimpleMenu to the "apps and games" section group, open **GAMES**, and launch the capture script. It takes a few seconds and returns to the menu. Launching from this list has not yet been observed on hardware. If the entry does not appear or does not start, stop; do not try other launch methods without updating the observation record.
 2. Power off normally from the menu.
-3. On the computer, copy the whole `roms/ports/atm-capture-*` folder off the card. Do not edit its contents.
+3. On the computer, copy the whole `SHARE/roms/ports/atm-capture-*` folder off the card. Do not edit its contents.
 
-**ADB route (fallback only).** Koriki v1.0 ships `/adb_uImage`. Swapping it for `/uImage` changes the booted kernel, so record `boot_kernel: adb_uImage` and the swap under `modifications`. Then run `adb push capture.sh /tmp/`, `adb shell sh /tmp/capture.sh /tmp`, and `adb pull /tmp/atm-capture-<...>`. Restore the original `/uImage` afterwards.
+**ADB route (fallback only).** Koriki v1.0 ships `/adb_uImage`, a separate kernel build (FW-007). Copying it over `/uImage` changes the booted kernel, so record `boot_kernel: adb_uImage` and the swap under `modifications`. Then run `adb push capture.sh /tmp/`, `adb shell sh /tmp/capture.sh /tmp`, and `adb pull /tmp/atm-capture-<...>`. Restore the original `/uImage` afterwards.
 
 ## Turning a capture into evidence
 
@@ -41,11 +42,11 @@ Use a new or spare microSD card. Never use the owner's GarlicOS card or the fail
 python tools/runtime_capture.py /path/to/atm-capture-<...> /tmp/OBS-001.json
 ```
 
-The parser verifies every item's size and hash. It links `/proc/version` to catalogued kernel builds and the exported FDT to catalogued DTBs. An exported FDT normally includes bootloader fixups, so expect a hash mismatch and compare it property by property. The parser summarises CPU, memory, storage, display, module and kernel-config data, and maps the CPU numbers onto the outcomes pre-registered in `cpu-topology.md`. That mapping is a **hint**, not a finding.
+The parser verifies every item's size and hash. It links `/proc/version` to catalogued kernel builds and the exported FDT to catalogued DTBs. An exported FDT normally includes bootloader fixups, so expect a hash mismatch and compare it property by property. The parser summarises CPU, memory, storage, display, module and kernel-config data, and evaluates every prediction in [evidence/predictions.json](../evidence/predictions.json): CPU topology, console UART, boot controller, non-removable storage, RAM size, kernel build, kernel config and GPU module. Each result is one of that prediction's pre-registered outcomes, and is a **hint**, not a finding. Summary text is redacted: `androidboot.serialno=` values and MAC addresses are replaced.
 
 Then:
 
-1. Review the raw capture for anything private. `dmesg` and the MMC listing can include card serial numbers or MAC addresses. By default the raw folder stays outside the repository (record where it is kept in `raw_location`). Commit it only after the owner has reviewed it.
+1. Review the raw capture for anything private. On this firmware `/proc/cmdline`, `dmesg` and the exported device tree contain the board serial number (`androidboot.serialno=`, BOOT-006), and network drivers may log MAC addresses. By default the raw folder stays outside the repository (record where it is kept in `raw_location`). Commit it only after the owner has reviewed it.
 2. Copy the parser output to `evidence/observations/OBS-NNN.json` and add a record to `evidence/observations.json`, following `evidence/schemas/observations.schema.json`. The record names the approval, board revision (silkscreen text, or `unknown`), firmware image hash, booted kernel component, every modification to the card, the capture tool hash and the manifest hash.
 3. Only then may a finding use `"validation": "hardware-observation"`, listing the observation in `observations` and citing capture items as evidence: `{"source": "koriki-v1.0-release", "observation": "OBS-001", "item": "cpu-possible"}`.
 4. Run `python tools/research.py validate`. It checks schemas, the observation-to-firmware link, the tool version, the manifest hash, that the summary did not come from a test fixture, and that cited capture items exist.

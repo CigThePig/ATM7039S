@@ -18,9 +18,15 @@ Specific unapproved exclusions: arbitrary `/dev/mem` access, `devmem`, register 
 
 ## Selected baseline and V3 tooling (2026-11-23)
 
-The baseline for physical testing is **Koriki v1.0 on a spare card**, chosen because every boot component is already hash-catalogued and analysed ([selection rationale](test-firmware-selection.md)). V3 no longer depends on a pre-existing diagnostic service: [device/capture.sh](../device/capture.sh) runs the read-only allowlist above from Koriki's Ports menu with the default kernel and writes only to its own output folder on the card. See the [operator guide](../device/README.md). The allowlist adds `/proc/config.gz`, `/proc/device-tree`, cpufreq limits, framebuffer attributes and module/mount/partition tables to the commands originally listed. It still excludes power_supply/PMIC attributes, `/dev/mem`, I2C, debugfs and every write.
+The baseline for physical testing is **Koriki v1.0 on a spare card**, chosen because every boot component is already hash-catalogued and analysed ([selection rationale](test-firmware-selection.md)). V3 no longer depends on a pre-existing diagnostic service: [device/capture.sh](../device/capture.sh) runs the read-only allowlist above from Koriki's SimpleMenu (a `.sh` in `roms/ports` on the SHARE partition) with the default kernel and writes only to its own output folder on the card. See the [operator guide](../device/README.md). The allowlist adds `/proc/config.gz`, `/proc/device-tree`, cpufreq limits, framebuffer attributes and module/mount/partition tables to the commands originally listed. It still excludes power_supply/PMIC attributes, `/dev/mem`, I2C, debugfs and every write.
 
 Results enter the repository only through an [observation record](../evidence/schemas/observations.schema.json), which names the approval, board revision, firmware image hash, booted kernel, card modifications and tool hash. `research.py validate` rejects a finding marked `hardware-observation` that does not cite such a record. Running the script is still a separately approved session.
+
+### Offline narrowing for V4 and V7 (2026-11-23)
+
+- **V4 rollback:** [spare-card-risk.md](spare-card-risk.md) shows that, for Koriki v1.0, Linux writes only to the boot card and any TF2 card, and has no NAND driver. Prediction P-NAND verifies this from the V3 capture before any V4 work. TF2 must be empty during tests.
+- **V7 UART:** [serial-console.md](../docs/serial-console.md) shows the kernel console index is injected by U-Boot from the runtime AFI record (P-CONSOLE), and records a vendor "UART over TF2" pin state that this DTB does not enable. No adapter, breakout or DTB change is proposed.
+- **Pre-registered outcomes:** every V3 question has declared outcomes in [predictions.json](../evidence/predictions.json). The parser can only report one of those outcomes.
 
 ## Questions narrowed by the offline firmware continuation
 

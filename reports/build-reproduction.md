@@ -46,3 +46,28 @@ Logs normalize only the scratch-root path to `<WORK>`. They are diagnostics gene
 The release contains a 2600mAh DTB absent from the previous source recipe checkout, confirming a source/release mismatch rather than demonstrating a reproducible producer. The U-Boot package installs `u-boot-rg35xx.img`, while genimage requests `u-boot-dtb.img`. A release containing U-Boot does not resolve that naming inconsistency. The binary header load/entry differs from the pinned `s500.h` text base; a small matching AFI ABI is insufficient to prove source identity.
 
 Next obtain the exact historical compiler or stage a separately recorded patch series, rebuild source without modifying evidence inputs, then compare output configuration/DTBs and function-level fingerprints. Until then a successful modern build, if later achieved, would still be distinct from reproducing shipped firmware.
+
+## Toolchain status (2026-11-23)
+
+Both release kernels name **Linaro GCC 4.9-2017.01 (gcc 4.9.4)**: `/uImage` build #75 (FW-003) and `/adb_uImage` build #19 (FW-007). Reproducing them byte for byte needs that compiler.
+
+| Route | Status |
+|---|---|
+| `releases.linaro.org`, `releases-ie.linaro.org` and `snapshots.linaro.org` paths for `gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf.tar.xz` | All redirect to `https://www.linaro.org/contact/` (60,125-byte HTML). No archive and no checksum obtainable from Linaro. |
+| Koriki SDK release `koriki_batocera_rg35xx_sdk_20240208` (`arm-buildroot-linux-gnueabihf_sdk-buildroot.tar.gz`, about 1.15 GB) | Release notes describe a Buildroot toolchain for the latest RG35XX firmware but state no GCC version. Not acquired. It is a later Buildroot toolchain, not evidence of the 2023 kernel compiler. |
+| Ubuntu 16.04 `gcc-4.9-arm-linux-gnueabihf 4.9.3-13ubuntu2cross1` and binutils 2.26.1 from `archive.ubuntu.com` | Downloaded to scratch only. The same GCC 4.9 series, so the unmodified tree's `compiler-gcc4.h` applies and the `compiler-gcc8.h` blocker disappears. Not Linaro 4.9.4, so the output would not be byte-identical. |
+
+The Ubuntu package hashes, recorded so that a later run uses identical bytes:
+
+| Package | SHA-256 |
+|---|---|
+| `gcc-4.9-arm-linux-gnueabihf_4.9.3-13ubuntu2cross1_amd64.deb` | `920d07f97bdba8703aa4e2162ae8cab03110409435fbdf3a574e6f27bf9bd4b0` |
+| `cpp-4.9-arm-linux-gnueabihf_4.9.3-13ubuntu2cross1_amd64.deb` | `8dbd377e413e993b0f0f4e6218b957bdcac8bdbe2fa4a04ecedcfc36b53f1ea0` |
+| `gcc-4.9-arm-linux-gnueabihf-base_4.9.3-13ubuntu2cross1_amd64.deb` | `5f7cb56ee634d3cf62400683f5d00162eff5605cbdf1ba0281e404ddac8a2c9e` |
+| `libgcc-4.9-dev-armhf-cross_4.9.3-13ubuntu2cross1_all.deb` | `48ae26ea9c44bca5484f4fe989a01259cc1d871966d58ca3db74cfb23c65b45b` |
+| `binutils-arm-linux-gnueabihf_2.26.1-1ubuntu1~16.04.8_amd64.deb` | `c6946c65265ad42f6cfef35def1214d623ace552dacbf898457f81aa6a5861e7` |
+| `libisl15_0.16.1-1_amd64.deb` | `842d832c28ded8725303ef42e81ff3b190371ab1f0617196a5290adf91e3a60d` |
+| `libmpc3_1.0.3-1_amd64.deb` | `45e7071d4be2f5a1dc2eb621e67504f4fe6352b194ed12ad9d74ced8cce0c8fb` |
+| `libmpfr4_3.1.4-1_amd64.deb` | `3973a97387bbe0e8a775995c22861d8478edee2a594e8117970f635de25b2c8a` |
+
+**Not built in this session.** Running the unpacked toolchain was refused by the session's permission policy, and that refusal was not worked around. With the owner's go-ahead, the next attempt is: unpack the packages into a scratch prefix with `dpkg -x`, then build `rg35xx_atm7039_defconfig` with `HOSTCFLAGS='-O2 -fcommon'` and no source patches. Compare `.config`, `vmlinux` symbols and function sizes against the release kernel (whose expanded payload hash is in `kernel-payload.json`). A completed build would remain "same source, different compiler", not a reproduction of the shipped bytes.

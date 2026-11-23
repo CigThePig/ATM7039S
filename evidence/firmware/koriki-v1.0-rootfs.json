@@ -128,6 +128,62 @@
       "inode": 211,
       "size": 3198,
       "sha256": "87206f0a159bfd6a89f6b9dc7e19f500dd17505c65eeafee6d63a4e1d1cdabf7"
+    },
+    {
+      "id": "inittab",
+      "path": "/etc/inittab",
+      "inode": 183,
+      "size": 1048,
+      "sha256": "ed33c487cfd72568444d3abbb6e881b130a82eb4552c9ec228c57d6406675f26"
+    },
+    {
+      "id": "S01adb",
+      "path": "/etc/init.d/S01adb",
+      "inode": 156,
+      "size": 336,
+      "sha256": "af2cff4bd6a66f3086972949c023f95a813bfef9baedcc7aef8b83b0f065a6a6"
+    },
+    {
+      "id": "S02overclock",
+      "path": "/etc/init.d/S02overclock",
+      "inode": 159,
+      "size": 1083,
+      "sha256": "95b82c727d33e405fb7d931c0889195378a40c32f5843e14b353024b75419e8c"
+    },
+    {
+      "id": "S02resize",
+      "path": "/etc/init.d/S02resize",
+      "inode": 160,
+      "size": 3545,
+      "sha256": "42c1d78008f70371f8375eb7bcd40429a5d87e4a92c33a1c2e4086ca6b01d8f1"
+    },
+    {
+      "id": "S03performance",
+      "path": "/etc/init.d/S03performance",
+      "inode": 163,
+      "size": 468,
+      "sha256": "437ae00adef34b602dc671bcaa4c2dc8feeb85733e5fb4becf1dc73a622aa0f3"
+    },
+    {
+      "id": "S08populate",
+      "path": "/etc/init.d/S08populate",
+      "inode": 166,
+      "size": 1639,
+      "sha256": "8c63454c02dc52002c1c45485e35775690f15b42ae5a9144ff2be530da10d39c"
+    },
+    {
+      "id": "S50dropbear",
+      "path": "/etc/init.d/S50dropbear",
+      "inode": 179,
+      "size": 1548,
+      "sha256": "c4371bcff952841891f8f3d30c985fb2764042dcb7c88f18159788553a9e02b1"
+    },
+    {
+      "id": "apps-and-games.ini",
+      "path": "/usr/share/simplemenu/.simplemenu/section_groups/apps and games.ini",
+      "inode": 26288,
+      "size": 234,
+      "sha256": "2c2652e074e7036090bb7154f246fbcb92c73935f871989bc73875a1c69fd528"
     }
   ],
   "container_size": 2411724800,

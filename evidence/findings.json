@@ -1291,5 +1291,355 @@
     "hardware_validated": false,
     "limitations": "Document/source discrepancy retained; no silicon behavior, target field width or safe programming value is inferred.",
     "related_findings": []
+  },
+  {
+    "id": "BOOT-006",
+    "subsystem": "boot",
+    "claim": "Koriki v1.0 U-Boot contains a default environment with bootcmd=run ramboot and console=ttyS2,115200, and format strings console=ttyS%d, boot_dev=%s and androidboot.serialno=. The pinned source owl_boot_fdt.c prepends console=ttyS<AFI uart_index> and appends boot_dev=<AFI boot device> and androidboot.serialno=<SN item> to the kernel bootargs; owl_afi.c falls back to UART index 5 when the AFI magic is absent.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#u-boot.uimage",
+        "sha256": "814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd",
+        "offset_start": 495647,
+        "offset_end": 495666
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#u-boot.uimage",
+        "sha256": "814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd",
+        "offset_start": 496015,
+        "offset_end": 496036
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#u-boot.uimage",
+        "sha256": "814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd",
+        "offset_start": 504493,
+        "offset_end": 504615
+      },
+      {
+        "source": "uboot",
+        "path": "board/actions/owl/owl_boot_fdt.c",
+        "line_start": 181,
+        "line_end": 236
+      },
+      {
+        "source": "uboot",
+        "path": "board/actions/owl/owl_afi.c",
+        "line_start": 33,
+        "line_end": 40
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "uboot"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "String presence in the release binary is consistent with the source routine but does not prove the release was built from it. The effective console index depends on the runtime AFI uart_index, which is not determined statically; the console=ttyS2 environment variable is not referenced by the listed boot commands. /proc/cmdline on a device is expected to contain the board serial number.",
+    "related_findings": [
+      "BOOT-004",
+      "BOOT-005",
+      "MEM-003"
+    ]
+  },
+  {
+    "id": "UART-001",
+    "subsystem": "uart",
+    "claim": "The Koriki v1.0 KERNEL.DTB enables UART0 (0xb0120000), UART3 (0xb0126000) and UART5 (0xb012a000) and disables UART1, UART2, UART4 and UART6. /chosen bootargs and uEnv.txt contain no console= argument, and /etc/inittab respawns getty on the generic 'console' device.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#kernel.dtb",
+        "sha256": "ad4b8b4dd98fbb95bde8854ff0bd9c2e870c3c0c21f27be0122c741f36686f0f",
+        "offset_start": 0,
+        "offset_end": 28111
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#uEnv.txt",
+        "sha256": "1dd2ae2422c8d611a5e3fe3960fc5a37f050152f49bf5ec5160dc989a1297d4a",
+        "offset_start": 0,
+        "offset_end": 121
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#inittab",
+        "sha256": "ed33c487cfd72568444d3abbb6e881b130a82eb4552c9ec228c57d6406675f26",
+        "offset_start": 0,
+        "offset_end": 1048
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Enabled DT nodes are not proof of a physical connector, pad or voltage. Which UART carries the kernel console depends on the U-Boot console= fixup (BOOT-006) at runtime.",
+    "related_findings": [
+      "BOOT-006"
+    ]
+  },
+  {
+    "id": "UART-002",
+    "subsystem": "uart",
+    "claim": "In the Koriki v1.0 KERNEL.DTB, mmc@b0230000 has a second pinctrl state named share_uart2_5 that selects a uart5 function on groups mfp2_19_17/mfp2_16_14 while keeping SD0 command/clock. The vendor gl520x MMC driver switches to that state only when the node has an sdio_uart_supported property; that property is absent from this DTB.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#kernel.dtb",
+        "sha256": "ad4b8b4dd98fbb95bde8854ff0bd9c2e870c3c0c21f27be0122c741f36686f0f",
+        "offset_start": 11176,
+        "offset_end": 11190
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/mmc/host/gl520x_mmc.h",
+        "line_start": 15,
+        "line_end": 15
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/mmc/host/gl520x_mmc.c",
+        "line_start": 1609,
+        "line_end": 1630
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/mmc/host/gl520x_mmc.c",
+        "line_start": 1700,
+        "line_end": 1703
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Suggests a vendor 'UART over SD slot' debug mode on the TF2 controller, but with this DT the Linux driver does not use it. Pin-to-contact mapping, signal voltage and whether the early loader or U-Boot use these pads are not established. No physical test is implied.",
+    "related_findings": [
+      "UART-001",
+      "MMC-001"
+    ]
+  },
+  {
+    "id": "STOR-001",
+    "subsystem": "storage",
+    "claim": "Koriki v1.0 init scripts name /sys/devices/b0238000.mmc/.../emmc_boot_card/block/mmcblk0 and /sys/devices/b0230000.mmc/.../sd_card/block/mmcblk1; the ramdisk init mounts /dev/mmcblk0p1 as the boot partition. The release DTB's nand@b0210000 node has no status property, but the decompressed release kernel contains no actions,atm7059a-nand compatible string and the rootfs ships no block or NAND modules.",
+    "confidence": "strongly-supported",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#S03performance",
+        "sha256": "437ae00adef34b602dc671bcaa4c2dc8feeb85733e5fb4becf1dc73a622aa0f3",
+        "offset_start": 0,
+        "offset_end": 468
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#ramdisk.img",
+        "sha256": "a64bfd03833d7b748dc4ef8121c3c8245c244993c3fccb97880cfa889ff788a9",
+        "offset_start": 0,
+        "offset_end": 3818481
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#kernel.dtb",
+        "sha256": "ad4b8b4dd98fbb95bde8854ff0bd9c2e870c3c0c21f27be0122c741f36686f0f",
+        "offset_start": 0,
+        "offset_end": 28111
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#uImage",
+        "sha256": "1b792401ae06904c85441a07f7e3b7fe32e80aef2a85211ef529fefee461f174",
+        "offset_start": 0,
+        "offset_end": 5541472
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Paths in scripts express the release author's expectation, not a measured probe. Absence of a NAND driver in this release means Linux here cannot write NAND; it does not prove no NAND or eMMC is fitted, nor that U-Boot (which carries nand commands) never accesses one.",
+    "related_findings": [
+      "MMC-001",
+      "BOOT-006"
+    ]
+  },
+  {
+    "id": "FW-005",
+    "subsystem": "firmware",
+    "claim": "Koriki v1.0 first-boot and every-boot scripts write to the boot card and to a TF2 card: S02resize (triggered by /BOOT/autoresize) resizes partition 3 to the end of mmcblk0, retypes it 0x0c and formats it FAT32 labelled SHARE; S08populate mounts the last partition of mmcblk1 as /userdata when one exists, otherwise mmcblk0p3, then copies default content onto it; the ramdisk init writes /boot/boot/reboot each boot.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#S02resize",
+        "sha256": "42c1d78008f70371f8375eb7bcd40429a5d87e4a92c33a1c2e4086ca6b01d8f1",
+        "offset_start": 0,
+        "offset_end": 3545
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#S08populate",
+        "sha256": "8c63454c02dc52002c1c45485e35775690f15b42ae5a9144ff2be530da10d39c",
+        "offset_start": 0,
+        "offset_end": 1639
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#ramdisk.img",
+        "sha256": "a64bfd03833d7b748dc4ef8121c3c8245c244993c3fccb97880cfa889ff788a9",
+        "offset_start": 0,
+        "offset_end": 3818481
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#batocera-boot.conf",
+        "sha256": "9d7555c7c3c467b0404c4234796aee507a6d8174fabe73e0d3c0c6e344efdbb4",
+        "offset_start": 0,
+        "offset_end": 2603
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Describes shipped script text, not an observed run. A card in the TF2 slot during testing would be mounted and written to.",
+    "related_findings": [
+      "STOR-001"
+    ]
+  },
+  {
+    "id": "FW-006",
+    "subsystem": "firmware",
+    "claim": "Koriki v1.0 boot scripts change runtime device state as part of normal operation: the ramdisk init sets the cpu0 governor to performance (and, when charging at boot, interactive with a 240 MHz cap and backlight off); S02overclock writes scaling_max_freq for cpu0-3 from batocera-boot.conf 'overclocking' (default 1008000 kHz, up to 1488000 for 'extreme'); S03performance sets MMC power control on and the noop scheduler; S01adb loads USB gadget modules and sets /sys/monitor/usb_port/config/idpin_debug=1. S50dropbear starts SSH unless system.ssh.enabled=0.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#S02overclock",
+        "sha256": "95b82c727d33e405fb7d931c0889195378a40c32f5843e14b353024b75419e8c",
+        "offset_start": 0,
+        "offset_end": 1083
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#S03performance",
+        "sha256": "437ae00adef34b602dc671bcaa4c2dc8feeb85733e5fb4becf1dc73a622aa0f3",
+        "offset_start": 0,
+        "offset_end": 468
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#S01adb",
+        "sha256": "af2cff4bd6a66f3086972949c023f95a813bfef9baedcc7aef8b83b0f065a6a6",
+        "offset_start": 0,
+        "offset_end": 336
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#S50dropbear",
+        "sha256": "c4371bcff952841891f8f3d30c985fb2764042dcb7c88f18159788553a9e02b1",
+        "offset_start": 0,
+        "offset_end": 1548
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#ramdisk.img",
+        "sha256": "a64bfd03833d7b748dc4ef8121c3c8245c244993c3fccb97880cfa889ff788a9",
+        "offset_start": 0,
+        "offset_end": 3818481
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "These are baseline firmware behaviours, not actions of the capture tool. Whether the 1008000 kHz default matches stock limits, and whether scaling_max_freq writes for absent CPUs fail harmlessly, are unverified.",
+    "related_findings": [
+      "CPU-001"
+    ]
+  },
+  {
+    "id": "FW-007",
+    "subsystem": "kernel",
+    "claim": "Koriki v1.0 /adb_uImage contains a separate kernel build: its embedded gzip stream expands to a Linux 3.10.37 / Linaro GCC 4.9-2017.01 string with build #19 dated Jun 21 2023, versus build #75 dated Jul 17 2023 in /uImage.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#adb_uImage",
+        "sha256": "cb24b7324dd9f7ae96620f1bdb91d8e0c9abd73c7a5157ef07c7af1368a0be3e",
+        "offset_start": 17588,
+        "offset_end": 17591
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Version strings separate the two builds for runtime linking (adb-kernel-payload.json); they do not describe configuration differences beyond that.",
+    "related_findings": [
+      "FW-003"
+    ]
+  },
+  {
+    "id": "UI-001",
+    "subsystem": "firmware",
+    "claim": "In Koriki v1.0 the SimpleMenu 'apps and games' section group lists .sh files from /userdata/system/.simplemenu/games/ and /userdata/roms/ports/ under GAMES and from /userdata/system/.simplemenu/apps/ under APPS.",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#apps-and-games.ini",
+        "sha256": "2c2652e074e7036090bb7154f246fbcb92c73935f871989bc73875a1c69fd528",
+        "offset_start": 0,
+        "offset_end": 234
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Configuration text only; launching behaviour, executable-bit handling on FAT and whether the default section group shows it were not observed. /userdata/roms/ports/ does not exist until created.",
+    "related_findings": [
+      "FW-005"
+    ]
   }
 ]

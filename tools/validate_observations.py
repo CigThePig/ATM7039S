@@ -7,13 +7,14 @@ import hashlib
 import json
 from pathlib import Path
 
-from runtime_capture import script_allowlist
+from runtime_capture import EVALUATORS, script_allowlist
 
 SCHEMAS = {
     'evidence/sources.json': 'evidence/schemas/sources.schema.json',
     'evidence/findings.json': 'evidence/schemas/findings.schema.json',
     'evidence/contradictions.json': 'evidence/schemas/contradictions.schema.json',
     'evidence/observations.json': 'evidence/schemas/observations.schema.json',
+    'evidence/predictions.json': 'evidence/schemas/predictions.schema.json',
 }
 
 
@@ -118,6 +119,22 @@ def cross_reference_errors(root):
                 ok = {x['id'] for x in summary['capture']['files'] if x['status'] == 'ok'}
                 if e['item'] not in ok:
                     errors.append(f"{f['id']}: capture item {e['item']} absent from {e['observation']}")
+    cids = {c['id'] for c in contradictions}
+    allowlist = {line.split('|', 1)[0] for line in script_allowlist((root / 'device/capture.sh').read_text())}
+    seen = set()
+    for p in load(root, 'evidence/predictions.json'):
+        if p['id'] in seen:
+            errors.append('duplicate prediction ' + p['id'])
+        seen.add(p['id'])
+        if p['id'] not in EVALUATORS:
+            errors.append(f"{p['id']}: no evaluator in tools/runtime_capture.py")
+        outcomes = [o['id'] for o in p['outcomes']]
+        if len(outcomes) != len(set(outcomes)):
+            errors.append(f"{p['id']}: duplicate outcome id")
+        errors += [f"{p['id']}: unknown finding {x}" for x in p['findings'] if x not in fids]
+        errors += [f"{p['id']}: unknown contradiction {x}" for x in p['contradictions'] if x not in cids]
+        errors += [f"{p['id']}: capture item {x} not in allowlist" for x in p['capture_items'] if x not in allowlist]
+    errors += [f"evaluator {x} has no prediction record" for x in EVALUATORS if x not in seen]
     for c in contradictions:
         for fid in c['findings']:
             if fid not in fids:

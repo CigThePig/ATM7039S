@@ -44,6 +44,10 @@
     {
       "id": "uEnv.txt",
       "path": "/uEnv.txt"
+    },
+    {
+      "id": "batocera-boot.conf",
+      "path": "/batocera-boot.conf"
     }
   ],
   "rootfs_path": "/BOOT/BATOCERA",
@@ -75,6 +79,38 @@
     {
       "id": "ddk-install.log",
       "path": "/etc/powervr_ddk_install.log"
+    },
+    {
+      "id": "inittab",
+      "path": "/etc/inittab"
+    },
+    {
+      "id": "S01adb",
+      "path": "/etc/init.d/S01adb"
+    },
+    {
+      "id": "S02overclock",
+      "path": "/etc/init.d/S02overclock"
+    },
+    {
+      "id": "S02resize",
+      "path": "/etc/init.d/S02resize"
+    },
+    {
+      "id": "S03performance",
+      "path": "/etc/init.d/S03performance"
+    },
+    {
+      "id": "S08populate",
+      "path": "/etc/init.d/S08populate"
+    },
+    {
+      "id": "S50dropbear",
+      "path": "/etc/init.d/S50dropbear"
+    },
+    {
+      "id": "apps-and-games.ini",
+      "path": "/usr/share/simplemenu/.simplemenu/section_groups/apps and games.ini"
     }
   ]
 }

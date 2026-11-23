@@ -75,9 +75,10 @@ Malformed/truncated FDTs, invalid reg geometry, unsupported flattened DTS syntax
 |---|---|---|
 | `device/capture.sh [PARENT]` | POSIX/BusyBox read-only collector for test V3; `--list` prints the allowlist | Fixed allowlist only; writes only its own output folder; no `/dev/mem`, I2C, power_supply, debugfs or writes |
 | `runtime_capture.py CAPTURE OUT` | Verifies item hashes, script version and allowlist; parses CPU/memory/storage/display/config/FDT; links kernel and DTB to catalogued firmware; CPU outcome hint | Hints are not findings; a capture describes one boot of one board |
+| `evidence/predictions.json` | Pre-registered outcomes for each V3 question; the parser may only return a declared outcome | Outcomes are hints for review, not findings |
 | `validate_observations.py` | JSON Schemas for sources/findings/contradictions/observations; observation-to-firmware/tool/summary links; hardware findings must cite observations | Called by `research.py validate`; checks records, not the truth of observations |
 
-Tests run the real script against a synthetic export tree (`ATM_CAPTURE_ROOT`) and check tampering, allowlist drift, unknown script versions and ledger links. See the [operator guide](../device/README.md).
+Tests run the real script against a synthetic export tree (`ATM_CAPTURE_ROOT`) and check tampering, allowlist drift, unknown script versions, prediction outcomes, serial-number/MAC redaction and ledger links. See the [operator guide](../device/README.md).
 
 ## Full-image continuation tools
 

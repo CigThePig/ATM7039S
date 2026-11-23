@@ -389,6 +389,152 @@ def cpu_hint(cpu):
     return dict(outcome=outcome, text=text, label='hint, not a finding')
 
 
+# ---------------------------------------------------------------- pre-registered predictions
+
+def load_predictions(root=ROOT):
+    return json.loads((root / 'evidence/predictions.json').read_text())
+
+
+def mib(n):
+    return n / (1024 * 1024)
+
+
+def _p_cpu(s):
+    return s['cpu_hint']['outcome'], {k: s['cpu'].get(k) for k in ('scu_ncores', 'possible', 'present', 'online')}
+
+
+def _p_console(s):
+    if 'cmdline' not in s:
+        return 'not-evaluable', {}
+    consoles = s['cmdline'].get('console') or []
+    if not consoles:
+        return 'no-console', {}
+    if len(consoles) > 1:
+        return 'multiple', {'console': consoles}
+    m = re.fullmatch(r'ttyS(\d+)(?:,.*)?', str(consoles[0]))
+    if not m:
+        return 'multiple', {'console': consoles}
+    return ('enabled-uart' if int(m.group(1)) in (0, 3, 5) else 'disabled-uart'), {'console': consoles[0]}
+
+
+def _p_bootdev(s):
+    blocks = s.get('storage', {}).get('block_links')
+    boot_dev = None
+    for t in (s.get('cmdline') or {}).get('tokens', []):
+        if t.startswith('boot_dev='):
+            boot_dev = t.split('=', 1)[1]
+    if not blocks or 'mmcblk0' not in blocks:
+        return 'not-evaluable', {'boot_dev': boot_dev}
+    path = blocks['mmcblk0']
+    values = {'mmcblk0': path, 'boot_dev': boot_dev}
+    if 'b0238000.mmc' in path:
+        return 'boot-card-on-b0238000', values
+    if 'b0230000.mmc' in path:
+        return 'boot-card-on-b0230000', values
+    return 'other', values
+
+
+REMOVABLE = re.compile(r'^(mmcblk\d+(p\d+)?|loop\d+|ram\d+|zram\d+)$')
+
+
+def _p_nand(s):
+    text = s.get('storage', {}).get('partitions')
+    if text is None:
+        return 'not-evaluable', {}
+    names = [line.split()[-1] for line in text.splitlines()[1:] if len(line.split()) == 4]
+    other = [n for n in names if not REMOVABLE.match(n)]
+    return ('other-block-device' if other else 'removable-only'), {'block_devices': names, 'non_removable': other}
+
+
+def _p_ram(s):
+    size = None
+    source = None
+    for m in (s.get('fdt') or {}).get('memory') or []:
+        reg = m.get('reg')
+        if isinstance(reg, list) and len(reg) >= 2 and len(reg) % 2 == 0:
+            size = sum(reg[i + 1] for i in range(0, len(reg), 2))
+            source = 'fdt'
+    io = s.get('memory', {}).get('iomem')
+    if size in (None, 0) and io and not io['addresses_zeroed'] and io['system_ram_bytes']:
+        size, source = io['system_ram_bytes'], 'iomem'
+    if not size:
+        return 'not-evaluable', {}
+    v = mib(size)
+    values = {'bytes': size, 'MiB': round(v, 1), 'source': source,
+              'MemTotal_kB': s.get('memory', {}).get('meminfo_kB', {}).get('MemTotal')}
+    if 192 <= v <= 320:
+        return 'ram-256mib-class', values
+    if 384 <= v <= 544:
+        return 'ram-512mib-class', values
+    return 'other', values
+
+
+def _p_kernel(s):
+    if 'kernel_version' not in s:
+        return 'not-evaluable', {}
+    manifests = {Path(m['manifest']).name for m in s['release_link']['kernel_version_matches']}
+    if 'kernel-payload.json' in manifests:
+        return 'uimage-build', {}
+    if 'adb-kernel-payload.json' in manifests:
+        return 'adb-uimage-build', {}
+    return 'other', {'version': s['kernel_version']}
+
+
+def _p_kconfig(s):
+    k = s.get('kconfig')
+    if not k or not k.get('valid'):
+        return 'absent', {}
+    n = k['selected'].get('CONFIG_NR_CPUS')
+    return ('nr-cpus-4' if n == '4' else 'nr-cpus-other'), {'CONFIG_NR_CPUS': n}
+
+
+def _p_gpu(s):
+    if 'modules' not in s:
+        return 'not-evaluable', {}
+    loaded = any(m['name'] == 'pvrsrvkm' for m in s['modules'])
+    return ('pvr-loaded' if loaded else 'pvr-not-loaded'), {'pvr_version': s.get('pvr_version')}
+
+
+EVALUATORS = {'P-CPU': _p_cpu, 'P-CONSOLE': _p_console, 'P-BOOTDEV': _p_bootdev, 'P-NAND': _p_nand,
+              'P-RAM': _p_ram, 'P-KERNEL': _p_kernel, 'P-KCONFIG': _p_kconfig, 'P-GPU': _p_gpu}
+
+
+def evaluate_predictions(summary, root=ROOT):
+    out = []
+    for p in load_predictions(root):
+        declared = {o['id'] for o in p['outcomes']}
+        fn = EVALUATORS.get(p['id'])
+        if fn is None:
+            raise ValueError('no evaluator for prediction ' + p['id'])
+        outcome, values = fn(summary)
+        if outcome not in declared:
+            raise ValueError(f"evaluator for {p['id']} returned undeclared outcome {outcome}")
+        out.append(dict(id=p['id'], outcome=outcome, values=values,
+                        implication=next(o['implication'] for o in p['outcomes'] if o['id'] == outcome)))
+    return out
+
+
+# ---------------------------------------------------------------- privacy
+
+SECRETS = [
+    (re.compile(r'(androidboot\.serialno=)\S+'), r'\1<redacted>'),
+    (re.compile(r'\b([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}\b'), '<mac-redacted>'),
+]
+
+
+def redact(value):
+    """Remove board serial numbers and MAC addresses from summary text; raw items keep them."""
+    if isinstance(value, str):
+        for pattern, repl in SECRETS:
+            value = pattern.sub(repl, value)
+        return value
+    if isinstance(value, list):
+        return [redact(v) for v in value]
+    if isinstance(value, dict):
+        return {k: redact(v) for k, v in value.items()}
+    return value
+
+
 # ---------------------------------------------------------------- driver
 
 def parse(capture, root=ROOT):
@@ -452,7 +598,12 @@ def parse(capture, root=ROOT):
         except tarfile.TarError as e:
             s['device_tree_dir'] = dict(error=str(e))
     s['release_link'] = release_link(s, root)
-    return dict(format_version=FORMAT_VERSION, capture=report, summary=s,
+    predictions = redact(evaluate_predictions(s, root))
+    raw_cmdline = (s.get('cmdline') or {}).get('raw', '')
+    s['privacy'] = dict(serialno_in_cmdline='androidboot.serialno=' in raw_cmdline,
+                        note='Summary text is redacted; raw capture items are not. Review before committing raw data.')
+    s = redact(s)
+    return dict(format_version=FORMAT_VERSION, capture=report, summary=s, predictions=predictions,
                 limitations='Runtime exports describe one boot of one device under one firmware. Interpretations '
                             'are hints until reviewed and recorded through evidence/observations.json.')
 
@@ -466,7 +617,7 @@ def main():
     research.save(a.output, result)
     errs = result['capture']['errors']
     print(json.dumps(dict(errors=errs, warnings=result['capture']['warnings'],
-                          cpu_hint=result['summary']['cpu_hint']['outcome']), indent=2))
+                          predictions={p['id']: p['outcome'] for p in result['predictions']}), indent=2))
     raise SystemExit(bool(errs))
 
 

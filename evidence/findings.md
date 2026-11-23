@@ -623,3 +623,137 @@ Evidence:
 - [linux / drivers/clk/actions/owl-s500.c](https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/clk/actions/owl-s500.c#L331-L335)
 
 Limits: Document/source discrepancy retained; no silicon behavior, target field width or safe programming value is inferred.
+
+## BOOT-006
+
+Koriki v1.0 U-Boot contains a default environment with bootcmd=run ramboot and console=ttyS2,115200, and format strings console=ttyS%d, boot_dev=%s and androidboot.serialno=. The pinned source owl_boot_fdt.c prepends console=ttyS<AFI uart_index> and appends boot_dev=<AFI boot device> and androidboot.serialno=<SN item> to the kernel bootargs; owl_afi.c falls back to UART index 5 when the AFI magic is absent.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [uboot / board/actions/owl/owl_boot_fdt.c](https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/board/actions/owl/owl_boot_fdt.c#L181-L236)
+
+- [uboot / board/actions/owl/owl_afi.c](https://github.com/rg35xx-cfw/u-boot_s500/blob/0a557e37a5274d40bcd357585d4bcd3b73619371/board/actions/owl/owl_afi.c#L33-L40)
+
+Limits: String presence in the release binary is consistent with the source routine but does not prove the release was built from it. The effective console index depends on the runtime AFI uart_index, which is not determined statically; the console=ttyS2 environment variable is not referenced by the listed boot commands. /proc/cmdline on a device is expected to contain the board serial number.
+
+## UART-001
+
+The Koriki v1.0 KERNEL.DTB enables UART0 (0xb0120000), UART3 (0xb0126000) and UART5 (0xb012a000) and disables UART1, UART2, UART4 and UART6. /chosen bootargs and uEnv.txt contain no console= argument, and /etc/inittab respawns getty on the generic 'console' device.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Enabled DT nodes are not proof of a physical connector, pad or voltage. Which UART carries the kernel console depends on the U-Boot console= fixup (BOOT-006) at runtime.
+
+## UART-002
+
+In the Koriki v1.0 KERNEL.DTB, mmc@b0230000 has a second pinctrl state named share_uart2_5 that selects a uart5 function on groups mfp2_19_17/mfp2_16_14 while keeping SD0 command/clock. The vendor gl520x MMC driver switches to that state only when the node has an sdio_uart_supported property; that property is absent from this DTB.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [vendor-kernel / drivers/mmc/host/gl520x_mmc.h](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/mmc/host/gl520x_mmc.h#L15-L15)
+
+- [vendor-kernel / drivers/mmc/host/gl520x_mmc.c](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/mmc/host/gl520x_mmc.c#L1609-L1630)
+
+- [vendor-kernel / drivers/mmc/host/gl520x_mmc.c](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/mmc/host/gl520x_mmc.c#L1700-L1703)
+
+Limits: Suggests a vendor 'UART over SD slot' debug mode on the TF2 controller, but with this DT the Linux driver does not use it. Pin-to-contact mapping, signal voltage and whether the early loader or U-Boot use these pads are not established. No physical test is implied.
+
+## STOR-001
+
+Koriki v1.0 init scripts name /sys/devices/b0238000.mmc/.../emmc_boot_card/block/mmcblk0 and /sys/devices/b0230000.mmc/.../sd_card/block/mmcblk1; the ramdisk init mounts /dev/mmcblk0p1 as the boot partition. The release DTB's nand@b0210000 node has no status property, but the decompressed release kernel contains no actions,atm7059a-nand compatible string and the rootfs ships no block or NAND modules.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Paths in scripts express the release author's expectation, not a measured probe. Absence of a NAND driver in this release means Linux here cannot write NAND; it does not prove no NAND or eMMC is fitted, nor that U-Boot (which carries nand commands) never accesses one.
+
+## FW-005
+
+Koriki v1.0 first-boot and every-boot scripts write to the boot card and to a TF2 card: S02resize (triggered by /BOOT/autoresize) resizes partition 3 to the end of mmcblk0, retypes it 0x0c and formats it FAT32 labelled SHARE; S08populate mounts the last partition of mmcblk1 as /userdata when one exists, otherwise mmcblk0p3, then copies default content onto it; the ramdisk init writes /boot/boot/reboot each boot.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Describes shipped script text, not an observed run. A card in the TF2 slot during testing would be mounted and written to.
+
+## FW-006
+
+Koriki v1.0 boot scripts change runtime device state as part of normal operation: the ramdisk init sets the cpu0 governor to performance (and, when charging at boot, interactive with a 240 MHz cap and backlight off); S02overclock writes scaling_max_freq for cpu0-3 from batocera-boot.conf 'overclocking' (default 1008000 kHz, up to 1488000 for 'extreme'); S03performance sets MMC power control on and the noop scheduler; S01adb loads USB gadget modules and sets /sys/monitor/usb_port/config/idpin_debug=1. S50dropbear starts SSH unless system.ssh.enabled=0.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: These are baseline firmware behaviours, not actions of the capture tool. Whether the 1008000 kHz default matches stock limits, and whether scaling_max_freq writes for absent CPUs fail harmlessly, are unverified.
+
+## FW-007
+
+Koriki v1.0 /adb_uImage contains a separate kernel build: its embedded gzip stream expands to a Linux 3.10.37 / Linaro GCC 4.9-2017.01 string with build #19 dated Jun 21 2023, versus build #75 dated Jul 17 2023 in /uImage.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Version strings separate the two builds for runtime linking (adb-kernel-payload.json); they do not describe configuration differences beyond that.
+
+## UI-001
+
+In Koriki v1.0 the SimpleMenu 'apps and games' section group lists .sh files from /userdata/system/.simplemenu/games/ and /userdata/roms/ports/ under GAMES and from /userdata/system/.simplemenu/apps/ under APPS.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Configuration text only; launching behaviour, executable-bit handling on FAT and whether the default section group shows it were not observed. /userdata/roms/ports/ does not exist until created.

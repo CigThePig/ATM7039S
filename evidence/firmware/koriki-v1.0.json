@@ -245,6 +245,18 @@
       "sha256": "1dd2ae2422c8d611a5e3fe3960fc5a37f050152f49bf5ec5160dc989a1297d4a",
       "mbr": null,
       "candidates": []
+    },
+    {
+      "id": "batocera-boot.conf",
+      "location": {
+        "kind": "fat-file",
+        "partition": 1,
+        "path": "/batocera-boot.conf"
+      },
+      "size": 2603,
+      "sha256": "9d7555c7c3c467b0404c4234796aee507a6d8174fabe73e0d3c0c6e344efdbb4",
+      "mbr": null,
+      "candidates": []
     }
   ]
 }
