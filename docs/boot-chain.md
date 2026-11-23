@@ -43,7 +43,7 @@ This is a source recipe, not an acquired image partition report. It neither prov
 
 ## Memory handoff
 
-Related U-Boot checks AFI magic and reads boot device, serial parameters and DDR size from a structure referenced at `0xb4060300`. That is an address in the boot environment; its physical translation and producer have not been established. Related kernel memory reservations depend on runtime low-memory limits and vendor heap properties. A static DT with `memory=<0 0>` cannot substitute for the final boot handoff.
+Related U-Boot checks AFI magic and reads boot device, serial parameters and DDR size from a structure referenced at `0xb4060300`. That is an address in the boot environment; its physical translation and producer were not established in the initial edition; the continuation recovers a release-specific writer (see below). Related kernel memory reservations depend on runtime low-memory limits and vendor heap properties. A static DT with `memory=<0 0>` cannot substitute for the final boot handoff.
 
 ## What can plausibly be replaced
 
@@ -51,6 +51,6 @@ U-Boot and the old kernel have source candidates. Porting modern Linux still req
 
 Stock, GarlicOS 1.4.9, historical Koriki and current KNULLI are not interchangeable evidence sets. No complete GarlicOS image was inspected. Tinyhack reports a stock/Garlic kernel difference and changing historical Koriki kernel choices; the source build recipe establishes an available route, not what every release actually shipped.
 
-## Next static investigation
+## Continuation: hash-identified release evidence
 
-Obtain a public, lawful original-RG35XX boot bundle with release URL, exact size and SHA-256. Extract bootloader, U-Boot, kernel, ramdisk, DT and modules without executing them. Determine their formats and hashes, correlate version/build strings, trace early DDR/AFI handling, then compare compiled source paths to actual binaries. Do not replace a bootloader during this phase.
+The next acquisition was completed for Koriki v1.0: a full image verifies both recipe offsets, and its early region contains an AFI writer matching released U-Boot consumers. See [firmware analysis](../reports/firmware-analysis.md) and [AFI handoff](afi-handoff.md). The source-stage table above remains a description of the original source baseline, not a release trace. ROM media rules, DDR training, final memory fixups and stock/Garlic equivalence remain unresolved.

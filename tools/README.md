@@ -68,3 +68,18 @@ For the mainline S500 comparison, prepend `/dts-v1/;` to the pinned `arch/arm/bo
 ## Errors and tests
 
 Malformed/truncated FDTs, invalid reg geometry, unsupported flattened DTS syntax, duplicate properties, hash mismatches and stale generated files fail explicitly. Unit tests generate representative binary fixtures in memory, including valid/invalid uImages, FDTs and MBR entries, and also check differences against the real extracted board datasets. `unittest discover -s tests -v` and CI execute the tests without network or hardware access.
+
+## Full-image continuation tools
+
+See [firmware reproduction](../reports/firmware-analysis.md) for exact commands and pinned public inputs. Install optional dependencies in an isolated venv with `requirements-firmware.txt`; ordinary evidence validation and unit tests do not require network or firmware downloads. CI installs these dependencies to exercise a synthetic FAT image as well.
+
+| Tool | Purpose | Deliberate limits |
+|---|---|---|
+| `acquire_firmware.py SOURCE OUT [--expand]` | Stream hash/size-pinned release assets; exact bounded gzip expansion | 8 GiB ceiling; never overwrites existing files or auto-extracts ZIP members |
+| `firmware_catalogue.py IMAGE PLAN OUT [--extract DIR]` | Stream whole-image SHA, strict primary MBR, selected raw/uImage/FAT files | 32 MiB selected files, partition-bounded read-only FAT; rejects GPT/extended MBR |
+| `rootfs_catalogue.py IMAGE PLAN OUT [--extract DIR]` | Hash nested ext4 rootfs, selected regular inodes, ELF metadata | No mount, symlink output, recursive extraction, native execution or library loading |
+| `boot_payloads.py COMPONENT OUT` | Bounded internal gzip identification, expanded hashes/version strings | 64 MiB per stream, max 256 candidates; no claimed behavior from strings |
+| `arm_refs.py COMPONENT OUT --start N --end N` | A32 direct branches and PC-relative word literals | Offset coordinates; not a disassembler or code/data classifier; no Thumb support |
+| `validate_firmware.py` | Binary finding hash/range links and manifest integrity | Checks retained evidence, not hardware or availability of external inputs |
+
+The S500 CMU comparison fields are curated in `comparisons/cmu-fields.json` and applied by build_dataset.py without promoting target register reset/access values. Regeneration now preserves extra curated source/file provenance records; the previous builder would have silently dropped new records outside its fixed extraction list. This correction has a regression test.

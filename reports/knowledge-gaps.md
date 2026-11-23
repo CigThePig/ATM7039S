@@ -23,3 +23,7 @@ The upstream driver comparison is pinned to v6.12 for reproducibility. Current P
 ## What was not completed
 
 No whole-image firmware extraction, Ghidra decompilation, full source cross build, electrical validation, exact ATM7039S bitfield/reset audit, complete mainline port or physical test was completed. Tools and provenance are provided to continue these tasks. No hardware verification is claimed and no vendor binary is redistributed.
+
+## Changes after the first edition
+
+One complete Koriki v1.0 image has now been acquired; the lack of **all** complete-image evidence is no longer a gap. Stock/Garlic release comparisons remain open. A release-specific AFI writer and size conversion have been found, narrowing but not resolving the DDR/early-memory gap. Ten CMU field comparisons and a new divisor contradiction are documented. Actual kernel/U-Boot builds failed at recorded host/toolchain compatibility blockers; source/release equivalence remains open. See the [continuation report](offline-continuation.md) rather than interpreting the first-edition roadmap as current completion status.

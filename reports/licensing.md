@@ -23,3 +23,7 @@ The MIT grant covers this project's original contributions, not third-party inte
 Previous contributors are credited by source identity, including macromorgan, Yohanes Nugroho/Tinyhack, rg35xx-cfw contributors, KNULLI contributors, Actions, upstream Linux contributors, Imagination and Gama/reMESA. No claim of newly discovering their prior work is intended. New results here are the reproducible cross-comparison, explicit scope/contradiction model and original tools/documentation.
 
 Remaining audit tasks: per-file notices for any proposed imported driver, actual matching firmware licenses, provenance/rights of early bootloader and GPU libraries, and any redistribution obligations for complete future release bundles. This session does not publish or endorse those binaries.
+
+## Offline firmware continuation
+
+The Koriki disk image, boot-fix archive, bootloader region, modules, userspace libraries and compiler archive were acquired only as external research inputs. This PR includes independently written analysis, hashes, format/ELF metadata, bounded reference inventories and reproducible tools. It includes no firmware image, binary component, third-party library, PDF, bulk decompilation or substantial disassembly. Public download availability and a module's license metadata do not grant rights over the whole distribution. Original project additions remain MIT; external sources retain their own terms. Arm toolchain binaries and third-party parser dependencies are not vendored into this repository.

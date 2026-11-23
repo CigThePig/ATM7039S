@@ -22,3 +22,14 @@ Every task begins from the pinned sources and unresolved claims, not a presumed 
 Prefer public boot-only bundles and vendor-origin manuals before more hardware. Exact board-revision photographs already publicly available may resolve fitted parts, but must not be treated as the owner's board. An existing runtime log may answer CPU/RAM questions without firmware changes. A later spare microSD would isolate experiments from the working system. UART equipment should be selected only after pin function and voltage are established; neither opening nor soldering is requested by this roadmap.
 
 The project does not need a firmware rewrite to improve immediately: a reliable image/component manifest, DDR/AFI handoff analysis and a field-by-field S500/ATM7039S compatibility study would remove more uncertainty than speculative driver code.
+
+## Continuation status and revised immediate priorities
+
+1. **Image evidence: completed for one CFW release, partial overall.** Koriki v1.0 and V6C bootfix are catalogued; acquire authenticated stock/Garlic next and compare component hashes.
+2. **AFI: partially completed.** Writer, layout, size conversion and getters reconstructed. Trace `0xb4070820` producer, DDR paths and final memory fixups before replacing early boot.
+3. **CMU semantics: partially completed.** Ten reviewed gate/reset positions; resolve UART divisor/manual discrepancies and expand dependencies rather than asserting whole-block compatibility.
+4. **Builds: attempted, blocked.** Obtain exact historical compiler or record an explicit compatibility patch series; retain failed logs and separate built from shipped identity.
+5. **CPU: investigation documented, unresolved.** Prefer existing logs with final cmdline/SCU/masks; physical tests require separate authorization.
+6. **GPU: concrete artifacts acquired, ABI map partial.** Match exact kernel build configuration and bridge layouts to bundled libraries, then trace buffer/display ownership and synchronization. Preserve reMESA attribution.
+
+NAND/media/security/OTP, broad historical SDK archaeology, a complete candidate board DTS and modern-kernel driver implementation were not completed in this phase. The initial long-term roadmap still applies to those dependencies.

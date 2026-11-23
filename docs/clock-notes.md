@@ -26,3 +26,7 @@ flowchart TD
 ```
 
 This deliberately omits undocumented ATM7039S relationships and does not claim a complete clock tree. Mainline's clock macros encode rates and delays for S500; none is a proven ATM7039S operating limit. CPU/DDR/GPU PLL changes, regulator edits and disabling unused clocks must wait for a hardware-specific review and separate authorization.
+
+## Field-level continuation
+
+The [selected CMU study](../comparisons/cmu-field-study.md) compares ten GPIO/UART gate/reset positions with S500 manual tables and Linux v6.12. Canonical fields retain related-chip scope, including separately named related access/reset metadata; target register access/reset/width remains unknown. The UART divisor discrepancy is now C-UART-DIV. This is a comparison foundation, not a safe clock configuration.

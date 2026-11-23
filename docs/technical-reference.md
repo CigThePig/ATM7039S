@@ -257,3 +257,13 @@ The [source catalogue](../evidence/catalogue.md) links immutable repository revi
 The highest-value missing evidence is a known-provenance boot bundle linking early loader, U-Boot, kernel, final DT and PowerVR module/userspace. That would permit static reconstruction of DDR handoff and actual resource selection without touching the owner's cards. Next priorities are final CPU topology and memory layout, CMU/reset/power dependencies, and a source-to-binary comparison of the source-built kernel. [roadmap](../reports/next-investigations.md)
 
 A complete TRM would additionally require silicon identification/revision semantics, electrical/package documentation, exhaustive register fields/access/reset behavior, ROM behavior, DRAM training, coherency/ordering constraints, safe power transitions, media command ABIs, GPU programming details and verified errata. This edition does not supply those missing facts.
+
+## Offline firmware continuation
+
+Edition 0.2 adds release-specific binary evidence without broadening related-chip claims. [The firmware report](../reports/firmware-analysis.md) identifies a full original-RG35XX Koriki v1.0 image, confirms raw boot-region placement and records kernel/DT/ramdisk/module/userspace hashes. It is not an authenticated stock/Garlic acquisition.
+
+The [AFI chapter](afi-handoff.md) reconstructs a 16-byte producer/consumer interface and its MiB-to-byte size conversion. Final capacity, physical mapping, DDR training and Linux reservations remain unresolved. The [CPU study](../reports/cpu-topology.md) separates manufacturer topology, DT nodes, SCU discovery and software policy.
+
+[Ten selected clock/reset fields](../comparisons/cmu-field-study.md) now have explicit S500 manual/source evidence. Related reset/access metadata is separate from unknown target values. The manual/upstream UART divisor discrepancy remains an explicit contradiction. [Graphics ABI work](../reports/graphics-abi.md) connects a released 3.10.37 module to versioned library candidates and maps the source bridge envelope without claiming a complete open driver.
+
+[Historical build attempts](../reports/build-reproduction.md) preserve real compiler/DTC failures and exact inputs. No newly built image was booted and no hardware finding was added. See the [engineering report](../reports/offline-continuation.md) for scope and remaining priorities.
