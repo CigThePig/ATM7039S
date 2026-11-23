@@ -15,7 +15,7 @@
 # $ATM_CAPTURE_ROOT/<path> (file items) or $ATM_CAPTURE_ROOT/.cmd/<id>
 # (command items) instead of the live system.
 
-CAPTURE_VERSION=1
+CAPTURE_VERSION=2
 set -u
 umask 022
 
@@ -67,6 +67,8 @@ fi
 ROOT="${ATM_CAPTURE_ROOT:-}"
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 PARENT="${1:-$SCRIPT_DIR}"
+# Absolute path: the tree item changes directory before writing its archive.
+mkdir -p "$PARENT" && PARENT=$(cd "$PARENT" && pwd) || { echo "cannot use $PARENT" >&2; exit 1; }
 # FAT-safe name: no colons. Seconds plus PID avoid collisions on repeated runs.
 STAMP=$(date -u +%Y%m%dT%H%M%SZ 2>/dev/null || echo unknown-time)
 OUT="$PARENT/atm-capture-$STAMP-$$"

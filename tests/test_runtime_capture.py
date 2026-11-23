@@ -174,6 +174,16 @@ class CaptureScriptTests(unittest.TestCase):
         errors = rc.parse(self.capture)['capture']['errors']
         self.assertTrue(any('known device/capture.sh' in e for e in errors))
 
+    def test_relative_output_parent(self):
+        """Regression: v1 lost the device-tree tar when the output folder was relative."""
+        work = self.tmp / 'cwd'
+        work.mkdir()
+        subprocess.run(['sh', str(SCRIPT), 'out'], cwd=work, check=True, capture_output=True,
+                       env={'PATH': '/usr/bin:/bin', 'ATM_CAPTURE_ROOT': str(self.tmp / 'root')})
+        capture = next((work / 'out').glob('atm-capture-*'))
+        files = {f['id']: f['status'] for f in rc.parse(capture)['capture']['files']}
+        self.assertEqual(files['device-tree'], 'ok')
+
     def test_list_mode_reads_nothing(self):
         out = subprocess.run(['sh', str(SCRIPT), '--list'], capture_output=True, text=True, check=True).stdout
         self.assertEqual(out.splitlines(), rc.script_allowlist(SCRIPT.read_text()))
