@@ -100,6 +100,13 @@ class ImageInventoryTests(unittest.TestCase):
         self.assertEqual([p['name'] for p in t['partitions']], ['MISC'])
         self.assertEqual(t['partitions_beyond_image'][0]['name'], 'ROMS')
 
+    def test_partial_partition_not_scanned_as_raw(self):
+        img = gpt_image([('MISC', 64, 95), ('ROMS', 128, 4000)], sectors=256, declared=8192)
+        img[128 * 512:128 * 512 + 8] = b'ANDROID!'
+        inv = ii.inventory(self.write(img), allow_truncated=True)
+        self.assertEqual(inv['partition_table']['partitions_beyond_image'][0]['in_image_bytes'], 128 * 512)
+        self.assertFalse(any(r['offset'] + r['size'] > 128 * 512 for r in inv['raw_regions']))
+
     def test_overlap_and_usable_range(self):
         with self.assertRaisesRegex(ValueError, 'overlapping'):
             ii.inventory(self.write(gpt_image([('A', 64, 120), ('B', 100, 150)])))
@@ -181,6 +188,22 @@ class ArchiveTests(unittest.TestCase):
         with self.assertRaises(FileExistsError):
             am.extract(p, 'img', d / 'out2')
 
+    def test_existing_destination_preserved_on_non_zip_path(self):
+        d = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, d)
+        out = d / 'out'
+        out.mkdir()
+        (out / 'img').write_bytes(b'earlier evidence')
+        fake = dict(container='rar5', members=[dict(name='img', size=4, directory=False, special=False)])
+        orig = am.list_members
+        am.list_members = lambda path: fake
+        try:
+            with self.assertRaises(FileExistsError):
+                am.extract(d / 'a.rar', 'img', out)
+        finally:
+            am.list_members = orig
+        self.assertEqual((out / 'img').read_bytes(), b'earlier evidence')
+
     def test_unknown_container(self):
         d = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, d)
@@ -232,6 +255,13 @@ class MmioTests(unittest.TestCase):
         # b +0 (to next+4) makes the store a branch target with unknown incoming registers.
         code = words(MOVW_R0_A0, MOVT_R0_B016, 0xEAFFFFFF, STR_R2_R0_8, BX_LR)
         self.assertEqual(mr.scan(code, 0, [(0, len(code))]), [])
+
+    def test_ldrd_invalidates_both_destinations(self):
+        # mov r1,#5 ; movw r2,#0xa8 ; movt r2,#0xb016 ; ldrd r0,r1,[r4] ; str r1,[r2]
+        code = words(0xE3A01005, 0xE30020A8, 0xE34B2016, 0xE1C400D0, 0xE5821000, BX_LR)
+        acc = mr.scan(code, 0, [(0, len(code))])
+        self.assertEqual([(a['access'], a['physical']) for a in acc], [('write', 0xb01600a8)])
+        self.assertNotIn('value', acc[0])
 
     def test_call_argument_recorded(self):
         # mov r0,#4 ; movw r1,#4 ; movt r1,#0xb01c ; bl +0x100

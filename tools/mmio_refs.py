@@ -172,8 +172,11 @@ def scan(data, load, ranges, thumb=False, window=DEFAULT_WINDOW, iomap=(), entri
                         entry['value'] = state[rt]
                     entry.update(regmap.describe(phys))
                     results.append(entry)
-            if name.startswith('ldr') and rt:
-                state.pop(rt, None)
+            if name.startswith('ldr'):
+                # Every register a load writes (two for ldrd) loses its known value.
+                for r in [rt] + [ins.reg_name(x) for x in ins.regs_access()[1]]:
+                    if r:
+                        state.pop(r, None)
             if ins.writeback and base:
                 state.pop(base, None)
             if rt == 'pc':

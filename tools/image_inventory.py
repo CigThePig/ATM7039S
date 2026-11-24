@@ -100,7 +100,11 @@ def parse_gpt(f, total, allow_truncated=False):
             raise ValueError(f'GPT entry {i + 1} outside usable LBAs')
         name = e[56:128].decode('utf-16le', errors='replace').split('\0')[0]
         if (l + 1) * SECTOR > total:
-            beyond.append(dict(index=i + 1, name=name, start_lba=s, sectors=l - s + 1))
+            item = dict(index=i + 1, name=name, start_lba=s, sectors=l - s + 1)
+            if s * SECTOR < total:
+                # Its in-image bytes still belong to the partition, not to unpartitioned space.
+                item['in_image_bytes'] = total - s * SECTOR
+            beyond.append(item)
             continue
         parts.append(dict(index=i + 1, name=name, type_guid=str(uuid.UUID(bytes_le=e[:16])),
                           unique_guid=str(uuid.UUID(bytes_le=e[16:32])), start_lba=s, sectors=l - s + 1,
@@ -332,7 +336,10 @@ def inventory(image, summary_only=(), expected_sha256=None, include=(), allow_tr
         table = partition_table(f, total, allow_truncated)
         parts = table['partitions']
         result = dict(format_version=1, tool='image_inventory.py', size=total, sha256=digest, sector_size=SECTOR,
-                      partition_table=table, raw_regions=raw_regions(f, total, parts), partitions=[])
+                      partition_table=table, partitions=[])
+        reserved = parts + [dict(offset=b['start_lba'] * SECTOR, size=b['in_image_bytes'])
+                            for b in table.get('partitions_beyond_image', []) if b.get('in_image_bytes')]
+        result['raw_regions'] = raw_regions(f, total, reserved)
         for p in parts:
             label = p.get('name') or str(p['index'])
             kind, oem = detect_fs(f, p)

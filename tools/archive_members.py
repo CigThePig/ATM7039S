@@ -163,12 +163,16 @@ def extract(path, member, outdir, limit=DEFAULT_LIMIT, out_name=None):
         with zipfile.ZipFile(path) as z, z.open(entry['name']) as s:
             result = _copy(s, dest, limit, entry['size'])
     else:
+        if dest.exists() or dest.is_symlink():
+            raise FileExistsError(str(dest))  # never replace or delete earlier research outputs
         errors = []
         for cmd in _stream_commands(listing['container'], path, entry['name']):
             proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             try:
                 result = _copy(proc.stdout, dest, limit, entry['size'])
                 failed = None
+            except FileExistsError:
+                raise  # created concurrently by someone else: not ours to delete
             except (ValueError, OSError) as e:
                 failed = str(e)
             finally:
