@@ -210,6 +210,21 @@ class ArchiveTests(unittest.TestCase):
         self.assertEqual(am.extract(p, 'sub/disk.img', d / 'o1')['size'], 10)
         self.assertEqual(am.extract(p, './sub//disk.img', d / 'o2')['size'], 10)
 
+    def test_verbose_extractor_stderr_does_not_deadlock(self):
+        d = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, d)
+        tool = d / 'noisy.py'
+        tool.write_text('import sys\nsys.stderr.write("x" * (1 << 20)); sys.stderr.flush()\nsys.stdout.write("DATA")\n')
+        fake = dict(container='rar5', members=[dict(name='img', archive_name='img', size=4, directory=False, special=False)])
+        orig_list, orig_cmds = am.list_members, am._stream_commands
+        am.list_members = lambda path: fake
+        am._stream_commands = lambda kind, path, name: [[sys.executable, '-I', str(tool)]]
+        try:
+            r = am.extract(d / 'a.rar', 'img', d / 'out')
+        finally:
+            am.list_members, am._stream_commands = orig_list, orig_cmds
+        self.assertEqual((r['size'], (d / 'out/img').read_bytes()), (4, b'DATA'))
+
     def test_unknown_container(self):
         d = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, d)
@@ -277,6 +292,11 @@ class MmioTests(unittest.TestCase):
     def test_store_multiple_writeback_invalidates_base(self):
         # r0=0xb01600a0 ; stmia r0!,{r1} ; str r2,[r0]
         code = words(MOVW_R0_A0, MOVT_R0_B016, 0xE8A00002, 0xE5802000, BX_LR)
+        self.assertEqual(mr.scan(code, 0, [(0, len(code))]), [])
+
+    def test_ip_clobbered_by_calls(self):
+        # movw ip,#0xa8 ; movt ip,#0xb016 ; bl (to the bx lr) ; str r2,[ip]
+        code = words(0xE300C0A8, 0xE34BC016, 0xEB000000, 0xE58C2000, BX_LR)
         self.assertEqual(mr.scan(code, 0, [(0, len(code))]), [])
 
     def test_call_argument_recorded(self):

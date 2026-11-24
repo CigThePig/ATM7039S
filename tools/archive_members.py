@@ -18,6 +18,7 @@ import json
 from pathlib import Path, PurePosixPath
 import shutil
 import subprocess
+import tempfile
 import zipfile
 
 DEFAULT_LIMIT = 16 * 1024**3
@@ -168,18 +169,23 @@ def extract(path, member, outdir, limit=DEFAULT_LIMIT, out_name=None):
             raise FileExistsError(str(dest))  # never replace or delete earlier research outputs
         errors = []
         for cmd in _stream_commands(listing['container'], path, entry['archive_name']):
-            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            try:
-                result = _copy(proc.stdout, dest, limit, entry['size'])
-                failed = None
-            except FileExistsError:
-                raise  # created concurrently by someone else: not ours to delete
-            except (ValueError, OSError) as e:
-                failed = str(e)
-            finally:
-                proc.stdout.close()
-                err = proc.stderr.read().decode(errors='replace')
-                code = proc.wait(timeout=600)
+            # stderr goes to a temporary file so a verbose extractor cannot block on a full pipe.
+            with tempfile.TemporaryFile() as errf:
+                proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=errf)
+                try:
+                    result = _copy(proc.stdout, dest, limit, entry['size'])
+                    failed = None
+                except FileExistsError:
+                    proc.kill()
+                    raise  # created concurrently by someone else: not ours to delete
+                except (ValueError, OSError) as e:
+                    failed = str(e)
+                    proc.kill()
+                finally:
+                    proc.stdout.close()
+                    code = proc.wait(timeout=600)
+                    errf.seek(0)
+                    err = errf.read()[-4096:].decode(errors='replace')
             if failed is None and code == 0:
                 result['extractor'] = cmd[0]
                 break

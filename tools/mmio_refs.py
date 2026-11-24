@@ -27,7 +27,7 @@ import struct
 
 LIMIT = 64 * 1024 * 1024
 DEFAULT_WINDOW = (0xB0000000, 0xB8000000)
-CALL_CLOBBER = ('r0', 'r1', 'r2', 'r3', 'r12', 'lr')
+CALL_CLOBBER = ('r0', 'r1', 'r2', 'r3', 'r12', 'ip', 'lr')  # Capstone names r12 'ip'
 
 
 def parse_int(text):
