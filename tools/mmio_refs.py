@@ -270,7 +270,8 @@ def run(path, load, ranges, thumb=False, window=DEFAULT_WINDOW, iomap=(), functi
     entries = []
     if functions:
         entries = sorted({f['address'] for f in functions})
-    ranges = ranges or [(0, len(data) - len(data) % 4)]
+    step = 2 if thumb else 4  # Thumb instructions are halfword-aligned
+    ranges = ranges or [(0, len(data) - len(data) % step)]
     acc = scan(data, load, ranges, thumb, window, iomap, entries, RegisterMap(model))
     return dict(format_version=1, tool='mmio_refs.py', component_sha256=hashlib.sha256(data).hexdigest(),
                 component_size=len(data), load_address=load, instruction_set='T32' if thumb else 'A32',

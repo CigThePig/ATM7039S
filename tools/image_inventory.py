@@ -109,7 +109,8 @@ def parse_gpt(f, total, allow_truncated=False):
         parts.append(dict(index=i + 1, name=name, type_guid=str(uuid.UUID(bytes_le=e[:16])),
                           unique_guid=str(uuid.UUID(bytes_le=e[16:32])), start_lba=s, sectors=l - s + 1,
                           offset=s * SECTOR, size=(l - s + 1) * SECTOR, attributes=attr))
-    _overlap(parts)
+    # Overlap is checked across every declared extent, including partitions cut off by truncation.
+    _overlap(parts + [dict(offset=b['start_lba'] * SECTOR, size=b['sectors'] * SECTOR) for b in beyond])
     return dict(scheme='gpt', revision=hex(rev), disk_guid=disk_guid, first_usable_lba=first,
                 last_usable_lba=last, entry_array_lba=ent_lba, backup_lba=backup,
                 backup_header_valid=backup_ok, truncated_image=truncated,

@@ -113,6 +113,11 @@ class ImageInventoryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'usable'):
             ii.inventory(self.write(gpt_image([('A', 10, 20)])))
 
+    def test_truncated_partitions_still_checked_for_overlap(self):
+        img = gpt_image([('A', 64, 4000), ('B', 96, 127)], sectors=256, declared=8192)
+        with self.assertRaisesRegex(ValueError, 'overlapping'):
+            ii.inventory(self.write(img), allow_truncated=True)
+
     def test_hybrid_mbr_and_odd_length(self):
         img = gpt_image([('A', 64, 95)])
         img[446 + 16 + 4] = 0x0c
@@ -298,6 +303,15 @@ class MmioTests(unittest.TestCase):
         # movw ip,#0xa8 ; movt ip,#0xb016 ; bl (to the bx lr) ; str r2,[ip]
         code = words(0xE300C0A8, 0xE34BC016, 0xEB000000, 0xE58C2000, BX_LR)
         self.assertEqual(mr.scan(code, 0, [(0, len(code))]), [])
+
+    def test_default_thumb_range_keeps_final_halfword(self):
+        d = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, d)
+        # movw r0,#0xa0 ; movt r0,#0xb016 ; str r1,[r0]  (10 bytes of T32)
+        (d / 't.bin').write_bytes(bytes.fromhex('40f2a000') + bytes.fromhex('cbf21600') + bytes.fromhex('0160'))
+        r = mr.run(d / 't.bin', 0x1000, [], thumb=True)
+        self.assertEqual(r['ranges'], [[0, 10]])
+        self.assertEqual([(a['access'], a['physical']) for a in r['accesses']], [('write', 0xb01600a0)])
 
     def test_call_argument_recorded(self):
         # mov r0,#4 ; movw r1,#4 ; movt r1,#0xb01c ; bl +0x100
