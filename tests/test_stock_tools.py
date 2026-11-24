@@ -204,6 +204,12 @@ class ArchiveTests(unittest.TestCase):
             am.list_members = orig
         self.assertEqual((out / 'img').read_bytes(), b'earlier evidence')
 
+    def test_normalised_member_names_extract_by_stored_spelling(self):
+        p, d = self.zip_with([('./sub//disk.img', b'C' * 10, 0)])
+        self.assertEqual([m['name'] for m in am.list_members(p)['members']], ['sub/disk.img'])
+        self.assertEqual(am.extract(p, 'sub/disk.img', d / 'o1')['size'], 10)
+        self.assertEqual(am.extract(p, './sub//disk.img', d / 'o2')['size'], 10)
+
     def test_unknown_container(self):
         d = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, d)
@@ -262,6 +268,16 @@ class MmioTests(unittest.TestCase):
         acc = mr.scan(code, 0, [(0, len(code))])
         self.assertEqual([(a['access'], a['physical']) for a in acc], [('write', 0xb01600a8)])
         self.assertNotIn('value', acc[0])
+
+    def test_literal_pc_load_is_a_control_transfer(self):
+        # movw/movt r0=0xb01600a0 ; ldr pc,[pc,#4] ; str r2,[r0] (not fall-through) ; bx lr ; .word target
+        code = words(MOVW_R0_A0, MOVT_R0_B016, 0xE59FF004, 0xE5802000, BX_LR, 0x00001234)
+        self.assertEqual(mr.scan(code, 0, [(0, 0x14)]), [])
+
+    def test_store_multiple_writeback_invalidates_base(self):
+        # r0=0xb01600a0 ; stmia r0!,{r1} ; str r2,[r0]
+        code = words(MOVW_R0_A0, MOVT_R0_B016, 0xE8A00002, 0xE5802000, BX_LR)
+        self.assertEqual(mr.scan(code, 0, [(0, len(code))]), [])
 
     def test_call_argument_recorded(self):
         # mov r0,#4 ; movw r1,#4 ; movt r1,#0xb01c ; bl +0x100

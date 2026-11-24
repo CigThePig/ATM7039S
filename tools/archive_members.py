@@ -96,6 +96,7 @@ def list_members(path):
             raise RuntimeError('no RAR/7z lister available (install 7zip or unar)')
     seen = set()
     for m in members:
+        m['archive_name'] = m['name']  # exact spelling stored in the archive, used for extraction
         m['name'] = check_name(m['name'])
         if m['name'] in seen:
             raise ValueError('duplicate archive member ' + m['name'])
@@ -160,13 +161,13 @@ def extract(path, member, outdir, limit=DEFAULT_LIMIT, out_name=None):
     outdir.mkdir(parents=True, exist_ok=True)
     dest = outdir / name
     if listing['container'] == 'zip':
-        with zipfile.ZipFile(path) as z, z.open(entry['name']) as s:
+        with zipfile.ZipFile(path) as z, z.open(entry['archive_name']) as s:
             result = _copy(s, dest, limit, entry['size'])
     else:
         if dest.exists() or dest.is_symlink():
             raise FileExistsError(str(dest))  # never replace or delete earlier research outputs
         errors = []
-        for cmd in _stream_commands(listing['container'], path, entry['name']):
+        for cmd in _stream_commands(listing['container'], path, entry['archive_name']):
             proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             try:
                 result = _copy(proc.stdout, dest, limit, entry['size'])

@@ -157,7 +157,7 @@ def scan(data, load, ranges, thumb=False, window=DEFAULT_WINDOW, iomap=(), entri
             if base == 'pc' and mem.index == 0:
                 lit = (pc & ~3) + mem.disp
                 off = lit - load
-                if 0 <= off <= len(data) - 4 and name == 'ldr':
+                if 0 <= off <= len(data) - 4 and name == 'ldr' and rt != 'pc':
                     state[rt] = struct.unpack_from('<I', data, off)[0]
                     continue
             elif base in state and mem.index == 0 and len(ops) == 2 and not ins.writeback:
@@ -224,11 +224,18 @@ def scan(data, load, ranges, thumb=False, window=DEFAULT_WINDOW, iomap=(), entri
             if not cond:
                 state = {}
             continue
-        if name in ('pop', 'ldm', 'ldmia', 'ldmfd', 'stm', 'push', 'stmdb', 'stmfd'):
+        if name.startswith(('pop', 'ldm', 'stm', 'push')):
+            # Loaded registers, a written-back base and sp lose their known values;
+            # loading pc is a control transfer.
+            written = {ins.reg_name(r) for r in ins.regs_access()[1]}
             if name.startswith(('pop', 'ldm')):
-                for o in ops:
-                    if o.type == arm.ARM_OP_REG:
-                        state.pop(ins.reg_name(o.reg), None)
+                written |= {ins.reg_name(o.reg) for o in ops if o.type == arm.ARM_OP_REG}
+            if ins.writeback and ops and ops[0].type == arm.ARM_OP_REG:
+                written.add(ins.reg_name(ops[0].reg))
+            if 'pc' in written and not cond:
+                state = {}
+            for r in written:
+                state.pop(r, None)
             continue
         # Any other written register becomes unknown. Conditional writes poison as well.
         written = [ins.reg_name(r) for r in ins.regs_access()[1]]
