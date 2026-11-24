@@ -122,8 +122,9 @@ def scan(data, load, ranges, thumb=False, window=DEFAULT_WINDOW, iomap=(), entri
         lite = Cs(CS_ARCH_ARM, CS_MODE_THUMB); lite.detail = True
         md, keep = lite, md
         for ins in stream():
-            if (ins.group(CS_GRP_JUMP) or ins.group(CS_GRP_CALL)) and ins.operands and ins.operands[0].type == arm.ARM_OP_IMM:
-                targets.add(ins.operands[0].imm)
+            if ins.group(CS_GRP_JUMP) or ins.group(CS_GRP_CALL):
+                # cbz/cbnz carry the destination in operand 1, so take every immediate operand.
+                targets.update(o.imm for o in ins.operands if o.type == arm.ARM_OP_IMM)
         md = keep
     else:
         for lo, hi in ranges:
@@ -169,7 +170,7 @@ def scan(data, load, ranges, thumb=False, window=DEFAULT_WINDOW, iomap=(), entri
                                  access='write' if name.startswith('str') else 'read', width=width,
                                  conditional=cond, instruction=f'{ins.mnemonic} {ins.op_str}')
                     if entry['access'] == 'write' and rt in state:
-                        entry['value'] = state[rt]
+                        entry['value'] = state[rt] & ((1 << width) - 1 if width < 32 else 0xffffffff)
                     entry.update(regmap.describe(phys))
                     results.append(entry)
             if name.startswith('ldr'):

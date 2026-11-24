@@ -84,6 +84,14 @@ class ImageInventoryTests(unittest.TestCase):
         raw = [r for r in inv['raw_regions'] if r.get('signatures')]
         self.assertTrue(any(s['kind'] == 'uImage' and s['offset'] == 40 * 512 for r in raw for s in r['signatures']))
 
+    def test_gpt_metadata_not_reported_as_raw(self):
+        inv = ii.inventory(self.write(gpt_image([('A', 64, 95)])))
+        self.assertEqual(inv['raw_regions'], [])
+        img = gpt_image([('A', 64, 95)])
+        img[40 * 512] = 1
+        regions = ii.inventory(self.write(img))['raw_regions']
+        self.assertEqual([(r['offset'], r['size']) for r in regions], [(40 * 512, 512)])
+
     def test_corrupt_header_and_entries_rejected(self):
         with self.assertRaisesRegex(ValueError, 'header CRC'):
             ii.inventory(self.write(gpt_image([('A', 64, 95)], break_header=True)))
@@ -312,6 +320,17 @@ class MmioTests(unittest.TestCase):
         r = mr.run(d / 't.bin', 0x1000, [], thumb=True)
         self.assertEqual(r['ranges'], [[0, 10]])
         self.assertEqual([(a['access'], a['physical']) for a in r['accesses']], [('write', 0xb01600a0)])
+
+    def test_narrow_store_value_masked_to_width(self):
+        # movw r1,#0x1234 ; movw r0,#0xa0 ; movt r0,#0xb016 ; strb r1,[r0] ; strh r1,[r0]
+        code = words(0xE3011234, MOVW_R0_A0, MOVT_R0_B016, 0xE5C01000, 0xE1C010B0, BX_LR)
+        acc = mr.scan(code, 0, [(0, len(code))])
+        self.assertEqual([(a['width'], a['value']) for a in acc], [(8, 0x34), (16, 0x1234)])
+
+    def test_thumb_cbz_target_discards_state(self):
+        # cbz r2, L ; movw r0,#0xa0 ; movt r0,#0xb016 ; L: str r1,[r0] ; bx lr
+        code = bytes.fromhex('1ab1') + bytes.fromhex('40f2a000') + bytes.fromhex('cbf21600') + bytes.fromhex('0160') + bytes.fromhex('7047')
+        self.assertEqual(mr.scan(code, 0, [(0, len(code))], thumb=True), [])
 
     def test_call_argument_recorded(self):
         # mov r0,#4 ; movw r1,#4 ; movt r1,#0xb01c ; bl +0x100

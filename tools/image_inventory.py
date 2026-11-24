@@ -111,7 +111,14 @@ def parse_gpt(f, total, allow_truncated=False):
                           offset=s * SECTOR, size=(l - s + 1) * SECTOR, attributes=attr))
     # Overlap is checked across every declared extent, including partitions cut off by truncation.
     _overlap(parts + [dict(offset=b['start_lba'] * SECTOR, size=b['sectors'] * SECTOR) for b in beyond])
+    array = (count * esize + SECTOR - 1) // SECTOR
+    metadata = [dict(offset=SECTOR, size=SECTOR), dict(offset=ent_lba * SECTOR, size=array * SECTOR)]
+    if backup < sectors:
+        metadata.append(dict(offset=backup * SECTOR, size=SECTOR))
+        if last + 1 + array <= backup:  # backup entry array conventionally sits just below the backup header
+            metadata.append(dict(offset=(backup - array) * SECTOR, size=array * SECTOR))
     return dict(scheme='gpt', revision=hex(rev), disk_guid=disk_guid, first_usable_lba=first,
+                metadata_extents=metadata,
                 last_usable_lba=last, entry_array_lba=ent_lba, backup_lba=backup,
                 backup_header_valid=backup_ok, truncated_image=truncated,
                 partitions_beyond_image=beyond, partitions=parts)
@@ -338,7 +345,7 @@ def inventory(image, summary_only=(), expected_sha256=None, include=(), allow_tr
         parts = table['partitions']
         result = dict(format_version=1, tool='image_inventory.py', size=total, sha256=digest, sector_size=SECTOR,
                       partition_table=table, partitions=[])
-        reserved = parts + [dict(offset=b['start_lba'] * SECTOR, size=b['in_image_bytes'])
+        reserved = parts + table.get('metadata_extents', []) + [dict(offset=b['start_lba'] * SECTOR, size=b['in_image_bytes'])
                             for b in table.get('partitions_beyond_image', []) if b.get('in_image_bytes')]
         result['raw_regions'] = raw_regions(f, total, reserved)
         for p in parts:
