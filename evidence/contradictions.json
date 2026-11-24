@@ -108,5 +108,28 @@
     ],
     "status": "Unresolved. Possibilities: the early loader applies uEnv.txt bootargs, U-Boot runs from a different stored environment, or alpha 0.1 did not boot as packaged.",
     "next_validation": "Prediction P-UENV on the V3 capture: presence of init=/init (only in uEnv.txt) in /proc/cmdline."
+  },
+  {
+    "id": "C-STOCKLIKE",
+    "issue": "Earlier reports call Koriki 1.0.3.1 a \"stock-like kernel\" and GarlicOS a \"closed stock-derived binary\". Stock kernels are flower@flower-B85M-D2V builds with Linaro GCC 4.7.3 and a different configuration (umonitor/xHCI present, EHCI/Bluetooth/fbcon absent); Koriki kernels are ctalon@endymion GCC 4.9.4 builds that share 119 vendor-only functions with stock but are not the stock build. The GarlicOS kernel is a separate blackseraph build from essentially the stock tree with the stock toolchain.",
+    "findings": [
+      "FW-016",
+      "FW-017",
+      "FW-011"
+    ],
+    "status": "Resolved in part: \"stock-like\" holds for vendor BSP code, not for build, configuration or USB stack. Test-plan wording should say \"vendor-BSP-derived\".",
+    "next_validation": "None needed statically; a runtime capture should record which kernel build actually booted (uname -v)."
+  },
+  {
+    "id": "C-DDR-WIDTH",
+    "issue": "The Actions 2015 Form 20-F lists ATM7039S with 32-bit DDR (ID-001), but every stock RG35XX loader configures bus_width_selector=1, printed as x16, with 256 MiB and one chip select, and sets DXGCR bit 0 only on byte lanes 2 and 3 in some paths. The pinned U-Boot source falls back to 496 MiB when the AFI size is invalid (MEM-003).",
+    "findings": [
+      "ID-001",
+      "MEM-005",
+      "DDR-001",
+      "MEM-003"
+    ],
+    "status": "Unresolved. Most likely the SoC supports 32-bit DRAM while this board populates a 16-bit interface, but that is board inference, not evidence. Whether lanes 2/3 are disabled at run time depends on which conditional path executes.",
+    "next_validation": "Board photograph of the DRAM package(s) and part number; or a read-only serial boot log showing the \"DRAM init ... x%dbus ... Ok:DCU_CFG\" lines. No register access."
   }
 ]

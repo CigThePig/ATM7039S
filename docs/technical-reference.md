@@ -267,3 +267,15 @@ The [AFI chapter](afi-handoff.md) reconstructs a 16-byte producer/consumer inter
 [Ten selected clock/reset fields](../comparisons/cmu-field-study.md) now have explicit S500 manual/source evidence. Related reset/access metadata is separate from unknown target values. The manual/upstream UART divisor discrepancy remains an explicit contradiction. [Graphics ABI work](../reports/graphics-abi.md) connects a released 3.10.37 module to versioned library candidates and maps the source bridge envelope without claiming a complete open driver.
 
 [Historical build attempts](../reports/build-reproduction.md) preserve real compiler/DTC failures and exact inputs. No newly built image was booted and no hardware finding was added. See the [engineering report](../reports/offline-continuation.md) for scope and remaining priorities.
+
+## Stock firmware continuation
+
+Anbernic's own firmware is now part of the evidence base ([dossier](../reports/anbernic-stock-reverse-engineering.md)). Section-level updates:
+
+- **§5 Memory / §22 Boot:** The loader container, stage load addresses and the DRAM configuration record (468 MHz, 256 MiB, x16, 1 CS) are documented, and the AFI size producer is traced (BOOT-009, MEM-005). DRAM bring-up uses two previously undocumented blocks at `0xb01c0000`/`0xb01c8000` whose offsets match the DesignWare uPCTL/PUBL layout (DDR-001; candidate blocks `firmware:DDR_UPCTL` and `firmware:DDR_PUBL` in the register model). The x16 setting is recorded against the manufacturer's 32-bit DDR claim (C-DDR-WIDTH).
+- **§7 Clocks:** The loader sets core and device PLLs to 600 MHz and pulses DDR/DMAC reset and clock gates, which the vendor clock tree names exactly.
+- **§10 GPIO / §25 Board:** From 230309, U-Boot reads GPIOC6 as a board-variant strap. Variant boards use alternative LED (GPIO 78–80) and earphone-detect (GPIO 81) pins (BOOT-011).
+- **§11 UART:** All loaders configure UART3/115200, so the expected kernel console is ttyS3 (UART-003).
+- **§15 USB:** Stock init leaves the port in host mode with the Actions umonitor stopped; ADB requires a device-mode script (USB-002).
+- **§17 GPU:** Stock disables the GPU and ships a DDK 1.12 Android module without userspace (GPU-011).
+- **§23 Firmware:** Stock kernels are flower/GCC 4.7.3 builds sharing 119 vendor-only functions with Koriki. Koriki's loader and U-Boot are stock 230309's. GarlicOS's kernel comes from the same tree (FW-016, FW-017, BOOT-010).

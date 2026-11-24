@@ -60,3 +60,11 @@ Solid edges represent inspected data dependencies, not a measured execution trac
 3. Recover DDR controller writes, training decisions and error paths around the initialization diagnostics. Strings alone do not establish their implementation.
 4. Trace release U-Boot memory-bank construction and FDT changes; reconcile its `0x05000000` header with the source configuration's `0x08000040` text base.
 5. Compare a separately acquired stock/Garlic image before extending these observations to those releases.
+
+## Stock firmware answers (MEM-005, BOOT-009, UART-003)
+
+1. **Producer of `0xb4070820`.** Loader routine `0xb4065ff8` copies the DRAM record from `bootloader.ini` (load `0xb4062400`): ini+0x1c clock 468 MHz → block+0, ini+0x20 capacity 256 MiB → block+2, and bus selector, CS, type, rcc, ODT and drive → block+4..+0xa. The size helper therefore yields 256 MiB from **configuration**. Capacity scan/test code exists and one path rewrites block+2/+3, so a detected value cannot be excluded statically.
+2. **Entry and relocation.** The loader's `PACK` directory declares `bootloader.bin` at `0xb4060000`, `bootloader.ini` at `0xb4062400` and `app.bin` at `0x00001000` (BOOT-009). This is the image's own declaration, which strengthens the local address hypothesis above; it is still not an MMU/physical map.
+3. **DDR controller writes.** Located (DDR-001); see the dossier's register sequence.
+4. **UART fields.** ini+0x0e/0x0f/0x10 (index 3, pad 0, 115200) feed AFI `+0x06..+0x0b` (UART-003).
+5. **Stock comparison.** Done: Koriki v1.0's early window equals stock 230309; all stock loader code is identical across releases.

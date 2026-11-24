@@ -1,0 +1,528 @@
+{
+ "format_version": 1,
+ "tool": "actions_loader.py",
+ "region": "448 sectors from disk offset 0x200200 (the extent written by the stock DMENU.BIN bootloader updater: dd seek=4097 count=448)",
+ "loaders": {
+  "stock-20231014": {
+   "format_version": 1,
+   "tool": "actions_loader.py",
+   "size": 229376,
+   "sha256": "ec9e4ec812020fef9e5ecf8354811ecf43abc40e9cf991f3bb31d14deb4bf6c3",
+   "trailers": [
+    {
+     "offset": 500,
+     "stored_checksum": "0x5ffe8737",
+     "valid": true,
+     "earliest_valid_start": 0,
+     "first_nonzero_sector_in_window": 0,
+     "latest_valid_start": 0,
+     "block_end": 512
+    },
+    {
+     "offset": 8180,
+     "stored_checksum": "0x981ee2e7",
+     "valid": true,
+     "earliest_valid_start": 1024,
+     "first_nonzero_sector_in_window": 7680,
+     "latest_valid_start": 7680,
+     "block_end": 8192
+    },
+    {
+     "offset": 211956,
+     "stored_checksum": "0x328bcdc2",
+     "valid": true,
+     "earliest_valid_start": 19456,
+     "first_nonzero_sector_in_window": 21504,
+     "latest_valid_start": 21504,
+     "block_end": 211968
+    },
+    {
+     "offset": 229364,
+     "stored_checksum": "0x85e9c1df",
+     "valid": true,
+     "earliest_valid_start": 48128,
+     "first_nonzero_sector_in_window": 102400,
+     "latest_valid_start": 102400,
+     "block_end": 229376
+    }
+   ],
+   "pack": {
+    "offset": 8192,
+    "count": 3,
+    "members": [
+     {
+      "name": "bootloader.bin",
+      "size_sectors": 414,
+      "offset_sectors": 0,
+      "load_address": "0xb4060000",
+      "byte_range": [
+       0,
+       211968
+      ],
+      "within_region": true,
+      "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27"
+     },
+     {
+      "name": "bootloader.ini",
+      "size_sectors": 20,
+      "offset_sectors": 18,
+      "load_address": "0xb4062400",
+      "byte_range": [
+       9216,
+       19456
+      ],
+      "within_region": true,
+      "sha256": "dae9f276b4934e2152b766901857f012ecf2ff7d399ea7f6da684d12bcb32f67"
+     },
+     {
+      "name": "app.bin",
+      "size_sectors": 200,
+      "offset_sectors": 200,
+      "load_address": "0x00001000",
+      "byte_range": [
+       102400,
+       204800
+      ],
+      "within_region": true,
+      "sha256": "5f0a8b0309afe3babc8a5ebf3271d08bd8ef73a0c0e2728af5c16f3eff105cf1"
+     }
+    ]
+   },
+   "dram_config": {
+    "ini_offset": 9216,
+    "version": "1.1",
+    "ddr_clock_mhz": 468,
+    "capacity_mib": 256,
+    "bus_width_selector": 1,
+    "chip_selects": 1,
+    "type": 16,
+    "rcc": 72,
+    "rdodt": 2,
+    "wrodt": 2,
+    "drv": 9,
+    "bus_width_bits_as_printed": 16,
+    "uart_index": 3,
+    "uart_pad": 0,
+    "uart_baudrate": 115200
+   },
+   "last_nonzero_sector_end": 229376
+  },
+  "stock-230309": {
+   "format_version": 1,
+   "tool": "actions_loader.py",
+   "size": 229376,
+   "sha256": "a3a56aca752559c0690c259420de006c6def815bfae8ddcdc38fd840f3ad67a1",
+   "trailers": [
+    {
+     "offset": 500,
+     "stored_checksum": "0x5ffe8737",
+     "valid": true,
+     "earliest_valid_start": 0,
+     "first_nonzero_sector_in_window": 0,
+     "latest_valid_start": 0,
+     "block_end": 512
+    },
+    {
+     "offset": 8180,
+     "stored_checksum": "0x981ee2e7",
+     "valid": true,
+     "earliest_valid_start": 1024,
+     "first_nonzero_sector_in_window": 7680,
+     "latest_valid_start": 7680,
+     "block_end": 8192
+    },
+    {
+     "offset": 211956,
+     "stored_checksum": "0x328bcdc2",
+     "valid": true,
+     "earliest_valid_start": 19456,
+     "first_nonzero_sector_in_window": 21504,
+     "latest_valid_start": 21504,
+     "block_end": 211968
+    },
+    {
+     "offset": 229364,
+     "stored_checksum": "0x85e9c1df",
+     "valid": true,
+     "earliest_valid_start": 48128,
+     "first_nonzero_sector_in_window": 102400,
+     "latest_valid_start": 102400,
+     "block_end": 229376
+    }
+   ],
+   "pack": {
+    "offset": 8192,
+    "count": 3,
+    "members": [
+     {
+      "name": "bootloader.bin",
+      "size_sectors": 414,
+      "offset_sectors": 0,
+      "load_address": "0xb4060000",
+      "byte_range": [
+       0,
+       211968
+      ],
+      "within_region": true,
+      "sha256": "52dcfad962ddf7c8ca35900e6f4b057fb8a2fa9842f2c23258837a7a0f6441ba"
+     },
+     {
+      "name": "bootloader.ini",
+      "size_sectors": 20,
+      "offset_sectors": 18,
+      "load_address": "0xb4062400",
+      "byte_range": [
+       9216,
+       19456
+      ],
+      "within_region": true,
+      "sha256": "b6afea4fa7198566869f182105199f5d165f97ffd83ac0d1e39d142c96eeb82c"
+     },
+     {
+      "name": "app.bin",
+      "size_sectors": 200,
+      "offset_sectors": 200,
+      "load_address": "0x00001000",
+      "byte_range": [
+       102400,
+       204800
+      ],
+      "within_region": true,
+      "sha256": "5f0a8b0309afe3babc8a5ebf3271d08bd8ef73a0c0e2728af5c16f3eff105cf1"
+     }
+    ]
+   },
+   "dram_config": {
+    "ini_offset": 9216,
+    "version": "1.1",
+    "ddr_clock_mhz": 468,
+    "capacity_mib": 256,
+    "bus_width_selector": 1,
+    "chip_selects": 1,
+    "type": 16,
+    "rcc": 72,
+    "rdodt": 1,
+    "wrodt": 1,
+    "drv": 12,
+    "bus_width_bits_as_printed": 16,
+    "uart_index": 3,
+    "uart_pad": 0,
+    "uart_baudrate": 115200
+   },
+   "last_nonzero_sector_end": 229376
+  },
+  "stock-221223": {
+   "format_version": 1,
+   "tool": "actions_loader.py",
+   "size": 229376,
+   "sha256": "bb59f0651f34baed066bad75e40f2ee9f7ab8dbe3e287e52a8428c9bcbf1b5ec",
+   "trailers": [
+    {
+     "offset": 500,
+     "stored_checksum": "0x5ffe8737",
+     "valid": true,
+     "earliest_valid_start": 0,
+     "first_nonzero_sector_in_window": 0,
+     "latest_valid_start": 0,
+     "block_end": 512
+    },
+    {
+     "offset": 8180,
+     "stored_checksum": "0x981ee2e7",
+     "valid": true,
+     "earliest_valid_start": 1024,
+     "first_nonzero_sector_in_window": 7680,
+     "latest_valid_start": 7680,
+     "block_end": 8192
+    },
+    {
+     "offset": 211956,
+     "stored_checksum": "0x328bcdc2",
+     "valid": true,
+     "earliest_valid_start": 19456,
+     "first_nonzero_sector_in_window": 21504,
+     "latest_valid_start": 21504,
+     "block_end": 211968
+    },
+    {
+     "offset": 229364,
+     "stored_checksum": "0x85e9c1df",
+     "valid": true,
+     "earliest_valid_start": 48128,
+     "first_nonzero_sector_in_window": 102400,
+     "latest_valid_start": 102400,
+     "block_end": 229376
+    }
+   ],
+   "pack": {
+    "offset": 8192,
+    "count": 3,
+    "members": [
+     {
+      "name": "bootloader.bin",
+      "size_sectors": 414,
+      "offset_sectors": 0,
+      "load_address": "0xb4060000",
+      "byte_range": [
+       0,
+       211968
+      ],
+      "within_region": true,
+      "sha256": "0e4a6304633784f5ad7a1d08130049ad9d784a04887a5681df122a5480f385e8"
+     },
+     {
+      "name": "bootloader.ini",
+      "size_sectors": 20,
+      "offset_sectors": 18,
+      "load_address": "0xb4062400",
+      "byte_range": [
+       9216,
+       19456
+      ],
+      "within_region": true,
+      "sha256": "15b65fabecde8e3d45eb211e640cd38de78a273b1d086edc08cdcaf20859a81c"
+     },
+     {
+      "name": "app.bin",
+      "size_sectors": 200,
+      "offset_sectors": 200,
+      "load_address": "0x00001000",
+      "byte_range": [
+       102400,
+       204800
+      ],
+      "within_region": true,
+      "sha256": "5f0a8b0309afe3babc8a5ebf3271d08bd8ef73a0c0e2728af5c16f3eff105cf1"
+     }
+    ]
+   },
+   "dram_config": {
+    "ini_offset": 9216,
+    "version": "1.1",
+    "ddr_clock_mhz": 468,
+    "capacity_mib": 256,
+    "bus_width_selector": 1,
+    "chip_selects": 1,
+    "type": 16,
+    "rcc": 72,
+    "rdodt": 1,
+    "wrodt": 1,
+    "drv": 12,
+    "bus_width_bits_as_printed": 16,
+    "uart_index": 3,
+    "uart_pad": 0,
+    "uart_baudrate": 115200
+   },
+   "last_nonzero_sector_end": 229376
+  },
+  "stock-221203": {
+   "format_version": 1,
+   "tool": "actions_loader.py",
+   "size": 229376,
+   "sha256": "c4630f0a4231f743f64f24df4fe169118fb268653c4da2f6af48fd22e095a406",
+   "trailers": [
+    {
+     "offset": 500,
+     "stored_checksum": "0x5ffe8737",
+     "valid": true,
+     "earliest_valid_start": 0,
+     "first_nonzero_sector_in_window": 0,
+     "latest_valid_start": 0,
+     "block_end": 512
+    },
+    {
+     "offset": 8180,
+     "stored_checksum": "0x981ee2e7",
+     "valid": true,
+     "earliest_valid_start": 1024,
+     "first_nonzero_sector_in_window": 7680,
+     "latest_valid_start": 7680,
+     "block_end": 8192
+    },
+    {
+     "offset": 211956,
+     "stored_checksum": "0x328bcdc2",
+     "valid": true,
+     "earliest_valid_start": 19456,
+     "first_nonzero_sector_in_window": 21504,
+     "latest_valid_start": 21504,
+     "block_end": 211968
+    },
+    {
+     "offset": 229364,
+     "stored_checksum": "0x85e9c1df",
+     "valid": true,
+     "earliest_valid_start": 48128,
+     "first_nonzero_sector_in_window": 102400,
+     "latest_valid_start": 102400,
+     "block_end": 229376
+    }
+   ],
+   "pack": {
+    "offset": 8192,
+    "count": 3,
+    "members": [
+     {
+      "name": "bootloader.bin",
+      "size_sectors": 414,
+      "offset_sectors": 0,
+      "load_address": "0xb4060000",
+      "byte_range": [
+       0,
+       211968
+      ],
+      "within_region": true,
+      "sha256": "7d2f32fbf645d6a6b683d42d280def38716ba93cf7237110d94ba17048a769dc"
+     },
+     {
+      "name": "bootloader.ini",
+      "size_sectors": 20,
+      "offset_sectors": 18,
+      "load_address": "0xb4062400",
+      "byte_range": [
+       9216,
+       19456
+      ],
+      "within_region": true,
+      "sha256": "e77aba041cd3a9ce580630271d88beefed70325527db17c4a87697c634be4779"
+     },
+     {
+      "name": "app.bin",
+      "size_sectors": 200,
+      "offset_sectors": 200,
+      "load_address": "0x00001000",
+      "byte_range": [
+       102400,
+       204800
+      ],
+      "within_region": true,
+      "sha256": "5f0a8b0309afe3babc8a5ebf3271d08bd8ef73a0c0e2728af5c16f3eff105cf1"
+     }
+    ]
+   },
+   "dram_config": {
+    "ini_offset": 9216,
+    "version": "1.1",
+    "ddr_clock_mhz": 468,
+    "capacity_mib": 256,
+    "bus_width_selector": 1,
+    "chip_selects": 1,
+    "type": 16,
+    "rcc": 72,
+    "rdodt": 1,
+    "wrodt": 1,
+    "drv": 12,
+    "bus_width_bits_as_printed": 16,
+    "uart_index": 3,
+    "uart_pad": 0,
+    "uart_baudrate": 115200
+   },
+   "last_nonzero_sector_end": 229376
+  },
+  "koriki-v1.0": {
+   "format_version": 1,
+   "tool": "actions_loader.py",
+   "size": 229376,
+   "sha256": "a3a56aca752559c0690c259420de006c6def815bfae8ddcdc38fd840f3ad67a1",
+   "trailers": [
+    {
+     "offset": 500,
+     "stored_checksum": "0x5ffe8737",
+     "valid": true,
+     "earliest_valid_start": 0,
+     "first_nonzero_sector_in_window": 0,
+     "latest_valid_start": 0,
+     "block_end": 512
+    },
+    {
+     "offset": 8180,
+     "stored_checksum": "0x981ee2e7",
+     "valid": true,
+     "earliest_valid_start": 1024,
+     "first_nonzero_sector_in_window": 7680,
+     "latest_valid_start": 7680,
+     "block_end": 8192
+    },
+    {
+     "offset": 211956,
+     "stored_checksum": "0x328bcdc2",
+     "valid": true,
+     "earliest_valid_start": 19456,
+     "first_nonzero_sector_in_window": 21504,
+     "latest_valid_start": 21504,
+     "block_end": 211968
+    },
+    {
+     "offset": 229364,
+     "stored_checksum": "0x85e9c1df",
+     "valid": true,
+     "earliest_valid_start": 48128,
+     "first_nonzero_sector_in_window": 102400,
+     "latest_valid_start": 102400,
+     "block_end": 229376
+    }
+   ],
+   "pack": {
+    "offset": 8192,
+    "count": 3,
+    "members": [
+     {
+      "name": "bootloader.bin",
+      "size_sectors": 414,
+      "offset_sectors": 0,
+      "load_address": "0xb4060000",
+      "byte_range": [
+       0,
+       211968
+      ],
+      "within_region": true,
+      "sha256": "52dcfad962ddf7c8ca35900e6f4b057fb8a2fa9842f2c23258837a7a0f6441ba"
+     },
+     {
+      "name": "bootloader.ini",
+      "size_sectors": 20,
+      "offset_sectors": 18,
+      "load_address": "0xb4062400",
+      "byte_range": [
+       9216,
+       19456
+      ],
+      "within_region": true,
+      "sha256": "b6afea4fa7198566869f182105199f5d165f97ffd83ac0d1e39d142c96eeb82c"
+     },
+     {
+      "name": "app.bin",
+      "size_sectors": 200,
+      "offset_sectors": 200,
+      "load_address": "0x00001000",
+      "byte_range": [
+       102400,
+       204800
+      ],
+      "within_region": true,
+      "sha256": "5f0a8b0309afe3babc8a5ebf3271d08bd8ef73a0c0e2728af5c16f3eff105cf1"
+     }
+    ]
+   },
+   "dram_config": {
+    "ini_offset": 9216,
+    "version": "1.1",
+    "ddr_clock_mhz": 468,
+    "capacity_mib": 256,
+    "bus_width_selector": 1,
+    "chip_selects": 1,
+    "type": 16,
+    "rcc": 72,
+    "rdodt": 1,
+    "wrodt": 1,
+    "drv": 12,
+    "bus_width_bits_as_printed": 16,
+    "uart_index": 3,
+    "uart_pad": 0,
+    "uart_baudrate": 115200
+   },
+   "last_nonzero_sector_end": 229376,
+   "note": "first 448 sectors of the committed 1,048,064-byte early-region.bin window (sha256 904f92f6...); the window is byte-identical to stock 230309 bytes 0x200200..0x300000"
+  }
+ }
+}

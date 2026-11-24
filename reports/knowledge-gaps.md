@@ -27,3 +27,7 @@ No whole-image firmware extraction, Ghidra decompilation, full source cross buil
 ## Changes after the first edition
 
 One complete Koriki v1.0 image has now been acquired; the lack of **all** complete-image evidence is no longer a gap. Stock/Garlic release comparisons remain open. A release-specific AFI writer and size conversion have been found, narrowing but not resolving the DDR/early-memory gap. Ten CMU field comparisons and a new divisor contradiction are documented. Actual kernel/U-Boot builds failed at recorded host/toolchain compatibility blockers; source/release equivalence remains open. See the [continuation report](offline-continuation.md) rather than interpreting the first-edition roadmap as current completion status.
+
+## Changes after the stock-firmware acquisition
+
+Gap 5 ("exact shipped software") is closed for four stock releases: hash-pinned images, inventories and component lineage (FW-014..017). Gap 2 (early boot) is narrowed. The loader container, its checksum, stage load addresses, the DRAM configuration record and a register-level DRAM bring-up outline (uPCTL/PUBL-like blocks at `0xb01c0000`/`0xb01c8000`) are now documented (BOOT-009, MEM-005, DDR-001). Still missing: Boot ROM behaviour, computed DRAM timings, the kernel/ramdisk/DTB loader before U-Boot's `bootm`, the per-release 5 KiB loader area, the meaning of the GPIOC6 "s500/a7039" strap at board level, and any authenticated manufacturer checksum. Stock contributes no usable GPU stack (GPU-011). See [the stock dossier](anbernic-stock-reverse-engineering.md).

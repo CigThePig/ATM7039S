@@ -1,0 +1,3336 @@
+{
+ "format_version": 1,
+ "description": "Register observations from static analysis of the Anbernic stock loader and U-Boot; applied to registers/canonical/hardware.json by tools/apply_firmware_registers.py and tools/build_dataset.py. Nothing here is hardware-validated.",
+ "new_blocks": [
+  {
+   "id": "firmware:DDR_UPCTL",
+   "base": 2954625024,
+   "size": null,
+   "scope": "stock-loader-binary",
+   "status": "candidate-only",
+   "interrupts_raw": [],
+   "dependencies": "Bring-up order observed in the stock loader: CMU_DDRPLL enable cleared, CMU_DEVCLKEN0 DDRCH0/DMAC gated, CMU_DEVRST0 DDR/DMAC reset pulsed, clocks re-enabled, DDR PLL reprogrammed, then this block. Never write from a running OS.",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 29040,
+     "offset_end": 29044,
+     "section": "DRAM init function 0xb40673f4 (Ghidra extent 6752 bytes) and status helpers reference this base",
+     "curated": "firmware-observations"
+    },
+    {
+     "source": "u-boot-mainline",
+     "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+     "line_start": 9,
+     "section": "public struct used for offset comparison",
+     "curated": "firmware-observations"
+    }
+   ],
+   "registers": [
+    {
+     "id": "reg:DDR_UPCTL_SCFG",
+     "name": "DDR_UPCTL_SCFG",
+     "offset": 0,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35264,
+       "offset_end": 35268,
+       "section": "1 loader operation(s): write=0x700",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 10,
+       "line_end": 10,
+       "section": "rk3288_ddr_pctl.scfg (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_SCTL",
+     "name": "DDR_UPCTL_SCTL",
+     "offset": 4,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 29116,
+       "offset_end": 29120,
+       "section": "2 loader operation(s): write, write=0x4",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 11,
+       "line_end": 11,
+       "section": "rk3288_ddr_pctl.sctl (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_STAT",
+     "name": "DDR_UPCTL_STAT",
+     "offset": 8,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 29052,
+       "offset_end": 29056,
+       "section": "7 loader operation(s): read",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 12,
+       "line_end": 12,
+       "section": "rk3288_ddr_pctl.stat (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_MCMD",
+     "name": "DDR_UPCTL_MCMD",
+     "offset": 64,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34620,
+       "offset_end": 34624,
+       "section": "10 loader operation(s): read, write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 15,
+       "line_end": 15,
+       "section": "rk3288_ddr_pctl.mcmd (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_POWCTL",
+     "name": "DDR_UPCTL_POWCTL",
+     "offset": 68,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33212,
+       "offset_end": 33216,
+       "section": "1 loader operation(s): write=0x1",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 16,
+       "line_end": 16,
+       "section": "rk3288_ddr_pctl.powctl (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_POWSTAT",
+     "name": "DDR_UPCTL_POWSTAT",
+     "offset": 72,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33232,
+       "offset_end": 33236,
+       "section": "1 loader operation(s): read",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 17,
+       "line_end": 17,
+       "section": "rk3288_ddr_pctl.powstat (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_CMDTSTAT",
+     "name": "DDR_UPCTL_CMDTSTAT",
+     "offset": 76,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35532,
+       "offset_end": 35536,
+       "section": "1 loader operation(s): read",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 18,
+       "line_end": 18,
+       "section": "rk3288_ddr_pctl.cmdtstat (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TSTATEN",
+     "name": "DDR_UPCTL_TSTATEN",
+     "offset": 80,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35524,
+       "offset_end": 35528,
+       "section": "1 loader operation(s): write=0x1",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 19,
+       "line_end": 19,
+       "section": "rk3288_ddr_pctl.tstaten (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_MCFG1",
+     "name": "DDR_UPCTL_MCFG1",
+     "offset": 124,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33304,
+       "offset_end": 33308,
+       "section": "2 loader operation(s): set-bits, write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 25,
+       "line_end": 25,
+       "section": "rk3288_ddr_pctl.mcfg1 (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_MCFG",
+     "name": "DDR_UPCTL_MCFG",
+     "offset": 128,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33264,
+       "offset_end": 33268,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 26,
+       "line_end": 26,
+       "section": "rk3288_ddr_pctl.mcfg (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_PPCFG",
+     "name": "DDR_UPCTL_PPCFG",
+     "offset": 132,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35308,
+       "offset_end": 35312,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 27,
+       "line_end": 27,
+       "section": "rk3288_ddr_pctl.ppcfg (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TOGCNT1U",
+     "name": "DDR_UPCTL_TOGCNT1U",
+     "offset": 192,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33100,
+       "offset_end": 33104,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 40,
+       "line_end": 40,
+       "section": "rk3288_ddr_pctl.togcnt1u (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TINIT",
+     "name": "DDR_UPCTL_TINIT",
+     "offset": 196,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33148,
+       "offset_end": 33152,
+       "section": "1 loader operation(s): write=0xc8",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 41,
+       "line_end": 41,
+       "section": "rk3288_ddr_pctl.tinit (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TRSTH",
+     "name": "DDR_UPCTL_TRSTH",
+     "offset": 200,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33160,
+       "offset_end": 33164,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 42,
+       "line_end": 42,
+       "section": "rk3288_ddr_pctl.trsth (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TOGCNT100N",
+     "name": "DDR_UPCTL_TOGCNT100N",
+     "offset": 204,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33136,
+       "offset_end": 33140,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 43,
+       "line_end": 43,
+       "section": "rk3288_ddr_pctl.togcnt100n (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TREFI",
+     "name": "DDR_UPCTL_TREFI",
+     "offset": 208,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34956,
+       "offset_end": 34960,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 44,
+       "line_end": 44,
+       "section": "rk3288_ddr_pctl.trefi (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TMRD",
+     "name": "DDR_UPCTL_TMRD",
+     "offset": 212,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34784,
+       "offset_end": 34788,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 45,
+       "line_end": 45,
+       "section": "rk3288_ddr_pctl.tmrd (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TRFC",
+     "name": "DDR_UPCTL_TRFC",
+     "offset": 216,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34796,
+       "offset_end": 34800,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 46,
+       "line_end": 46,
+       "section": "rk3288_ddr_pctl.trfc (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TRP",
+     "name": "DDR_UPCTL_TRP",
+     "offset": 220,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34808,
+       "offset_end": 34812,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 47,
+       "line_end": 47,
+       "section": "rk3288_ddr_pctl.trp (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TRTW",
+     "name": "DDR_UPCTL_TRTW",
+     "offset": 224,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35004,
+       "offset_end": 35008,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 48,
+       "line_end": 48,
+       "section": "rk3288_ddr_pctl.trtw (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TAL",
+     "name": "DDR_UPCTL_TAL",
+     "offset": 228,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34820,
+       "offset_end": 34824,
+       "section": "1 loader operation(s): write=0x0",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 49,
+       "line_end": 49,
+       "section": "rk3288_ddr_pctl.tal (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TCL",
+     "name": "DDR_UPCTL_TCL",
+     "offset": 232,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34832,
+       "offset_end": 34836,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 50,
+       "line_end": 50,
+       "section": "rk3288_ddr_pctl.tcl (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TCWL",
+     "name": "DDR_UPCTL_TCWL",
+     "offset": 236,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34844,
+       "offset_end": 34848,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 51,
+       "line_end": 51,
+       "section": "rk3288_ddr_pctl.tcwl (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TRAS",
+     "name": "DDR_UPCTL_TRAS",
+     "offset": 240,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34856,
+       "offset_end": 34860,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 52,
+       "line_end": 52,
+       "section": "rk3288_ddr_pctl.tras (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TRC",
+     "name": "DDR_UPCTL_TRC",
+     "offset": 244,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34868,
+       "offset_end": 34872,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 53,
+       "line_end": 53,
+       "section": "rk3288_ddr_pctl.trc (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TRCD",
+     "name": "DDR_UPCTL_TRCD",
+     "offset": 248,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34880,
+       "offset_end": 34884,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 54,
+       "line_end": 54,
+       "section": "rk3288_ddr_pctl.trcd (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TRRD",
+     "name": "DDR_UPCTL_TRRD",
+     "offset": 252,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34892,
+       "offset_end": 34896,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 55,
+       "line_end": 55,
+       "section": "rk3288_ddr_pctl.trrd (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TRTP",
+     "name": "DDR_UPCTL_TRTP",
+     "offset": 256,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34904,
+       "offset_end": 34908,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 56,
+       "line_end": 56,
+       "section": "rk3288_ddr_pctl.trtp (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TWR",
+     "name": "DDR_UPCTL_TWR",
+     "offset": 260,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34916,
+       "offset_end": 34920,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 57,
+       "line_end": 57,
+       "section": "rk3288_ddr_pctl.twr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TWTR",
+     "name": "DDR_UPCTL_TWTR",
+     "offset": 264,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34928,
+       "offset_end": 34932,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 58,
+       "line_end": 58,
+       "section": "rk3288_ddr_pctl.twtr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TEXSR",
+     "name": "DDR_UPCTL_TEXSR",
+     "offset": 268,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34940,
+       "offset_end": 34944,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 59,
+       "line_end": 59,
+       "section": "rk3288_ddr_pctl.texsr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TXP",
+     "name": "DDR_UPCTL_TXP",
+     "offset": 272,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34980,
+       "offset_end": 34984,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 60,
+       "line_end": 60,
+       "section": "rk3288_ddr_pctl.txp (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TXPDLL",
+     "name": "DDR_UPCTL_TXPDLL",
+     "offset": 276,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35112,
+       "offset_end": 35116,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 61,
+       "line_end": 61,
+       "section": "rk3288_ddr_pctl.txpdll (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TZQCS",
+     "name": "DDR_UPCTL_TZQCS",
+     "offset": 280,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35088,
+       "offset_end": 35092,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 62,
+       "line_end": 62,
+       "section": "rk3288_ddr_pctl.tzqcs (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TZQCSI",
+     "name": "DDR_UPCTL_TZQCSI",
+     "offset": 284,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35124,
+       "offset_end": 35128,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 63,
+       "line_end": 63,
+       "section": "rk3288_ddr_pctl.tzqcsi (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TDQS",
+     "name": "DDR_UPCTL_TDQS",
+     "offset": 288,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34992,
+       "offset_end": 34996,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 64,
+       "line_end": 64,
+       "section": "rk3288_ddr_pctl.tdqs (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TCKSRE",
+     "name": "DDR_UPCTL_TCKSRE",
+     "offset": 292,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35016,
+       "offset_end": 35020,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 65,
+       "line_end": 65,
+       "section": "rk3288_ddr_pctl.tcksre (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TCKSRX",
+     "name": "DDR_UPCTL_TCKSRX",
+     "offset": 296,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35028,
+       "offset_end": 35032,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 66,
+       "line_end": 66,
+       "section": "rk3288_ddr_pctl.tcksrx (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TCKE",
+     "name": "DDR_UPCTL_TCKE",
+     "offset": 300,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35052,
+       "offset_end": 35056,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 67,
+       "line_end": 67,
+       "section": "rk3288_ddr_pctl.tcke (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TMOD",
+     "name": "DDR_UPCTL_TMOD",
+     "offset": 304,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35040,
+       "offset_end": 35044,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 68,
+       "line_end": 68,
+       "section": "rk3288_ddr_pctl.tmod (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TRSTL",
+     "name": "DDR_UPCTL_TRSTL",
+     "offset": 308,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35076,
+       "offset_end": 35080,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 69,
+       "line_end": 69,
+       "section": "rk3288_ddr_pctl.trstl (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TZQCL",
+     "name": "DDR_UPCTL_TZQCL",
+     "offset": 312,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35100,
+       "offset_end": 35104,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 70,
+       "line_end": 70,
+       "section": "rk3288_ddr_pctl.tzqcl (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TMRR",
+     "name": "DDR_UPCTL_TMRR",
+     "offset": 316,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35064,
+       "offset_end": 35068,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 71,
+       "line_end": 71,
+       "section": "rk3288_ddr_pctl.tmrr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TCKESR",
+     "name": "DDR_UPCTL_TCKESR",
+     "offset": 320,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35136,
+       "offset_end": 35140,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 72,
+       "line_end": 72,
+       "section": "rk3288_ddr_pctl.tckesr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_TDPD",
+     "name": "DDR_UPCTL_TDPD",
+     "offset": 324,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35148,
+       "offset_end": 35152,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 73,
+       "line_end": 73,
+       "section": "rk3288_ddr_pctl.tdpd (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_RESERVED5_0",
+     "name": "DDR_UPCTL_RESERVED5_0",
+     "offset": 328,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34968,
+       "offset_end": 34972,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 74,
+       "line_end": 74,
+       "section": "rk3288_ddr_pctl.reserved5[0] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_ECCCFG",
+     "name": "DDR_UPCTL_ECCCFG",
+     "offset": 384,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35392,
+       "offset_end": 35396,
+       "section": "1 loader operation(s): write=0x0",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 75,
+       "line_end": 75,
+       "section": "rk3288_ddr_pctl.ecccfg (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFITCTRLDELAY",
+     "name": "DDR_UPCTL_DFITCTRLDELAY",
+     "offset": 576,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35452,
+       "offset_end": 35456,
+       "section": "1 loader operation(s): write=0x2",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 96,
+       "line_end": 96,
+       "section": "rk3288_ddr_pctl.dfitctrldelay (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFIODTCFG",
+     "name": "DDR_UPCTL_DFIODTCFG",
+     "offset": 580,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35488,
+       "offset_end": 35492,
+       "section": "2 loader operation(s): set-bits/0x202, write=0x808",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 97,
+       "line_end": 97,
+       "section": "rk3288_ddr_pctl.dfiodtcfg (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFIODTRANKMAP",
+     "name": "DDR_UPCTL_DFIODTRANKMAP",
+     "offset": 588,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35332,
+       "offset_end": 35336,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 99,
+       "line_end": 99,
+       "section": "rk3288_ddr_pctl.dfiodtrankmap (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFITPHYWRDATA",
+     "name": "DDR_UPCTL_DFITPHYWRDATA",
+     "offset": 592,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35288,
+       "offset_end": 35292,
+       "section": "1 loader operation(s): write=0x0",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 100,
+       "line_end": 100,
+       "section": "rk3288_ddr_pctl.dfitphywrdata (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFITPHYWRLAT",
+     "name": "DDR_UPCTL_DFITPHYWRLAT",
+     "offset": 596,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35404,
+       "offset_end": 35408,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 101,
+       "line_end": 101,
+       "section": "rk3288_ddr_pctl.dfitphywrlat (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFITRDDATAEN",
+     "name": "DDR_UPCTL_DFITRDDATAEN",
+     "offset": 608,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35416,
+       "offset_end": 35420,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 103,
+       "line_end": 103,
+       "section": "rk3288_ddr_pctl.dfitrddataen (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFITPHYRDLAT",
+     "name": "DDR_UPCTL_DFITPHYRDLAT",
+     "offset": 612,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35276,
+       "offset_end": 35280,
+       "section": "1 loader operation(s): write=0xa",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 104,
+       "line_end": 104,
+       "section": "rk3288_ddr_pctl.dfitphyrdlat (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFITPHYUPDTYPE0",
+     "name": "DDR_UPCTL_DFITPHYUPDTYPE0",
+     "offset": 624,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35464,
+       "offset_end": 35468,
+       "section": "1 loader operation(s): write=0x1",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 106,
+       "line_end": 106,
+       "section": "rk3288_ddr_pctl.dfitphyupdtype0 (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFITCTRLUPDMIN",
+     "name": "DDR_UPCTL_DFITCTRLUPDMIN",
+     "offset": 640,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33052,
+       "offset_end": 33056,
+       "section": "1 loader operation(s): write=0x4",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 110,
+       "line_end": 110,
+       "section": "rk3288_ddr_pctl.dfitctrlupdmin (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFITCTRLUPDMAX",
+     "name": "DDR_UPCTL_DFITCTRLUPDMAX",
+     "offset": 644,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33064,
+       "offset_end": 33068,
+       "section": "1 loader operation(s): write=0xa",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 111,
+       "line_end": 111,
+       "section": "rk3288_ddr_pctl.dfitctrlupdmax (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFITCTRLUPDDLY",
+     "name": "DDR_UPCTL_DFITCTRLUPDDLY",
+     "offset": 648,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33076,
+       "offset_end": 33080,
+       "section": "1 loader operation(s): write=0x8",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 112,
+       "line_end": 112,
+       "section": "rk3288_ddr_pctl.dfitctrlupddly (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFISTSTAT0",
+     "name": "DDR_UPCTL_DFISTSTAT0",
+     "offset": 704,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34764,
+       "offset_end": 34768,
+       "section": "1 loader operation(s): read",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 123,
+       "line_end": 123,
+       "section": "rk3288_ddr_pctl.dfiststat0 (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFISTCFG0",
+     "name": "DDR_UPCTL_DFISTCFG0",
+     "offset": 708,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35344,
+       "offset_end": 35348,
+       "section": "1 loader operation(s): write=0x7",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 124,
+       "line_end": 124,
+       "section": "rk3288_ddr_pctl.dfistcfg0 (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFISTCFG1",
+     "name": "DDR_UPCTL_DFISTCFG1",
+     "offset": 712,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35356,
+       "offset_end": 35360,
+       "section": "1 loader operation(s): write=0x3",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 125,
+       "line_end": 125,
+       "section": "rk3288_ddr_pctl.dfistcfg1 (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFITDRAMCLKEN",
+     "name": "DDR_UPCTL_DFITDRAMCLKEN",
+     "offset": 720,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35440,
+       "offset_end": 35444,
+       "section": "1 loader operation(s): write=0x2",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 127,
+       "line_end": 127,
+       "section": "rk3288_ddr_pctl.dfitdramclken (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFITDRAMCLKDIS",
+     "name": "DDR_UPCTL_DFITDRAMCLKDIS",
+     "offset": 724,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35428,
+       "offset_end": 35432,
+       "section": "1 loader operation(s): write=0x2",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 128,
+       "line_end": 128,
+       "section": "rk3288_ddr_pctl.dfitdramclkdis (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFISTCFG2",
+     "name": "DDR_UPCTL_DFISTCFG2",
+     "offset": 728,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35368,
+       "offset_end": 35372,
+       "section": "1 loader operation(s): write=0x3",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 129,
+       "line_end": 129,
+       "section": "rk3288_ddr_pctl.dfistcfg2 (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_UPCTL_DFILPCFG0",
+     "name": "DDR_UPCTL_DFILPCFG0",
+     "offset": 752,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35380,
+       "offset_end": 35384,
+       "section": "1 loader operation(s): write=0x70101",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 133,
+       "line_end": 133,
+       "section": "rk3288_ddr_pctl.dfilpcfg0 (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    }
+   ],
+   "notes": "Block absent from the ATM7039-labelled header and all public RG35XX device trees. Base, offsets and operation order come from static analysis of the Anbernic stock loader; 128 of 129 accesses across both DRAM blocks match the public DesignWare uPCTL layout, which supports but does not prove that IP identity. Field meanings, widths and reset values are unknown on ATM7039S."
+  },
+  {
+   "id": "firmware:DDR_PUBL",
+   "base": 2954657792,
+   "size": null,
+   "scope": "stock-loader-binary",
+   "status": "candidate-only",
+   "interrupts_raw": [],
+   "dependencies": "Bring-up order observed in the stock loader: CMU_DDRPLL enable cleared, CMU_DEVCLKEN0 DDRCH0/DMAC gated, CMU_DEVRST0 DDR/DMAC reset pulsed, clocks re-enabled, DDR PLL reprogrammed, then this block. Never write from a running OS.",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 29040,
+     "offset_end": 29044,
+     "section": "DRAM init function 0xb40673f4 (Ghidra extent 6752 bytes) and status helpers reference this base",
+     "curated": "firmware-observations"
+    },
+    {
+     "source": "u-boot-mainline",
+     "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+     "line_start": 166,
+     "section": "public struct used for offset comparison",
+     "curated": "firmware-observations"
+    }
+   ],
+   "registers": [
+    {
+     "id": "reg:DDR_PUBL_PIR",
+     "name": "DDR_PUBL_PIR",
+     "offset": 4,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33024,
+       "offset_end": 33028,
+       "section": "4 loader operation(s): read, write, write=0x10000000, write=0x81",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 168,
+       "line_end": 168,
+       "section": "rk3288_ddr_publ.pir (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_PGCR",
+     "name": "DDR_PUBL_PGCR",
+     "offset": 8,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34520,
+       "offset_end": 34524,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 169,
+       "line_end": 169,
+       "section": "rk3288_ddr_publ.pgcr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_PGSR",
+     "name": "DDR_PUBL_PGSR",
+     "offset": 12,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34472,
+       "offset_end": 34476,
+       "section": "3 loader operation(s): read",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 170,
+       "line_end": 170,
+       "section": "rk3288_ddr_publ.pgsr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_ACDLLCR",
+     "name": "DDR_PUBL_ACDLLCR",
+     "offset": 20,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 32984,
+       "offset_end": 32988,
+       "section": "2 loader operation(s): write=0x0, write=0x40000000",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 172,
+       "line_end": 172,
+       "section": "rk3288_ddr_publ.acdllcr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_PTR_0",
+     "name": "DDR_PUBL_PTR_0",
+     "offset": 24,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33380,
+       "offset_end": 33384,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 173,
+       "line_end": 173,
+       "section": "rk3288_ddr_publ.ptr[0] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_PTR_1",
+     "name": "DDR_PUBL_PTR_1",
+     "offset": 28,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33392,
+       "offset_end": 33396,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 173,
+       "line_end": 173,
+       "section": "rk3288_ddr_publ.ptr[1] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_PTR_2",
+     "name": "DDR_PUBL_PTR_2",
+     "offset": 32,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33404,
+       "offset_end": 33408,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 173,
+       "line_end": 173,
+       "section": "rk3288_ddr_publ.ptr[2] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_ACIOCR",
+     "name": "DDR_PUBL_ACIOCR",
+     "offset": 36,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 29376,
+       "offset_end": 29380,
+       "section": "3 loader operation(s): write=0x1bfc3c18, write=0xbc03812, write=0xbc3f8f6",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 174,
+       "line_end": 174,
+       "section": "rk3288_ddr_publ.aciocr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DXCCR",
+     "name": "DDR_PUBL_DXCCR",
+     "offset": 40,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 29388,
+       "offset_end": 29392,
+       "section": "3 loader operation(s): write=0x800, write=0x80c, write=0x911",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 175,
+       "line_end": 175,
+       "section": "rk3288_ddr_publ.dxccr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DSGCR",
+     "name": "DDR_PUBL_DSGCR",
+     "offset": 44,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 29400,
+       "offset_end": 29404,
+       "section": "2 loader operation(s): write, write=0xc5fc0000",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 176,
+       "line_end": 176,
+       "section": "rk3288_ddr_publ.dsgcr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DCR",
+     "name": "DDR_PUBL_DCR",
+     "offset": 48,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33316,
+       "offset_end": 33320,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 177,
+       "line_end": 177,
+       "section": "rk3288_ddr_publ.dcr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DTPR_0",
+     "name": "DDR_PUBL_DTPR_0",
+     "offset": 52,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33416,
+       "offset_end": 33420,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 178,
+       "line_end": 178,
+       "section": "rk3288_ddr_publ.dtpr[0] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DTPR_1",
+     "name": "DDR_PUBL_DTPR_1",
+     "offset": 56,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33428,
+       "offset_end": 33432,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 178,
+       "line_end": 178,
+       "section": "rk3288_ddr_publ.dtpr[1] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DTPR_2",
+     "name": "DDR_PUBL_DTPR_2",
+     "offset": 60,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33440,
+       "offset_end": 33444,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 178,
+       "line_end": 178,
+       "section": "rk3288_ddr_publ.dtpr[2] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_MR_1",
+     "name": "DDR_PUBL_MR_1",
+     "offset": 68,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33356,
+       "offset_end": 33360,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 179,
+       "line_end": 179,
+       "section": "rk3288_ddr_publ.mr[1] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_MR_2",
+     "name": "DDR_PUBL_MR_2",
+     "offset": 72,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33368,
+       "offset_end": 33372,
+       "section": "1 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 179,
+       "line_end": 179,
+       "section": "rk3288_ddr_publ.mr[2] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_ODTCR",
+     "name": "DDR_PUBL_ODTCR",
+     "offset": 80,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33488,
+       "offset_end": 33492,
+       "section": "3 loader operation(s): set-bits/0x210000, write, write=0x21",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 180,
+       "line_end": 180,
+       "section": "rk3288_ddr_publ.odtcr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DTAR",
+     "name": "DDR_PUBL_DTAR",
+     "offset": 84,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33452,
+       "offset_end": 33456,
+       "section": "1 loader operation(s): write=0x20000000",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 181,
+       "line_end": 181,
+       "section": "rk3288_ddr_publ.dtar (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_ZQ0CR_1",
+     "name": "DDR_PUBL_ZQ0CR_1",
+     "offset": 388,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33556,
+       "offset_end": 33560,
+       "section": "2 loader operation(s): write",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 194,
+       "line_end": 194,
+       "section": "rk3288_ddr_publ.zq0cr[1] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_ZQ0SR_0",
+     "name": "DDR_PUBL_ZQ0SR_0",
+     "offset": 392,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34388,
+       "offset_end": 34392,
+       "section": "1 loader operation(s): read",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 195,
+       "line_end": 195,
+       "section": "rk3288_ddr_publ.zq0sr[0] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DATX8_0_DXGCR",
+     "name": "DDR_PUBL_DATX8_0_DXGCR",
+     "offset": 448,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34244,
+       "offset_end": 34248,
+       "section": "1 loader operation(s): clear-bits/0x786",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 157,
+       "line_end": 157,
+       "section": "rk3288_ddr_publ.datx8[0].dxgcr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DATX8_0_DXGSR_0",
+     "name": "DDR_PUBL_DATX8_0_DXGSR_0",
+     "offset": 452,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 36708,
+       "offset_end": 36712,
+       "section": "1 loader operation(s): read",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 157,
+       "line_end": 157,
+       "section": "rk3288_ddr_publ.datx8[0].dxgsr[0] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DATX8_1_DXGCR",
+     "name": "DDR_PUBL_DATX8_1_DXGCR",
+     "offset": 512,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34256,
+       "offset_end": 34260,
+       "section": "1 loader operation(s): clear-bits/0x786",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 157,
+       "line_end": 157,
+       "section": "rk3288_ddr_publ.datx8[1].dxgcr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DATX8_1_DXGSR_0",
+     "name": "DDR_PUBL_DATX8_1_DXGSR_0",
+     "offset": 516,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 36720,
+       "offset_end": 36724,
+       "section": "1 loader operation(s): read",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 157,
+       "line_end": 157,
+       "section": "rk3288_ddr_publ.datx8[1].dxgsr[0] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DATX8_2_DXGCR",
+     "name": "DDR_PUBL_DATX8_2_DXGCR",
+     "offset": 576,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34268,
+       "offset_end": 34272,
+       "section": "2 loader operation(s): clear-bits/0x786, set-bits/0x1",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 157,
+       "line_end": 157,
+       "section": "rk3288_ddr_publ.datx8[2].dxgcr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DATX8_2_DXGSR_0",
+     "name": "DDR_PUBL_DATX8_2_DXGSR_0",
+     "offset": 580,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 36732,
+       "offset_end": 36736,
+       "section": "1 loader operation(s): read",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 157,
+       "line_end": 157,
+       "section": "rk3288_ddr_publ.datx8[2].dxgsr[0] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DATX8_3_DXGCR",
+     "name": "DDR_PUBL_DATX8_3_DXGCR",
+     "offset": 640,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34280,
+       "offset_end": 34284,
+       "section": "3 loader operation(s): clear-bits/0x1, clear-bits/0x786, set-bits/0x1",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 157,
+       "line_end": 157,
+       "section": "rk3288_ddr_publ.datx8[3].dxgcr (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_DATX8_3_DXGSR_0",
+     "name": "DDR_PUBL_DATX8_3_DXGSR_0",
+     "offset": 644,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; name from public DesignWare layout (hypothesis)",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 36744,
+       "offset_end": 36748,
+       "section": "1 loader operation(s): read",
+       "curated": "firmware-observations"
+      },
+      {
+       "source": "u-boot-mainline",
+       "path": "arch/arm/include/asm/arch-rockchip/ddr_rk3288.h",
+       "line_start": 157,
+       "line_end": 157,
+       "section": "rk3288_ddr_publ.datx8[3].dxgsr[0] (public DesignWare layout used for naming only)",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DDR_PUBL_UNKNOWN_3FC",
+     "name": "DDR_PUBL_UNKNOWN_3FC",
+     "offset": 1020,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary; outside the public layout",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 34420,
+       "offset_end": 34424,
+       "section": "1 loader operation(s): write=0x1",
+       "curated": "firmware-observations"
+      }
+     ]
+    }
+   ],
+   "notes": "Block absent from the ATM7039-labelled header and all public RG35XX device trees. Base, offsets and operation order come from static analysis of the Anbernic stock loader; 128 of 129 accesses across both DRAM blocks match the public DesignWare PUBL layout, which supports but does not prove that IP identity. Field meanings, widths and reset values are unknown on ATM7039S."
+  }
+ ],
+ "extra_registers": [
+  {
+   "block_id": "candidate:DMM_BASE",
+   "registers": [
+    {
+     "id": "reg:DMM_UNNAMED_064",
+     "name": "DMM_UNNAMED_064",
+     "offset": 100,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 33172,
+       "offset_end": 33176,
+       "section": "loader DRAM-init operations: write=0x1, write=0x0; offset not defined in the ATM7039 header",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DMM_UNNAMED_068",
+     "name": "DMM_UNNAMED_068",
+     "offset": 104,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 29592,
+       "offset_end": 29596,
+       "section": "loader DRAM-init operations: write=0x3180; offset not defined in the ATM7039 header",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DMM_UNNAMED_080",
+     "name": "DMM_UNNAMED_080",
+     "offset": 128,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35868,
+       "offset_end": 35872,
+       "section": "loader DRAM-init operations: write; offset not defined in the ATM7039 header",
+       "curated": "firmware-observations"
+      }
+     ]
+    },
+    {
+     "id": "reg:DMM_UNNAMED_088",
+     "name": "DMM_UNNAMED_088",
+     "offset": 136,
+     "width": null,
+     "access": "unknown",
+     "reset": null,
+     "fields": [],
+     "confidence": "inferred",
+     "scope": "stock-loader-binary",
+     "hardware_validated": false,
+     "evidence": [
+      {
+       "source": "anbernic-stock-archive",
+       "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+       "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+       "offset_start": 35712,
+       "offset_end": 35716,
+       "section": "loader DRAM-init operations: write=0x1; offset not defined in the ATM7039 header",
+       "curated": "firmware-observations"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "register_evidence": [
+  {
+   "block_id": "candidate:CMU_BASE",
+   "register": "CMU_DDRPLL",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 32780,
+     "offset_end": 32784,
+     "section": "DRAM init clears bit 8 (clear-bits mask 0x100) before reset/clock handshake and later writes a computed value",
+     "curated": "firmware-observations"
+    },
+    {
+     "source": "vendor-kernel",
+     "path": "arch/arm/mach-owl/clocktree-atm7059.c",
+     "line_start": 151,
+     "line_end": 152,
+     "section": "pllbit_DDRPLLEN bit 8, DDRPLLFREQ bits 7:0",
+     "curated": "firmware-observations"
+    }
+   ]
+  },
+  {
+   "block_id": "candidate:CMU_BASE",
+   "register": "CMU_DEVCLKEN0",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 32792,
+     "offset_end": 32796,
+     "section": "DRAM init clears then sets mask 0xa (bits 3 and 1)",
+     "curated": "firmware-observations"
+    },
+    {
+     "source": "vendor-kernel",
+     "path": "arch/arm/mach-owl/clocktree-atm7059.c",
+     "line_start": 200,
+     "line_end": 202,
+     "section": "enablebit_MODULE_DDRCH0 bit 3, enablebit_MODULE_DMAC bit 1",
+     "curated": "firmware-observations"
+    }
+   ]
+  },
+  {
+   "block_id": "candidate:CMU_BASE",
+   "register": "CMU_DEVRST0",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 32804,
+     "offset_end": 32808,
+     "section": "DRAM init clears then sets mask 0x5 (bits 2 and 0)",
+     "curated": "firmware-observations"
+    },
+    {
+     "source": "vendor-kernel",
+     "path": "arch/arm/mach-owl/clocktree-atm7059.c",
+     "line_start": 255,
+     "line_end": 257,
+     "section": "resetbit_MODULE_DDR bit 2, resetbit_MODULE_DMAC bit 0",
+     "curated": "firmware-observations"
+    }
+   ]
+  },
+  {
+   "block_id": "candidate:DMM_BASE",
+   "register": "DMM_SCH_CTRL",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 29416,
+     "offset_end": 29420,
+     "section": "DRAM init reads/writes it and toggles bit 2 (clear/set mask 0x4) around controller start",
+     "curated": "firmware-observations"
+    }
+   ]
+  },
+  {
+   "block_id": "candidate:DMM_BASE",
+   "register": "DMM_TO_DE_CRITICAL_USB2",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 29604,
+     "offset_end": 29608,
+     "section": "DRAM init writes 0xf8010000",
+     "curated": "firmware-observations"
+    }
+   ]
+  },
+  {
+   "block_id": "candidate:DMM_BASE",
+   "register": "DMM_INTERLEAVE_FRAGMENT",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 35776,
+     "offset_end": 35780,
+     "section": "DRAM init writes 0x2",
+     "curated": "firmware-observations"
+    }
+   ]
+  },
+  {
+   "block_id": "candidate:GPIO_MFP_PWM_BASE",
+   "register": "MEM_MARGIN_CTRL1",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 29580,
+     "offset_end": 29584,
+     "section": "DRAM init read-modify-write: clear 0xffff, set 0x3ff",
+     "curated": "firmware-observations"
+    }
+   ]
+  },
+  {
+   "block_id": "candidate:GPIO_MFP_PWM_BASE",
+   "register": "GPIO_CDAT",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-platform.json#uboot:stock-20231014",
+     "sha256": "5b8d5b2c99bac43139e920bf3b202bed1d22814ae3ca1b4638856d14ca58003d",
+     "section": "Stock U-Boot (230309, 20231014) samples bit 6 (GPIO 70) once at boot as a board-variant strap: set -> \"-----s500\" and bootarg allenS500=1; clear -> \"-----a7039\". Payload VA 0x05025e5c / 0x05021898.",
+     "curated": "firmware-observations"
+    }
+   ]
+  },
+  {
+   "block_id": "candidate:CMU_BASE",
+   "register": "CMU_COREPLL",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 24332,
+     "offset_end": 24336,
+     "section": "early loader writes 0x332 (static operand; loader later prints \"pll: core %uMHz\")",
+     "curated": "firmware-observations"
+    },
+    {
+     "source": "vendor-kernel",
+     "path": "arch/arm/mach-owl/clocktree-atm7059.c",
+     "line_start": 147,
+     "line_end": 148,
+     "section": "COREPLLEN bit 9, COREPLLFREQ bits 7:0 in 12 MHz steps (lines 405-414); HOSC enable bit 8 at line 175",
+     "curated": "firmware-observations"
+    }
+   ]
+  },
+  {
+   "block_id": "candidate:CMU_BASE",
+   "register": "CMU_DEVPLL",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 24344,
+     "offset_end": 24348,
+     "section": "early loader writes 0x164; separate read-modify-write of bit 12 (mask 0x1000) at 0x5ee0/0x5f30",
+     "curated": "firmware-observations"
+    },
+    {
+     "source": "vendor-kernel",
+     "path": "arch/arm/mach-owl/clocktree-atm7059.c",
+     "line_start": 149,
+     "line_end": 150,
+     "section": "DEVPLLEN bit 8, DEVPLLFREQ bits 6:0 in 6 MHz steps; selbit_DEV_CLK bit 12 at line 110",
+     "curated": "firmware-observations"
+    }
+   ]
+  },
+  {
+   "block_id": "candidate:CMU_BASE",
+   "register": "CMU_BUSCLK",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 24300,
+     "offset_end": 24304,
+     "section": "early loader writes 0x1c710000, then read-modify-write clear 0x3 set 0x2 at 0x5f40",
+     "curated": "firmware-observations"
+    }
+   ]
+  },
+  {
+   "block_id": "candidate:CMU_BASE",
+   "register": "CMU_BUSCLK1",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 24320,
+     "offset_end": 24324,
+     "section": "early loader writes 0x2e004",
+     "curated": "firmware-observations"
+    }
+   ]
+  },
+  {
+   "block_id": "candidate:CMU_BASE",
+   "register": "CMU_SD0CLK",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 24200,
+     "offset_end": 24204,
+     "section": "early loader writes 0xc",
+     "curated": "firmware-observations"
+    }
+   ]
+  },
+  {
+   "block_id": "candidate:CMU_BASE",
+   "register": "CMU_SD2CLK",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 24216,
+     "offset_end": 24220,
+     "section": "early loader writes 0xc",
+     "curated": "firmware-observations"
+    }
+   ]
+  },
+  {
+   "block_id": "candidate:SPI0_BASE",
+   "register": "SPI0_CLKDIV",
+   "evidence": [
+    {
+     "source": "anbernic-stock-archive",
+     "artifact": "evidence/firmware/stock-loaders.json#stock-20231014:bootloader.bin",
+     "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+     "offset_start": 24180,
+     "offset_end": 24184,
+     "section": "early loader writes 0x1 (string \"spi0 clk=50mhz\")",
+     "curated": "firmware-observations"
+    }
+   ]
+  }
+ ]
+}

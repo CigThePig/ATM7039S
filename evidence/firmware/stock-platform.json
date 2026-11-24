@@ -1,0 +1,507 @@
+{
+ "format_version": 1,
+ "uboot": {
+  "stock-221203": {
+   "sha256": "d0fa625a9d087886dd85f5c90006b8b554ae7a8c533e03d35904504f5c255117",
+   "size": 725807,
+   "name": "U-Boot 2015.04 for owl board",
+   "timestamp_utc": "2022-12-02T16:38:39+00:00",
+   "load": "0x5000000",
+   "entry": "0x5000040",
+   "contains_variant_strap": false,
+   "bootcmd": "run ramboot;"
+  },
+  "stock-221223": {
+   "sha256": "d50a93a02ec141b8ac3306b3593cd9f05b28c3c4665deb7e8e676b3f67597871",
+   "size": 725807,
+   "name": "U-Boot 2015.04 for owl board",
+   "timestamp_utc": "2022-12-23T06:52:09+00:00",
+   "load": "0x5000000",
+   "entry": "0x5000040",
+   "contains_variant_strap": false,
+   "bootcmd": "run ramboot;"
+  },
+  "stock-230309": {
+   "sha256": "814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd",
+   "size": 726396,
+   "name": "U-Boot 2015.04 for owl board",
+   "timestamp_utc": "2023-02-25T02:09:25+00:00",
+   "load": "0x5000000",
+   "entry": "0x5000040",
+   "contains_variant_strap": true,
+   "bootcmd": "run ramboot;",
+   "identical_to": "koriki-v1.0 u-boot.uimage (sha256 814ce6dbe7ab66a0...) and every early CFW release from alpha 0.4 (BOOT-008)"
+  },
+  "stock-20231014": {
+   "sha256": "5b8d5b2c99bac43139e920bf3b202bed1d22814ae3ca1b4638856d14ca58003d",
+   "size": 726396,
+   "name": "U-Boot 2015.04 for owl board",
+   "timestamp_utc": "2023-10-14T07:13:35+00:00",
+   "load": "0x5000000",
+   "entry": "0x5000040",
+   "contains_variant_strap": true,
+   "bootcmd": "run ramboot;"
+  }
+ },
+ "uboot_variant_strap": {
+  "component": "stock-20231014 u-boot.uimage payload (offset 0 = VA 0x05000040)",
+  "payload_sha256": "f71fa81758d90a87691f7eafed483a6b437503afe25217f6c456ec4c56c92268",
+  "probe_function_va": "0x05025e5c",
+  "probe_called_from_va": "0x050078bc (after \"begin to check power!\", only when AFI boot_mode != 1; getter 0x050041d4)",
+  "observed": [
+   "clears vendor gd->flags bits above bit 17 (ubfx r2,r2,#0,#18)",
+   "calls GPIO get-value wrapper 0x05021b10 with GPIO 70",
+   "GPIO ops slot 0x05021898 reads (0xb01b0008 + 12*(gpio>>5)) and tests bit (gpio&31); GPIO 224-230 are routed to a PMIC register read instead",
+   "non-zero: sets gd->flags bit 20 (0x100000) and prints \"-----s500\"; zero: prints \"-----a7039\"",
+   "bootargs builder at 0x05004670 appends \"allenS500=1\" when gd->flags bit 20 is set; bit 18 (0x40000) selects androidboot.mode=charger"
+  ],
+  "gpio": {
+   "number": 70,
+   "bank": "C",
+   "bit": 6,
+   "data_register": "0xb01b0020"
+  },
+  "gpio_init": "GPIO driver init sets CMU_DEVCLKEN0 (0xb01600a0) bit 18 before registering the ops table at VA 0x0508faf4",
+  "limitations": "Static dataflow only. Which board revisions pull GPIOC6 high, and whether \"s500\" denotes different silicon or only a different PCB, is not established."
+ },
+ "kernel_variant_flag": {
+  "component": "stock-20231014 kernel Image (VA 0xc0008000 = offset 0)",
+  "setup_handler": "allen_check_cpu_type (__setup \"allenS500=\", VA 0xc0a20b74): flag=1 when the argument equals \"1\"; prints \"allen_is_s500=%d, str=%s\"",
+  "getter": "allen_get_cpu_s500 (VA 0xc00226f8)",
+  "consumers": {
+   "atc260x_power_probe": "selects charger_led2_ctl/work_led2_ctl/low_power_led2_ctl instead of charger_led_ctl/work_led_ctl/low_power_led_ctl (of_get_named_gpio_flags)",
+   "atc2603c_init": "selects earphone_detect2_gpios instead of earphone_detect_gpios"
+  },
+  "first_release": "stock-230309 (absent from stock-221203, stock-221223, the GarlicOS kernel and Koriki v1.0)",
+  "dt_values": {
+   "charger_led_ctl": "<gpio 22 act-high>",
+   "charger_led2_ctl": "<gpio 78 act-high>",
+   "low_power_led_ctl": "<gpio 21 act-low>",
+   "low_power_led2_ctl": "<gpio 79 act-low>",
+   "work_led_ctl": "<gpio 18 act-low>",
+   "work_led2_ctl": "<gpio 80 act-low>",
+   "earphone_detect_gpios": "<gpio 28 0>",
+   "earphone_detect2_gpios": "<gpio 81 1>"
+  },
+  "koriki_equivalent": "Koriki v1.0 KERNEL.DTB carries the same alternative GPIOs as *_ctl_new / earphone_detect_gpios_new"
+ },
+ "device_tree": {
+  "stock_kernel_dtb_sha256": "94ef841c1feceb13d44b5b7a2e152785506e8ea6683bad02d83eba421ad7ff48",
+  "stock_230309_identical": true,
+  "koriki_kernel_dtb_sha256": "ad4b8b4dd98fbb95bde8854ff0bd9c2e870c3c0c21f27be0122c741f36686f0f",
+  "differing_nodes": [
+   "/",
+   "/gpu@b0300000",
+   "/i2c@b0174000/atc2603c@65/atc260x-audio",
+   "/i2c@b0174000/atc2603c@65/atc260x-power"
+  ],
+  "tool": "research.py tree + compare",
+  "notes": {
+   "/": "stock model \"Actions GS705A board\"; Koriki \"RG35XX ATM7039 based handheld gaming console (V6C)\"",
+   "/gpu@b0300000": "status \"disabled\" in stock, \"okay\" in Koriki",
+   "/i2c@b0174000/atc2603c@65/atc260x-audio": "earphone_detect2_gpios (stock) vs earphone_detect_gpios_new (Koriki)",
+   "/i2c@b0174000/atc2603c@65/atc260x-power": "*_led2_ctl (stock) vs inner_charger_led_ctl/*_new (Koriki) naming"
+  }
+ },
+ "ramdisk": {
+  "component": "stock-20231014 MISC:/ramdisk.img",
+  "uimage_sha256": "a49e8fb8678a3818dca5c08443b2dabcd14899e271d5be9ca56f8fcc7f2c14c2",
+  "format": "legacy uImage (type ramdisk, compression 0) containing an uncompressed newc cpio",
+  "files": [
+   {
+    "path": "/usbmond.sh",
+    "mode": "0o100755",
+    "size": 2359,
+    "sha256": "10e00dc2a0b75a26b30d42870622a901861d7c2eab655af59747c919cec383c7",
+    "link": null
+   },
+   {
+    "path": "/ueventd.rc",
+    "mode": "0o100755",
+    "size": 5405,
+    "sha256": "aa4e10f9a1a2f1cc7f284dc554faed0560441b014b8041a88303acd0bd4943d3",
+    "link": null
+   },
+   {
+    "path": "/usbdbg.sh",
+    "mode": "0o100755",
+    "size": 376,
+    "sha256": "77dbc71edff3fcfcd0495546a6424e19a66d54f2be1d526b1d8032cb6db4273f",
+    "link": null
+   },
+   {
+    "path": "/default.prop",
+    "mode": "0o100755",
+    "size": 311,
+    "sha256": "5612c4be42d95c227dfe78e74446669b64ca6d46e2e75409ddd936d8f90f14e0",
+    "link": null
+   },
+   {
+    "path": "/loadapp.sh",
+    "mode": "0o100755",
+    "size": 523,
+    "sha256": "36e2a9a1dcdc6b5841ccac52020de9fe4d28fce2183913eacd1d787840c01cc1",
+    "link": null
+   },
+   {
+    "path": "/init.extra_modules.rc",
+    "mode": "0o100755",
+    "size": 705,
+    "sha256": "ae5f8b434a86c31032fa268dc4ef6c60f95e859614a24ce767ceb41c2ffc85c5",
+    "link": null
+   },
+   {
+    "path": "/init",
+    "mode": "0o100755",
+    "size": 179432,
+    "sha256": "3aae3da36584e144e5c03d46d8ef7f48f0821cc28f9c02084d5649c74756ef87",
+    "link": null
+   },
+   {
+    "path": "/init.wifi.rc",
+    "mode": "0o100755",
+    "size": 1108,
+    "sha256": "e93bb3ea45b8707c4da7cf21148bd02a46ac1001f6bc6da4e537ee723debc7be",
+    "link": null
+   },
+   {
+    "path": "/fstab.gs705a",
+    "mode": "0o100755",
+    "size": 317,
+    "sha256": "4dd3e6a2e92b6e554066722ab20dbe041cf65f3f5e64529f62ec4fc171c72a9a",
+    "link": null
+   },
+   {
+    "path": "/charger",
+    "mode": "0o100755",
+    "size": 251776,
+    "sha256": "1eee9c4e9d6c7e2d8a4eb6260b75515a82c436724c85399ed3222fcb2910d2c6",
+    "link": null
+   },
+   {
+    "path": "/res/images/charger/battery_charge.png",
+    "mode": "0o100755",
+    "size": 26996,
+    "sha256": "e3dd72bdae936316ceaefaec80bcaa8e9d25f1b72015b3ca4e76b9870cdf9f59",
+    "link": null
+   },
+   {
+    "path": "/res/images/charger/battery_5.png",
+    "mode": "0o100755",
+    "size": 22866,
+    "sha256": "88e0ab56ede34bc7acd4f6324fc755023491de6e67fa3bc0e59f8bcbaf4fa1f8",
+    "link": null
+   },
+   {
+    "path": "/res/images/charger/battery_fail.png",
+    "mode": "0o100755",
+    "size": 26511,
+    "sha256": "7d68b5d71c18aec484c0282c3c9e2523437090a722d0b86271fb0d664e01bb76",
+    "link": null
+   },
+   {
+    "path": "/res/images/charger/battery_4.png",
+    "mode": "0o100755",
+    "size": 25648,
+    "sha256": "50a370bd9e3bce9a4051124a5897fa09ff50006234a8a2a7e1374d9b58efa1e6",
+    "link": null
+   },
+   {
+    "path": "/res/images/charger/battery_2.png",
+    "mode": "0o100755",
+    "size": 29287,
+    "sha256": "2a41c2ebaecc8ccca0f5abfcbc8f50661c36299ff0c6650e1ec9d09ee3227dac",
+    "link": null
+   },
+   {
+    "path": "/res/images/charger/battery_0.png",
+    "mode": "0o100755",
+    "size": 26872,
+    "sha256": "94f5c2fd40f46d033061c8b213af4e104b69a3136dfd13ba3de134a84e487285",
+    "link": null
+   },
+   {
+    "path": "/res/images/charger/battery_3.png",
+    "mode": "0o100755",
+    "size": 28476,
+    "sha256": "064f416da1f7c7403779a78b204ff411a095f8189d854ebca71705ddd477c9b9",
+    "link": null
+   },
+   {
+    "path": "/res/images/charger/battery_1.png",
+    "mode": "0o100755",
+    "size": 28276,
+    "sha256": "c5993511c1e3b3ff5ac29a8e47764f40bf37f8eeebc5a06b308ce316cfdf1c47",
+    "link": null
+   },
+   {
+    "path": "/init.rc",
+    "mode": "0o100755",
+    "size": 5752,
+    "sha256": "7f68a48525a71637fc5e88f0b80d3afb6ac7d93bc7d93d0706770f94670d40e5",
+    "link": null
+   },
+   {
+    "path": "/usbtest.sh",
+    "mode": "0o100755",
+    "size": 621,
+    "sha256": "b310190610f3ef46516f7c54e4117d60ce0de770cce375d3509e96bba833d3f6",
+    "link": null
+   }
+  ]
+ },
+ "init_usb": {
+  "file": "/init.rc in stock-20231014 ramdisk",
+  "sha256": "7f68a48525a71637fc5e88f0b80d3afb6ac7d93bc7d93d0706770f94670d40e5",
+  "observations": [
+   {
+    "line": 142,
+    "text": "on boot: start USB monitor (run 5)"
+   },
+   {
+    "line": 144,
+    "text": "force ID pin high (device role)"
+   },
+   {
+    "line": 164,
+    "text": "\"usb3.0 force host\": idpin_debug 0"
+   },
+   {
+    "line": 165,
+    "text": "stop USB monitor"
+   },
+   {
+    "line": 166,
+    "text": "report USB_A_IN (host role)"
+   },
+   {
+    "line": 209,
+    "text": "adbd declared; class core, disabled (never started by init)"
+   },
+   {
+    "line": 62,
+    "text": "only gpio_keys_polled.ko (early-init) and atc260x_cap_gauge.ko (boot) are loaded; no pvrsrvkm.ko/dc_owl.ko/ethernet.ko insmod"
+   }
+  ],
+  "default_prop": {
+   "sha256": "5612c4be42d95c227dfe78e74446669b64ca6d46e2e75409ddd936d8f90f14e0",
+   "values": [
+    "ro.secure=0",
+    "ro.debuggable=1",
+    "persist.sys.usb.config=mass_storage,adb"
+   ]
+  },
+  "device_mode_scripts": "usbmond.sh USB_B_IN / usbdbg.sh device: Android gadget VID 10d6, PID 0c02 (mass_storage,adb) or 4e42 (mtp,adb), iManufacturer \"Actions\", iProduct \"ToyCloud\", then start adbd; not invoked by init.rc"
+ },
+ "gpu": {
+  "stock_pvrsrvkm": {
+   "sha256": "86346a75b210fe111826fd8129375877036b9956a6f365cb985dfefd5f6c565d",
+   "size": 322912,
+   "modinfo": [
+    "parm=gPVRDebugLevel:Sets the level of debug output (default 0x7)",
+    "parmtype=gPVRDebugLevel:uint",
+    "license=Dual MIT/GPL",
+    "author=Imagination Technologies Ltd. <gpl-support@imgtec.com>",
+    "alias=of:N*T*Cactions,atm7039c-gpu*",
+    "depends=",
+    "intree=Y",
+    "vermagic=3.10.37 SMP preempt mod_unload ARMv7 p2v8 "
+   ],
+   "ddk_string": [
+    "SGX_DDK_Android_RSCompute sgxddk 1.12@3052601",
+    "SGX_DDK_Android_RSCompute sgxddk 1.12@3052601"
+   ],
+   "text_bytes": 155916,
+   "undefined_symbols": 191,
+   "owl_and_platform_imports": [
+    "ion_client_create",
+    "ion_client_destroy",
+    "ion_free",
+    "ion_import_dma_buf",
+    "ion_phys",
+    "ion_sg_table",
+    "module_clk_disable",
+    "module_clk_enable",
+    "owl_get_putaway_parent_rate",
+    "owl_getdivider_index",
+    "owl_getparent_newrate",
+    "owl_ion_device",
+    "owl_mmu_import_buffer_on_dc",
+    "owl_mmu_unimport_buffer_on_dc",
+    "owl_pll_in_change",
+    "owl_pllsub_set_putaway",
+    "owl_powergate_power_off",
+    "owl_powergate_power_on",
+    "owl_set_putaway_divsel",
+    "owl_update_notify_newrate",
+    "regulator_get",
+    "regulator_set_voltage",
+    "sw_sync_pt_create",
+    "sw_sync_timeline_create",
+    "sw_sync_timeline_inc",
+    "sync_fence_create",
+    "sync_fence_fdget",
+    "sync_fence_install",
+    "sync_fence_put",
+    "sync_fence_wait_async",
+    "sync_pt_create",
+    "sync_pt_free",
+    "sync_timeline_create",
+    "sync_timeline_destroy",
+    "sync_timeline_signal"
+   ]
+  },
+  "koriki_pvrsrvkm": {
+   "sha256": "578fca81480cc77b419701363a93d9b81e83d894a246423809d04c2d43946df4",
+   "size": 258640,
+   "modinfo": [
+    "license=Dual MIT/GPL",
+    "author=Imagination Technologies Ltd. <gpl-support@imgtec.com>",
+    "license=Dual MIT/GPL",
+    "author=Imagination Technologies Ltd. <gpl-support@imgtec.com>",
+    "license=Dual MIT/GPL",
+    "author=Imagination Technologies Ltd. <gpl-support@imgtec.com>",
+    "alias=of:N*T*Cactions,atm7039c-gpu*",
+    "depends=drm",
+    "intree=Y",
+    "vermagic=3.10.37 SMP preempt mod_unload ARMv7 p2v8 "
+   ],
+   "ddk_string": [
+    "SGX_DDK_Linux_XOrg sgxddk MAIN@3625561",
+    "SGX_DDK_Linux_XOrg sgxddk MAIN@3625561"
+   ],
+   "text_bytes": 128712,
+   "undefined_symbols": 168,
+   "owl_and_platform_imports": [
+    "drm_fasync",
+    "drm_ioctl",
+    "drm_mmap",
+    "drm_open",
+    "drm_platform_exit",
+    "drm_platform_init",
+    "drm_poll",
+    "drm_release",
+    "fb_blank",
+    "fb_register_client",
+    "fb_set_var",
+    "fb_unregister_client",
+    "module_clk_disable",
+    "module_clk_enable",
+    "owl_get_putaway_parent_rate",
+    "owl_getdivider_index",
+    "owl_getparent_newrate",
+    "owl_pll_in_change",
+    "owl_pllsub_set_putaway",
+    "owl_powergate_power_off",
+    "owl_powergate_power_on",
+    "owl_set_putaway_divsel",
+    "owl_update_notify_newrate",
+    "register_early_suspend",
+    "regulator_get",
+    "regulator_set_voltage"
+   ]
+  },
+  "stock_dc_owl": {
+   "sha256": "a14e7fe8a4dd77ec4c5ad79d0e80453416c2b199e636564d247c2afbe8cbce46",
+   "size": 13120,
+   "modinfo": [
+    "license=Dual MIT/GPL",
+    "author=Imagination Technologies Ltd. <gpl-support@imgtec.com>",
+    "depends=pvrsrvkm",
+    "intree=Y",
+    "vermagic=3.10.37 SMP preempt mod_unload ARMv7 p2v8 "
+   ],
+   "ddk_string": [],
+   "text_bytes": 3196,
+   "undefined_symbols": 31,
+   "owl_and_platform_imports": [
+    "fb_blank",
+    "fb_pan_display",
+    "fb_set_var"
+   ]
+  },
+  "garlic_pvrsrvkm": {
+   "sha256": "024bb4fab178da2cfc55f85c970546ec97bbb3ce8bb6aaf87e06ac8bc010cb6f",
+   "size": 322504,
+   "modinfo": [
+    "parm=gPVRDebugLevel:Sets the level of debug output (default 0x7)",
+    "parmtype=gPVRDebugLevel:uint",
+    "license=Dual MIT/GPL",
+    "author=Imagination Technologies Ltd. <gpl-support@imgtec.com>",
+    "alias=of:N*T*Cactions,atm7039c-gpu*",
+    "depends=",
+    "intree=Y",
+    "vermagic=3.10.37 SMP preempt mod_unload ARMv7 p2v8 "
+   ],
+   "ddk_string": [
+    "SGX_DDK_Android_RSCompute sgxddk 1.12@3052601",
+    "SGX_DDK_Android_RSCompute sgxddk 1.12@3052601"
+   ],
+   "text_bytes": 155916,
+   "undefined_symbols": 191,
+   "owl_and_platform_imports": [
+    "ion_client_create",
+    "ion_client_destroy",
+    "ion_free",
+    "ion_import_dma_buf",
+    "ion_phys",
+    "ion_sg_table",
+    "module_clk_disable",
+    "module_clk_enable",
+    "owl_get_putaway_parent_rate",
+    "owl_getdivider_index",
+    "owl_getparent_newrate",
+    "owl_ion_device",
+    "owl_mmu_import_buffer_on_dc",
+    "owl_mmu_unimport_buffer_on_dc",
+    "owl_pll_in_change",
+    "owl_pllsub_set_putaway",
+    "owl_powergate_power_off",
+    "owl_powergate_power_on",
+    "owl_set_putaway_divsel",
+    "owl_update_notify_newrate",
+    "regulator_get",
+    "regulator_set_voltage",
+    "sw_sync_pt_create",
+    "sw_sync_timeline_create",
+    "sw_sync_timeline_inc",
+    "sync_fence_create",
+    "sync_fence_fdget",
+    "sync_fence_install",
+    "sync_fence_put",
+    "sync_fence_wait_async",
+    "sync_pt_create",
+    "sync_pt_free",
+    "sync_timeline_create",
+    "sync_timeline_destroy",
+    "sync_timeline_signal"
+   ]
+  },
+  "stock_userspace": "SYSTEM partition contains no libEGL/libGLESv*/libsrv_um and no file references pvrsrvkm; SDL 1.2 (libSDL-1.2.so.0.11.4) and /dev/fb0 are used",
+  "stock_dt_gpu_status": "disabled"
+ },
+ "userspace": {
+  "build_prop_sha256": "9bcbf01410e57ce1dd94f69ae43593befd63452c3bc35de7077f5fd5ea5108e0",
+  "values": [
+   "ro.build.display.id=Demo_7051H-user 4.4.2 KOT49H eng.songzhining.20161121.190628 test-keys",
+   "ro.build.version.release=4.4.2",
+   "ro.build.date=Mon Nov 21 19:10:55 CST 2016",
+   "ro.product.model=ToyCloud",
+   "ro.product.device=q88_hd",
+   "ro.product.board=atm7051H_demo_q88_hd",
+   "ro.board.platform=ATM702X",
+   "ro.product.usbdevice.VID=10d6",
+   "ro.usb.descriptor=MID,GS705B,V1.0"
+  ],
+  "dmenu_updater": {
+   "file": "MISC:/DMENU.BIN (stock-20231014)",
+   "sha256": "2ec16d07df301a0ae6eacce18f0f90cd1932d994bc971752edc0479ef7f2bc3d",
+   "observations": [
+    "if /misc/bootloader.img exists: dd of=/dev/block/mmcblk0 bs=512 seek=4097 count=448",
+    "if /misc/u-boot-dtb.img exists: dd bs=512 seek=6144 count=1417",
+    "switches MISC between CFW/OS/BOOT/STOCK and CFW/OS/BOOT/GARLIC sets by flag files"
+   ]
+  },
+  "garlic_boot_set_reuse": "CFW/OS/BOOT/GARLIC RAMDISK.IMG and def_config.bin are byte-identical to stock-221203 MISC files (6779a03e..., 3e26f64c...)"
+ }
+}

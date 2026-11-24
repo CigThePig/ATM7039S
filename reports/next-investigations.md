@@ -33,3 +33,13 @@ The project does not need a firmware rewrite to improve immediately: a reliable 
 6. **GPU: concrete artifacts acquired, ABI map partial.** Match exact kernel build configuration and bridge layouts to bundled libraries, then trace buffer/display ownership and synchronization. Preserve reMESA attribution.
 
 NAND/media/security/OTP, broad historical SDK archaeology, a complete candidate board DTS and modern-kernel driver implementation were not completed in this phase. The initial long-term roadmap still applies to those dependencies.
+
+## Status after stock-firmware analysis
+
+1. **Rank 1 (boot bundle): completed for stock.** Four releases are hash-pinned. Manufacturer-hash authentication remains impossible (FW-014).
+2. **Rank 2 (early loader DDR/AFI): substantially advanced.** The AFI producer, DRAM record and register-level bring-up are documented (MEM-005, DDR-001). Next: symbolic evaluation of the timing computations in `0xb40673f4`, and the Boot ROM interface of block 0.
+3. **Rank 9 (PowerVR ABI):** stock adds a DDK 1.12 Android module but no userspace, so it does not help a working stack (GPU-011).
+4. **Rank 11 (USB):** stock defaults and the umonitor interface are documented (USB-002); hardware role switching remains a device test.
+5. **New:** trace the stock U-Boot path that pre-loads kernel/ramdisk/DTB (BOOT-007), and resolve the board meaning of the GPIOC6 strap (BOOT-011) from board photographs.
+
+The highest-value continuation is now **recovering the computed DRAM timing values** in the stock loader. With the documented controller/PHY layout, this would give an independently reimplementable DRAM init for the original RG35XX, the single largest remaining closed dependency before U-Boot.

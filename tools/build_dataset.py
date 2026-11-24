@@ -119,7 +119,10 @@ def build(inputs):
     if field['name'].startswith(prefix) and field['expression'].startswith(('BIT(', 'GENMASK(')):
      reg['fields'].append(dict(name=field['name'],mask=field['value'],meaning='S500 source symbol; ATM7039S semantics unverified',scope='S500-source',confidence='inferred',evidence=[ref('linux',path,field['line'])]))
  apply_cmu_fields(blocks)
- r.save(ROOT/'registers/canonical/hardware.json',dict(schema_version=1,target='ATM7039S',hardware_validated=False,blocks=blocks))
+ # Binary-derived observations live in registers/curated/ and survive source rebuilds.
+ import apply_firmware_registers as afr
+ model=afr.apply(dict(schema_version=1,target='ATM7039S',hardware_validated=False,blocks=blocks),json.loads(afr.CURATED.read_text()))
+ r.save(ROOT/'registers/canonical/hardware.json',model)
  # Preserve upstream register/bitmask observations separately from target claims.
  upstream=[]
  for path in FILES['linux']:

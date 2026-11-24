@@ -34,3 +34,7 @@ This points to a vendor debug pattern where UART signals share pins with a card 
 3. Any breakout, adapter, voltage measurement or DTB change remains a separate, explicitly approved procedure under V7. The owner's cards are never used.
 
 `/proc/cmdline` on this firmware is expected to include `androidboot.serialno=<board serial>` (BOOT-006). The capture parser redacts it from summaries. The raw capture keeps it, so review the raw files before sharing them.
+
+## Stock firmware update (UART-003)
+
+The early loader's own configuration settles the AFI `uart_index` statically. Every examined loader carries `uart_index=3`, `uart_pad=0` and `115200` in `bootloader.ini` (+0x0e/+0x0f/+0x10): stock 221203, 221223, 230309, 20231014 and Koriki v1.0 (byte-identical to 230309). Loader routine `0xb4065ff8` copies them into the parameter block from which the AFI is written. Both the stock and Koriki DTBs enable UART3 (`0xb0126000`), so the expected kernel console is **`ttyS3`**. Stock `default.prop` sets `ro.debuggable=1`, which starts a root `console` shell service (USB-002). P-CONSOLE is left as pre-registered; `/proc/cmdline` from the V3 capture still decides it. See the [stock dossier](../reports/anbernic-stock-reverse-engineering.md).
