@@ -56,6 +56,20 @@ def stock_index(root,index):
                     index[f'{key}#uimage:{rel}']=dict(sha256=v['uimage_sha256'],size=v['uimage_size'])
                     index[f'{key}#image:{rel}']=dict(sha256=v['image_sha256'],size=v['image_size'])
         except (KeyError,ValueError,OSError) as e:errors.append('invalid manifest '+key+': '+str(e))
+    p=folder/'stock-ddr-timing.json'
+    if p.exists():
+        try:
+            m=json.loads(p.read_text());loaders=json.loads((folder/'stock-loaders.json').read_text())['loaders']
+            if len({r['code_sha256'] for r in m['releases'].values()})!=1:errors.append('DDR timing: code differs between releases')
+            for name,r in m['releases'].items():
+                if loaders.get(name,{}).get('sha256')!=r['loader_sha256']:errors.append('DDR timing loader hash mismatch '+name)
+                mv=r['model_vs_unicorn']
+                if mv['firmware_record_reference'] or mv['primary_record_reference'] or any(mv['scenarios'].values()) \
+                        or any(mv['reset_seeds'].values()):errors.append('DDR timing: model/emulation disagreement '+name)
+                if 'symbolic' in r and not r['symbolic']['equals_unicorn']:errors.append('DDR timing: symbolic/emulation disagreement '+name)
+                if r['class_consistency']['contradictions']:errors.append('DDR timing: provenance class contradiction '+name)
+            if m['division_helpers']['mismatches']:errors.append('DDR timing: division helper model mismatch')
+        except (KeyError,ValueError,OSError) as e:errors.append('invalid DDR timing evidence: '+str(e))
     p=folder/'stock-ddr-sequence.json'
     if p.exists():
         m=json.loads(p.read_text())

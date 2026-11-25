@@ -112,6 +112,23 @@ Install `requirements-dev.txt`, `requirements-firmware.txt` and `capstone==5.0.6
 | `ghidra_headless.py COMP OUT --ghidra DIR --base A [--entry E]` + `ghidra/*.java` | Throw-away Ghidra project; exports function extents, call edges and window constants | Never exports decompiler output or disassembly text |
 | `apply_firmware_registers.py` | Idempotently merges `registers/curated/firmware-observations.json` into the canonical model (also run by `build_dataset.py`) | Never sets widths, access, reset or hardware validation |
 
+### DRAM timing reconstruction (2026-11-25)
+
+Needs `unicorn` and `z3-solver` (pinned in `requirements-firmware.txt`) besides Capstone. See [the report](../reports/ddr-timing-reconstruction.md).
+
+| Tool | Purpose | Deliberate limits |
+|---|---|---|
+| `ddr_emulate.py REGION OUT [--image-offset 0x200200] [--scenario S] [--reset-seed N] [--record firmware\|primary\|second]` | Bounded Unicorn emulation of the loader's ini copy, record selection, DRAM routine `0xb40673f4` and write-back; logs every MMIO write with its firmware call site, every read with the oracle rule that answered it, and the console lines | ≤ 2 M instructions; delay and printf stubbed; peripheral reads come from declared oracle rules and named hardware hypotheses, never from hardware |
+| `ddr_symbolic.py REGION OUT [--clock-range LO:HI] [--evaluate-clock C]` | Own A32 interpreter over Capstone with z3 terms; clock symbolic; forks on input-dependent branches and reports each path's clock intervals and per-write expressions | Implements only the instruction classes used (raises otherwise); division helpers modelled and validated separately |
+| `ddr_model.py` (library) | Readable DDR3 model: named timing quantities, packed registers and the full write sequence with provenance class, formula and call order | DDR3 branch, mode 0 only; hardware outcomes and reset values are explicit inputs |
+| `ddr_timing.py OUT --loader NAME=PATH \| --image NAME=PATH [--sweep-step N] [--no-symbolic]` | Runs all three, sweeps clocks, hardware hypotheses and reset seeds, classifies each write differentially, compares releases; writes `stock-ddr-timing.json` | Output holds values, formulas and addresses only; no firmware bytes or disassembly |
+
+```sh
+python tools/ddr_timing.py evidence/firmware/stock-ddr-timing.json --loader stock-221203=loader-221203.bin \
+  --loader stock-221223=loader-221223.bin --loader stock-230309=loader-230309.bin --image stock-20231014=stock-20231014.img
+ATM7039S_STOCK_LOADERS=DIR python -m unittest tests.test_ddr_timing -v
+```
+
 Reproduce the stock analysis from an externally supplied image (hashes in `evidence/firmware/acquisitions.json`):
 
 ```sh

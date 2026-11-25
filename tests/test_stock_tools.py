@@ -266,6 +266,22 @@ STR_R2_R0_8 = 0xE5802008     # str r2, [r0, #8]
 BX_LR = 0xE12FFF1E
 
 
+class LsarSizeTests(unittest.TestCase):
+    def test_sign_extended_rar5_size_is_unknown_not_rejected(self):
+        """unar/lsar 1.10.1 reports a 3.97 GB RAR5 member as 2**64 - 329777152; that must not trip the ceiling."""
+        from unittest import mock
+        listing = json.dumps({'lsarContents': [{'XADFileName': 'IMG', 'XADFileSize': (1 << 64) - 329777152,
+                                                'XADCompressedSize': 5}]})
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / 'a.rar'
+            p.write_bytes(b'Rar!\x1a\x07\x01\x00' + bytes(8))
+            with mock.patch.object(am, '_7z', return_value=None), \
+                    mock.patch.object(am.shutil, 'which', side_effect=lambda x: '/usr/bin/lsar' if x == 'lsar' else None), \
+                    mock.patch.object(am.subprocess, 'run', return_value=mock.Mock(stdout=listing)):
+                m = am.list_members(p)['members'][0]
+        self.assertIsNone(m['size'])
+
+
 class MmioTests(unittest.TestCase):
     MODEL = dict(blocks=[dict(id='b', base=0xb0160000, size=None, registers=[
         dict(name='CMU_DEVCLKEN0', offset=0xa0), dict(name='CMU_DEVRST0', offset=0xa8)])])

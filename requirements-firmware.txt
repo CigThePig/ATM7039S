@@ -11,3 +11,6 @@ dissect.cstruct==4.7
 pyelftools==0.32
 # Static ARM disassembly for mmio_refs.py (no code execution).
 capstone==5.0.6
+# Bounded emulation and symbolic evaluation for the DRAM timing reconstruction (no hardware access).
+unicorn==2.1.4
+z3-solver==4.15.4.0

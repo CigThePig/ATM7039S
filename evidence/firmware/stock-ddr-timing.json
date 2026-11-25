@@ -1,0 +1,8172 @@
+{
+ "format_version": 1,
+ "tool": "ddr_timing.py",
+ "function": "0xb40673f4",
+ "reference_scenario": "x16-1rank-2Gb",
+ "scenarios": {
+  "x16-1rank-2Gb": {
+   "ranks": 1,
+   "width": 16,
+   "col_bits": 10,
+   "row_bits": 14,
+   "bank_log2": 3,
+   "note": "one x16 DDR3 2Gb die (256 MiB): the geometry the primary record rcc=0x48 encodes"
+  },
+  "x16-2rank-2Gb": {
+   "ranks": 2,
+   "width": 16,
+   "col_bits": 10,
+   "row_bits": 14,
+   "bank_log2": 3,
+   "note": "hypothetical second rank; not claimed for any board"
+  },
+  "x16-1rank-4Gb": {
+   "ranks": 1,
+   "width": 16,
+   "col_bits": 10,
+   "row_bits": 15,
+   "bank_log2": 3,
+   "note": "hypothetical 512 MiB die; shows how detection changes outputs"
+  },
+  "x16-1rank-1Gb": {
+   "ranks": 1,
+   "width": 16,
+   "col_bits": 10,
+   "row_bits": 13,
+   "bank_log2": 3,
+   "note": "hypothetical 128 MiB die"
+  }
+ },
+ "sweep": {
+  "clocks": [
+   100,
+   1200
+  ],
+  "step": 1
+ },
+ "releases": {
+  "stock-221203": {
+   "loader_sha256": "c4630f0a4231f743f64f24df4fe169118fb268653c4da2f6af48fd22e095a406",
+   "code_sha256": "6b17b88c92e4d9f90f3f123e4a340b692d001bada4f78f24889481b73adf6ea9",
+   "bootloader_ini": {
+    "primary_record": {
+     "clock_mhz": 468,
+     "capacity_mib": 256,
+     "bus_sel": 1,
+     "cs": 1,
+     "type": 16,
+     "rcc": 72,
+     "rdodt": 1,
+     "wrodt": 1,
+     "drv": 12
+    },
+    "second_record": {
+     "clock_mhz": 468,
+     "capacity_mib": 0,
+     "bus_sel": 1,
+     "cs": 0,
+     "type": 16,
+     "rcc": 0,
+     "rdodt": 1,
+     "wrodt": 1,
+     "drv": 12
+    },
+    "word_0x2c": 1,
+    "selected": "second",
+    "decode_matches_firmware_copy": true
+   },
+   "console": [
+    "DRAM init mode0,type16,2cs,x16bus,rcc0x0,wrodt1,rdodt1,drvc,468MHz.@180525_R...",
+    "Fail:0x0,0x0,0x0,0x0;",
+    "DRAM init mode0,type16,1cs,x16bus,rcc0x0,wrodt1,rdodt1,drvc,468MHz.@180525_R...",
+    "Ok:DCU_CFG:0x202c,256MByte Cap."
+   ],
+   "return_value": "0x0",
+   "ini_writeback": {
+    "x16-1rank-1Gb": {
+     "after": "d4010000800000000101100801010c00",
+     "equals_shipped": false
+    },
+    "x16-1rank-2Gb": {
+     "after": "d4010000000100000101104801010c00",
+     "equals_shipped": true
+    },
+    "x16-1rank-4Gb": {
+     "after": "d4010000000200000101108801010c00",
+     "equals_shipped": false
+    },
+    "x16-2rank-2Gb": {
+     "after": "d4010000000200000102104801010c00",
+     "equals_shipped": false
+    }
+   },
+   "ini_primary_as_shipped": "d4010000000100000101104801010c00",
+   "param_after": {
+    "clock_mhz": 468,
+    "capacity_mib": 256,
+    "bus_sel": 1,
+    "cs": 1,
+    "type": 16,
+    "rcc": 72,
+    "rdodt": 1,
+    "wrodt": 1,
+    "drv": 12,
+    "byte_b": 0,
+    "raw": "d40100010101104801010c00"
+   },
+   "instructions": 4840,
+   "timings": {
+    "tRFC": {
+     "cycles": 164,
+     "ns": 350.427
+    },
+    "tRP": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "tRCD": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "tRAS": {
+     "cycles": 18,
+     "ns": 38.462
+    },
+    "tRC": {
+     "cycles": 26,
+     "ns": 55.556
+    },
+    "tRRD": {
+     "cycles": 5,
+     "ns": 10.684
+    },
+    "tFAW": {
+     "cycles": 24,
+     "ns": 51.282
+    },
+    "tWR": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "tRTP": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "tWTR": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "CL": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "CWL": {
+     "cycles": 6,
+     "ns": 12.821
+    },
+    "tXP": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "tXPDLL": {
+     "cycles": 12,
+     "ns": 25.641
+    },
+    "tCKE": {
+     "cycles": 3,
+     "ns": 6.41
+    },
+    "tCKESR": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "tCKSRE": {
+     "cycles": 5,
+     "ns": 10.684
+    },
+    "tRSTL": {
+     "cycles": 70,
+     "ns": 149.573
+    },
+    "tREFI_cycles": {
+     "cycles": 3650,
+     "ns": 7799.145
+    },
+    "tZQCSI": {
+     "cycles": 29200,
+     "ns": 62393.162
+    },
+    "TRTW": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "dfi_wrlat": {
+     "cycles": 2,
+     "ns": 4.274
+    },
+    "dfi_rddata_en": {
+     "cycles": 3,
+     "ns": 6.41
+    },
+    "F_mhz": 468,
+    "tCK_ns": 2.1368,
+    "density_mib": 2048,
+    "tRFC_ns_selected": 350
+   },
+   "final_pass": [
+    {
+     "site": "0xb406800c",
+     "address": "0xb0160008",
+     "register": "CMU_DDRPLL",
+     "value": "0x227",
+     "model_value": "0x227",
+     "model_class": "detected",
+     "formula": "prev & ~0x100",
+     "varies_with": [
+      "hardware",
+      "clock"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068018",
+     "address": "0xb01600a0",
+     "register": "CMU_DEVCLKEN0",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0xa",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068024",
+     "address": "0xb01600a8",
+     "register": "CMU_DEVRST0",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0x5",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068038",
+     "address": "0xb01600a8",
+     "register": "CMU_DEVRST0",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "reset",
+     "formula": "prev | 0x5",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb406804c",
+     "address": "0xb0160008",
+     "register": "CMU_DDRPLL",
+     "value": "0x327",
+     "model_value": "0x327",
+     "model_class": "ini",
+     "formula": "(F/12) | 0x300  (F/12 = PLL multiple of 12 MHz)",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068060",
+     "address": "0xb01600a0",
+     "register": "CMU_DEVCLKEN0",
+     "value": "0xa",
+     "model_value": "0xa",
+     "model_class": "reset",
+     "formula": "prev | 0xa",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb40680d8",
+     "address": "0xb01c8014",
+     "register": "PUBL.ACDLLCR",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40680ec",
+     "address": "0xb01c8014",
+     "register": "PUBL.ACDLLCR",
+     "value": "0x40000000",
+     "model_value": "0x40000000",
+     "model_class": "constant",
+     "formula": "DLLSRST",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068100",
+     "address": "0xb01c8004",
+     "register": "PUBL.PIR",
+     "value": "0x10000000",
+     "model_value": "0x10000000",
+     "model_class": "constant",
+     "formula": "PIR_CLRSR",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406811c",
+     "address": "0xb01c0280",
+     "register": "uPCTL.DFITCTRLUPDMIN",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "constant",
+     "formula": "4",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068128",
+     "address": "0xb01c0284",
+     "register": "uPCTL.DFITCTRLUPDMAX",
+     "value": "0xa",
+     "model_value": "0xa",
+     "model_class": "constant",
+     "formula": "10",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068134",
+     "address": "0xb01c0288",
+     "register": "uPCTL.DFITCTRLUPDDLY",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "constant",
+     "formula": "8",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406814c",
+     "address": "0xb01c00c0",
+     "register": "uPCTL.TOGCNT1U",
+     "value": "0xea",
+     "model_value": "0xea",
+     "model_class": "ini",
+     "formula": "F >> 1   (1 us in controller clocks, F/2)",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068170",
+     "address": "0xb01c00cc",
+     "register": "uPCTL.TOGCNT100N",
+     "value": "0x17",
+     "model_value": "0x17",
+     "model_class": "ini",
+     "formula": "F / 20  (100 ns in controller clocks)",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406817c",
+     "address": "0xb01c00c4",
+     "register": "uPCTL.TINIT",
+     "value": "0xc8",
+     "model_value": "0xc8",
+     "model_class": "constant",
+     "formula": "200",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068188",
+     "address": "0xb01c00c8",
+     "register": "uPCTL.TRSTH",
+     "value": "0x1f4",
+     "model_value": "0x1f4",
+     "model_class": "constant",
+     "formula": "500 (DDR3 branch)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068194",
+     "address": "0xb0290064",
+     "register": "DMM+0x64",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40681a8",
+     "address": "0xb0290064",
+     "register": "DMM+0x64",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40681bc",
+     "address": "0xb01c0044",
+     "register": "uPCTL.POWCTL",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "POWER_UP_START",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40681f0",
+     "address": "0xb01c0080",
+     "register": "uPCTL.MCFG",
+     "value": "0x68029",
+     "model_value": "0x68029",
+     "model_class": "ini",
+     "formula": "((tFAW/tRRD) - 3) << 18 | 0x28029",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068218",
+     "address": "0xb01c007c",
+     "register": "uPCTL.MCFG1",
+     "value": "0x100",
+     "model_value": "0x100",
+     "model_class": "ini",
+     "formula": "(tRRD*(tFAW/tRRD + 1) - tFAW) << 8",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068224",
+     "address": "0xb01c8030",
+     "register": "PUBL.DCR",
+     "value": "0xb",
+     "model_value": "0xb",
+     "model_class": "constant",
+     "formula": "0xb (DDR3 branch)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068240",
+     "address": "0xb01c8040",
+     "register": "PUBL.MR0",
+     "value": "0x1140",
+     "model_value": "0x1140",
+     "model_class": "ini",
+     "formula": "(CL-4)<<4 | 0x1100 | tWR<<9",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406824c",
+     "address": "0xb01c8044",
+     "register": "PUBL.MR1",
+     "value": "0x6",
+     "model_value": "0x6",
+     "model_class": "ini",
+     "formula": "RTT_NOM[wrodt] | 2",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068258",
+     "address": "0xb01c8048",
+     "register": "PUBL.MR2",
+     "value": "0x248",
+     "model_value": "0x248",
+     "model_class": "ini",
+     "formula": "(CWL-5)<<3 | 0x240",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068264",
+     "address": "0xb01c8018",
+     "register": "PUBL.PTR0",
+     "value": "0x2a5766",
+     "model_value": "0x2a5766",
+     "model_class": "ini",
+     "formula": "min63(F*80/1000+1) | (F*5120/1000+1)<<6 | 0xa<<18",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068270",
+     "address": "0xb01c801c",
+     "register": "PUBL.PTR1",
+     "value": "0x5439210",
+     "model_value": "0x5439210",
+     "model_class": "ini",
+     "formula": "F*500 | (tRFC + F/100)<<19",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406827c",
+     "address": "0xb01c8020",
+     "register": "PUBL.PTR2",
+     "value": "0x3a96da0",
+     "model_value": "0x3a96da0",
+     "model_class": "ini",
+     "formula": "F*200 | F<<17",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068288",
+     "address": "0xb01c8034",
+     "register": "PUBL.DTPR0",
+     "value": "0x34b28890",
+     "model_value": "0x34b28890",
+     "model_class": "ini",
+     "formula": "tRTP<<2|tWTR<<5|tRP<<8|tRCD<<12|tRAS<<16|tRRD<<21|tRC<<25",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068294",
+     "address": "0xb01c8038",
+     "register": "PUBL.DTPR1",
+     "value": "0xa400c0",
+     "model_value": "0xa400c0",
+     "model_class": "ini",
+     "formula": "tFAW<<3 | tRFC<<16",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40682a0",
+     "address": "0xb01c803c",
+     "register": "PUBL.DTPR2",
+     "value": "0x10023200",
+     "model_value": "0x10023200",
+     "model_class": "ini",
+     "formula": "0x200 | tXPDLL<<10 | tCKESR<<15 | 0x200<<19",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40682ac",
+     "address": "0xb01c8054",
+     "register": "PUBL.DTAR",
+     "value": "0x20000000",
+     "model_value": "0x20000000",
+     "model_class": "constant",
+     "formula": "0x20000000",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40682c4",
+     "address": "0xb01c8028",
+     "register": "PUBL.DXCCR",
+     "value": "0x911",
+     "model_value": "0x911",
+     "model_class": "ini",
+     "formula": "0x911",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40682d0",
+     "address": "0xb01c8050",
+     "register": "PUBL.ODTCR",
+     "value": "0x21",
+     "model_value": "0x21",
+     "model_class": "ini",
+     "formula": "0x21",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068314",
+     "address": "0xb01c8184",
+     "register": "PUBL.ZQ0CR1",
+     "value": "0x4c",
+     "model_value": "0x4c",
+     "model_class": "ini",
+     "formula": "ZQ_ODT[rdodt] | drv",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068320",
+     "address": "0xb01c8024",
+     "register": "PUBL.ACIOCR",
+     "value": "0xbc03812",
+     "model_value": "0xbc03812",
+     "model_class": "ini",
+     "formula": "0xbc03812",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068600",
+     "address": "0xb01c8050",
+     "register": "PUBL.ODTCR",
+     "value": "0x210021",
+     "model_value": "0x210021",
+     "model_class": "ini",
+     "formula": "prev | 0x210000",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406862c",
+     "address": "0xb01c8240",
+     "register": "PUBL.DX2GCR",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0x1",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068638",
+     "address": "0xb01c8280",
+     "register": "PUBL.DX3GCR",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0x1",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068690",
+     "address": "0xb01c802c",
+     "register": "PUBL.DSGCR",
+     "value": "0xf2001807",
+     "model_value": "0xf2001807",
+     "model_class": "ini",
+     "formula": "0xf2001807 (DDR3 branch)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40686d8",
+     "address": "0xb01c8008",
+     "register": "PUBL.PGCR",
+     "value": "0x1842e02",
+     "model_value": "0x1842e02",
+     "model_class": "detected",
+     "formula": "cs==1 ? 0x1842e02 : 0x18c2e02 (rank enables)",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068700",
+     "address": "0xb01c8004",
+     "register": "PUBL.PIR",
+     "value": "0x7f",
+     "model_value": "0x7f",
+     "model_class": "constant",
+     "formula": "PIR 0x7f (DDR3, mode 0)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406879c",
+     "address": "0xb01c8004",
+     "register": "PUBL.PIR",
+     "value": "0x81",
+     "model_value": "0x81",
+     "model_class": "constant",
+     "formula": "PIR_INIT|PIR_QSTRN (data training)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40687e0",
+     "address": "0xb01c00d4",
+     "register": "uPCTL.TMRD",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "constant",
+     "formula": "4",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40687ec",
+     "address": "0xb01c00d8",
+     "register": "uPCTL.TRFC",
+     "value": "0xa4",
+     "model_value": "0xa4",
+     "model_class": "ini",
+     "formula": "tRFC",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40687f8",
+     "address": "0xb01c00dc",
+     "register": "uPCTL.TRP",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "tRP",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068804",
+     "address": "0xb01c00e4",
+     "register": "uPCTL.TAL",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068810",
+     "address": "0xb01c00e8",
+     "register": "uPCTL.TCL",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "CL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406881c",
+     "address": "0xb01c00ec",
+     "register": "uPCTL.TCWL",
+     "value": "0x6",
+     "model_value": "0x6",
+     "model_class": "ini",
+     "formula": "CWL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068828",
+     "address": "0xb01c00f0",
+     "register": "uPCTL.TRAS",
+     "value": "0x12",
+     "model_value": "0x12",
+     "model_class": "ini",
+     "formula": "tRAS",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068834",
+     "address": "0xb01c00f4",
+     "register": "uPCTL.TRC",
+     "value": "0x1a",
+     "model_value": "0x1a",
+     "model_class": "ini",
+     "formula": "tRC",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068840",
+     "address": "0xb01c00f8",
+     "register": "uPCTL.TRCD",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "tRCD",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406884c",
+     "address": "0xb01c00fc",
+     "register": "uPCTL.TRRD",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "ini",
+     "formula": "tRRD",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068858",
+     "address": "0xb01c0100",
+     "register": "uPCTL.TRTP",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tRTP",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068864",
+     "address": "0xb01c0104",
+     "register": "uPCTL.TWR",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "tWR",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068870",
+     "address": "0xb01c0108",
+     "register": "uPCTL.TWTR",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tWTR",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406887c",
+     "address": "0xb01c010c",
+     "register": "uPCTL.TEXSR",
+     "value": "0x200",
+     "model_value": "0x200",
+     "model_class": "constant",
+     "formula": "512",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406888c",
+     "address": "0xb01c00d0",
+     "register": "uPCTL.TREFI",
+     "value": "0x7004e",
+     "model_value": "0x7004e",
+     "model_class": "constant",
+     "formula": "78 | 0x70000",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068898",
+     "address": "0xb01c0148",
+     "register": "uPCTL+0x148 (reserved5[0] in ddr_rk3288.h)",
+     "value": "0xe42",
+     "model_value": "0xe42",
+     "model_class": "ini",
+     "formula": "F*78/10",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688a4",
+     "address": "0xb01c0110",
+     "register": "uPCTL.TXP",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tXP",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688b0",
+     "address": "0xb01c0120",
+     "register": "uPCTL.TDQS",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40688bc",
+     "address": "0xb01c00e0",
+     "register": "uPCTL.TRTW",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "CL + 6 - CWL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688c8",
+     "address": "0xb01c0124",
+     "register": "uPCTL.TCKSRE",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "ini",
+     "formula": "F<500 ? 5 : F/100+1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688d4",
+     "address": "0xb01c0128",
+     "register": "uPCTL.TCKSRX",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "ini",
+     "formula": "F<500 ? 5 : F/100+1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688e0",
+     "address": "0xb01c0130",
+     "register": "uPCTL.TMOD",
+     "value": "0xc",
+     "model_value": "0xc",
+     "model_class": "constant",
+     "formula": "12",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40688ec",
+     "address": "0xb01c012c",
+     "register": "uPCTL.TCKE",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "ini",
+     "formula": "tCKE",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688f8",
+     "address": "0xb01c013c",
+     "register": "uPCTL.TMRR",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068904",
+     "address": "0xb01c0134",
+     "register": "uPCTL.TRSTL",
+     "value": "0x46",
+     "model_value": "0x46",
+     "model_class": "ini",
+     "formula": "F*150/1000",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068910",
+     "address": "0xb01c0118",
+     "register": "uPCTL.TZQCS",
+     "value": "0x40",
+     "model_value": "0x40",
+     "model_class": "constant",
+     "formula": "64",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406891c",
+     "address": "0xb01c0138",
+     "register": "uPCTL.TZQCL",
+     "value": "0x200",
+     "model_value": "0x200",
+     "model_class": "constant",
+     "formula": "512",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068928",
+     "address": "0xb01c0114",
+     "register": "uPCTL.TXPDLL",
+     "value": "0xc",
+     "model_value": "0xc",
+     "model_class": "ini",
+     "formula": "tXPDLL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068934",
+     "address": "0xb01c011c",
+     "register": "uPCTL.TZQCSI",
+     "value": "0x7210",
+     "model_value": "0x7210",
+     "model_class": "ini",
+     "formula": "(F*78/10) << 3",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068940",
+     "address": "0xb01c0140",
+     "register": "uPCTL.TCKESR",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tCKE + 1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406894c",
+     "address": "0xb01c0144",
+     "register": "uPCTL.TDPD",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406896c",
+     "address": "0xb01c0040",
+     "register": "uPCTL.MCMD",
+     "value": "0x80100000",
+     "model_value": "0x80100000",
+     "model_class": "detected",
+     "formula": "START | rank mask(cs) | NOP",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb406899c",
+     "address": "0xb01c0040",
+     "register": "uPCTL.MCMD",
+     "value": "0x80100001",
+     "model_value": "0x80100001",
+     "model_class": "detected",
+     "formula": "START | rank mask(cs) | 1",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4067218",
+     "address": "0xb01c0004",
+     "register": "uPCTL.SCTL",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "CFG_STATE (via 0xb4067170)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689c0",
+     "address": "0xb01c0000",
+     "register": "uPCTL.SCFG",
+     "value": "0x700",
+     "model_value": "0x700",
+     "model_class": "constant",
+     "formula": "0x700",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689cc",
+     "address": "0xb01c0264",
+     "register": "uPCTL.DFITPHYRDLAT",
+     "value": "0xa",
+     "model_value": "0xa",
+     "model_class": "constant",
+     "formula": "10",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689d8",
+     "address": "0xb01c0250",
+     "register": "uPCTL.DFITPHYWRDATA",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689ec",
+     "address": "0xb01c0084",
+     "register": "uPCTL.PPCFG",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "ini",
+     "formula": "bus_sel ? 1 : 0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a04",
+     "address": "0xb01c024c",
+     "register": "uPCTL.DFIODTRANKMAP",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "detected",
+     "formula": "cs==2 ? 0x21 : 1",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068a10",
+     "address": "0xb01c02c4",
+     "register": "uPCTL.DFISTCFG0",
+     "value": "0x7",
+     "model_value": "0x7",
+     "model_class": "constant",
+     "formula": "0x7",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a1c",
+     "address": "0xb01c02c8",
+     "register": "uPCTL.DFISTCFG1",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "constant",
+     "formula": "0x3",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a28",
+     "address": "0xb01c02d8",
+     "register": "uPCTL.DFISTCFG2",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "constant",
+     "formula": "0x3",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a34",
+     "address": "0xb01c02f0",
+     "register": "uPCTL.DFILPCFG0",
+     "value": "0x70101",
+     "model_value": "0x70101",
+     "model_class": "constant",
+     "formula": "0x70101",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a40",
+     "address": "0xb01c0180",
+     "register": "uPCTL.ECCCFG",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0x0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a4c",
+     "address": "0xb01c0254",
+     "register": "uPCTL.DFITPHYWRLAT",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "ini",
+     "formula": "(CWL even ? CWL-2 : CWL-1) >> 1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068a58",
+     "address": "0xb01c0260",
+     "register": "uPCTL.DFITRDDATAEN",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "ini",
+     "formula": "(CL even ? CL-2 : CL-3) >> 1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068a64",
+     "address": "0xb01c02d4",
+     "register": "uPCTL.DFITDRAMCLKDIS",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "0x2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a70",
+     "address": "0xb01c02d0",
+     "register": "uPCTL.DFITDRAMCLKEN",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "0x2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a7c",
+     "address": "0xb01c0240",
+     "register": "uPCTL.DFITCTRLDELAY",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "0x2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a88",
+     "address": "0xb01c0270",
+     "register": "uPCTL.DFITPHYUPDTYPE0",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "0x1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068aa0",
+     "address": "0xb01c0244",
+     "register": "uPCTL.DFIODTCFG",
+     "value": "0x808",
+     "model_value": "0x808",
+     "model_class": "ini",
+     "formula": "0x808",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068ab8",
+     "address": "0xb01c0244",
+     "register": "uPCTL.DFIODTCFG",
+     "value": "0xa0a",
+     "model_value": "0xa0a",
+     "model_class": "ini",
+     "formula": "prev | 0x202",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068ac4",
+     "address": "0xb01c0050",
+     "register": "uPCTL.TSTATEN",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4067218",
+     "address": "0xb01c0004",
+     "register": "uPCTL.SCTL",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "GO_STATE (via 0xb4067170)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068b80",
+     "address": "0xb0290088",
+     "register": "DMM+0x88",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068ba8",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "detected",
+     "formula": "x32 | 8 | x32<<12 | (cs-1)<<4",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068bb4",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x40000000",
+     "model_value": "0x40000000",
+     "model_class": "reset",
+     "formula": "prev | 0x40000000",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068bc0",
+     "address": "0xb0290024",
+     "register": "DMM+0x24",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068c1c",
+     "address": "0xb0290080",
+     "register": "DMM+0x80",
+     "value": "0x598",
+     "model_value": "0x598",
+     "model_class": "ini",
+     "formula": "((tRC+3)>>2)+1 | (((tWR+tRCD+3+CWL+tRP)>>2)+1)<<4 | (((tRTP+tRCD-1+tRP)>>2)+1)<<8",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068c28",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x48000000",
+     "model_value": "0x48000000",
+     "model_class": "reset",
+     "formula": "prev | 0x8000000",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068c74",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x200e",
+     "model_value": "0x200e",
+     "model_class": "detected",
+     "formula": "prev & 0xfffe1f99 | 0x2006 (column probe)",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068ce4",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x206c",
+     "model_value": "0x206c",
+     "model_class": "detected",
+     "formula": "prev & 0xffffff99 | col<<1 | 0x60 (row probe)",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068f04",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x202c",
+     "model_value": "0x202c",
+     "model_class": "detected",
+     "formula": "prev & 0xfffc1899 | rcc>>1 | 0x2000 | ((cap>>8)-1)<<8",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb406736c",
+     "address": "0xb029000c",
+     "register": "DMM+0x0c",
+     "value": "0xf801",
+     "model_value": "0xf801",
+     "model_class": "reset",
+     "formula": "prev & ~0xffff | 0xf801",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb406737c",
+     "address": "0xb0290004",
+     "register": "DMM+0x04",
+     "value": "0x818f808",
+     "model_value": "0x818f808",
+     "model_class": "constant",
+     "formula": "prev & ~0xffffffff | 0x818f808",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406738c",
+     "address": "0xb01b00b4",
+     "register": "0xb01b00b4",
+     "value": "0x3ff",
+     "model_value": "0x3ff",
+     "model_class": "reset",
+     "formula": "prev & ~0xffff | 0x3ff",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4067398",
+     "address": "0xb0290068",
+     "register": "DMM+0x68",
+     "value": "0x3180",
+     "model_value": "0x3180",
+     "model_class": "constant",
+     "formula": "0x3180",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40673a4",
+     "address": "0xb0290010",
+     "register": "DMM+0x10",
+     "value": "0xf8010000",
+     "model_value": "0xf8010000",
+     "model_class": "constant",
+     "formula": "0xf8010000",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40673b0",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x48000000",
+     "model_value": "0x48000000",
+     "model_class": "reset",
+     "formula": "prev & ~0x4",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb40673bc",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x48000004",
+     "model_value": "0x48000004",
+     "model_class": "reset",
+     "formula": "prev | 0x4",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    }
+   ],
+   "class_consistency": {
+    "contradictions": [],
+    "model_more_general": [
+     "PUBL.DSGCR",
+     "uPCTL.PPCFG"
+    ]
+   },
+   "hardware_reads": [
+    {
+     "site": "0xb406712c",
+     "address": "0xb0160008",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a0",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a8",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a8",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a0",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068108",
+     "address": "0xb01c8004",
+     "value": "0x10000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x0",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb40681d0",
+     "address": "0xb01c0048",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01c8050",
+     "value": "0x21",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8240",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8280",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb4068654",
+     "address": "0xb01c8188",
+     "value": "0x80000000",
+     "rule": "ZQ done; impedance code unknown"
+    },
+    {
+     "site": "0xb40686a8",
+     "address": "0xb01c800c",
+     "value": "0x7",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb4068708",
+     "address": "0xb01c800c",
+     "value": "0xf",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb40687a4",
+     "address": "0xb01c800c",
+     "value": "0x3f",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb4068f64",
+     "address": "0xb01c81c4",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb4068f70",
+     "address": "0xb01c8204",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb4068f7c",
+     "address": "0xb01c8244",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb4068f88",
+     "address": "0xb01c8284",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb0160008",
+     "value": "0x327",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a0",
+     "value": "0xa",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a8",
+     "value": "0x5",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a8",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a0",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068108",
+     "address": "0xb01c8004",
+     "value": "0x10000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x0",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb40681d0",
+     "address": "0xb01c0048",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01c8050",
+     "value": "0x21",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8240",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8280",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068654",
+     "address": "0xb01c8188",
+     "value": "0x80000000",
+     "rule": "ZQ done; impedance code unknown"
+    },
+    {
+     "site": "0xb40686a8",
+     "address": "0xb01c800c",
+     "value": "0x7",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb4068708",
+     "address": "0xb01c800c",
+     "value": "0xf",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb40687a4",
+     "address": "0xb01c800c",
+     "value": "0x1f",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb40687cc",
+     "address": "0xb01c02c0",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb4068974",
+     "address": "0xb01c0040",
+     "value": "0x100000",
+     "rule": "MCMD start bit cleared (command done)"
+    },
+    {
+     "site": "0xb40689a4",
+     "address": "0xb01c0040",
+     "value": "0x100001",
+     "rule": "MCMD start bit cleared (command done)"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x0",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb4067220",
+     "address": "0xb01c0008",
+     "value": "0x1",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01c0244",
+     "value": "0x808",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068acc",
+     "address": "0xb01c004c",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb4068adc",
+     "address": "0xb01c0008",
+     "value": "0x1",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x1",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb4067220",
+     "address": "0xb01c0008",
+     "value": "0x3",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb0290000",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb0290000",
+     "value": "0x40000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068c5c",
+     "address": "0xb0290028",
+     "value": "0x8",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068ca8",
+     "address": "0x4",
+     "value": "0x0",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068ca8",
+     "address": "0x4",
+     "value": "0x0",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068ca8",
+     "address": "0x4",
+     "value": "0x6996",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068cd0",
+     "address": "0xb0290028",
+     "value": "0x200e",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068d64",
+     "address": "0x4",
+     "value": "0x0",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068d64",
+     "address": "0x4",
+     "value": "0x6996",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068e84",
+     "address": "0xb0290028",
+     "value": "0x206c",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4069040",
+     "address": "0xb0290028",
+     "value": "0x202c",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4067108",
+     "address": "0xb029000c",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb4067108",
+     "address": "0xb0290004",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb4067108",
+     "address": "0xb01b00b4",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb0290000",
+     "value": "0x48000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb0290000",
+     "value": "0x48000000",
+     "rule": "last written value"
+    }
+   ],
+   "model_vs_unicorn": {
+    "firmware_record_reference": [],
+    "primary_record_reference": [],
+    "scenarios": {
+     "x16-1rank-1Gb": [],
+     "x16-1rank-2Gb": [],
+     "x16-1rank-4Gb": [],
+     "x16-2rank-2Gb": []
+    },
+    "reset_seeds": {
+     "0xffffffff": [],
+     "0xa5a5a5a5": []
+    },
+    "note": "lists of clocks (MHz) where the model and Unicorn write sequences or console lines differ"
+   },
+   "symbolic": {
+    "paths": 8,
+    "domains": [
+     [
+      [
+       804,
+       1200
+      ]
+     ],
+     [
+      [
+       792,
+       803
+      ]
+     ],
+     [
+      [
+       672,
+       791
+      ]
+     ],
+     [
+      [
+       540,
+       671
+      ]
+     ],
+     [
+      [
+       408,
+       419
+      ]
+     ],
+     [
+      [
+       420,
+       503
+      ]
+     ],
+     [
+      [
+       504,
+       539
+      ]
+     ],
+     [
+      [
+       100,
+       407
+      ]
+     ]
+    ],
+    "writes_per_path": [
+     156
+    ],
+    "clobber_dependent": [],
+    "evaluated_at_clock": 468,
+    "equals_unicorn": true,
+    "clock_dependent_writes": [
+     "0xb0160008",
+     "0xb01c007c",
+     "0xb01c0080",
+     "0xb01c00c0",
+     "0xb01c00cc",
+     "0xb01c00d8",
+     "0xb01c00dc",
+     "0xb01c00f0",
+     "0xb01c00f4",
+     "0xb01c00f8",
+     "0xb01c00fc",
+     "0xb01c0100",
+     "0xb01c0104",
+     "0xb01c0108",
+     "0xb01c0110",
+     "0xb01c0114",
+     "0xb01c011c",
+     "0xb01c0124",
+     "0xb01c0128",
+     "0xb01c012c",
+     "0xb01c0134",
+     "0xb01c0140",
+     "0xb01c0148",
+     "0xb01c8018",
+     "0xb01c801c",
+     "0xb01c8020",
+     "0xb01c8034",
+     "0xb01c8038",
+     "0xb01c803c",
+     "0xb01c8040",
+     "0xb0290080"
+    ]
+   }
+  },
+  "stock-221223": {
+   "loader_sha256": "bb59f0651f34baed066bad75e40f2ee9f7ab8dbe3e287e52a8428c9bcbf1b5ec",
+   "code_sha256": "6b17b88c92e4d9f90f3f123e4a340b692d001bada4f78f24889481b73adf6ea9",
+   "bootloader_ini": {
+    "primary_record": {
+     "clock_mhz": 468,
+     "capacity_mib": 256,
+     "bus_sel": 1,
+     "cs": 1,
+     "type": 16,
+     "rcc": 72,
+     "rdodt": 1,
+     "wrodt": 1,
+     "drv": 12
+    },
+    "second_record": {
+     "clock_mhz": 468,
+     "capacity_mib": 0,
+     "bus_sel": 1,
+     "cs": 0,
+     "type": 16,
+     "rcc": 0,
+     "rdodt": 1,
+     "wrodt": 1,
+     "drv": 12
+    },
+    "word_0x2c": 1,
+    "selected": "second",
+    "decode_matches_firmware_copy": true
+   },
+   "console": [
+    "DRAM init mode0,type16,2cs,x16bus,rcc0x0,wrodt1,rdodt1,drvc,468MHz.@180525_R...",
+    "Fail:0x0,0x0,0x0,0x0;",
+    "DRAM init mode0,type16,1cs,x16bus,rcc0x0,wrodt1,rdodt1,drvc,468MHz.@180525_R...",
+    "Ok:DCU_CFG:0x202c,256MByte Cap."
+   ],
+   "return_value": "0x0",
+   "ini_writeback": {
+    "x16-1rank-1Gb": {
+     "after": "d4010000800000000101100801010c00",
+     "equals_shipped": false
+    },
+    "x16-1rank-2Gb": {
+     "after": "d4010000000100000101104801010c00",
+     "equals_shipped": true
+    },
+    "x16-1rank-4Gb": {
+     "after": "d4010000000200000101108801010c00",
+     "equals_shipped": false
+    },
+    "x16-2rank-2Gb": {
+     "after": "d4010000000200000102104801010c00",
+     "equals_shipped": false
+    }
+   },
+   "ini_primary_as_shipped": "d4010000000100000101104801010c00",
+   "param_after": {
+    "clock_mhz": 468,
+    "capacity_mib": 256,
+    "bus_sel": 1,
+    "cs": 1,
+    "type": 16,
+    "rcc": 72,
+    "rdodt": 1,
+    "wrodt": 1,
+    "drv": 12,
+    "byte_b": 0,
+    "raw": "d40100010101104801010c00"
+   },
+   "instructions": 4840,
+   "timings": {
+    "tRFC": {
+     "cycles": 164,
+     "ns": 350.427
+    },
+    "tRP": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "tRCD": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "tRAS": {
+     "cycles": 18,
+     "ns": 38.462
+    },
+    "tRC": {
+     "cycles": 26,
+     "ns": 55.556
+    },
+    "tRRD": {
+     "cycles": 5,
+     "ns": 10.684
+    },
+    "tFAW": {
+     "cycles": 24,
+     "ns": 51.282
+    },
+    "tWR": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "tRTP": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "tWTR": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "CL": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "CWL": {
+     "cycles": 6,
+     "ns": 12.821
+    },
+    "tXP": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "tXPDLL": {
+     "cycles": 12,
+     "ns": 25.641
+    },
+    "tCKE": {
+     "cycles": 3,
+     "ns": 6.41
+    },
+    "tCKESR": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "tCKSRE": {
+     "cycles": 5,
+     "ns": 10.684
+    },
+    "tRSTL": {
+     "cycles": 70,
+     "ns": 149.573
+    },
+    "tREFI_cycles": {
+     "cycles": 3650,
+     "ns": 7799.145
+    },
+    "tZQCSI": {
+     "cycles": 29200,
+     "ns": 62393.162
+    },
+    "TRTW": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "dfi_wrlat": {
+     "cycles": 2,
+     "ns": 4.274
+    },
+    "dfi_rddata_en": {
+     "cycles": 3,
+     "ns": 6.41
+    },
+    "F_mhz": 468,
+    "tCK_ns": 2.1368,
+    "density_mib": 2048,
+    "tRFC_ns_selected": 350
+   },
+   "final_pass": [
+    {
+     "site": "0xb406800c",
+     "address": "0xb0160008",
+     "register": "CMU_DDRPLL",
+     "value": "0x227",
+     "model_value": "0x227",
+     "model_class": "detected",
+     "formula": "prev & ~0x100",
+     "varies_with": [
+      "hardware",
+      "clock"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068018",
+     "address": "0xb01600a0",
+     "register": "CMU_DEVCLKEN0",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0xa",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068024",
+     "address": "0xb01600a8",
+     "register": "CMU_DEVRST0",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0x5",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068038",
+     "address": "0xb01600a8",
+     "register": "CMU_DEVRST0",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "reset",
+     "formula": "prev | 0x5",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb406804c",
+     "address": "0xb0160008",
+     "register": "CMU_DDRPLL",
+     "value": "0x327",
+     "model_value": "0x327",
+     "model_class": "ini",
+     "formula": "(F/12) | 0x300  (F/12 = PLL multiple of 12 MHz)",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068060",
+     "address": "0xb01600a0",
+     "register": "CMU_DEVCLKEN0",
+     "value": "0xa",
+     "model_value": "0xa",
+     "model_class": "reset",
+     "formula": "prev | 0xa",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb40680d8",
+     "address": "0xb01c8014",
+     "register": "PUBL.ACDLLCR",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40680ec",
+     "address": "0xb01c8014",
+     "register": "PUBL.ACDLLCR",
+     "value": "0x40000000",
+     "model_value": "0x40000000",
+     "model_class": "constant",
+     "formula": "DLLSRST",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068100",
+     "address": "0xb01c8004",
+     "register": "PUBL.PIR",
+     "value": "0x10000000",
+     "model_value": "0x10000000",
+     "model_class": "constant",
+     "formula": "PIR_CLRSR",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406811c",
+     "address": "0xb01c0280",
+     "register": "uPCTL.DFITCTRLUPDMIN",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "constant",
+     "formula": "4",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068128",
+     "address": "0xb01c0284",
+     "register": "uPCTL.DFITCTRLUPDMAX",
+     "value": "0xa",
+     "model_value": "0xa",
+     "model_class": "constant",
+     "formula": "10",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068134",
+     "address": "0xb01c0288",
+     "register": "uPCTL.DFITCTRLUPDDLY",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "constant",
+     "formula": "8",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406814c",
+     "address": "0xb01c00c0",
+     "register": "uPCTL.TOGCNT1U",
+     "value": "0xea",
+     "model_value": "0xea",
+     "model_class": "ini",
+     "formula": "F >> 1   (1 us in controller clocks, F/2)",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068170",
+     "address": "0xb01c00cc",
+     "register": "uPCTL.TOGCNT100N",
+     "value": "0x17",
+     "model_value": "0x17",
+     "model_class": "ini",
+     "formula": "F / 20  (100 ns in controller clocks)",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406817c",
+     "address": "0xb01c00c4",
+     "register": "uPCTL.TINIT",
+     "value": "0xc8",
+     "model_value": "0xc8",
+     "model_class": "constant",
+     "formula": "200",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068188",
+     "address": "0xb01c00c8",
+     "register": "uPCTL.TRSTH",
+     "value": "0x1f4",
+     "model_value": "0x1f4",
+     "model_class": "constant",
+     "formula": "500 (DDR3 branch)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068194",
+     "address": "0xb0290064",
+     "register": "DMM+0x64",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40681a8",
+     "address": "0xb0290064",
+     "register": "DMM+0x64",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40681bc",
+     "address": "0xb01c0044",
+     "register": "uPCTL.POWCTL",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "POWER_UP_START",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40681f0",
+     "address": "0xb01c0080",
+     "register": "uPCTL.MCFG",
+     "value": "0x68029",
+     "model_value": "0x68029",
+     "model_class": "ini",
+     "formula": "((tFAW/tRRD) - 3) << 18 | 0x28029",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068218",
+     "address": "0xb01c007c",
+     "register": "uPCTL.MCFG1",
+     "value": "0x100",
+     "model_value": "0x100",
+     "model_class": "ini",
+     "formula": "(tRRD*(tFAW/tRRD + 1) - tFAW) << 8",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068224",
+     "address": "0xb01c8030",
+     "register": "PUBL.DCR",
+     "value": "0xb",
+     "model_value": "0xb",
+     "model_class": "constant",
+     "formula": "0xb (DDR3 branch)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068240",
+     "address": "0xb01c8040",
+     "register": "PUBL.MR0",
+     "value": "0x1140",
+     "model_value": "0x1140",
+     "model_class": "ini",
+     "formula": "(CL-4)<<4 | 0x1100 | tWR<<9",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406824c",
+     "address": "0xb01c8044",
+     "register": "PUBL.MR1",
+     "value": "0x6",
+     "model_value": "0x6",
+     "model_class": "ini",
+     "formula": "RTT_NOM[wrodt] | 2",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068258",
+     "address": "0xb01c8048",
+     "register": "PUBL.MR2",
+     "value": "0x248",
+     "model_value": "0x248",
+     "model_class": "ini",
+     "formula": "(CWL-5)<<3 | 0x240",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068264",
+     "address": "0xb01c8018",
+     "register": "PUBL.PTR0",
+     "value": "0x2a5766",
+     "model_value": "0x2a5766",
+     "model_class": "ini",
+     "formula": "min63(F*80/1000+1) | (F*5120/1000+1)<<6 | 0xa<<18",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068270",
+     "address": "0xb01c801c",
+     "register": "PUBL.PTR1",
+     "value": "0x5439210",
+     "model_value": "0x5439210",
+     "model_class": "ini",
+     "formula": "F*500 | (tRFC + F/100)<<19",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406827c",
+     "address": "0xb01c8020",
+     "register": "PUBL.PTR2",
+     "value": "0x3a96da0",
+     "model_value": "0x3a96da0",
+     "model_class": "ini",
+     "formula": "F*200 | F<<17",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068288",
+     "address": "0xb01c8034",
+     "register": "PUBL.DTPR0",
+     "value": "0x34b28890",
+     "model_value": "0x34b28890",
+     "model_class": "ini",
+     "formula": "tRTP<<2|tWTR<<5|tRP<<8|tRCD<<12|tRAS<<16|tRRD<<21|tRC<<25",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068294",
+     "address": "0xb01c8038",
+     "register": "PUBL.DTPR1",
+     "value": "0xa400c0",
+     "model_value": "0xa400c0",
+     "model_class": "ini",
+     "formula": "tFAW<<3 | tRFC<<16",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40682a0",
+     "address": "0xb01c803c",
+     "register": "PUBL.DTPR2",
+     "value": "0x10023200",
+     "model_value": "0x10023200",
+     "model_class": "ini",
+     "formula": "0x200 | tXPDLL<<10 | tCKESR<<15 | 0x200<<19",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40682ac",
+     "address": "0xb01c8054",
+     "register": "PUBL.DTAR",
+     "value": "0x20000000",
+     "model_value": "0x20000000",
+     "model_class": "constant",
+     "formula": "0x20000000",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40682c4",
+     "address": "0xb01c8028",
+     "register": "PUBL.DXCCR",
+     "value": "0x911",
+     "model_value": "0x911",
+     "model_class": "ini",
+     "formula": "0x911",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40682d0",
+     "address": "0xb01c8050",
+     "register": "PUBL.ODTCR",
+     "value": "0x21",
+     "model_value": "0x21",
+     "model_class": "ini",
+     "formula": "0x21",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068314",
+     "address": "0xb01c8184",
+     "register": "PUBL.ZQ0CR1",
+     "value": "0x4c",
+     "model_value": "0x4c",
+     "model_class": "ini",
+     "formula": "ZQ_ODT[rdodt] | drv",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068320",
+     "address": "0xb01c8024",
+     "register": "PUBL.ACIOCR",
+     "value": "0xbc03812",
+     "model_value": "0xbc03812",
+     "model_class": "ini",
+     "formula": "0xbc03812",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068600",
+     "address": "0xb01c8050",
+     "register": "PUBL.ODTCR",
+     "value": "0x210021",
+     "model_value": "0x210021",
+     "model_class": "ini",
+     "formula": "prev | 0x210000",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406862c",
+     "address": "0xb01c8240",
+     "register": "PUBL.DX2GCR",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0x1",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068638",
+     "address": "0xb01c8280",
+     "register": "PUBL.DX3GCR",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0x1",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068690",
+     "address": "0xb01c802c",
+     "register": "PUBL.DSGCR",
+     "value": "0xf2001807",
+     "model_value": "0xf2001807",
+     "model_class": "ini",
+     "formula": "0xf2001807 (DDR3 branch)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40686d8",
+     "address": "0xb01c8008",
+     "register": "PUBL.PGCR",
+     "value": "0x1842e02",
+     "model_value": "0x1842e02",
+     "model_class": "detected",
+     "formula": "cs==1 ? 0x1842e02 : 0x18c2e02 (rank enables)",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068700",
+     "address": "0xb01c8004",
+     "register": "PUBL.PIR",
+     "value": "0x7f",
+     "model_value": "0x7f",
+     "model_class": "constant",
+     "formula": "PIR 0x7f (DDR3, mode 0)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406879c",
+     "address": "0xb01c8004",
+     "register": "PUBL.PIR",
+     "value": "0x81",
+     "model_value": "0x81",
+     "model_class": "constant",
+     "formula": "PIR_INIT|PIR_QSTRN (data training)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40687e0",
+     "address": "0xb01c00d4",
+     "register": "uPCTL.TMRD",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "constant",
+     "formula": "4",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40687ec",
+     "address": "0xb01c00d8",
+     "register": "uPCTL.TRFC",
+     "value": "0xa4",
+     "model_value": "0xa4",
+     "model_class": "ini",
+     "formula": "tRFC",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40687f8",
+     "address": "0xb01c00dc",
+     "register": "uPCTL.TRP",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "tRP",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068804",
+     "address": "0xb01c00e4",
+     "register": "uPCTL.TAL",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068810",
+     "address": "0xb01c00e8",
+     "register": "uPCTL.TCL",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "CL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406881c",
+     "address": "0xb01c00ec",
+     "register": "uPCTL.TCWL",
+     "value": "0x6",
+     "model_value": "0x6",
+     "model_class": "ini",
+     "formula": "CWL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068828",
+     "address": "0xb01c00f0",
+     "register": "uPCTL.TRAS",
+     "value": "0x12",
+     "model_value": "0x12",
+     "model_class": "ini",
+     "formula": "tRAS",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068834",
+     "address": "0xb01c00f4",
+     "register": "uPCTL.TRC",
+     "value": "0x1a",
+     "model_value": "0x1a",
+     "model_class": "ini",
+     "formula": "tRC",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068840",
+     "address": "0xb01c00f8",
+     "register": "uPCTL.TRCD",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "tRCD",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406884c",
+     "address": "0xb01c00fc",
+     "register": "uPCTL.TRRD",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "ini",
+     "formula": "tRRD",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068858",
+     "address": "0xb01c0100",
+     "register": "uPCTL.TRTP",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tRTP",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068864",
+     "address": "0xb01c0104",
+     "register": "uPCTL.TWR",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "tWR",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068870",
+     "address": "0xb01c0108",
+     "register": "uPCTL.TWTR",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tWTR",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406887c",
+     "address": "0xb01c010c",
+     "register": "uPCTL.TEXSR",
+     "value": "0x200",
+     "model_value": "0x200",
+     "model_class": "constant",
+     "formula": "512",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406888c",
+     "address": "0xb01c00d0",
+     "register": "uPCTL.TREFI",
+     "value": "0x7004e",
+     "model_value": "0x7004e",
+     "model_class": "constant",
+     "formula": "78 | 0x70000",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068898",
+     "address": "0xb01c0148",
+     "register": "uPCTL+0x148 (reserved5[0] in ddr_rk3288.h)",
+     "value": "0xe42",
+     "model_value": "0xe42",
+     "model_class": "ini",
+     "formula": "F*78/10",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688a4",
+     "address": "0xb01c0110",
+     "register": "uPCTL.TXP",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tXP",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688b0",
+     "address": "0xb01c0120",
+     "register": "uPCTL.TDQS",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40688bc",
+     "address": "0xb01c00e0",
+     "register": "uPCTL.TRTW",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "CL + 6 - CWL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688c8",
+     "address": "0xb01c0124",
+     "register": "uPCTL.TCKSRE",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "ini",
+     "formula": "F<500 ? 5 : F/100+1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688d4",
+     "address": "0xb01c0128",
+     "register": "uPCTL.TCKSRX",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "ini",
+     "formula": "F<500 ? 5 : F/100+1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688e0",
+     "address": "0xb01c0130",
+     "register": "uPCTL.TMOD",
+     "value": "0xc",
+     "model_value": "0xc",
+     "model_class": "constant",
+     "formula": "12",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40688ec",
+     "address": "0xb01c012c",
+     "register": "uPCTL.TCKE",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "ini",
+     "formula": "tCKE",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688f8",
+     "address": "0xb01c013c",
+     "register": "uPCTL.TMRR",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068904",
+     "address": "0xb01c0134",
+     "register": "uPCTL.TRSTL",
+     "value": "0x46",
+     "model_value": "0x46",
+     "model_class": "ini",
+     "formula": "F*150/1000",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068910",
+     "address": "0xb01c0118",
+     "register": "uPCTL.TZQCS",
+     "value": "0x40",
+     "model_value": "0x40",
+     "model_class": "constant",
+     "formula": "64",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406891c",
+     "address": "0xb01c0138",
+     "register": "uPCTL.TZQCL",
+     "value": "0x200",
+     "model_value": "0x200",
+     "model_class": "constant",
+     "formula": "512",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068928",
+     "address": "0xb01c0114",
+     "register": "uPCTL.TXPDLL",
+     "value": "0xc",
+     "model_value": "0xc",
+     "model_class": "ini",
+     "formula": "tXPDLL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068934",
+     "address": "0xb01c011c",
+     "register": "uPCTL.TZQCSI",
+     "value": "0x7210",
+     "model_value": "0x7210",
+     "model_class": "ini",
+     "formula": "(F*78/10) << 3",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068940",
+     "address": "0xb01c0140",
+     "register": "uPCTL.TCKESR",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tCKE + 1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406894c",
+     "address": "0xb01c0144",
+     "register": "uPCTL.TDPD",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406896c",
+     "address": "0xb01c0040",
+     "register": "uPCTL.MCMD",
+     "value": "0x80100000",
+     "model_value": "0x80100000",
+     "model_class": "detected",
+     "formula": "START | rank mask(cs) | NOP",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb406899c",
+     "address": "0xb01c0040",
+     "register": "uPCTL.MCMD",
+     "value": "0x80100001",
+     "model_value": "0x80100001",
+     "model_class": "detected",
+     "formula": "START | rank mask(cs) | 1",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4067218",
+     "address": "0xb01c0004",
+     "register": "uPCTL.SCTL",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "CFG_STATE (via 0xb4067170)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689c0",
+     "address": "0xb01c0000",
+     "register": "uPCTL.SCFG",
+     "value": "0x700",
+     "model_value": "0x700",
+     "model_class": "constant",
+     "formula": "0x700",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689cc",
+     "address": "0xb01c0264",
+     "register": "uPCTL.DFITPHYRDLAT",
+     "value": "0xa",
+     "model_value": "0xa",
+     "model_class": "constant",
+     "formula": "10",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689d8",
+     "address": "0xb01c0250",
+     "register": "uPCTL.DFITPHYWRDATA",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689ec",
+     "address": "0xb01c0084",
+     "register": "uPCTL.PPCFG",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "ini",
+     "formula": "bus_sel ? 1 : 0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a04",
+     "address": "0xb01c024c",
+     "register": "uPCTL.DFIODTRANKMAP",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "detected",
+     "formula": "cs==2 ? 0x21 : 1",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068a10",
+     "address": "0xb01c02c4",
+     "register": "uPCTL.DFISTCFG0",
+     "value": "0x7",
+     "model_value": "0x7",
+     "model_class": "constant",
+     "formula": "0x7",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a1c",
+     "address": "0xb01c02c8",
+     "register": "uPCTL.DFISTCFG1",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "constant",
+     "formula": "0x3",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a28",
+     "address": "0xb01c02d8",
+     "register": "uPCTL.DFISTCFG2",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "constant",
+     "formula": "0x3",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a34",
+     "address": "0xb01c02f0",
+     "register": "uPCTL.DFILPCFG0",
+     "value": "0x70101",
+     "model_value": "0x70101",
+     "model_class": "constant",
+     "formula": "0x70101",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a40",
+     "address": "0xb01c0180",
+     "register": "uPCTL.ECCCFG",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0x0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a4c",
+     "address": "0xb01c0254",
+     "register": "uPCTL.DFITPHYWRLAT",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "ini",
+     "formula": "(CWL even ? CWL-2 : CWL-1) >> 1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068a58",
+     "address": "0xb01c0260",
+     "register": "uPCTL.DFITRDDATAEN",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "ini",
+     "formula": "(CL even ? CL-2 : CL-3) >> 1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068a64",
+     "address": "0xb01c02d4",
+     "register": "uPCTL.DFITDRAMCLKDIS",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "0x2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a70",
+     "address": "0xb01c02d0",
+     "register": "uPCTL.DFITDRAMCLKEN",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "0x2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a7c",
+     "address": "0xb01c0240",
+     "register": "uPCTL.DFITCTRLDELAY",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "0x2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a88",
+     "address": "0xb01c0270",
+     "register": "uPCTL.DFITPHYUPDTYPE0",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "0x1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068aa0",
+     "address": "0xb01c0244",
+     "register": "uPCTL.DFIODTCFG",
+     "value": "0x808",
+     "model_value": "0x808",
+     "model_class": "ini",
+     "formula": "0x808",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068ab8",
+     "address": "0xb01c0244",
+     "register": "uPCTL.DFIODTCFG",
+     "value": "0xa0a",
+     "model_value": "0xa0a",
+     "model_class": "ini",
+     "formula": "prev | 0x202",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068ac4",
+     "address": "0xb01c0050",
+     "register": "uPCTL.TSTATEN",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4067218",
+     "address": "0xb01c0004",
+     "register": "uPCTL.SCTL",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "GO_STATE (via 0xb4067170)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068b80",
+     "address": "0xb0290088",
+     "register": "DMM+0x88",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068ba8",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "detected",
+     "formula": "x32 | 8 | x32<<12 | (cs-1)<<4",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068bb4",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x40000000",
+     "model_value": "0x40000000",
+     "model_class": "reset",
+     "formula": "prev | 0x40000000",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068bc0",
+     "address": "0xb0290024",
+     "register": "DMM+0x24",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068c1c",
+     "address": "0xb0290080",
+     "register": "DMM+0x80",
+     "value": "0x598",
+     "model_value": "0x598",
+     "model_class": "ini",
+     "formula": "((tRC+3)>>2)+1 | (((tWR+tRCD+3+CWL+tRP)>>2)+1)<<4 | (((tRTP+tRCD-1+tRP)>>2)+1)<<8",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068c28",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x48000000",
+     "model_value": "0x48000000",
+     "model_class": "reset",
+     "formula": "prev | 0x8000000",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068c74",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x200e",
+     "model_value": "0x200e",
+     "model_class": "detected",
+     "formula": "prev & 0xfffe1f99 | 0x2006 (column probe)",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068ce4",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x206c",
+     "model_value": "0x206c",
+     "model_class": "detected",
+     "formula": "prev & 0xffffff99 | col<<1 | 0x60 (row probe)",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068f04",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x202c",
+     "model_value": "0x202c",
+     "model_class": "detected",
+     "formula": "prev & 0xfffc1899 | rcc>>1 | 0x2000 | ((cap>>8)-1)<<8",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb406736c",
+     "address": "0xb029000c",
+     "register": "DMM+0x0c",
+     "value": "0xf801",
+     "model_value": "0xf801",
+     "model_class": "reset",
+     "formula": "prev & ~0xffff | 0xf801",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb406737c",
+     "address": "0xb0290004",
+     "register": "DMM+0x04",
+     "value": "0x818f808",
+     "model_value": "0x818f808",
+     "model_class": "constant",
+     "formula": "prev & ~0xffffffff | 0x818f808",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406738c",
+     "address": "0xb01b00b4",
+     "register": "0xb01b00b4",
+     "value": "0x3ff",
+     "model_value": "0x3ff",
+     "model_class": "reset",
+     "formula": "prev & ~0xffff | 0x3ff",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4067398",
+     "address": "0xb0290068",
+     "register": "DMM+0x68",
+     "value": "0x3180",
+     "model_value": "0x3180",
+     "model_class": "constant",
+     "formula": "0x3180",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40673a4",
+     "address": "0xb0290010",
+     "register": "DMM+0x10",
+     "value": "0xf8010000",
+     "model_value": "0xf8010000",
+     "model_class": "constant",
+     "formula": "0xf8010000",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40673b0",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x48000000",
+     "model_value": "0x48000000",
+     "model_class": "reset",
+     "formula": "prev & ~0x4",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb40673bc",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x48000004",
+     "model_value": "0x48000004",
+     "model_class": "reset",
+     "formula": "prev | 0x4",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    }
+   ],
+   "class_consistency": {
+    "contradictions": [],
+    "model_more_general": [
+     "PUBL.DSGCR",
+     "uPCTL.PPCFG"
+    ]
+   },
+   "hardware_reads": [
+    {
+     "site": "0xb406712c",
+     "address": "0xb0160008",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a0",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a8",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a8",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a0",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068108",
+     "address": "0xb01c8004",
+     "value": "0x10000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x0",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb40681d0",
+     "address": "0xb01c0048",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01c8050",
+     "value": "0x21",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8240",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8280",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb4068654",
+     "address": "0xb01c8188",
+     "value": "0x80000000",
+     "rule": "ZQ done; impedance code unknown"
+    },
+    {
+     "site": "0xb40686a8",
+     "address": "0xb01c800c",
+     "value": "0x7",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb4068708",
+     "address": "0xb01c800c",
+     "value": "0xf",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb40687a4",
+     "address": "0xb01c800c",
+     "value": "0x3f",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb4068f64",
+     "address": "0xb01c81c4",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb4068f70",
+     "address": "0xb01c8204",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb4068f7c",
+     "address": "0xb01c8244",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb4068f88",
+     "address": "0xb01c8284",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb0160008",
+     "value": "0x327",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a0",
+     "value": "0xa",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a8",
+     "value": "0x5",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a8",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a0",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068108",
+     "address": "0xb01c8004",
+     "value": "0x10000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x0",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb40681d0",
+     "address": "0xb01c0048",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01c8050",
+     "value": "0x21",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8240",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8280",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068654",
+     "address": "0xb01c8188",
+     "value": "0x80000000",
+     "rule": "ZQ done; impedance code unknown"
+    },
+    {
+     "site": "0xb40686a8",
+     "address": "0xb01c800c",
+     "value": "0x7",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb4068708",
+     "address": "0xb01c800c",
+     "value": "0xf",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb40687a4",
+     "address": "0xb01c800c",
+     "value": "0x1f",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb40687cc",
+     "address": "0xb01c02c0",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb4068974",
+     "address": "0xb01c0040",
+     "value": "0x100000",
+     "rule": "MCMD start bit cleared (command done)"
+    },
+    {
+     "site": "0xb40689a4",
+     "address": "0xb01c0040",
+     "value": "0x100001",
+     "rule": "MCMD start bit cleared (command done)"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x0",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb4067220",
+     "address": "0xb01c0008",
+     "value": "0x1",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01c0244",
+     "value": "0x808",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068acc",
+     "address": "0xb01c004c",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb4068adc",
+     "address": "0xb01c0008",
+     "value": "0x1",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x1",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb4067220",
+     "address": "0xb01c0008",
+     "value": "0x3",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb0290000",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb0290000",
+     "value": "0x40000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068c5c",
+     "address": "0xb0290028",
+     "value": "0x8",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068ca8",
+     "address": "0x4",
+     "value": "0x0",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068ca8",
+     "address": "0x4",
+     "value": "0x0",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068ca8",
+     "address": "0x4",
+     "value": "0x6996",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068cd0",
+     "address": "0xb0290028",
+     "value": "0x200e",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068d64",
+     "address": "0x4",
+     "value": "0x0",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068d64",
+     "address": "0x4",
+     "value": "0x6996",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068e84",
+     "address": "0xb0290028",
+     "value": "0x206c",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4069040",
+     "address": "0xb0290028",
+     "value": "0x202c",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4067108",
+     "address": "0xb029000c",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb4067108",
+     "address": "0xb0290004",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb4067108",
+     "address": "0xb01b00b4",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb0290000",
+     "value": "0x48000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb0290000",
+     "value": "0x48000000",
+     "rule": "last written value"
+    }
+   ],
+   "model_vs_unicorn": {
+    "firmware_record_reference": [],
+    "primary_record_reference": [],
+    "scenarios": {
+     "x16-1rank-1Gb": [],
+     "x16-1rank-2Gb": [],
+     "x16-1rank-4Gb": [],
+     "x16-2rank-2Gb": []
+    },
+    "reset_seeds": {
+     "0xffffffff": [],
+     "0xa5a5a5a5": []
+    },
+    "note": "lists of clocks (MHz) where the model and Unicorn write sequences or console lines differ"
+   },
+   "symbolic": {
+    "paths": 8,
+    "domains": [
+     [
+      [
+       804,
+       1200
+      ]
+     ],
+     [
+      [
+       792,
+       803
+      ]
+     ],
+     [
+      [
+       672,
+       791
+      ]
+     ],
+     [
+      [
+       540,
+       671
+      ]
+     ],
+     [
+      [
+       408,
+       419
+      ]
+     ],
+     [
+      [
+       420,
+       503
+      ]
+     ],
+     [
+      [
+       504,
+       539
+      ]
+     ],
+     [
+      [
+       100,
+       407
+      ]
+     ]
+    ],
+    "writes_per_path": [
+     156
+    ],
+    "clobber_dependent": [],
+    "evaluated_at_clock": 468,
+    "equals_unicorn": true,
+    "clock_dependent_writes": [
+     "0xb0160008",
+     "0xb01c007c",
+     "0xb01c0080",
+     "0xb01c00c0",
+     "0xb01c00cc",
+     "0xb01c00d8",
+     "0xb01c00dc",
+     "0xb01c00f0",
+     "0xb01c00f4",
+     "0xb01c00f8",
+     "0xb01c00fc",
+     "0xb01c0100",
+     "0xb01c0104",
+     "0xb01c0108",
+     "0xb01c0110",
+     "0xb01c0114",
+     "0xb01c011c",
+     "0xb01c0124",
+     "0xb01c0128",
+     "0xb01c012c",
+     "0xb01c0134",
+     "0xb01c0140",
+     "0xb01c0148",
+     "0xb01c8018",
+     "0xb01c801c",
+     "0xb01c8020",
+     "0xb01c8034",
+     "0xb01c8038",
+     "0xb01c803c",
+     "0xb01c8040",
+     "0xb0290080"
+    ]
+   }
+  },
+  "stock-230309": {
+   "loader_sha256": "a3a56aca752559c0690c259420de006c6def815bfae8ddcdc38fd840f3ad67a1",
+   "code_sha256": "6b17b88c92e4d9f90f3f123e4a340b692d001bada4f78f24889481b73adf6ea9",
+   "bootloader_ini": {
+    "primary_record": {
+     "clock_mhz": 468,
+     "capacity_mib": 256,
+     "bus_sel": 1,
+     "cs": 1,
+     "type": 16,
+     "rcc": 72,
+     "rdodt": 1,
+     "wrodt": 1,
+     "drv": 12
+    },
+    "second_record": {
+     "clock_mhz": 468,
+     "capacity_mib": 0,
+     "bus_sel": 1,
+     "cs": 0,
+     "type": 16,
+     "rcc": 0,
+     "rdodt": 1,
+     "wrodt": 1,
+     "drv": 12
+    },
+    "word_0x2c": 1,
+    "selected": "second",
+    "decode_matches_firmware_copy": true
+   },
+   "console": [
+    "DRAM init mode0,type16,2cs,x16bus,rcc0x0,wrodt1,rdodt1,drvc,468MHz.@180525_R...",
+    "Fail:0x0,0x0,0x0,0x0;",
+    "DRAM init mode0,type16,1cs,x16bus,rcc0x0,wrodt1,rdodt1,drvc,468MHz.@180525_R...",
+    "Ok:DCU_CFG:0x202c,256MByte Cap."
+   ],
+   "return_value": "0x0",
+   "ini_writeback": {
+    "x16-1rank-1Gb": {
+     "after": "d4010000800000000101100801010c00",
+     "equals_shipped": false
+    },
+    "x16-1rank-2Gb": {
+     "after": "d4010000000100000101104801010c00",
+     "equals_shipped": true
+    },
+    "x16-1rank-4Gb": {
+     "after": "d4010000000200000101108801010c00",
+     "equals_shipped": false
+    },
+    "x16-2rank-2Gb": {
+     "after": "d4010000000200000102104801010c00",
+     "equals_shipped": false
+    }
+   },
+   "ini_primary_as_shipped": "d4010000000100000101104801010c00",
+   "param_after": {
+    "clock_mhz": 468,
+    "capacity_mib": 256,
+    "bus_sel": 1,
+    "cs": 1,
+    "type": 16,
+    "rcc": 72,
+    "rdodt": 1,
+    "wrodt": 1,
+    "drv": 12,
+    "byte_b": 0,
+    "raw": "d40100010101104801010c00"
+   },
+   "instructions": 4840,
+   "timings": {
+    "tRFC": {
+     "cycles": 164,
+     "ns": 350.427
+    },
+    "tRP": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "tRCD": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "tRAS": {
+     "cycles": 18,
+     "ns": 38.462
+    },
+    "tRC": {
+     "cycles": 26,
+     "ns": 55.556
+    },
+    "tRRD": {
+     "cycles": 5,
+     "ns": 10.684
+    },
+    "tFAW": {
+     "cycles": 24,
+     "ns": 51.282
+    },
+    "tWR": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "tRTP": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "tWTR": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "CL": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "CWL": {
+     "cycles": 6,
+     "ns": 12.821
+    },
+    "tXP": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "tXPDLL": {
+     "cycles": 12,
+     "ns": 25.641
+    },
+    "tCKE": {
+     "cycles": 3,
+     "ns": 6.41
+    },
+    "tCKESR": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "tCKSRE": {
+     "cycles": 5,
+     "ns": 10.684
+    },
+    "tRSTL": {
+     "cycles": 70,
+     "ns": 149.573
+    },
+    "tREFI_cycles": {
+     "cycles": 3650,
+     "ns": 7799.145
+    },
+    "tZQCSI": {
+     "cycles": 29200,
+     "ns": 62393.162
+    },
+    "TRTW": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "dfi_wrlat": {
+     "cycles": 2,
+     "ns": 4.274
+    },
+    "dfi_rddata_en": {
+     "cycles": 3,
+     "ns": 6.41
+    },
+    "F_mhz": 468,
+    "tCK_ns": 2.1368,
+    "density_mib": 2048,
+    "tRFC_ns_selected": 350
+   },
+   "final_pass": [
+    {
+     "site": "0xb406800c",
+     "address": "0xb0160008",
+     "register": "CMU_DDRPLL",
+     "value": "0x227",
+     "model_value": "0x227",
+     "model_class": "detected",
+     "formula": "prev & ~0x100",
+     "varies_with": [
+      "hardware",
+      "clock"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068018",
+     "address": "0xb01600a0",
+     "register": "CMU_DEVCLKEN0",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0xa",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068024",
+     "address": "0xb01600a8",
+     "register": "CMU_DEVRST0",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0x5",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068038",
+     "address": "0xb01600a8",
+     "register": "CMU_DEVRST0",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "reset",
+     "formula": "prev | 0x5",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb406804c",
+     "address": "0xb0160008",
+     "register": "CMU_DDRPLL",
+     "value": "0x327",
+     "model_value": "0x327",
+     "model_class": "ini",
+     "formula": "(F/12) | 0x300  (F/12 = PLL multiple of 12 MHz)",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068060",
+     "address": "0xb01600a0",
+     "register": "CMU_DEVCLKEN0",
+     "value": "0xa",
+     "model_value": "0xa",
+     "model_class": "reset",
+     "formula": "prev | 0xa",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb40680d8",
+     "address": "0xb01c8014",
+     "register": "PUBL.ACDLLCR",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40680ec",
+     "address": "0xb01c8014",
+     "register": "PUBL.ACDLLCR",
+     "value": "0x40000000",
+     "model_value": "0x40000000",
+     "model_class": "constant",
+     "formula": "DLLSRST",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068100",
+     "address": "0xb01c8004",
+     "register": "PUBL.PIR",
+     "value": "0x10000000",
+     "model_value": "0x10000000",
+     "model_class": "constant",
+     "formula": "PIR_CLRSR",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406811c",
+     "address": "0xb01c0280",
+     "register": "uPCTL.DFITCTRLUPDMIN",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "constant",
+     "formula": "4",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068128",
+     "address": "0xb01c0284",
+     "register": "uPCTL.DFITCTRLUPDMAX",
+     "value": "0xa",
+     "model_value": "0xa",
+     "model_class": "constant",
+     "formula": "10",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068134",
+     "address": "0xb01c0288",
+     "register": "uPCTL.DFITCTRLUPDDLY",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "constant",
+     "formula": "8",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406814c",
+     "address": "0xb01c00c0",
+     "register": "uPCTL.TOGCNT1U",
+     "value": "0xea",
+     "model_value": "0xea",
+     "model_class": "ini",
+     "formula": "F >> 1   (1 us in controller clocks, F/2)",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068170",
+     "address": "0xb01c00cc",
+     "register": "uPCTL.TOGCNT100N",
+     "value": "0x17",
+     "model_value": "0x17",
+     "model_class": "ini",
+     "formula": "F / 20  (100 ns in controller clocks)",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406817c",
+     "address": "0xb01c00c4",
+     "register": "uPCTL.TINIT",
+     "value": "0xc8",
+     "model_value": "0xc8",
+     "model_class": "constant",
+     "formula": "200",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068188",
+     "address": "0xb01c00c8",
+     "register": "uPCTL.TRSTH",
+     "value": "0x1f4",
+     "model_value": "0x1f4",
+     "model_class": "constant",
+     "formula": "500 (DDR3 branch)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068194",
+     "address": "0xb0290064",
+     "register": "DMM+0x64",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40681a8",
+     "address": "0xb0290064",
+     "register": "DMM+0x64",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40681bc",
+     "address": "0xb01c0044",
+     "register": "uPCTL.POWCTL",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "POWER_UP_START",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40681f0",
+     "address": "0xb01c0080",
+     "register": "uPCTL.MCFG",
+     "value": "0x68029",
+     "model_value": "0x68029",
+     "model_class": "ini",
+     "formula": "((tFAW/tRRD) - 3) << 18 | 0x28029",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068218",
+     "address": "0xb01c007c",
+     "register": "uPCTL.MCFG1",
+     "value": "0x100",
+     "model_value": "0x100",
+     "model_class": "ini",
+     "formula": "(tRRD*(tFAW/tRRD + 1) - tFAW) << 8",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068224",
+     "address": "0xb01c8030",
+     "register": "PUBL.DCR",
+     "value": "0xb",
+     "model_value": "0xb",
+     "model_class": "constant",
+     "formula": "0xb (DDR3 branch)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068240",
+     "address": "0xb01c8040",
+     "register": "PUBL.MR0",
+     "value": "0x1140",
+     "model_value": "0x1140",
+     "model_class": "ini",
+     "formula": "(CL-4)<<4 | 0x1100 | tWR<<9",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406824c",
+     "address": "0xb01c8044",
+     "register": "PUBL.MR1",
+     "value": "0x6",
+     "model_value": "0x6",
+     "model_class": "ini",
+     "formula": "RTT_NOM[wrodt] | 2",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068258",
+     "address": "0xb01c8048",
+     "register": "PUBL.MR2",
+     "value": "0x248",
+     "model_value": "0x248",
+     "model_class": "ini",
+     "formula": "(CWL-5)<<3 | 0x240",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068264",
+     "address": "0xb01c8018",
+     "register": "PUBL.PTR0",
+     "value": "0x2a5766",
+     "model_value": "0x2a5766",
+     "model_class": "ini",
+     "formula": "min63(F*80/1000+1) | (F*5120/1000+1)<<6 | 0xa<<18",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068270",
+     "address": "0xb01c801c",
+     "register": "PUBL.PTR1",
+     "value": "0x5439210",
+     "model_value": "0x5439210",
+     "model_class": "ini",
+     "formula": "F*500 | (tRFC + F/100)<<19",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406827c",
+     "address": "0xb01c8020",
+     "register": "PUBL.PTR2",
+     "value": "0x3a96da0",
+     "model_value": "0x3a96da0",
+     "model_class": "ini",
+     "formula": "F*200 | F<<17",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068288",
+     "address": "0xb01c8034",
+     "register": "PUBL.DTPR0",
+     "value": "0x34b28890",
+     "model_value": "0x34b28890",
+     "model_class": "ini",
+     "formula": "tRTP<<2|tWTR<<5|tRP<<8|tRCD<<12|tRAS<<16|tRRD<<21|tRC<<25",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068294",
+     "address": "0xb01c8038",
+     "register": "PUBL.DTPR1",
+     "value": "0xa400c0",
+     "model_value": "0xa400c0",
+     "model_class": "ini",
+     "formula": "tFAW<<3 | tRFC<<16",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40682a0",
+     "address": "0xb01c803c",
+     "register": "PUBL.DTPR2",
+     "value": "0x10023200",
+     "model_value": "0x10023200",
+     "model_class": "ini",
+     "formula": "0x200 | tXPDLL<<10 | tCKESR<<15 | 0x200<<19",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40682ac",
+     "address": "0xb01c8054",
+     "register": "PUBL.DTAR",
+     "value": "0x20000000",
+     "model_value": "0x20000000",
+     "model_class": "constant",
+     "formula": "0x20000000",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40682c4",
+     "address": "0xb01c8028",
+     "register": "PUBL.DXCCR",
+     "value": "0x911",
+     "model_value": "0x911",
+     "model_class": "ini",
+     "formula": "0x911",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40682d0",
+     "address": "0xb01c8050",
+     "register": "PUBL.ODTCR",
+     "value": "0x21",
+     "model_value": "0x21",
+     "model_class": "ini",
+     "formula": "0x21",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068314",
+     "address": "0xb01c8184",
+     "register": "PUBL.ZQ0CR1",
+     "value": "0x4c",
+     "model_value": "0x4c",
+     "model_class": "ini",
+     "formula": "ZQ_ODT[rdodt] | drv",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068320",
+     "address": "0xb01c8024",
+     "register": "PUBL.ACIOCR",
+     "value": "0xbc03812",
+     "model_value": "0xbc03812",
+     "model_class": "ini",
+     "formula": "0xbc03812",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068600",
+     "address": "0xb01c8050",
+     "register": "PUBL.ODTCR",
+     "value": "0x210021",
+     "model_value": "0x210021",
+     "model_class": "ini",
+     "formula": "prev | 0x210000",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406862c",
+     "address": "0xb01c8240",
+     "register": "PUBL.DX2GCR",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0x1",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068638",
+     "address": "0xb01c8280",
+     "register": "PUBL.DX3GCR",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0x1",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068690",
+     "address": "0xb01c802c",
+     "register": "PUBL.DSGCR",
+     "value": "0xf2001807",
+     "model_value": "0xf2001807",
+     "model_class": "ini",
+     "formula": "0xf2001807 (DDR3 branch)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40686d8",
+     "address": "0xb01c8008",
+     "register": "PUBL.PGCR",
+     "value": "0x1842e02",
+     "model_value": "0x1842e02",
+     "model_class": "detected",
+     "formula": "cs==1 ? 0x1842e02 : 0x18c2e02 (rank enables)",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068700",
+     "address": "0xb01c8004",
+     "register": "PUBL.PIR",
+     "value": "0x7f",
+     "model_value": "0x7f",
+     "model_class": "constant",
+     "formula": "PIR 0x7f (DDR3, mode 0)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406879c",
+     "address": "0xb01c8004",
+     "register": "PUBL.PIR",
+     "value": "0x81",
+     "model_value": "0x81",
+     "model_class": "constant",
+     "formula": "PIR_INIT|PIR_QSTRN (data training)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40687e0",
+     "address": "0xb01c00d4",
+     "register": "uPCTL.TMRD",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "constant",
+     "formula": "4",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40687ec",
+     "address": "0xb01c00d8",
+     "register": "uPCTL.TRFC",
+     "value": "0xa4",
+     "model_value": "0xa4",
+     "model_class": "ini",
+     "formula": "tRFC",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40687f8",
+     "address": "0xb01c00dc",
+     "register": "uPCTL.TRP",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "tRP",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068804",
+     "address": "0xb01c00e4",
+     "register": "uPCTL.TAL",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068810",
+     "address": "0xb01c00e8",
+     "register": "uPCTL.TCL",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "CL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406881c",
+     "address": "0xb01c00ec",
+     "register": "uPCTL.TCWL",
+     "value": "0x6",
+     "model_value": "0x6",
+     "model_class": "ini",
+     "formula": "CWL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068828",
+     "address": "0xb01c00f0",
+     "register": "uPCTL.TRAS",
+     "value": "0x12",
+     "model_value": "0x12",
+     "model_class": "ini",
+     "formula": "tRAS",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068834",
+     "address": "0xb01c00f4",
+     "register": "uPCTL.TRC",
+     "value": "0x1a",
+     "model_value": "0x1a",
+     "model_class": "ini",
+     "formula": "tRC",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068840",
+     "address": "0xb01c00f8",
+     "register": "uPCTL.TRCD",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "tRCD",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406884c",
+     "address": "0xb01c00fc",
+     "register": "uPCTL.TRRD",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "ini",
+     "formula": "tRRD",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068858",
+     "address": "0xb01c0100",
+     "register": "uPCTL.TRTP",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tRTP",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068864",
+     "address": "0xb01c0104",
+     "register": "uPCTL.TWR",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "tWR",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068870",
+     "address": "0xb01c0108",
+     "register": "uPCTL.TWTR",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tWTR",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406887c",
+     "address": "0xb01c010c",
+     "register": "uPCTL.TEXSR",
+     "value": "0x200",
+     "model_value": "0x200",
+     "model_class": "constant",
+     "formula": "512",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406888c",
+     "address": "0xb01c00d0",
+     "register": "uPCTL.TREFI",
+     "value": "0x7004e",
+     "model_value": "0x7004e",
+     "model_class": "constant",
+     "formula": "78 | 0x70000",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068898",
+     "address": "0xb01c0148",
+     "register": "uPCTL+0x148 (reserved5[0] in ddr_rk3288.h)",
+     "value": "0xe42",
+     "model_value": "0xe42",
+     "model_class": "ini",
+     "formula": "F*78/10",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688a4",
+     "address": "0xb01c0110",
+     "register": "uPCTL.TXP",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tXP",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688b0",
+     "address": "0xb01c0120",
+     "register": "uPCTL.TDQS",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40688bc",
+     "address": "0xb01c00e0",
+     "register": "uPCTL.TRTW",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "CL + 6 - CWL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688c8",
+     "address": "0xb01c0124",
+     "register": "uPCTL.TCKSRE",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "ini",
+     "formula": "F<500 ? 5 : F/100+1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688d4",
+     "address": "0xb01c0128",
+     "register": "uPCTL.TCKSRX",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "ini",
+     "formula": "F<500 ? 5 : F/100+1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688e0",
+     "address": "0xb01c0130",
+     "register": "uPCTL.TMOD",
+     "value": "0xc",
+     "model_value": "0xc",
+     "model_class": "constant",
+     "formula": "12",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40688ec",
+     "address": "0xb01c012c",
+     "register": "uPCTL.TCKE",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "ini",
+     "formula": "tCKE",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688f8",
+     "address": "0xb01c013c",
+     "register": "uPCTL.TMRR",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068904",
+     "address": "0xb01c0134",
+     "register": "uPCTL.TRSTL",
+     "value": "0x46",
+     "model_value": "0x46",
+     "model_class": "ini",
+     "formula": "F*150/1000",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068910",
+     "address": "0xb01c0118",
+     "register": "uPCTL.TZQCS",
+     "value": "0x40",
+     "model_value": "0x40",
+     "model_class": "constant",
+     "formula": "64",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406891c",
+     "address": "0xb01c0138",
+     "register": "uPCTL.TZQCL",
+     "value": "0x200",
+     "model_value": "0x200",
+     "model_class": "constant",
+     "formula": "512",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068928",
+     "address": "0xb01c0114",
+     "register": "uPCTL.TXPDLL",
+     "value": "0xc",
+     "model_value": "0xc",
+     "model_class": "ini",
+     "formula": "tXPDLL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068934",
+     "address": "0xb01c011c",
+     "register": "uPCTL.TZQCSI",
+     "value": "0x7210",
+     "model_value": "0x7210",
+     "model_class": "ini",
+     "formula": "(F*78/10) << 3",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068940",
+     "address": "0xb01c0140",
+     "register": "uPCTL.TCKESR",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tCKE + 1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406894c",
+     "address": "0xb01c0144",
+     "register": "uPCTL.TDPD",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406896c",
+     "address": "0xb01c0040",
+     "register": "uPCTL.MCMD",
+     "value": "0x80100000",
+     "model_value": "0x80100000",
+     "model_class": "detected",
+     "formula": "START | rank mask(cs) | NOP",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb406899c",
+     "address": "0xb01c0040",
+     "register": "uPCTL.MCMD",
+     "value": "0x80100001",
+     "model_value": "0x80100001",
+     "model_class": "detected",
+     "formula": "START | rank mask(cs) | 1",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4067218",
+     "address": "0xb01c0004",
+     "register": "uPCTL.SCTL",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "CFG_STATE (via 0xb4067170)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689c0",
+     "address": "0xb01c0000",
+     "register": "uPCTL.SCFG",
+     "value": "0x700",
+     "model_value": "0x700",
+     "model_class": "constant",
+     "formula": "0x700",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689cc",
+     "address": "0xb01c0264",
+     "register": "uPCTL.DFITPHYRDLAT",
+     "value": "0xa",
+     "model_value": "0xa",
+     "model_class": "constant",
+     "formula": "10",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689d8",
+     "address": "0xb01c0250",
+     "register": "uPCTL.DFITPHYWRDATA",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689ec",
+     "address": "0xb01c0084",
+     "register": "uPCTL.PPCFG",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "ini",
+     "formula": "bus_sel ? 1 : 0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a04",
+     "address": "0xb01c024c",
+     "register": "uPCTL.DFIODTRANKMAP",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "detected",
+     "formula": "cs==2 ? 0x21 : 1",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068a10",
+     "address": "0xb01c02c4",
+     "register": "uPCTL.DFISTCFG0",
+     "value": "0x7",
+     "model_value": "0x7",
+     "model_class": "constant",
+     "formula": "0x7",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a1c",
+     "address": "0xb01c02c8",
+     "register": "uPCTL.DFISTCFG1",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "constant",
+     "formula": "0x3",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a28",
+     "address": "0xb01c02d8",
+     "register": "uPCTL.DFISTCFG2",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "constant",
+     "formula": "0x3",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a34",
+     "address": "0xb01c02f0",
+     "register": "uPCTL.DFILPCFG0",
+     "value": "0x70101",
+     "model_value": "0x70101",
+     "model_class": "constant",
+     "formula": "0x70101",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a40",
+     "address": "0xb01c0180",
+     "register": "uPCTL.ECCCFG",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0x0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a4c",
+     "address": "0xb01c0254",
+     "register": "uPCTL.DFITPHYWRLAT",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "ini",
+     "formula": "(CWL even ? CWL-2 : CWL-1) >> 1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068a58",
+     "address": "0xb01c0260",
+     "register": "uPCTL.DFITRDDATAEN",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "ini",
+     "formula": "(CL even ? CL-2 : CL-3) >> 1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068a64",
+     "address": "0xb01c02d4",
+     "register": "uPCTL.DFITDRAMCLKDIS",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "0x2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a70",
+     "address": "0xb01c02d0",
+     "register": "uPCTL.DFITDRAMCLKEN",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "0x2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a7c",
+     "address": "0xb01c0240",
+     "register": "uPCTL.DFITCTRLDELAY",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "0x2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a88",
+     "address": "0xb01c0270",
+     "register": "uPCTL.DFITPHYUPDTYPE0",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "0x1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068aa0",
+     "address": "0xb01c0244",
+     "register": "uPCTL.DFIODTCFG",
+     "value": "0x808",
+     "model_value": "0x808",
+     "model_class": "ini",
+     "formula": "0x808",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068ab8",
+     "address": "0xb01c0244",
+     "register": "uPCTL.DFIODTCFG",
+     "value": "0xa0a",
+     "model_value": "0xa0a",
+     "model_class": "ini",
+     "formula": "prev | 0x202",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068ac4",
+     "address": "0xb01c0050",
+     "register": "uPCTL.TSTATEN",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4067218",
+     "address": "0xb01c0004",
+     "register": "uPCTL.SCTL",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "GO_STATE (via 0xb4067170)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068b80",
+     "address": "0xb0290088",
+     "register": "DMM+0x88",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068ba8",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "detected",
+     "formula": "x32 | 8 | x32<<12 | (cs-1)<<4",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068bb4",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x40000000",
+     "model_value": "0x40000000",
+     "model_class": "reset",
+     "formula": "prev | 0x40000000",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068bc0",
+     "address": "0xb0290024",
+     "register": "DMM+0x24",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068c1c",
+     "address": "0xb0290080",
+     "register": "DMM+0x80",
+     "value": "0x598",
+     "model_value": "0x598",
+     "model_class": "ini",
+     "formula": "((tRC+3)>>2)+1 | (((tWR+tRCD+3+CWL+tRP)>>2)+1)<<4 | (((tRTP+tRCD-1+tRP)>>2)+1)<<8",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068c28",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x48000000",
+     "model_value": "0x48000000",
+     "model_class": "reset",
+     "formula": "prev | 0x8000000",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068c74",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x200e",
+     "model_value": "0x200e",
+     "model_class": "detected",
+     "formula": "prev & 0xfffe1f99 | 0x2006 (column probe)",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068ce4",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x206c",
+     "model_value": "0x206c",
+     "model_class": "detected",
+     "formula": "prev & 0xffffff99 | col<<1 | 0x60 (row probe)",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068f04",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x202c",
+     "model_value": "0x202c",
+     "model_class": "detected",
+     "formula": "prev & 0xfffc1899 | rcc>>1 | 0x2000 | ((cap>>8)-1)<<8",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb406736c",
+     "address": "0xb029000c",
+     "register": "DMM+0x0c",
+     "value": "0xf801",
+     "model_value": "0xf801",
+     "model_class": "reset",
+     "formula": "prev & ~0xffff | 0xf801",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb406737c",
+     "address": "0xb0290004",
+     "register": "DMM+0x04",
+     "value": "0x818f808",
+     "model_value": "0x818f808",
+     "model_class": "constant",
+     "formula": "prev & ~0xffffffff | 0x818f808",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406738c",
+     "address": "0xb01b00b4",
+     "register": "0xb01b00b4",
+     "value": "0x3ff",
+     "model_value": "0x3ff",
+     "model_class": "reset",
+     "formula": "prev & ~0xffff | 0x3ff",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4067398",
+     "address": "0xb0290068",
+     "register": "DMM+0x68",
+     "value": "0x3180",
+     "model_value": "0x3180",
+     "model_class": "constant",
+     "formula": "0x3180",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40673a4",
+     "address": "0xb0290010",
+     "register": "DMM+0x10",
+     "value": "0xf8010000",
+     "model_value": "0xf8010000",
+     "model_class": "constant",
+     "formula": "0xf8010000",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40673b0",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x48000000",
+     "model_value": "0x48000000",
+     "model_class": "reset",
+     "formula": "prev & ~0x4",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb40673bc",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x48000004",
+     "model_value": "0x48000004",
+     "model_class": "reset",
+     "formula": "prev | 0x4",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    }
+   ],
+   "class_consistency": {
+    "contradictions": [],
+    "model_more_general": [
+     "PUBL.DSGCR",
+     "uPCTL.PPCFG"
+    ]
+   },
+   "hardware_reads": [
+    {
+     "site": "0xb406712c",
+     "address": "0xb0160008",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a0",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a8",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a8",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a0",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068108",
+     "address": "0xb01c8004",
+     "value": "0x10000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x0",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb40681d0",
+     "address": "0xb01c0048",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01c8050",
+     "value": "0x21",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8240",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8280",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb4068654",
+     "address": "0xb01c8188",
+     "value": "0x80000000",
+     "rule": "ZQ done; impedance code unknown"
+    },
+    {
+     "site": "0xb40686a8",
+     "address": "0xb01c800c",
+     "value": "0x7",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb4068708",
+     "address": "0xb01c800c",
+     "value": "0xf",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb40687a4",
+     "address": "0xb01c800c",
+     "value": "0x3f",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb4068f64",
+     "address": "0xb01c81c4",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb4068f70",
+     "address": "0xb01c8204",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb4068f7c",
+     "address": "0xb01c8244",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb4068f88",
+     "address": "0xb01c8284",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb0160008",
+     "value": "0x327",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a0",
+     "value": "0xa",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a8",
+     "value": "0x5",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a8",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a0",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068108",
+     "address": "0xb01c8004",
+     "value": "0x10000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x0",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb40681d0",
+     "address": "0xb01c0048",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01c8050",
+     "value": "0x21",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8240",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8280",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068654",
+     "address": "0xb01c8188",
+     "value": "0x80000000",
+     "rule": "ZQ done; impedance code unknown"
+    },
+    {
+     "site": "0xb40686a8",
+     "address": "0xb01c800c",
+     "value": "0x7",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb4068708",
+     "address": "0xb01c800c",
+     "value": "0xf",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb40687a4",
+     "address": "0xb01c800c",
+     "value": "0x1f",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb40687cc",
+     "address": "0xb01c02c0",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb4068974",
+     "address": "0xb01c0040",
+     "value": "0x100000",
+     "rule": "MCMD start bit cleared (command done)"
+    },
+    {
+     "site": "0xb40689a4",
+     "address": "0xb01c0040",
+     "value": "0x100001",
+     "rule": "MCMD start bit cleared (command done)"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x0",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb4067220",
+     "address": "0xb01c0008",
+     "value": "0x1",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01c0244",
+     "value": "0x808",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068acc",
+     "address": "0xb01c004c",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb4068adc",
+     "address": "0xb01c0008",
+     "value": "0x1",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x1",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb4067220",
+     "address": "0xb01c0008",
+     "value": "0x3",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb0290000",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb0290000",
+     "value": "0x40000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068c5c",
+     "address": "0xb0290028",
+     "value": "0x8",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068ca8",
+     "address": "0x4",
+     "value": "0x0",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068ca8",
+     "address": "0x4",
+     "value": "0x0",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068ca8",
+     "address": "0x4",
+     "value": "0x6996",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068cd0",
+     "address": "0xb0290028",
+     "value": "0x200e",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068d64",
+     "address": "0x4",
+     "value": "0x0",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068d64",
+     "address": "0x4",
+     "value": "0x6996",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068e84",
+     "address": "0xb0290028",
+     "value": "0x206c",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4069040",
+     "address": "0xb0290028",
+     "value": "0x202c",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4067108",
+     "address": "0xb029000c",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb4067108",
+     "address": "0xb0290004",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb4067108",
+     "address": "0xb01b00b4",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb0290000",
+     "value": "0x48000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb0290000",
+     "value": "0x48000000",
+     "rule": "last written value"
+    }
+   ],
+   "model_vs_unicorn": {
+    "firmware_record_reference": [],
+    "primary_record_reference": [],
+    "scenarios": {
+     "x16-1rank-1Gb": [],
+     "x16-1rank-2Gb": [],
+     "x16-1rank-4Gb": [],
+     "x16-2rank-2Gb": []
+    },
+    "reset_seeds": {
+     "0xffffffff": [],
+     "0xa5a5a5a5": []
+    },
+    "note": "lists of clocks (MHz) where the model and Unicorn write sequences or console lines differ"
+   },
+   "symbolic": {
+    "paths": 8,
+    "domains": [
+     [
+      [
+       804,
+       1200
+      ]
+     ],
+     [
+      [
+       792,
+       803
+      ]
+     ],
+     [
+      [
+       672,
+       791
+      ]
+     ],
+     [
+      [
+       540,
+       671
+      ]
+     ],
+     [
+      [
+       408,
+       419
+      ]
+     ],
+     [
+      [
+       420,
+       503
+      ]
+     ],
+     [
+      [
+       504,
+       539
+      ]
+     ],
+     [
+      [
+       100,
+       407
+      ]
+     ]
+    ],
+    "writes_per_path": [
+     156
+    ],
+    "clobber_dependent": [],
+    "evaluated_at_clock": 468,
+    "equals_unicorn": true,
+    "clock_dependent_writes": [
+     "0xb0160008",
+     "0xb01c007c",
+     "0xb01c0080",
+     "0xb01c00c0",
+     "0xb01c00cc",
+     "0xb01c00d8",
+     "0xb01c00dc",
+     "0xb01c00f0",
+     "0xb01c00f4",
+     "0xb01c00f8",
+     "0xb01c00fc",
+     "0xb01c0100",
+     "0xb01c0104",
+     "0xb01c0108",
+     "0xb01c0110",
+     "0xb01c0114",
+     "0xb01c011c",
+     "0xb01c0124",
+     "0xb01c0128",
+     "0xb01c012c",
+     "0xb01c0134",
+     "0xb01c0140",
+     "0xb01c0148",
+     "0xb01c8018",
+     "0xb01c801c",
+     "0xb01c8020",
+     "0xb01c8034",
+     "0xb01c8038",
+     "0xb01c803c",
+     "0xb01c8040",
+     "0xb0290080"
+    ]
+   }
+  },
+  "stock-20231014": {
+   "loader_sha256": "ec9e4ec812020fef9e5ecf8354811ecf43abc40e9cf991f3bb31d14deb4bf6c3",
+   "code_sha256": "6b17b88c92e4d9f90f3f123e4a340b692d001bada4f78f24889481b73adf6ea9",
+   "bootloader_ini": {
+    "primary_record": {
+     "clock_mhz": 468,
+     "capacity_mib": 256,
+     "bus_sel": 1,
+     "cs": 1,
+     "type": 16,
+     "rcc": 72,
+     "rdodt": 2,
+     "wrodt": 2,
+     "drv": 9
+    },
+    "second_record": {
+     "clock_mhz": 468,
+     "capacity_mib": 0,
+     "bus_sel": 1,
+     "cs": 0,
+     "type": 16,
+     "rcc": 0,
+     "rdodt": 2,
+     "wrodt": 2,
+     "drv": 9
+    },
+    "word_0x2c": 1,
+    "selected": "second",
+    "decode_matches_firmware_copy": true
+   },
+   "console": [
+    "DRAM init mode0,type16,2cs,x16bus,rcc0x0,wrodt2,rdodt2,drv9,468MHz.@180525_R...",
+    "Fail:0x0,0x0,0x0,0x0;",
+    "DRAM init mode0,type16,1cs,x16bus,rcc0x0,wrodt2,rdodt2,drv9,468MHz.@180525_R...",
+    "Ok:DCU_CFG:0x202c,256MByte Cap."
+   ],
+   "return_value": "0x0",
+   "ini_writeback": {
+    "x16-1rank-1Gb": {
+     "after": "d4010000800000000101100802020900",
+     "equals_shipped": false
+    },
+    "x16-1rank-2Gb": {
+     "after": "d4010000000100000101104802020900",
+     "equals_shipped": true
+    },
+    "x16-1rank-4Gb": {
+     "after": "d4010000000200000101108802020900",
+     "equals_shipped": false
+    },
+    "x16-2rank-2Gb": {
+     "after": "d4010000000200000102104802020900",
+     "equals_shipped": false
+    }
+   },
+   "ini_primary_as_shipped": "d4010000000100000101104802020900",
+   "param_after": {
+    "clock_mhz": 468,
+    "capacity_mib": 256,
+    "bus_sel": 1,
+    "cs": 1,
+    "type": 16,
+    "rcc": 72,
+    "rdodt": 2,
+    "wrodt": 2,
+    "drv": 9,
+    "byte_b": 0,
+    "raw": "d40100010101104802020900"
+   },
+   "instructions": 4852,
+   "timings": {
+    "tRFC": {
+     "cycles": 164,
+     "ns": 350.427
+    },
+    "tRP": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "tRCD": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "tRAS": {
+     "cycles": 18,
+     "ns": 38.462
+    },
+    "tRC": {
+     "cycles": 26,
+     "ns": 55.556
+    },
+    "tRRD": {
+     "cycles": 5,
+     "ns": 10.684
+    },
+    "tFAW": {
+     "cycles": 24,
+     "ns": 51.282
+    },
+    "tWR": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "tRTP": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "tWTR": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "CL": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "CWL": {
+     "cycles": 6,
+     "ns": 12.821
+    },
+    "tXP": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "tXPDLL": {
+     "cycles": 12,
+     "ns": 25.641
+    },
+    "tCKE": {
+     "cycles": 3,
+     "ns": 6.41
+    },
+    "tCKESR": {
+     "cycles": 4,
+     "ns": 8.547
+    },
+    "tCKSRE": {
+     "cycles": 5,
+     "ns": 10.684
+    },
+    "tRSTL": {
+     "cycles": 70,
+     "ns": 149.573
+    },
+    "tREFI_cycles": {
+     "cycles": 3650,
+     "ns": 7799.145
+    },
+    "tZQCSI": {
+     "cycles": 29200,
+     "ns": 62393.162
+    },
+    "TRTW": {
+     "cycles": 8,
+     "ns": 17.094
+    },
+    "dfi_wrlat": {
+     "cycles": 2,
+     "ns": 4.274
+    },
+    "dfi_rddata_en": {
+     "cycles": 3,
+     "ns": 6.41
+    },
+    "F_mhz": 468,
+    "tCK_ns": 2.1368,
+    "density_mib": 2048,
+    "tRFC_ns_selected": 350
+   },
+   "final_pass": [
+    {
+     "site": "0xb406800c",
+     "address": "0xb0160008",
+     "register": "CMU_DDRPLL",
+     "value": "0x227",
+     "model_value": "0x227",
+     "model_class": "detected",
+     "formula": "prev & ~0x100",
+     "varies_with": [
+      "hardware",
+      "clock"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068018",
+     "address": "0xb01600a0",
+     "register": "CMU_DEVCLKEN0",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0xa",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068024",
+     "address": "0xb01600a8",
+     "register": "CMU_DEVRST0",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0x5",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068038",
+     "address": "0xb01600a8",
+     "register": "CMU_DEVRST0",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "reset",
+     "formula": "prev | 0x5",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb406804c",
+     "address": "0xb0160008",
+     "register": "CMU_DDRPLL",
+     "value": "0x327",
+     "model_value": "0x327",
+     "model_class": "ini",
+     "formula": "(F/12) | 0x300  (F/12 = PLL multiple of 12 MHz)",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068060",
+     "address": "0xb01600a0",
+     "register": "CMU_DEVCLKEN0",
+     "value": "0xa",
+     "model_value": "0xa",
+     "model_class": "reset",
+     "formula": "prev | 0xa",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb40680d8",
+     "address": "0xb01c8014",
+     "register": "PUBL.ACDLLCR",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40680ec",
+     "address": "0xb01c8014",
+     "register": "PUBL.ACDLLCR",
+     "value": "0x40000000",
+     "model_value": "0x40000000",
+     "model_class": "constant",
+     "formula": "DLLSRST",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068100",
+     "address": "0xb01c8004",
+     "register": "PUBL.PIR",
+     "value": "0x10000000",
+     "model_value": "0x10000000",
+     "model_class": "constant",
+     "formula": "PIR_CLRSR",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406811c",
+     "address": "0xb01c0280",
+     "register": "uPCTL.DFITCTRLUPDMIN",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "constant",
+     "formula": "4",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068128",
+     "address": "0xb01c0284",
+     "register": "uPCTL.DFITCTRLUPDMAX",
+     "value": "0xa",
+     "model_value": "0xa",
+     "model_class": "constant",
+     "formula": "10",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068134",
+     "address": "0xb01c0288",
+     "register": "uPCTL.DFITCTRLUPDDLY",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "constant",
+     "formula": "8",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406814c",
+     "address": "0xb01c00c0",
+     "register": "uPCTL.TOGCNT1U",
+     "value": "0xea",
+     "model_value": "0xea",
+     "model_class": "ini",
+     "formula": "F >> 1   (1 us in controller clocks, F/2)",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068170",
+     "address": "0xb01c00cc",
+     "register": "uPCTL.TOGCNT100N",
+     "value": "0x17",
+     "model_value": "0x17",
+     "model_class": "ini",
+     "formula": "F / 20  (100 ns in controller clocks)",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406817c",
+     "address": "0xb01c00c4",
+     "register": "uPCTL.TINIT",
+     "value": "0xc8",
+     "model_value": "0xc8",
+     "model_class": "constant",
+     "formula": "200",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068188",
+     "address": "0xb01c00c8",
+     "register": "uPCTL.TRSTH",
+     "value": "0x1f4",
+     "model_value": "0x1f4",
+     "model_class": "constant",
+     "formula": "500 (DDR3 branch)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068194",
+     "address": "0xb0290064",
+     "register": "DMM+0x64",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40681a8",
+     "address": "0xb0290064",
+     "register": "DMM+0x64",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40681bc",
+     "address": "0xb01c0044",
+     "register": "uPCTL.POWCTL",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "POWER_UP_START",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40681f0",
+     "address": "0xb01c0080",
+     "register": "uPCTL.MCFG",
+     "value": "0x68029",
+     "model_value": "0x68029",
+     "model_class": "ini",
+     "formula": "((tFAW/tRRD) - 3) << 18 | 0x28029",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068218",
+     "address": "0xb01c007c",
+     "register": "uPCTL.MCFG1",
+     "value": "0x100",
+     "model_value": "0x100",
+     "model_class": "ini",
+     "formula": "(tRRD*(tFAW/tRRD + 1) - tFAW) << 8",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068224",
+     "address": "0xb01c8030",
+     "register": "PUBL.DCR",
+     "value": "0xb",
+     "model_value": "0xb",
+     "model_class": "constant",
+     "formula": "0xb (DDR3 branch)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068240",
+     "address": "0xb01c8040",
+     "register": "PUBL.MR0",
+     "value": "0x1140",
+     "model_value": "0x1140",
+     "model_class": "ini",
+     "formula": "(CL-4)<<4 | 0x1100 | tWR<<9",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406824c",
+     "address": "0xb01c8044",
+     "register": "PUBL.MR1",
+     "value": "0x42",
+     "model_value": "0x42",
+     "model_class": "ini",
+     "formula": "RTT_NOM[wrodt] | 2",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068258",
+     "address": "0xb01c8048",
+     "register": "PUBL.MR2",
+     "value": "0x248",
+     "model_value": "0x248",
+     "model_class": "ini",
+     "formula": "(CWL-5)<<3 | 0x240",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068264",
+     "address": "0xb01c8018",
+     "register": "PUBL.PTR0",
+     "value": "0x2a5766",
+     "model_value": "0x2a5766",
+     "model_class": "ini",
+     "formula": "min63(F*80/1000+1) | (F*5120/1000+1)<<6 | 0xa<<18",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068270",
+     "address": "0xb01c801c",
+     "register": "PUBL.PTR1",
+     "value": "0x5439210",
+     "model_value": "0x5439210",
+     "model_class": "ini",
+     "formula": "F*500 | (tRFC + F/100)<<19",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406827c",
+     "address": "0xb01c8020",
+     "register": "PUBL.PTR2",
+     "value": "0x3a96da0",
+     "model_value": "0x3a96da0",
+     "model_class": "ini",
+     "formula": "F*200 | F<<17",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068288",
+     "address": "0xb01c8034",
+     "register": "PUBL.DTPR0",
+     "value": "0x34b28890",
+     "model_value": "0x34b28890",
+     "model_class": "ini",
+     "formula": "tRTP<<2|tWTR<<5|tRP<<8|tRCD<<12|tRAS<<16|tRRD<<21|tRC<<25",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068294",
+     "address": "0xb01c8038",
+     "register": "PUBL.DTPR1",
+     "value": "0xa400c0",
+     "model_value": "0xa400c0",
+     "model_class": "ini",
+     "formula": "tFAW<<3 | tRFC<<16",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40682a0",
+     "address": "0xb01c803c",
+     "register": "PUBL.DTPR2",
+     "value": "0x10023200",
+     "model_value": "0x10023200",
+     "model_class": "ini",
+     "formula": "0x200 | tXPDLL<<10 | tCKESR<<15 | 0x200<<19",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40682ac",
+     "address": "0xb01c8054",
+     "register": "PUBL.DTAR",
+     "value": "0x20000000",
+     "model_value": "0x20000000",
+     "model_class": "constant",
+     "formula": "0x20000000",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40682c4",
+     "address": "0xb01c8028",
+     "register": "PUBL.DXCCR",
+     "value": "0x911",
+     "model_value": "0x911",
+     "model_class": "ini",
+     "formula": "0x911",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40682d0",
+     "address": "0xb01c8050",
+     "register": "PUBL.ODTCR",
+     "value": "0x21",
+     "model_value": "0x21",
+     "model_class": "ini",
+     "formula": "0x21",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068314",
+     "address": "0xb01c8184",
+     "register": "PUBL.ZQ0CR1",
+     "value": "0x29",
+     "model_value": "0x29",
+     "model_class": "ini",
+     "formula": "ZQ_ODT[rdodt] | drv",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068320",
+     "address": "0xb01c8024",
+     "register": "PUBL.ACIOCR",
+     "value": "0xbc03812",
+     "model_value": "0xbc03812",
+     "model_class": "ini",
+     "formula": "0xbc03812",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068600",
+     "address": "0xb01c8050",
+     "register": "PUBL.ODTCR",
+     "value": "0x210021",
+     "model_value": "0x210021",
+     "model_class": "ini",
+     "formula": "prev | 0x210000",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406862c",
+     "address": "0xb01c8240",
+     "register": "PUBL.DX2GCR",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0x1",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068638",
+     "address": "0xb01c8280",
+     "register": "PUBL.DX3GCR",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "reset",
+     "formula": "prev & ~0x1",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068690",
+     "address": "0xb01c802c",
+     "register": "PUBL.DSGCR",
+     "value": "0xf2001807",
+     "model_value": "0xf2001807",
+     "model_class": "ini",
+     "formula": "0xf2001807 (DDR3 branch)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40686d8",
+     "address": "0xb01c8008",
+     "register": "PUBL.PGCR",
+     "value": "0x1842e02",
+     "model_value": "0x1842e02",
+     "model_class": "detected",
+     "formula": "cs==1 ? 0x1842e02 : 0x18c2e02 (rank enables)",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068700",
+     "address": "0xb01c8004",
+     "register": "PUBL.PIR",
+     "value": "0x7f",
+     "model_value": "0x7f",
+     "model_class": "constant",
+     "formula": "PIR 0x7f (DDR3, mode 0)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406879c",
+     "address": "0xb01c8004",
+     "register": "PUBL.PIR",
+     "value": "0x81",
+     "model_value": "0x81",
+     "model_class": "constant",
+     "formula": "PIR_INIT|PIR_QSTRN (data training)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40687e0",
+     "address": "0xb01c00d4",
+     "register": "uPCTL.TMRD",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "constant",
+     "formula": "4",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40687ec",
+     "address": "0xb01c00d8",
+     "register": "uPCTL.TRFC",
+     "value": "0xa4",
+     "model_value": "0xa4",
+     "model_class": "ini",
+     "formula": "tRFC",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40687f8",
+     "address": "0xb01c00dc",
+     "register": "uPCTL.TRP",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "tRP",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068804",
+     "address": "0xb01c00e4",
+     "register": "uPCTL.TAL",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068810",
+     "address": "0xb01c00e8",
+     "register": "uPCTL.TCL",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "CL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406881c",
+     "address": "0xb01c00ec",
+     "register": "uPCTL.TCWL",
+     "value": "0x6",
+     "model_value": "0x6",
+     "model_class": "ini",
+     "formula": "CWL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068828",
+     "address": "0xb01c00f0",
+     "register": "uPCTL.TRAS",
+     "value": "0x12",
+     "model_value": "0x12",
+     "model_class": "ini",
+     "formula": "tRAS",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068834",
+     "address": "0xb01c00f4",
+     "register": "uPCTL.TRC",
+     "value": "0x1a",
+     "model_value": "0x1a",
+     "model_class": "ini",
+     "formula": "tRC",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068840",
+     "address": "0xb01c00f8",
+     "register": "uPCTL.TRCD",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "tRCD",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406884c",
+     "address": "0xb01c00fc",
+     "register": "uPCTL.TRRD",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "ini",
+     "formula": "tRRD",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068858",
+     "address": "0xb01c0100",
+     "register": "uPCTL.TRTP",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tRTP",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068864",
+     "address": "0xb01c0104",
+     "register": "uPCTL.TWR",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "tWR",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068870",
+     "address": "0xb01c0108",
+     "register": "uPCTL.TWTR",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tWTR",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406887c",
+     "address": "0xb01c010c",
+     "register": "uPCTL.TEXSR",
+     "value": "0x200",
+     "model_value": "0x200",
+     "model_class": "constant",
+     "formula": "512",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406888c",
+     "address": "0xb01c00d0",
+     "register": "uPCTL.TREFI",
+     "value": "0x7004e",
+     "model_value": "0x7004e",
+     "model_class": "constant",
+     "formula": "78 | 0x70000",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068898",
+     "address": "0xb01c0148",
+     "register": "uPCTL+0x148 (reserved5[0] in ddr_rk3288.h)",
+     "value": "0xe42",
+     "model_value": "0xe42",
+     "model_class": "ini",
+     "formula": "F*78/10",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688a4",
+     "address": "0xb01c0110",
+     "register": "uPCTL.TXP",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tXP",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688b0",
+     "address": "0xb01c0120",
+     "register": "uPCTL.TDQS",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40688bc",
+     "address": "0xb01c00e0",
+     "register": "uPCTL.TRTW",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "ini",
+     "formula": "CL + 6 - CWL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688c8",
+     "address": "0xb01c0124",
+     "register": "uPCTL.TCKSRE",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "ini",
+     "formula": "F<500 ? 5 : F/100+1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688d4",
+     "address": "0xb01c0128",
+     "register": "uPCTL.TCKSRX",
+     "value": "0x5",
+     "model_value": "0x5",
+     "model_class": "ini",
+     "formula": "F<500 ? 5 : F/100+1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688e0",
+     "address": "0xb01c0130",
+     "register": "uPCTL.TMOD",
+     "value": "0xc",
+     "model_value": "0xc",
+     "model_class": "constant",
+     "formula": "12",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40688ec",
+     "address": "0xb01c012c",
+     "register": "uPCTL.TCKE",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "ini",
+     "formula": "tCKE",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb40688f8",
+     "address": "0xb01c013c",
+     "register": "uPCTL.TMRR",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068904",
+     "address": "0xb01c0134",
+     "register": "uPCTL.TRSTL",
+     "value": "0x46",
+     "model_value": "0x46",
+     "model_class": "ini",
+     "formula": "F*150/1000",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068910",
+     "address": "0xb01c0118",
+     "register": "uPCTL.TZQCS",
+     "value": "0x40",
+     "model_value": "0x40",
+     "model_class": "constant",
+     "formula": "64",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406891c",
+     "address": "0xb01c0138",
+     "register": "uPCTL.TZQCL",
+     "value": "0x200",
+     "model_value": "0x200",
+     "model_class": "constant",
+     "formula": "512",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068928",
+     "address": "0xb01c0114",
+     "register": "uPCTL.TXPDLL",
+     "value": "0xc",
+     "model_value": "0xc",
+     "model_class": "ini",
+     "formula": "tXPDLL",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068934",
+     "address": "0xb01c011c",
+     "register": "uPCTL.TZQCSI",
+     "value": "0x7210",
+     "model_value": "0x7210",
+     "model_class": "ini",
+     "formula": "(F*78/10) << 3",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068940",
+     "address": "0xb01c0140",
+     "register": "uPCTL.TCKESR",
+     "value": "0x4",
+     "model_value": "0x4",
+     "model_class": "ini",
+     "formula": "tCKE + 1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb406894c",
+     "address": "0xb01c0144",
+     "register": "uPCTL.TDPD",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406896c",
+     "address": "0xb01c0040",
+     "register": "uPCTL.MCMD",
+     "value": "0x80100000",
+     "model_value": "0x80100000",
+     "model_class": "detected",
+     "formula": "START | rank mask(cs) | NOP",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb406899c",
+     "address": "0xb01c0040",
+     "register": "uPCTL.MCMD",
+     "value": "0x80100001",
+     "model_value": "0x80100001",
+     "model_class": "detected",
+     "formula": "START | rank mask(cs) | 1",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4067218",
+     "address": "0xb01c0004",
+     "register": "uPCTL.SCTL",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "CFG_STATE (via 0xb4067170)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689c0",
+     "address": "0xb01c0000",
+     "register": "uPCTL.SCFG",
+     "value": "0x700",
+     "model_value": "0x700",
+     "model_class": "constant",
+     "formula": "0x700",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689cc",
+     "address": "0xb01c0264",
+     "register": "uPCTL.DFITPHYRDLAT",
+     "value": "0xa",
+     "model_value": "0xa",
+     "model_class": "constant",
+     "formula": "10",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689d8",
+     "address": "0xb01c0250",
+     "register": "uPCTL.DFITPHYWRDATA",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40689ec",
+     "address": "0xb01c0084",
+     "register": "uPCTL.PPCFG",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "ini",
+     "formula": "bus_sel ? 1 : 0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a04",
+     "address": "0xb01c024c",
+     "register": "uPCTL.DFIODTRANKMAP",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "detected",
+     "formula": "cs==2 ? 0x21 : 1",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068a10",
+     "address": "0xb01c02c4",
+     "register": "uPCTL.DFISTCFG0",
+     "value": "0x7",
+     "model_value": "0x7",
+     "model_class": "constant",
+     "formula": "0x7",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a1c",
+     "address": "0xb01c02c8",
+     "register": "uPCTL.DFISTCFG1",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "constant",
+     "formula": "0x3",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a28",
+     "address": "0xb01c02d8",
+     "register": "uPCTL.DFISTCFG2",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "constant",
+     "formula": "0x3",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a34",
+     "address": "0xb01c02f0",
+     "register": "uPCTL.DFILPCFG0",
+     "value": "0x70101",
+     "model_value": "0x70101",
+     "model_class": "constant",
+     "formula": "0x70101",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a40",
+     "address": "0xb01c0180",
+     "register": "uPCTL.ECCCFG",
+     "value": "0x0",
+     "model_value": "0x0",
+     "model_class": "constant",
+     "formula": "0x0",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a4c",
+     "address": "0xb01c0254",
+     "register": "uPCTL.DFITPHYWRLAT",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "ini",
+     "formula": "(CWL even ? CWL-2 : CWL-1) >> 1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068a58",
+     "address": "0xb01c0260",
+     "register": "uPCTL.DFITRDDATAEN",
+     "value": "0x3",
+     "model_value": "0x3",
+     "model_class": "ini",
+     "formula": "(CL even ? CL-2 : CL-3) >> 1",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068a64",
+     "address": "0xb01c02d4",
+     "register": "uPCTL.DFITDRAMCLKDIS",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "0x2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a70",
+     "address": "0xb01c02d0",
+     "register": "uPCTL.DFITDRAMCLKEN",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "0x2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a7c",
+     "address": "0xb01c0240",
+     "register": "uPCTL.DFITCTRLDELAY",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "0x2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068a88",
+     "address": "0xb01c0270",
+     "register": "uPCTL.DFITPHYUPDTYPE0",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "0x1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068aa0",
+     "address": "0xb01c0244",
+     "register": "uPCTL.DFIODTCFG",
+     "value": "0x808",
+     "model_value": "0x808",
+     "model_class": "ini",
+     "formula": "0x808",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068ab8",
+     "address": "0xb01c0244",
+     "register": "uPCTL.DFIODTCFG",
+     "value": "0xa0a",
+     "model_value": "0xa0a",
+     "model_class": "ini",
+     "formula": "prev | 0x202",
+     "varies_with": [
+      "ini_odt_drv"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068ac4",
+     "address": "0xb01c0050",
+     "register": "uPCTL.TSTATEN",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4067218",
+     "address": "0xb01c0004",
+     "register": "uPCTL.SCTL",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "GO_STATE (via 0xb4067170)",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068b80",
+     "address": "0xb0290088",
+     "register": "DMM+0x88",
+     "value": "0x1",
+     "model_value": "0x1",
+     "model_class": "constant",
+     "formula": "1",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068ba8",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x8",
+     "model_value": "0x8",
+     "model_class": "detected",
+     "formula": "x32 | 8 | x32<<12 | (cs-1)<<4",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068bb4",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x40000000",
+     "model_value": "0x40000000",
+     "model_class": "reset",
+     "formula": "prev | 0x40000000",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068bc0",
+     "address": "0xb0290024",
+     "register": "DMM+0x24",
+     "value": "0x2",
+     "model_value": "0x2",
+     "model_class": "constant",
+     "formula": "2",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb4068c1c",
+     "address": "0xb0290080",
+     "register": "DMM+0x80",
+     "value": "0x598",
+     "model_value": "0x598",
+     "model_class": "ini",
+     "formula": "((tRC+3)>>2)+1 | (((tWR+tRCD+3+CWL+tRP)>>2)+1)<<4 | (((tRTP+tRCD-1+tRP)>>2)+1)<<8",
+     "varies_with": [
+      "clock"
+     ],
+     "observed_class": "ini"
+    },
+    {
+     "site": "0xb4068c28",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x48000000",
+     "model_value": "0x48000000",
+     "model_class": "reset",
+     "formula": "prev | 0x8000000",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4068c74",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x200e",
+     "model_value": "0x200e",
+     "model_class": "detected",
+     "formula": "prev & 0xfffe1f99 | 0x2006 (column probe)",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068ce4",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x206c",
+     "model_value": "0x206c",
+     "model_class": "detected",
+     "formula": "prev & 0xffffff99 | col<<1 | 0x60 (row probe)",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb4068f04",
+     "address": "0xb0290028",
+     "register": "DMM DCU_CFG (+0x28; name from the loader string)",
+     "value": "0x202c",
+     "model_value": "0x202c",
+     "model_class": "detected",
+     "formula": "prev & 0xfffc1899 | rcc>>1 | 0x2000 | ((cap>>8)-1)<<8",
+     "varies_with": [
+      "hardware"
+     ],
+     "observed_class": "detected"
+    },
+    {
+     "site": "0xb406736c",
+     "address": "0xb029000c",
+     "register": "DMM+0x0c",
+     "value": "0xf801",
+     "model_value": "0xf801",
+     "model_class": "reset",
+     "formula": "prev & ~0xffff | 0xf801",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb406737c",
+     "address": "0xb0290004",
+     "register": "DMM+0x04",
+     "value": "0x818f808",
+     "model_value": "0x818f808",
+     "model_class": "constant",
+     "formula": "prev & ~0xffffffff | 0x818f808",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb406738c",
+     "address": "0xb01b00b4",
+     "register": "0xb01b00b4",
+     "value": "0x3ff",
+     "model_value": "0x3ff",
+     "model_class": "reset",
+     "formula": "prev & ~0xffff | 0x3ff",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb4067398",
+     "address": "0xb0290068",
+     "register": "DMM+0x68",
+     "value": "0x3180",
+     "model_value": "0x3180",
+     "model_class": "constant",
+     "formula": "0x3180",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40673a4",
+     "address": "0xb0290010",
+     "register": "DMM+0x10",
+     "value": "0xf8010000",
+     "model_value": "0xf8010000",
+     "model_class": "constant",
+     "formula": "0xf8010000",
+     "varies_with": [],
+     "observed_class": "constant"
+    },
+    {
+     "site": "0xb40673b0",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x48000000",
+     "model_value": "0x48000000",
+     "model_class": "reset",
+     "formula": "prev & ~0x4",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    },
+    {
+     "site": "0xb40673bc",
+     "address": "0xb0290000",
+     "register": "DMM+0x00",
+     "value": "0x48000004",
+     "model_value": "0x48000004",
+     "model_class": "reset",
+     "formula": "prev | 0x4",
+     "varies_with": [
+      "reset"
+     ],
+     "observed_class": "reset"
+    }
+   ],
+   "class_consistency": {
+    "contradictions": [],
+    "model_more_general": [
+     "PUBL.DSGCR",
+     "uPCTL.PPCFG"
+    ]
+   },
+   "hardware_reads": [
+    {
+     "site": "0xb406712c",
+     "address": "0xb0160008",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a0",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a8",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a8",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a0",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068108",
+     "address": "0xb01c8004",
+     "value": "0x10000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x0",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb40681d0",
+     "address": "0xb01c0048",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01c8050",
+     "value": "0x21",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8240",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8280",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb4068654",
+     "address": "0xb01c8188",
+     "value": "0x80000000",
+     "rule": "ZQ done; impedance code unknown"
+    },
+    {
+     "site": "0xb40686a8",
+     "address": "0xb01c800c",
+     "value": "0x7",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb4068708",
+     "address": "0xb01c800c",
+     "value": "0xf",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb40687a4",
+     "address": "0xb01c800c",
+     "value": "0x3f",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb4068f64",
+     "address": "0xb01c81c4",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb4068f70",
+     "address": "0xb01c8204",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb4068f7c",
+     "address": "0xb01c8244",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb4068f88",
+     "address": "0xb01c8284",
+     "value": "0x0",
+     "rule": "lane status unknown"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb0160008",
+     "value": "0x327",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a0",
+     "value": "0xa",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01600a8",
+     "value": "0x5",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a8",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01600a0",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068108",
+     "address": "0xb01c8004",
+     "value": "0x10000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x0",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb40681d0",
+     "address": "0xb01c0048",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01c8050",
+     "value": "0x21",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8240",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb01c8280",
+     "value": "0x0",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068654",
+     "address": "0xb01c8188",
+     "value": "0x80000000",
+     "rule": "ZQ done; impedance code unknown"
+    },
+    {
+     "site": "0xb40686a8",
+     "address": "0xb01c800c",
+     "value": "0x7",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb4068708",
+     "address": "0xb01c800c",
+     "value": "0xf",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb40687a4",
+     "address": "0xb01c800c",
+     "value": "0x1f",
+     "rule": "PGSR follows last PIR and scenario training result"
+    },
+    {
+     "site": "0xb40687cc",
+     "address": "0xb01c02c0",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb4068974",
+     "address": "0xb01c0040",
+     "value": "0x100000",
+     "rule": "MCMD start bit cleared (command done)"
+    },
+    {
+     "site": "0xb40689a4",
+     "address": "0xb01c0040",
+     "value": "0x100001",
+     "rule": "MCMD start bit cleared (command done)"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x0",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb4067220",
+     "address": "0xb01c0008",
+     "value": "0x1",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb01c0244",
+     "value": "0x808",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068acc",
+     "address": "0xb01c004c",
+     "value": "0x1",
+     "rule": "done bit set"
+    },
+    {
+     "site": "0xb4068adc",
+     "address": "0xb01c0008",
+     "value": "0x1",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb406717c",
+     "address": "0xb01c0008",
+     "value": "0x1",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb4067220",
+     "address": "0xb01c0008",
+     "value": "0x3",
+     "rule": "STAT follows last SCTL command"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb0290000",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb0290000",
+     "value": "0x40000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068c5c",
+     "address": "0xb0290028",
+     "value": "0x8",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068ca8",
+     "address": "0x4",
+     "value": "0x0",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068ca8",
+     "address": "0x4",
+     "value": "0x0",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068ca8",
+     "address": "0x4",
+     "value": "0x6996",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068cd0",
+     "address": "0xb0290028",
+     "value": "0x200e",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4068d64",
+     "address": "0x4",
+     "value": "0x0",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068d64",
+     "address": "0x4",
+     "value": "0x6996",
+     "rule": "DRAM aliasing model (x16-1rank-2Gb), phys 0x4"
+    },
+    {
+     "site": "0xb4068e84",
+     "address": "0xb0290028",
+     "value": "0x206c",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4069040",
+     "address": "0xb0290028",
+     "value": "0x202c",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb4067108",
+     "address": "0xb029000c",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb4067108",
+     "address": "0xb0290004",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb4067108",
+     "address": "0xb01b00b4",
+     "value": "0x0",
+     "rule": "reset seed (unknown reset value)"
+    },
+    {
+     "site": "0xb406712c",
+     "address": "0xb0290000",
+     "value": "0x48000000",
+     "rule": "last written value"
+    },
+    {
+     "site": "0xb406714c",
+     "address": "0xb0290000",
+     "value": "0x48000000",
+     "rule": "last written value"
+    }
+   ],
+   "model_vs_unicorn": {
+    "firmware_record_reference": [],
+    "primary_record_reference": [],
+    "scenarios": {
+     "x16-1rank-1Gb": [],
+     "x16-1rank-2Gb": [],
+     "x16-1rank-4Gb": [],
+     "x16-2rank-2Gb": []
+    },
+    "reset_seeds": {
+     "0xffffffff": [],
+     "0xa5a5a5a5": []
+    },
+    "note": "lists of clocks (MHz) where the model and Unicorn write sequences or console lines differ"
+   },
+   "symbolic": {
+    "paths": 8,
+    "domains": [
+     [
+      [
+       804,
+       1200
+      ]
+     ],
+     [
+      [
+       792,
+       803
+      ]
+     ],
+     [
+      [
+       672,
+       791
+      ]
+     ],
+     [
+      [
+       540,
+       671
+      ]
+     ],
+     [
+      [
+       408,
+       419
+      ]
+     ],
+     [
+      [
+       420,
+       503
+      ]
+     ],
+     [
+      [
+       504,
+       539
+      ]
+     ],
+     [
+      [
+       100,
+       407
+      ]
+     ]
+    ],
+    "writes_per_path": [
+     156
+    ],
+    "clobber_dependent": [],
+    "evaluated_at_clock": 468,
+    "equals_unicorn": true,
+    "clock_dependent_writes": [
+     "0xb0160008",
+     "0xb01c007c",
+     "0xb01c0080",
+     "0xb01c00c0",
+     "0xb01c00cc",
+     "0xb01c00d8",
+     "0xb01c00dc",
+     "0xb01c00f0",
+     "0xb01c00f4",
+     "0xb01c00f8",
+     "0xb01c00fc",
+     "0xb01c0100",
+     "0xb01c0104",
+     "0xb01c0108",
+     "0xb01c0110",
+     "0xb01c0114",
+     "0xb01c011c",
+     "0xb01c0124",
+     "0xb01c0128",
+     "0xb01c012c",
+     "0xb01c0134",
+     "0xb01c0140",
+     "0xb01c0148",
+     "0xb01c8018",
+     "0xb01c801c",
+     "0xb01c8020",
+     "0xb01c8034",
+     "0xb01c8038",
+     "0xb01c803c",
+     "0xb01c8040",
+     "0xb0290080"
+    ]
+   }
+  }
+ },
+ "identical_code_across_releases": true,
+ "division_helpers": {
+  "cases": 2213,
+  "mismatches": 0,
+  "helpers": [
+   "0xb406ae80 unsigned",
+   "0xb406ad40 signed (non-negative operands)"
+  ]
+ },
+ "cross_release_differences": [
+  {
+   "register": "PUBL.MR1",
+   "site": "0xb406824c",
+   "values": {
+    "stock-221203": "0x6",
+    "stock-221223": "0x6",
+    "stock-230309": "0x6",
+    "stock-20231014": "0x42"
+   }
+  },
+  {
+   "register": "PUBL.ZQ0CR1",
+   "site": "0xb4068314",
+   "values": {
+    "stock-221203": "0x4c",
+    "stock-221223": "0x4c",
+    "stock-230309": "0x4c",
+    "stock-20231014": "0x29"
+   }
+  }
+ ]
+}

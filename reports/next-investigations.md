@@ -43,3 +43,14 @@ NAND/media/security/OTP, broad historical SDK archaeology, a complete candidate 
 5. **New:** trace the stock U-Boot path that pre-loads kernel/ramdisk/DTB (BOOT-007), and resolve the board meaning of the GPIOC6 strap (BOOT-011) from board photographs.
 
 The highest-value continuation is now **recovering the computed DRAM timing values** in the stock loader. With the documented controller/PHY layout, this would give an independently reimplementable DRAM init for the original RG35XX, the single largest remaining closed dependency before U-Boot.
+
+## Status after DRAM timing reconstruction (2026-11-25)
+
+**Done offline** ([report](ddr-timing-reconstruction.md); MEM-006, DDR-002, DDR-003, C-INI-RECORD): every value the stock DDR3 path writes is reproduced by three agreeing methods and traced to a call site and to its inputs (constant, ini field, hardware-detected outcome or unknown reset value). Cold boot uses the second ini record and detects ranks and geometry; the shipped primary record matches the write-back for one ×16 2 Gb rank.
+
+Remaining, in order of value:
+
+1. **Read-only serial log** of a normal stock boot (V1 if a log already exists, otherwise V7 after explicit approval): confirms or falsifies the training-retry and probe hypotheses via the four predicted console lines (report §8). No register access.
+2. **DMM and PUBL semantics** for the undocumented constants (report §10), by comparison with any public DesignWare PUBL databook-derived source or a second Actions SoC loader.
+3. **Resume path (mode 1)** and the memory test `0xb406631c`, with the same tools (the symbolic interpreter accepts other entries).
+4. A clean-room DRAM init (U-Boot SPL style) is now specifiable from DDR-002, but must not be run on hardware without the approvals in the hardware validation plan.

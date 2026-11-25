@@ -251,7 +251,7 @@ This extends Tinyhack's `ADB_ON.sh` (which uses the same controls) by locating t
 
 * Boot ROM behaviour: block execution order, media search, the role of the `[0x1e00,0x2000)` block and the 5 KiB per-release area.
 * Who loads kernel/ramdisk/DTB before U-Boot's `bootm` (BOOT-007, now also for stock).
-* Computed DRAM timing values and the DDR PLL frequency field encoding; whether lanes 2/3 are disabled at run time; whether capacity detection overrides 256 MiB.
+* ~~Computed DRAM timing values and the DDR PLL frequency field encoding; whether lanes 2/3 are disabled at run time; whether capacity detection overrides 256 MiB.~~ Resolved offline in [ddr-timing-reconstruction.md](ddr-timing-reconstruction.md): CMU_DDRPLL = (F/12) | 0x300; lanes 2/3 have DXGCR bit 0 cleared for the ×16 records; cold boot uses the second ini record and detects capacity (MEM-006, DDR-002).
 * Which boards strap GPIOC6 high, and whether "s500"/"a7039" mean different silicon.
 * The 5 KiB high-entropy area: encrypted, signed or random padding.
 * USB role/VBUS behaviour on hardware; reachability of the console shell.
@@ -261,7 +261,7 @@ This extends Tinyhack's `ADB_ON.sh` (which uses the same controls) by locating t
 
 | Rank | Task | Mode |
 |---|---|---|
-| 1 | Recover computed DRAM timing values by symbolic evaluation of `0xb40673f4` with the `bootloader.ini` inputs (bounded emulation of pure arithmetic only, no peripheral model) | Offline |
+| 1 | ~~Recover computed DRAM timing values by symbolic evaluation of `0xb40673f4` with the `bootloader.ini` inputs~~ **Done**: [ddr-timing-reconstruction.md](ddr-timing-reconstruction.md) | Offline |
 | 2 | Trace the U-Boot (stock) path that places kernel/ramdisk/DTB in memory: owl board init, `boot_dev`, any FAT reads in non-env code | Offline |
 | 3 | Disassemble block 0 and the `[0x1e00,0x2000)` block with the Boot ROM interface in mind (calls to `0xffff....`) | Offline |
 | 4 | Compare the loader's UART/PMIC early init with `atc260x` kernel code to document the PMIC I2C bring-up sequence | Offline |
