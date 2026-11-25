@@ -806,9 +806,17 @@ def storage_model(s):
             c = CONTROLLER.search(e['link'] or '')
             hosts[name] = c.group(1) if c else None
     disks_not_in_partitions = sorted(n for n in blocks if part_names is not None and n not in part_names)
+    # Enumeration is incomplete if the probe skipped entries (64-entry cap, unsafe names) or if
+    # /proc/partitions names a disk the listing does not contain. Either way an absent device
+    # may simply be unlisted, so no "only the boot card" conclusion is allowed.
+    skipped = sorted(set((probe_block or {}).get('skipped', [])))
+    unlisted = sorted({p for p in (part_names or []) if p not in blocks
+                       and not any(p.startswith(b) and re.fullmatch(r'p?\d+', p[len(b):]) for b in blocks)})
+    incomplete = bool(skipped or unlisted) if source == 'probe' else bool(unlisted)
     return dict(source=source, block_devices=blocks, partition_names=part_names, boot_mount=boot_mount,
                 boot_disk=boot_disk, boot_controller=(blocks.get(boot_disk) or {}).get('controller'),
                 mmc_cards=mmc_cards, mmc_hosts=hosts, inconsistent=disks_not_in_partitions,
+                probe_skipped=skipped, partitions_not_listed=unlisted, enumeration_incomplete=incomplete,
                 note=('/sys/block/mmcblk*/removable is 0 for every MMC disk by design of the kernel MMC block '
                       'driver, so removability is judged from the card type (SD versus MMC) and the controller, '
                       'not from that attribute. Absence of an enumerated device does not prove no storage is fitted.'))
@@ -1083,13 +1091,16 @@ def _p_nand(s):
         return 'incomplete', {'source': sm.get('source')}
     values = {n: {k: b.get(k) for k in ('kind', 'media', 'controller', 'type')} for n, b in blocks.items()}
     values = {'devices': values, 'boot_disk': sm.get('boot_disk'), 'source': sm.get('source'),
-              'not_in_partitions': sm.get('inconsistent')}
+              'not_in_partitions': sm.get('inconsistent'), 'probe_skipped': sm.get('probe_skipped'),
+              'partitions_not_listed': sm.get('partitions_not_listed')}
     kinds = [b['kind'] for b in blocks.values()]
     mmc = [b for b in blocks.values() if b['kind'] == 'mmc']
     if 'nand-or-mtd' in kinds or 'other' in kinds:
         return 'other-block-device', values
     if any(b.get('media') == 'mmc-or-emmc' for b in mmc):
         return 'non-removable-mmc', values
+    if sm.get('enumeration_incomplete'):
+        return 'incomplete', values
     if sm.get('source') != 'probe' or any(b.get('media') == 'unknown' for b in mmc):
         return 'type-unknown', values
     if len(mmc) > 1:

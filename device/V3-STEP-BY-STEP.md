@@ -250,6 +250,7 @@ Examples:
 The last line must say **`0 FAIL, 0 WARN`**. You should see `PASS` for:
 
 * `card-boot:` and each of the 8 boot files;
+* `card-rootfs` (the firmware's 2.4 GB root filesystem file is checked, so this step takes one to a few minutes);
 * `card-overclocking` (`overclocking unset`);
 * `card-boot-extra`;
 * `card-first-boot`;
@@ -261,7 +262,7 @@ What to do if it reports a problem:
 
 | Message | What to do |
 |---|---|
-| `card-boot:… DIFFERS` or `missing` | Something changed the boot partition. Do not use this card. Start again from Part 3. |
+| `card-boot:… DIFFERS` or `missing`, or `card-rootfs FAIL` | Something changed the boot partition. Do not use this card. Start again from Part 3. |
 | `card-overclocking FAIL` | Do not edit the file by hand. Start again from Part 3. |
 | `card-first-boot WARN` | The first boot did not finish. Repeat Part 4. |
 | `card-script FAIL` | The copied file is not the registered script. Delete it, then repeat 5.3 exactly. |

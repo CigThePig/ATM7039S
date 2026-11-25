@@ -267,11 +267,31 @@ def check_boot_dir(folder, root=ROOT):
                    | {'boot', 'tools', 'boot_logo.bmp.gz'} and not os_metadata(p.name))
     out.append(result('card-boot-extra', 'WARN' if extra else 'PASS',
                       ('files not in the pinned image: ' + ', '.join(extra)) if extra else 'no extra top-level files'))
+    out += check_card_rootfs(folder, root)
     marker = folder / 'boot' / 'autoresize'
     out.append(result('card-first-boot', 'PASS' if not marker.exists() else 'WARN',
                       'first boot completed (boot/autoresize removed by S02resize)' if not marker.exists() else
                       'boot/autoresize still present: boot the card once and power off before copying the script'))
     return out
+
+
+def check_card_rootfs(folder, root=ROOT):
+    """The root filesystem container on the card (boot/BATOCERA) must equal the catalogued one.
+
+    It holds the init scripts, launcher and BusyBox the safety analysis read, so the top-level
+    boot files matching is not enough. Hashing it reads about 2.4 GB from the card.
+    """
+    cat = json.loads((root / 'evidence/firmware/koriki-v1.0-rootfs.json').read_text())
+    boot = find_ci(folder, 'boot')
+    container = find_ci(boot, 'BATOCERA') if boot is not None and boot.is_dir() else None
+    if container is None or not container.is_file():
+        return [result('card-rootfs', 'FAIL', 'boot/BATOCERA (the root filesystem) is missing from the boot partition')]
+    size = container.stat().st_size
+    if size != cat['container_size']:
+        return [result('card-rootfs', 'FAIL', f"boot/BATOCERA is {size} bytes, catalogued {cat['container_size']}")]
+    ok = file_sha(container) == cat['container_sha256']
+    return [result('card-rootfs', 'PASS' if ok else 'FAIL',
+                   'boot/BATOCERA ' + ('equals' if ok else 'DIFFERS from') + ' the catalogued root filesystem')]
 
 
 def check_share_dir(folder, root=ROOT):

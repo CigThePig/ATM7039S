@@ -606,8 +606,8 @@
       {
         "id": "incomplete",
         "class": "insufficient",
-        "condition": "no block listing",
-        "implication": "Not evaluable."
+        "condition": "no block listing, a probe that skipped entries, or a /proc/partitions disk missing from the listing",
+        "implication": "Enumeration is incomplete: an unlisted device could be non-removable. Not a negative result."
       }
     ]
   },

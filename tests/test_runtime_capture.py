@@ -400,6 +400,29 @@ class ScenarioTests(Base):
                 got = outcomes(self.parse(scenario, storage_scenario=scenario))
                 self.assertEqual((got['P-NAND'], got['P-BOOTDEV']), (nand, bootdev))
 
+    def test_probe_entry_cap_is_incomplete_not_boot_card_only(self):
+        """Regression (Codex review): a NAND disk past the 64-entry probe cap must not vanish."""
+        root = cf.build(self.tmp / 'root', storage_scenario='nand')
+        block, parts = root / 'sys/block', root / 'proc/partitions'
+        for i in range(2, 64):
+            d = root / f'sys/devices/virtual/block/loop{i}'
+            d.mkdir(parents=True)
+            (d / 'removable').write_text('0\n')
+            os.symlink(f'../devices/virtual/block/loop{i}', block / f'loop{i}')
+            parts.write_text(parts.read_text() + f'    7 {i:>8} {0:>10} loop{i}\n')
+        cap, _ = run_capture(root, self.tmp / 'out')
+        r = rc.parse(cap)
+        sm = r['summary']['storage_model']
+        self.assertIn('entry-limit', sm['probe_skipped'])
+        self.assertIn('nand0', sm['partitions_not_listed'])
+        self.assertEqual(outcomes(r)['P-NAND'], 'incomplete')
+
+    def test_partition_disk_missing_from_listing(self):
+        r = self.parse()
+        sm = r['summary']['storage_model']
+        self.assertEqual(sm['partitions_not_listed'], [])
+        self.assertFalse(sm['enumeration_incomplete'])
+
     def test_missing_sysfs_links(self):
         r = self.parse(storage_scenario='no-links')
         sm = r['summary']['storage_model']

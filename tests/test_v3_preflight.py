@@ -111,6 +111,24 @@ class CardChecks(unittest.TestCase):
         self.assertEqual(r['card-overclocking']['status'], 'FAIL')
         self.assertEqual(r['card-boot-extra']['status'], 'WARN')
         self.assertEqual(r['card-first-boot']['status'], 'WARN')
+        self.assertEqual(r['card-rootfs']['status'], 'FAIL')
+
+    def test_card_rootfs(self):
+        repo = self.tmp / 'repo'
+        shutil.copytree(ROOT / 'evidence', repo / 'evidence')
+        boot = self.tmp / 'BOOT2'
+        (boot / 'BOOT').mkdir(parents=True)
+        self.assertEqual(pf.check_card_rootfs(boot, repo)[0]['status'], 'FAIL')  # missing
+        data = b'rootfs stand-in'
+        (boot / 'BOOT/BATOCERA').write_bytes(data)
+        self.assertIn('bytes, catalogued', pf.check_card_rootfs(boot, repo)[0]['detail'])
+        cat = repo / 'evidence/firmware/koriki-v1.0-rootfs.json'
+        c = json.loads(cat.read_text())
+        c.update(container_size=len(data), container_sha256=hashlib.sha256(data).hexdigest())
+        cat.write_text(json.dumps(c))
+        self.assertEqual(pf.check_card_rootfs(boot, repo)[0]['status'], 'PASS')
+        (boot / 'BOOT/BATOCERA').write_bytes(b'rootfs stand-iN')
+        self.assertIn('DIFFERS', pf.check_card_rootfs(boot, repo)[0]['detail'])
 
     def test_boot_region_without_sfvd(self):
         dump = self.tmp / 'head.bin'
