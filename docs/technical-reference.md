@@ -216,6 +216,8 @@ See the dedicated [boot-chain report](boot-chain.md). The identified image-layou
 
 Stock userspace boot is reported through uImage, ramdisk, Android-style init and a launcher script. It has not been independently replayed here. No bootloader or boot ROM replacement was attempted. [BOOT-003]
 
+**Stock boot chain (PR #5).** Block 0 at SRAM `0xb4060000` → ROM read service `0xb4060400` (r9=4) → bootloader.bin `0xb4065400`, which loads `bootloader.ini`, initialises DRAM, writes the AFI, loads app.bin to `0x1000` (ActBrm-checked) and U-Boot to `0x05000000` (not CRC-checked) → app.bin (chip check, optional ini write-back) → U-Boot. `check_boot_flag` turns `bootcmd=run ramboot` into `run mmcboot`, which fatloads `uEnv.txt`, `uImage` (`0x7fc0`), `ramdisk.img` (`0x1ffffc0`) and `kernel.dtb` (`0x03800000`) from SD0 partition 1 and runs `bootm`. Linux starts at `0x8000` with `r0=0, r1=0, r2=0x03800000`, MMU and caches off. [BOOT-012..BOOT-020; [report](../reports/stock-boot-chain-reconstruction.md)]
+
 ## 23. Firmware
 
 Only public standalone components were analyzed: the published GPU DTB and a historical GPIO key module. Provenance, hashes, sizes and module metadata are in [artifacts.json](../evidence/artifacts.json). No complete stock, GarlicOS or Koriki release image was acquired, mounted or executed. Therefore there is no new whole-image partition map, kernel disassembly or early-boot binary reconstruction in this edition.
@@ -279,3 +281,8 @@ Anbernic's own firmware is now part of the evidence base ([dossier](../reports/a
 - **§15 USB:** Stock init leaves the port in host mode with the Actions umonitor stopped; ADB requires a device-mode script (USB-002).
 - **§17 GPU:** Stock disables the GPU and ships a DDK 1.12 Android module without userspace (GPU-011).
 - **§23 Firmware:** Stock kernels are flower/GCC 4.7.3 builds sharing 119 vendor-only functions with Koriki. Koriki's loader and U-Boot are stock 230309's. GarlicOS's kernel comes from the same tree (FW-016, FW-017, BOOT-010).
+
+## Boot-chain edition (PR #5)
+
+- **§22 Boot:** Complete instruction-level reconstruction of the stock chain from loader block 0 to the Linux jump; BOOT-007 revised (uEnv.txt is applied and the images are loaded by U-Boot `mmcboot`). The Boot ROM boundary is the SRAM service at `0xb4060400`, which is absent from every image (BOOT-012). See [the report](../reports/stock-boot-chain-reconstruction.md) and [`stock-boot-chain.json`](../evidence/firmware/stock-boot-chain.json).
+- **§5 Memory:** the final DT gets `/memory reg=<0 ram_size>` (AFI `ddr_size`, else 496 MiB), `/memreserve/` entries for the DTB and the initrd, and initrd `0x2000000` (BOOT-017).

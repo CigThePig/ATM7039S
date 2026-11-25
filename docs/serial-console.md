@@ -6,11 +6,11 @@ Scope: **Koriki v1.0** release bytes plus the pinned vendor kernel and U-Boot so
 
 | Layer | Evidence | Effect |
 |---|---|---|
-| `uEnv.txt` | `bootargs=earlyprintk clk_ignore_unused selinux=0 init=/init` | **Disputed (C-UENV).** U-Boot's `bootcmd=run ramboot` never imports it (BOOT-007), yet RetroArch alpha 0.1 depends on its `root=` to boot. P-UENV settles this from `/proc/cmdline`. |
+| `uEnv.txt` | `bootargs=earlyprintk clk_ignore_unused selinux=0 init=/init` | **Applied (C-UENV resolved offline).** `check_boot_flag` replaces `bootcmd=run ramboot` with `run mmcboot`, which imports `uEnv.txt` before loading the images (BOOT-015/016). P-UENV is now a confirmation test. |
 | Release DTB `/chosen` | `bootargs = "earlyprintk clk_ignore_unused selinux=0"` | No `console=`; this is the base command line U-Boot extends if `uEnv.txt` is not applied |
 | U-Boot environment | `console=ttyS2,115200`, `baudrate=115200`, `stdout=serial` | U-Boot's own variable; not referenced by the boot commands found |
 | U-Boot FDT fixup | Release binary contains `console=ttyS%d`; source `owl_boot_fdt.c:181–183` prepends `console=ttyS<AFI uart_index>` | **The kernel console index comes from the early loader's AFI record at runtime** |
-| AFI producer | Early routine copies `uart_index` from `0xb407082c` (BOOT-004) | Value not present in the static window; set at runtime |
+| AFI producer | Early routine copies `uart_index` from `0xb407082c` (BOOT-004) | Emulating the stock loader on the shipped `bootloader.ini` gives index 3, so the reconstructed kernel console is `ttyS3` (BOOT-013, BOOT-017) |
 | Fallback | `owl_afi.c:33–40` returns 5 when the AFI magic is missing | Source behaviour; release equivalence unproven |
 | Userspace | `/etc/inittab`: `getty -L console 0 vt100` | A login prompt is offered on whatever `console=` selects |
 
@@ -38,3 +38,7 @@ This points to a vendor debug pattern where UART signals share pins with a card 
 ## Stock firmware update (UART-003)
 
 The early loader's own configuration settles the AFI `uart_index` statically. Every examined loader carries `uart_index=3`, `uart_pad=0` and `115200` in `bootloader.ini` (+0x0e/+0x0f/+0x10): stock 221203, 221223, 230309, 20231014 and Koriki v1.0 (byte-identical to 230309). Loader routine `0xb4065ff8` copies them into the parameter block from which the AFI is written. Both the stock and Koriki DTBs enable UART3 (`0xb0126000`), so the expected kernel console is **`ttyS3`**. Stock `default.prop` sets `ro.debuggable=1`, which starts a root `console` shell service (USB-002). P-CONSOLE is left as pre-registered; `/proc/cmdline` from the V3 capture still decides it. See the [stock dossier](../reports/anbernic-stock-reverse-engineering.md).
+
+## Update from the boot-chain reconstruction (PR #5)
+
+Emulating the whole pre-kernel chain on all four stock images and Koriki v1.0 gives AFI `uart_index` 3 and the final command line `console=ttyS3 …` (UART3, enabled in the DTB: prediction P-CONSOLE's `enabled-uart` outcome). U-Boot's autoboot uses `bootdelay=0` with the default abort key `s500`: typing it on U-Boot's serial console during the single poll before `run bootcmd` would stop autoboot. That note is for planning only and authorises nothing ([report](../reports/stock-boot-chain-reconstruction.md)).

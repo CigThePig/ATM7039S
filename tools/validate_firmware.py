@@ -70,10 +70,39 @@ def stock_index(root,index):
                 if r['class_consistency']['contradictions']:errors.append('DDR timing: provenance class contradiction '+name)
             if m['division_helpers']['mismatches']:errors.append('DDR timing: division helper model mismatch')
         except (KeyError,ValueError,OSError) as e:errors.append('invalid DDR timing evidence: '+str(e))
+    errors.extend(boot_chain_checks(folder))
     p=folder/'stock-ddr-sequence.json'
     if p.exists():
         m=json.loads(p.read_text())
         if m['named']+m['unnamed']!=m['accesses'] or len(m['sequence'])!=m['accesses']:errors.append('inconsistent DDR sequence counts')
+    return errors
+
+
+def boot_chain_checks(folder):
+    """Consistency of stock-boot-chain.json with the other manifests and between its methods."""
+    p=folder/'stock-boot-chain.json'
+    if not p.exists():return []
+    errors=[]
+    try:
+        m=json.loads(p.read_text())
+        loaders=json.loads((folder/'stock-loaders.json').read_text())['loaders']
+        uboot=json.loads((folder/'stock-platform.json').read_text())['uboot']
+        stages=m['stages']
+        if [s['id'] for s in stages]!=[f'S{i}' for i in range(len(stages))]:errors.append('boot chain: stage ids not sequential')
+        for a,b in zip(stages,stages[1:]):
+            if b['caller']!=a['id']:errors.append('boot chain: broken caller link at '+b['id'])
+        for rel,r in m['releases'].items():
+            c=r['components']
+            if rel.startswith('stock-'):
+                if loaders.get(rel,{}).get('sha256')!=c['loader']['sha256']:errors.append('boot chain: loader hash mismatch '+rel)
+                if uboot.get(rel,{}).get('sha256')!=c['uboot']['uimage_sha256']:errors.append('boot chain: U-Boot hash mismatch '+rel)
+            main=r['loader']['main']
+            if main['error'] or main['stopped']!='app.bin entry 0x1000':errors.append('boot chain: loader emulation incomplete '+rel)
+            model=[r['bootargs']['gpio_low']]+([r['bootargs']['gpio_high']] if r['bootargs']['gpio_high'] else [])
+            if [h['dt_chosen'].get('bootargs') for h in r.get('handoff',[])]!=model:
+                errors.append('boot chain: emulated handoff bootargs differ from the model '+rel)
+            if any(h['error'] for h in r.get('handoff',[])+r.get('handoff_bootargs',[])):errors.append('boot chain: handoff emulation error '+rel)
+    except (KeyError,ValueError,OSError,StopIteration) as e:errors.append('invalid boot chain evidence: '+str(e))
     return errors
 
 

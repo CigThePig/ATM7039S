@@ -143,3 +143,15 @@ python tools/map_accesses.py refs.json ddr.json --block uPCTL:0xb01c0000:ddr_rk3
 ```
 
 Compare outputs with `evidence/firmware/stock-loaders.json` and `stock-ddr-sequence.json`. The kernel scans use `--load 0xc0008000 --io-map 0xf8000000:0xb0000000:0x04000000` with function boundaries from `kallsyms.py`.
+
+### Stock boot-chain reconstruction (PR #5)
+
+Needs `capstone`, `unicorn` and `pyfatfs` (`requirements-firmware.txt`). See [the report](../reports/stock-boot-chain-reconstruction.md).
+
+| Tool | Purpose | Deliberate limits |
+|---|---|---|
+| `boot_chain.py analyze IMAGE OUT --release NAME [--sha256 H] [--ram-mib N]` | Re-derives the chain from one image. Anchors are strings and literals, not fixed addresses. Emulates loader block 0 (per clock-bit hypothesis), bootloader.bin main to the app.bin jump (ROM read service served from the image), the boot-code→AFI map, U-Boot `check_boot_flag` with real getters, the bootargs helper, `owl_boot_fdt_setup` and `image_setup_linux` on the shipped DTB. Static decoding covers env storage, `init_sequence_r`, `boot_jump_linux`, `cleanup_before_linux`, strap and autoboot. Data parsing covers GPT/MBR, FAT boot files, uImage and uEnv | Every emulation lists its models. Unmodelled MMIO reads abort. DRAM outcome is a parameter. app.bin is analysed statically only |
+| `boot_chain.py compare A.json B.json … OUT` | Component hashes and boot-behaviour equality across releases | Equality of traced behaviour, not of whole binaries |
+| `boot_chain.py trace A.json … OUT` | Builds `evidence/firmware/stock-boot-chain.json`: stages S0–S7 (component hash, function, inputs with disk offsets, destinations, lengths, validation, transition, method, confidence), comparison and compacted per-release results | Stock releases form the comparison; other firmware is reported separately |
+
+Tests: `tests/test_boot_chain.py` covers hand-encoded A32 fixtures (call tracking, string anchors, a synthetic `check_boot_flag` executed with its getter, emulator MMIO/stub rules) and evidence consistency. Set `ATM_FIRMWARE_DIR` to a folder holding the pinned `stock-*.img` / `koriki-v1.0.img` to re-derive the committed evidence (about 30 s).

@@ -104,10 +104,13 @@
     "findings": [
       "BOOT-007",
       "BOOT-008",
+      "BOOT-015",
+      "BOOT-016",
+      "BOOT-017",
       "FW-013"
     ],
-    "status": "Unresolved. Possibilities: the early loader applies uEnv.txt bootargs, U-Boot runs from a different stored environment, or alpha 0.1 did not boot as packaged.",
-    "next_validation": "Prediction P-UENV on the V3 capture: presence of init=/init (only in uEnv.txt) in /proc/cmdline."
+    "status": "Resolved offline (PR #5) in favour of uEnv.txt being applied: check_boot_flag replaces bootcmd=run ramboot with run mmcboot after the environment is loaded, and mmcboot imports uEnv.txt before fatloading the images (BOOT-015, BOOT-016). Executing the handoff on Koriki v1.0 puts its uEnv.txt init=/init into /chosen bootargs. Alpha 0.1's root= is applied the same way. The MiaUI statement and the original BOOT-007 reading are refuted statically.",
+    "next_validation": "P-UENV on the V3 capture remains the hardware confirmation: the offline prediction is outcome uenv-applied (init=/init present in /proc/cmdline on Koriki)."
   },
   {
     "id": "C-STOCKLIKE",
@@ -142,5 +145,36 @@
     ],
     "status": "Resolved statically for the cold-boot path in favour of MEM-006. MEM-005's copy routine and field offsets remain correct; its 'configured 256 MiB' is an expected detection result, not an input. The shipped +0x1c values match the write-back only under the single-rank x16 2 Gb hypothesis.",
     "next_validation": "A read-only serial log of a normal boot (no register access). For 20231014 the reconstruction predicts, in order: \"DRAM init mode0,type16,2cs,x16bus,rcc0x0,wrodt2,rdodt2,drv9,468MHz.@180525_R...\", a \"Fail:...\" lane-status line, the same line with 1cs, then \"Ok:DCU_CFG:0x202c,256MByte Cap.\"; older releases print wrodt1,rdodt1,drvc. A different sequence falsifies the training or probe hypotheses, not the formulas."
+  },
+  {
+    "id": "C-APPBIN",
+    "issue": "The stock dossier (PR #3) said app.bin loads and checksums U-Boot. Instruction-level tracing shows bootloader.bin loads U-Boot (0xb4065bf0) before app.bin runs, and no loader stage checks the uImage magic or CRC; app.bin only gates on a chip identity, writes back bootloader.ini when the SFVD record is missing, and jumps to the entry bootloader.bin passed in r0.",
+    "findings": [
+      "BOOT-013",
+      "BOOT-014"
+    ],
+    "status": "Resolved statically in favour of BOOT-013/BOOT-014. app.bin does contain an SD driver and an unreferenced \"load uboot\" string, which explains the earlier reading.",
+    "next_validation": "A serial log of a normal boot prints \"load uboot: load address is 0x5000000, entry point is 0x5000040\" before \"in fourth\" (app.bin) if the order is right."
+  },
+  {
+    "id": "C-DEVCLK",
+    "issue": "Loader block 0 maps CMU_DEVCLKEN0 (0xb01600a0) bit 4 to boot code 0, which the loader turns into AFI boot_dev 0x20 (sd0) and the SD read paths; the mainline S500 clock driver names bit 4 the NAND gate and bit 5 the SD0 gate.",
+    "findings": [
+      "BOOT-012",
+      "BOOT-013"
+    ],
+    "status": "Unresolved. Either the ATM7039S Boot ROM leaves bit 4 set after an SD0 boot (different gate assignment or a ROM side effect), or the stock card boots through a path not taken in this reconstruction. A working stock card requires code 0 (BOOT-012).",
+    "next_validation": "Read-only: /proc/cmdline containing boot_dev=sd0 confirms code 0. The bit itself needs a register read, which is not authorized; prefer a serial log or vendor documentation."
+  },
+  {
+    "id": "C-OPAQUE",
+    "issue": "PR #3 described loader 0x3800-0x4c00 as a 5 KiB high-entropy per-release area (possibly encrypted or signed). PR #5 places it inside bootloader.ini, shows no traced code reads it on the SD path, and shows app.bin writes the whole 20-sector ini back from SRAM.",
+    "findings": [
+      "BOOT-010",
+      "BOOT-019",
+      "BOOT-014"
+    ],
+    "status": "Reinterpreted, not proven: best explained as uninitialised SRAM captured by the write-back on each master card. Nothing suggests a signature.",
+    "next_validation": "Offline: obtain a second dump of a stock card after a factory first boot (if one exists publicly) and compare; on hardware this would require reading the card before and after a boot, which is not authorized."
   }
 ]

@@ -313,8 +313,10 @@
     "question": "Is uEnv.txt applied, or does the kernel command line come only from the DTB /chosen plus U-Boot's fixup?",
     "test": "V3",
     "findings": [
+      "BOOT-006",
       "BOOT-007",
-      "BOOT-006"
+      "BOOT-015",
+      "BOOT-016"
     ],
     "contradictions": [
       "C-UENV"
@@ -326,12 +328,12 @@
       {
         "id": "uenv-not-applied",
         "condition": "cmdline lacks init=/init (present only in uEnv.txt)",
-        "implication": "Supports BOOT-007: images preloaded, uEnv.txt ignored on the default path; edits to uEnv.txt have no effect."
+        "implication": "Contradicts BOOT-015/BOOT-016 (offline reconstruction predicts uEnv.txt is applied); would mean the runtime boot differs from the traced code, e.g. a different AFI boot_mode."
       },
       {
         "id": "uenv-applied",
         "condition": "cmdline contains init=/init",
-        "implication": "uEnv.txt bootargs reach the kernel; BOOT-007's default-path reading is wrong or overridden at runtime."
+        "implication": "Confirms BOOT-015/BOOT-016 (offline prediction): check_boot_flag selects mmcboot and uEnv.txt bootargs reach the kernel."
       },
       {
         "id": "not-evaluable",

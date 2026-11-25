@@ -113,7 +113,7 @@ Solid edges are static data or control dependencies seen in code. The ROM-to-blo
 
 **Checksum rule** (BOOT-009). The trailer is `"ActBrm" AA 55 <u32>`, where the u32 equals the sum of the block's little-endian words up to (excluding) that word, plus `0x1234`. The four blocks are: `[0x0,0x200)`, `[0x1e00,0x2000)`, `[0x5400,0x33c00)` (bootloader.bin code, **excluding** the PACK directory and `bootloader.ini`, so DRAM-config edits do not change it) and `[0x19000,0x38000)` (app.bin padded to 248 sectors). [`actions_loader.py`](../tools/actions_loader.py) reproduces this for all five loaders: [`stock-loaders.json`](../evidence/firmware/stock-loaders.json).
 
-**Stage roles.** Strings and references place DDR init, PMIC early init, AFI production and "load app" in `bootloader.bin` (SRAM-resident, `0xb4060000`). The DRAM-resident `app.bin` holds SD/eMMC/NAND/SPI-flash drivers and loads and checksums U-Boot. Neither stage contains `uImage`/`ramdisk.img`/`kernel.dtb` file names, and U-Boot's default command is `bootm` of addresses already in memory (BOOT-007). **Who loads the kernel, ramdisk and DTB remains unresolved**, now for stock as well as Koriki.
+**Stage roles.** Strings and references place DDR init, PMIC early init, AFI production and "load app" in `bootloader.bin` (SRAM-resident, `0xb4060000`). The DRAM-resident `app.bin` holds SD/eMMC/NAND/SPI-flash drivers. *Correction (PR #5, C-APPBIN):* bootloader.bin itself loads U-Boot, and app.bin only gates on a chip identity and may write `bootloader.ini` back (BOOT-013/014). *Resolved (PR #5):* U-Boot's `check_boot_flag` replaces the default `bootm` of addresses in memory with `run mmcboot`, which loads the kernel, RAM disk and DTB from the FAT partition ([reconstruction](stock-boot-chain-reconstruction.md), BOOT-015/016).
 
 **Answers to the brief's boot questions**
 
@@ -250,10 +250,10 @@ This extends Tinyhack's `ADB_ON.sh` (which uses the same controls) by locating t
 ## 14. Unknowns
 
 * Boot ROM behaviour: block execution order, media search, the role of the `[0x1e00,0x2000)` block and the 5 KiB per-release area.
-* Who loads kernel/ramdisk/DTB before U-Boot's `bootm` (BOOT-007, now also for stock).
+* ~~Who loads kernel/ramdisk/DTB before U-Boot's `bootm` (BOOT-007).~~ Resolved: U-Boot `mmcboot` (BOOT-015/016).
 * ~~Computed DRAM timing values and the DDR PLL frequency field encoding; whether lanes 2/3 are disabled at run time; whether capacity detection overrides 256 MiB.~~ Resolved offline in [ddr-timing-reconstruction.md](ddr-timing-reconstruction.md): CMU_DDRPLL = (F/12) | 0x300; lanes 2/3 have DXGCR bit 0 cleared for the ×16 records; cold boot uses the second ini record and detects capacity (MEM-006, DDR-002).
 * Which boards strap GPIOC6 high, and whether "s500"/"a7039" mean different silicon.
-* The 5 KiB high-entropy area: encrypted, signed or random padding.
+* The 5 KiB high-entropy area: now placed inside bootloader.ini and best explained by app.bin's SRAM write-back (BOOT-019, inferred; C-OPAQUE).
 * USB role/VBUS behaviour on hardware; reachability of the console shell.
 * DDK 1.12 microkernel and userspace for the stock module (absent).
 

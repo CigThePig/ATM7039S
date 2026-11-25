@@ -64,8 +64,25 @@ Four Anbernic stock releases are now hash-identified and analysed ([dossier](../
 | Boot ROM | Not in the image | Unknown |
 | Raw loader at sector 4097 (448 sectors) | ActBrm-checksummed blocks + `PACK` directory: `bootloader.bin` @ `0xb4060000`, `bootloader.ini` @ `0xb4062400`, `app.bin` @ `0x1000` | Verified layout (BOOT-009) |
 | SRAM stage (`bootloader.bin`) | PLL setup (core/dev 600 MHz), PMIC early init, **DRAM init via uPCTL `0xb01c0000` + PUBL `0xb01c8000`**, AFI producer | Strongly supported (DDR-001, MEM-005) |
-| DRAM stage (`app.bin`) | Storage drivers; loads and checksums U-Boot | Verified strings/refs; identical in all releases |
-| U-Boot 2015.04 | GPIOC6 variant strap → `allenS500=1`; `bootcmd=run ramboot` | BOOT-011; kernel/ramdisk/DTB loader still unknown (BOOT-007) |
+| DRAM stage (`app.bin`) | Chip-identity gate and `bootloader.ini` write-back; jumps to U-Boot loaded by bootloader.bin (corrected, C-APPBIN) | BOOT-014 |
+| U-Boot 2015.04 | GPIOC6 variant strap → `allenS500=1`; `check_boot_flag` replaces `bootcmd=run ramboot` with `run mmcboot` | BOOT-011, BOOT-015; loads kernel/ramdisk/DTB from SD0 p1 (BOOT-016, resolves BOOT-007) |
 | Kernel 3.10.37 (flower, GCC 4.7.3) | Android init; host-mode USB; launcher `dmenu.bin` | FW-016, USB-002, UI-002 |
 
 The disk image is GPT-partitioned (MISC/SYSTEM/CONFIG/ROMS) but keeps the same raw offsets as the CFW recipe. Koriki v1.0's whole pre-kernel chain (loader window and U-Boot) is byte-identical to stock 230309 (BOOT-010).
+
+## Stock boot chain, instruction level (PR #5)
+
+The full trace is in [the reconstruction report](../reports/stock-boot-chain-reconstruction.md) and machine-readable in [`stock-boot-chain.json`](../evidence/firmware/stock-boot-chain.json). It supersedes the stage tables above for stock firmware.
+
+| # | Stage | Reads (disk offset → address) | Hands over with | Finding |
+|---|---|---|---|---|
+| S0 | Boot ROM (not in image) | block 0 `0x200200` → `0xb4060000` (inferred) | jump `0xb4060000` | BOOT-012, BOOT-019 |
+| S1 | Block 0 | ROM svc r9=4: `0x205600` ×40 KiB → `0xb4065400` | code at `0xb4064c00`; jump `0xb4065400` | BOOT-012 |
+| S2 | bootloader.bin | ini `0x202600` → `0xb4062400`; app.bin `0x219200` → `0x1000`; U-Boot `0x300000` → `0x05000000` | AFI `0xb4060300`; `r0=0x05000040`; `blx 0x1000` | BOOT-013 |
+| S3 | app.bin | (writes ini back if `SFVD` missing) | jump to `r0` | BOOT-014 |
+| S4 | U-Boot init | env: mmc 1 `0x5000` (absent → default) | `bootcmd=run mmcboot` | BOOT-015, BOOT-018 |
+| S5 | mmcboot | FAT `mmc 0:1`: uEnv.txt → `0x04400000`, uImage → `0x7fc0`, ramdisk.img → `0x1ffffc0`, kernel.dtb → `0x03800000` | `bootm` | BOOT-016 |
+| S6 | bootm / FDT | in place; `/memory`, `/chosen`, `/memreserve/` written | — | BOOT-017 |
+| S7 | Linux entry | — | `pc=0x8000 r0=0 r1=0 r2=0x03800000`, MMU/caches off | BOOT-017 |
+
+`ramboot` (images already in RAM) is used only when the AFI says PRODUCE or is missing. The disk offsets `0x200200`/`0x300000` are therefore raw loader inputs, and the kernel, RAM disk and DTB are ordinary FAT files.
