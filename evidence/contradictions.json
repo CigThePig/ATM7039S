@@ -176,5 +176,54 @@
     ],
     "status": "Reinterpreted, not proven: best explained as uninitialised SRAM captured by the write-back on each master card. Nothing suggests a signature.",
     "next_validation": "Offline: obtain a second dump of a stock card after a factory first boot (if one exists publicly) and compare; on hardware this would require reading the card before and after a boot, which is not authorized."
+  },
+  {
+    "id": "C-PROBE-NOALIAS",
+    "issue": "PR #4 (MEM-006, ddr_model.capacity_probe) treated a row probe without an alias as the error 0xf000fa11. The instructions 0xb4068cec..0xb4068dd0 end the row search at an alias or at exponent 31 and otherwise leave the row code at 0, reporting 13 rows; the exponent-32 check that would return 0xf000fa11 can never fire.",
+    "findings": [
+      "MEM-006",
+      "DDR-004"
+    ],
+    "status": "Resolved by instruction reading and emulation; ddr_model corrected (48 geometries, 0 mismatches). PR #4's committed evidence covered only aliasing geometries and is unaffected.",
+    "next_validation": "None needed offline."
+  },
+  {
+    "id": "C-FAILCODE",
+    "issue": "PR #4 listed 0x2a00fa11, 0x9a00fa11, 0xdf00fa11, 0xf000fa11 and 0xc000fa11 as values the DRAM routine returns. 0xb4068f34..0xb4068f50 prints each as 'Fail: 0x...' and returns 0x1747fa11 instead; only 0x1017fa11 is returned unchanged.",
+    "findings": [
+      "MEM-006",
+      "DDR-004"
+    ],
+    "status": "Resolved by instruction reading and scenario emulation.",
+    "next_validation": "None needed offline."
+  },
+  {
+    "id": "C-WRITEBACK-FAIL",
+    "issue": "PR #4 (MEM-006) said the parameter write-back 0xb4066280 runs on success. The caller joins the success and the 'ddr init error' paths at 0xb4066744, so the write-back and the AFI write also run after a failed init, with the forced 2048 MiB capacity.",
+    "findings": [
+      "MEM-006",
+      "MEM-010"
+    ],
+    "status": "Resolved: both writes happen, but main then takes the ADFU exit, so neither reaches U-Boot or the card.",
+    "next_validation": "None needed offline."
+  },
+  {
+    "id": "C-PREDRAM-9254",
+    "issue": "PR #4 listed 0xb4069254 as the pre-DRAM clock setup; PR #5 called it a PMIC status read. It is an ADFU-entry check (PMIC reg 0x35 bit 1; GPIO 0x55aa55aa handshake on non-SD0 boot codes) with no DDR effect.",
+    "findings": [
+      "BOOT-021"
+    ],
+    "status": "Resolved by instruction reading and emulation (adfu-request scenario).",
+    "next_validation": "None needed offline."
+  },
+  {
+    "id": "C-RESUME-DRAMRST",
+    "issue": "The resume init issues PIR 0x3f, whose bit 5 is DRAMRST (RESET# pulse) in the related RK3288 PUBL layout, while every other feature of mode 1 (no DRAMINIT, PREA/REF bursts, no probe or memory test, a jump to a kernel resume vector, reads of kernel-left data at DRAM 0x400) presumes DRAM contents survive self-refresh. A DDR3 RESET# pulse would void that. Mode 1 also shortens tDINIT2 to about 100 ns and sends 0x3f for LPDDR types, which have no RESET#.",
+    "findings": [
+      "MEM-008",
+      "DDR-006"
+    ],
+    "status": "Open. Not decidable offline without the PUBL v1 databook or a public driver for this PUBL revision with a resume path.",
+    "next_validation": "Offline: a PUBL v1 databook or a vendor (e.g. older Rockchip RK30/RK3188) DDR driver with a self-refresh resume sequence. Hardware: a suspend/resume cycle with a read-only UART log (separate approval required)."
   }
 ]

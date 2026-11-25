@@ -237,7 +237,7 @@ The 230309 strap runs only in `power_init_board` when `boot_mode != 1`. It sets 
 | Serial number term | Read from a "misc info" store via `read_mi_item` (not traced) | `/proc/cmdline` |
 | uEnv applied (P-UENV) | Offline prediction only | V3 `/proc/cmdline` on Koriki: expect `init=/init` |
 | Whether the kernel uses `/chosen` or a built-in command line | Kernel config not checked | Kernel `CONFIG_CMDLINE*` symbols (offline, next PR) |
-| Resume (mode 1) path and memory test | Reserved for PR #6 | Offline (PR #6) |
+| Resume (mode 1) path and memory test | Reserved for PR #6 | **Done offline in PR #6** ([report](dram-complete-reconstruction.md)): resume is PMIC-flagged suspend-to-RAM; it never writes the AFI and never reaches U-Boot unless the kernel's resume vector returns |
 
 A single read-only V3 capture (`/proc/cmdline`, `/proc/meminfo`, `/proc/device-tree/chosen`) would confirm C-DEVCLK, P-UENV, the DRAM size and the strap at once. That requires the separate hardware approval in the [validation plan](hardware-validation-plan.md).
 

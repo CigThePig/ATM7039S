@@ -21,8 +21,14 @@ Inputs are split by provenance, and every output carries one of these classes:
                  survived PUBL data training, or the capacity probe result
 ``reset``        bits preserved from an unknown hardware reset value (RMW)
 
-The LPDDR branch (``type & 0xf != 0``) and the resume path (mode 1) are not
-modelled; ``ddr_symbolic.py`` can still analyse them.
+The resume path (mode 1, wrapper ``0xb40690d0``) is modelled by ``run(...,
+mode=1)`` from the instructions as reconstructed in PR #6
+(reports/dram-complete-reconstruction.md): the record is used as stored (no
+clock rounding, no forced capacity, no rank/bus retry), PTR2 is F/10, PIR is
+0x3f, MCMD issues 8 PREA and 8 REF before data training and 8 REF before
+GO_STATE, and the capacity probe is skipped. The LPDDR branch
+(``type & 0xf != 0``) is not modelled; tools/dram_complete.py records its
+emulated write sequence instead.
 
 Register names follow the public DesignWare uPCTL/PUBL layout in U-Boot's
 ``ddr_rk3288.h`` (pinned in evidence); that the ATM7039S uses this IP is a
@@ -241,11 +247,13 @@ class Sequencer:
         self.rmw(a, self.cur(a) | m, formula or f'prev | {m:#x}')
 
 
-def attempt(seq, rec, cs, F):
-    """One pass of the init loop (0xb40674dc..): returns True if training passes."""
+def attempt(seq, rec, cs, F, mode=0):
+    """One pass of the init loop (0xb40674dc..). ``rec.capacity_mib`` is 0x800 in mode 0 (forced), stored in mode 1."""
     w = seq.w
-    t = timings(F, cs, rec.bus_sel)
+    t = timings(F, cs, rec.bus_sel, rec.capacity_mib)
     p = packed(t, rec)
+    if mode:
+        p['PTR2'] = udiv(F, 10) & 0xFFFF       # 0xb4067a1c: mode != 0 -> tDINIT2 = F/10 (100 ns), tDINIT3 = 0
     seq.clear(CMU + 0x08, 0x100)
     seq.clear(CMU + 0xA0, 0xA)
     seq.clear(CMU + 0xA8, 0x5)
@@ -268,7 +276,7 @@ def attempt(seq, rec, cs, F):
     w(PUBL + 0x48, p['MR2'], 'ini', '(CWL-5)<<3 | 0x240')
     w(PUBL + 0x18, p['PTR0'], 'ini', 'min63(F*80/1000+1) | (F*5120/1000+1)<<6 | 0xa<<18')
     w(PUBL + 0x1C, p['PTR1'], 'ini', 'F*500 | (tRFC + F/100)<<19')
-    w(PUBL + 0x20, p['PTR2'], 'ini', 'F*200 | F<<17')
+    w(PUBL + 0x20, p['PTR2'], 'ini', 'F/10 (mode 1)' if mode else 'F*200 | F<<17')
     w(PUBL + 0x34, p['DTPR0'], 'ini', 'tRTP<<2|tWTR<<5|tRP<<8|tRCD<<12|tRAS<<16|tRRD<<21|tRC<<25')
     w(PUBL + 0x38, p['DTPR1'], 'ini', 'tFAW<<3 | tRFC<<16')
     w(PUBL + 0x3C, p['DTPR2'], 'ini', '0x200 | tXPDLL<<10 | tCKESR<<15 | 0x200<<19')
@@ -295,12 +303,19 @@ def attempt(seq, rec, cs, F):
     w(PUBL + 0x2C, 0xF2001807, 'constant', '0xf2001807 (DDR3 branch)')
     seq.context = 'constant'
     w(PUBL + 0x08, 0x1842E02 if cs == 1 else 0x18C2E02, 'detected', 'cs==1 ? 0x1842e02 : 0x18c2e02 (rank enables)')
-    w(PUBL + 0x04, 0x7F, 'constant', 'PIR 0x7f (DDR3, mode 0)')
+    if mode:
+        w(PUBL + 0x04, 0x3F, 'constant', 'PIR 0x3f (mode 1: no DRAMINIT)')
+        rank = 0x100000 if cs == 1 else 0x300000
+        for cmd, name in ((1, 'PREA'), (2, 'REF')):
+            for _ in range(8):
+                w(UPCTL + 0x040, 0x80000000 | rank | cmd, 'ini', f'START | rank mask(cs) | {name} (mode 1)')
+    else:
+        w(PUBL + 0x04, 0x7F, 'constant', 'PIR 0x7f (DDR3, mode 0)')
     w(PUBL + 0x04, 0x81, 'constant', 'PIR_INIT|PIR_QSTRN (data training)')
     return t, p
 
 
-def after_training(seq, rec, cs, t, p):
+def after_training(seq, rec, cs, t, p, mode=0):
     w = seq.w
     F = t['F']
     for reg, key in ((0xD4, None), (0xD8, 'tRFC'), (0xDC, 'tRP'), (0xE4, None), (0xE8, 'CL'), (0xEC, 'CWL'),
@@ -349,6 +364,11 @@ def after_training(seq, rec, cs, t, p):
         seq.set(UPCTL + 0x244, 0x202)
     seq.context = 'constant'
     w(UPCTL + 0x050, 1, 'constant', '1')
+    if mode:                                   # 0xb4068aec: mode 1 issues 8 more refreshes before GO_STATE
+        for _ in range(8):
+            w(UPCTL + 0x040, 0x80000002 | (0x100000 if cs == 1 else 0x300000), 'ini', 'START | rank mask(cs) | REF (mode 1)')
+    if rec.type & 0xF0 != 0x10:                # 0xb4068b30: idle self-refresh (MCFG1 low byte) unless type high nibble is 1
+        seq.set(UPCTL + 0x07C, 0x20 if rec.type & 0xF else 0x60)
     w(UPCTL + 0x004, 2, 'constant', 'GO_STATE (via 0xb4067170)')
     w(DMM + 0x88, 1, 'constant', '1')
     bw = 1 - rec.bus_sel if rec.bus_sel <= 1 else 0
@@ -369,9 +389,18 @@ def capacity_probe(seq, rec, cs, hw):
         rcc |= c << 2
         w(DMM + 0x28, (seq.cur(DMM + 0x28) & 0xFFFFFF99) | c << 1 | 0x60, 'detected', 'prev & 0xffffff99 | col<<1 | 0x60 (row probe)')
         base = 0x19 if rec.bus_sel else 0x1A
-        r = hw.row_code
-        if r > 3 or base + c + r >= 0x20:
-            return None, None, 'row probe exhausted (0xf000fa11) or limit'
+        # 0xb4068cec..0xb4068dd0: k = 0..3; an alias at k (hw.row_code == k), or an exponent of exactly 31
+        # (no write is made above 30), ends the search with r = k. The exponent-32 check (0xf000fa11) can never
+        # fire: the exponent rises by one per try from at most 0x1d, so 31 always ends the search first. Four
+        # tries without an alias leave r = 0 *silently* (a larger device is reported as 13 rows).
+        r = 0
+        for k in range(4):
+            e = base + c + k
+            if (e <= 0x1E and hw.row_code == k) or e == 0x1F:
+                r = k
+                break
+            if e == 0x20:
+                return None, None, 'row probe reached 2^32 (0xf000fa11; unreachable, kept to mirror the code)'
         rcc |= r << 6
     bw = 1 if rec.bus_sel else 2
     n = (rcc >> 6) + ((rcc & 0xC) >> 2) + bw + cs + 0x17
@@ -388,8 +417,9 @@ def final_dcu(seq, rcc, cap):
         x = cap * 0x10000
         hi = (((x >> 24) - 1) << 8) if x > 0xFF0000 else 0
         v = prev & 0xFFFC1899 | rcc >> 1 | 0x2000 | hi
-    else:
-        raise NotImplementedError('rcc bank code != 0 not modelled')
+    else:                                      # 0xb4068ec4: 4-bank codes; capacity high byte minus one at bit 8
+        v = (prev & 0xFFFC1899 | (rcc & 0xFC) >> 1 | (((cap >> 8) & 0xFF) - 1) << 8
+             | (0x2000 if rcc & 3 == 1 else 0x22000)) & 0xFFFFFFFF
     seq.w(DMM + 0x28, v, 'detected', 'prev & 0xfffc1899 | rcc>>1 | 0x2000 | ((cap>>8)-1)<<8')
 
 
@@ -405,8 +435,38 @@ def dmm_setup(seq):
     seq.clear(DMM + 0x00, 4); seq.set(DMM + 0x00, 4)
 
 
-def run(rec, hw):
-    """Full cold-boot (mode 0) DDR3 sequence. Returns dict(writes, prints, param_after, result)."""
+def run_resume(rec, hw):
+    """Mode-1 (resume) DDR3 sequence, wrapper 0xb40690d0 with r1 = 0 (the only call in the loader).
+
+    The record is used exactly as stored (it is the ini *primary* record on this path). There is no
+    rank or bus retry: a training error returns 0x1017fa11 at once."""
+    if rec.type & 0xF:
+        raise NotImplementedError('only the DDR3 branch (type & 0xf == 0) is modelled')
+    if rec.cs == 0:
+        raise NotImplementedError('cs = 0 in mode 1 divides by zero in the density calculation (see dram_complete.py)')
+    F, cs, bus_sel = rec.clock_mhz, rec.cs, rec.bus_sel
+    rec = Record(F, rec.capacity_mib, bus_sel, cs, rec.type, rec.rcc, rec.rdodt, rec.wrodt, rec.drv)
+    seq = Sequencer(hw)
+    prints = [f'DRAM init mode1,type{rec.type},{cs}cs,x{16 if bus_sel else 32}bus,rcc0x{rec.rcc:x},'
+              f'wrodt{rec.wrodt},rdodt{rec.rdodt},drv{rec.drv:x},{F}MHz.@180525_R...']
+    t, p = attempt(seq, rec, cs, F, mode=1)
+    if not hw.trains(cs, bus_sel):
+        prints.append('Fail:0x0,0x0,0x0,0x0;')
+        return dict(writes=seq.out, prints=prints, result='0x1017fa11 (training failed)')
+    after_training(seq, rec, cs, t, p, mode=1)
+    final_dcu(seq, rec.rcc, rec.capacity_mib)     # 0xb4068e74: no probe; stored rcc and capacity
+    prints.append(f'Ok:DCU_CFG:0x{seq.cur(DMM + 0x28):x},{rec.capacity_mib}MByte Cap.')
+    dmm_setup(seq)
+    return dict(writes=seq.out, prints=prints, result='0x0', timings=t, packed=p,
+                param_after=dict(clock_mhz=F, capacity_mib=rec.capacity_mib, bus_sel=bus_sel, cs=cs, type=rec.type,
+                                 rcc=rec.rcc, rdodt=rec.rdodt, wrodt=rec.wrodt, drv=rec.drv))
+
+
+def run(rec, hw, mode=0):
+    """Full cold-boot (mode 0) DDR3 sequence, or the resume sequence with ``mode=1``.
+    Returns dict(writes, prints, param_after, result)."""
+    if mode:
+        return run_resume(rec, hw)
     if rec.type & 0xF:
         raise NotImplementedError('only the DDR3 branch (type & 0xf == 0) is modelled')
     F = udiv(rec.clock_mhz, 12) * 12          # 0xb40674c0: clock rounded down to a 12 MHz multiple

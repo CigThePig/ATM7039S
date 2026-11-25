@@ -86,3 +86,16 @@ The full trace is in [the reconstruction report](../reports/stock-boot-chain-rec
 | S7 | Linux entry | — | `pc=0x8000 r0=0 r1=0 r2=0x03800000`, MMU/caches off | BOOT-017 |
 
 `ramboot` (images already in RAM) is used only when the AFI says PRODUCE or is missing. The disk offsets `0x200200`/`0x300000` are therefore raw loader inputs, and the kernel, RAM disk and DTB are ordinary FAT files.
+
+## DRAM paths inside bootloader.bin (PR #6)
+
+The [DRAM reconstruction](../reports/dram-complete-reconstruction.md) completes the stage between `bootloader.ini` and the AFI. These are instruction-level results, reproduced by emulation and independent models; hardware outcomes are synthetic.
+
+| Path | Selected by | DRAM work | AFI | Next stage |
+|---|---|---|---|---|
+| Cold boot | PMU_CTL3 s2 flag clear (or vector 0, or "from s4") | mode 0 on the ini second record, rank retry, probe, memory test (result ignored), write-back | written (capacity << 20) | app.bin, U-Boot |
+| Cold boot failure | DRAM routine returns ≠ 0 | as above until the failure | written anyway (2048 MiB) | ADFU (`load fail to adfu`), no U-Boot |
+| Resume | s2 flag, not from S4, non-zero vector (PMIC regs 8/0x5d) | mode 1 on the ini **primary** record: no probe, no test, no retry, PIR 0x3f, PREA/REF bursts | **not written** | jump to the kernel resume vector |
+| Resume failure | mode 1 returns ≠ 0 | — | not written | RTC alarm +3 s, s2 flag set again, PMIC power-off |
+| Resume check | vector bit 31 and alarm wake | mode 1, then back to self-refresh | not written | PMIC power-off |
+| ADFU request | PMIC reg 0x35 bit 1, or GPIO 0x55aa55aa on non-SD0 boot codes | none | not written | ROM ADFU |

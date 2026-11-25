@@ -81,3 +81,18 @@ U-Boot consumers:
 * ddr_size becomes `gd->ram_size` and the DT `/memory reg=<0 0x10000000>` (BOOT-017).
 
 When the magic is absent, U-Boot assumes PRODUCE and runs `ramboot`. The resume path (`0xb40664e4`) does not rewrite the AFI (PR #6).
+
+## Every DRAM outcome (PR #6)
+
+[MEM-010](../evidence/findings.json): the AFI is written by `0xb4066588` → `0xb4066500` only on the cold path, after the write-back, **whether or not DRAM init succeeded**.
+
+| Outcome | AFI `ddr_size` | U-Boot `gd->ram_size` / `/memory` |
+|---|---|---|
+| Cold success (reference hypothesis) | `0x10000000` | `0x10000000` |
+| Cold success, memory test fails | unchanged (test result ignored) | unchanged |
+| Cold failure (training or other) | `0x80000000` (forced 2048 MiB) | not reached: main enters ADFU |
+| Resume (any outcome) | not written this boot | not reached: jump to resume vector or power-off |
+| Hypothetical: resume vector returns | whatever SRAM holds (image bytes are code, no magic) | getters fall back: PRODUCE mode, `0x1f000000` |
+| Capacity ≥ 4096 MiB in the record | wraps to 0 (`cap << 20`, 32-bit) | fallback `0x1f000000` |
+
+`boot_chain.py analyze --dram-scenario NAME` derives the size from the loader's own DRAM code instead of `--ram-mib`.

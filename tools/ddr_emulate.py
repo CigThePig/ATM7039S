@@ -111,10 +111,10 @@ def _sprintf(fmt, args):
         conv = fmt[j] if j < len(fmt) else ''
         if conv == '%':
             out.append('%')
-        elif conv in 'dux':
+        elif conv in 'duxi':
             v = args[ai] if ai < len(args) else 0
             ai += 1
-            if conv == 'd':
+            if conv in 'di':
                 v = v - (1 << 32) if v & 0x80000000 else v
                 out.append(str(v))
             elif conv == 'u':

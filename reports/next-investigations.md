@@ -73,3 +73,28 @@ Remaining offline items outside DRAM:
 3. Look for public ATM7039S/S500 Boot ROM documentation to settle C-DEVCLK.
 
 The hardware V3 capture (read-only, approval required) would confirm C-DEVCLK, P-UENV, P-CONSOLE, DRAM size and the strap from `/proc/cmdline`, `/proc/meminfo` and `/proc/device-tree/chosen`.
+
+## Status after the DRAM subsystem reconstruction (PR #6, 2026-11-25)
+
+**Done offline** ([report](dram-complete-reconstruction.md); MEM-007..010, DDR-004..006, BOOT-021; C-PROBE-NOALIAS, C-FAILCODE, C-WRITEBACK-FAIL, C-PREDRAM-9254 resolved; C-RESUME-DRAMRST open):
+
+* resume (mode 1) and its PMIC decision;
+* the memory test and its blind spot;
+* every poll, bound and failure code;
+* rank/bus retries;
+* the LPDDR2/LPDDR3-class branch;
+* uPCTL+0x148;
+* the geometry distinguishability study;
+* the DRAM → AFI → U-Boot → `/memory` chain for every outcome;
+* `boot_chain.py --dram-scenario`.
+
+The DRAM code is identical in all releases and Koriki v1.0.
+
+Remaining, in order of value:
+
+1. **First hardware observation (V3, read-only, separate approval).** `/proc/cmdline`, `/proc/meminfo`, `/proc/iomem` and the final device tree confirm capacity and the U-Boot handoff. They do not show training.
+2. **Read-only stock boot log over UART (V7, separate approval).** The only way to see the training retry, `Ok:DCU_CFG:0x202c,256MByte Cap.`, `==ddr_test 256 MB ==` / `== ok==` and the PMIC lines (`PMU_CTL3`, `pmu_status`).
+3. **Offline: the stock kernel's suspend code.** Find who writes PMIC regs 8/0x5d and PMU_CTL3 bit 4, and what Linux reserves around DRAM 0x400 and the DTAR training address.
+4. **Offline: PUBL v1 semantics** for PIR bit 5 in resume (C-RESUME-DRAMRST), DSGCR/ACIOCR/DXCCR fields, PUBL+0x3fc and the DMM block, from any vendor databook or an older Synopsys-PUBL driver.
+5. **Offline: ATC260x PMIC register meanings** for the pre-DRAM regulator writes.
+6. A clean-room DDR3 stage can now be written from DDR-002 and §13.1 of the report. It must not run on hardware without the approvals in the validation plan.

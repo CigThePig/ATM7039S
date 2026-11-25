@@ -366,7 +366,7 @@
     "type": "source-repository",
     "examined": "2026-11-24",
     "license_status": "GPL-2.0+; register struct layout used for offset comparison only, not imported",
-    "scope": "Public DesignWare uPCTL/PUBL register layout (Rockchip RK3288 definitions) used to name ATM7039S loader DRAM accesses"
+    "scope": "Public DesignWare uPCTL/PUBL register layout (Rockchip RK3288 definitions) used to name ATM7039S loader DRAM accesses. PR #6 also compares the RK322x uPCTL layout (sdram_rk322x.h: tref_mem_ddr3 at 0x148); layout comparison only, nothing imported."
   },
   {
     "id": "ghidra-11.4.2",
