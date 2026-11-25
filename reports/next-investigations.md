@@ -40,7 +40,7 @@ NAND/media/security/OTP, broad historical SDK archaeology, a complete candidate 
 2. **Rank 2 (early loader DDR/AFI): substantially advanced.** The AFI producer, DRAM record and register-level bring-up are documented (MEM-005, DDR-001). Next: symbolic evaluation of the timing computations in `0xb40673f4`, and the Boot ROM interface of block 0.
 3. **Rank 9 (PowerVR ABI):** stock adds a DDK 1.12 Android module but no userspace, so it does not help a working stack (GPU-011).
 4. **Rank 11 (USB):** stock defaults and the umonitor interface are documented (USB-002); hardware role switching remains a device test.
-5. **New:** trace the stock U-Boot path that pre-loads kernel/ramdisk/DTB (BOOT-007), and resolve the board meaning of the GPIOC6 strap (BOOT-011) from board photographs.
+5. **New:** ~~trace the stock U-Boot path that pre-loads kernel/ramdisk/DTB (BOOT-007)~~ done in PR #5 (BOOT-015/016); resolve the board meaning of the GPIOC6 strap (BOOT-011) from board photographs.
 
 The highest-value continuation is now **recovering the computed DRAM timing values** in the stock loader. With the documented controller/PHY layout, this would give an independently reimplementable DRAM init for the original RG35XX, the single largest remaining closed dependency before U-Boot.
 
@@ -54,3 +54,22 @@ Remaining, in order of value:
 2. **DMM and PUBL semantics** for the undocumented constants (report §10), by comparison with any public DesignWare PUBL databook-derived source or a second Actions SoC loader.
 3. **Resume path (mode 1)** and the memory test `0xb406631c`, with the same tools (the symbolic interpreter accepts other entries).
 4. A clean-room DRAM init (U-Boot SPL style) is now specifiable from DDR-002, but must not be run on hardware without the approvals in the hardware validation plan.
+
+## Status after the boot-chain reconstruction (PR #5, 2026-11-25)
+
+**Done offline** ([report](stock-boot-chain-reconstruction.md); BOOT-012..020, BOOT-007 revised; C-UENV resolved, C-APPBIN, C-DEVCLK, C-OPAQUE). Every link from loader block 0 to the Linux jump is traced in all four stock releases and reproduced by `tools/boot_chain.py`. The kernel, RAM disk and DTB are FAT files loaded by U-Boot `mmcboot`. The only parts not reconstructable offline are the Boot ROM (service `0xb4060400`, media search) and runtime values (DRAM size, GPIOC6, serial number).
+
+Handoff to **PR #6 (DRAM)**:
+
+1. Resume path: block-0/main return-2 branch `0xb40664e4` → `0xb4067094` → mode-1 wrapper `0xb40690d0`, gated by `0xb4070874/0xb4070878`. It skips the AFI write, so also check what U-Boot sees on resume.
+2. Memory test `0xb406631c`, called from `0xb4066740` after a successful mode-0 init (stubbed in the boot-chain emulation).
+3. The DRAM outcome feeds AFI `ddr_size` → U-Boot `gd->ram_size` → DT `/memory`; the boot-chain tool takes it as `--ram-mib`, so PR #6 results plug in directly.
+4. `0xb4066280` write-back plus app.bin's ini persistence (BOOT-014) mean detected DRAM parameters are stored on the card. Treat stored and detected records separately.
+
+Remaining offline items outside DRAM:
+
+1. Check the stock kernel for `CONFIG_CMDLINE`/`CMDLINE_FORCE` (whether `/chosen` bootargs are used as traced).
+2. Trace `read_mi_item("SN")` to its storage (the serial-number term).
+3. Look for public ATM7039S/S500 Boot ROM documentation to settle C-DEVCLK.
+
+The hardware V3 capture (read-only, approval required) would confirm C-DEVCLK, P-UENV, P-CONSOLE, DRAM size and the strap from `/proc/cmdline`, `/proc/meminfo` and `/proc/device-tree/chosen`.

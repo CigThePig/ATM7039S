@@ -68,3 +68,16 @@ Solid edges represent inspected data dependencies, not a measured execution trac
 3. **DDR controller writes.** Located (DDR-001); see the dossier's register sequence.
 4. **UART fields.** ini+0x0e/0x0f/0x10 (index 3, pad 0, 115200) feed AFI `+0x06..+0x0b` (UART-003).
 5. **Stock comparison.** Done: Koriki v1.0's early window equals stock 230309; all stock loader code is identical across releases.
+
+## End-to-end values (PR #5)
+
+Executing the stock loader on each shipped image (DRAM outcome supplied as 256 MiB) writes the AFI `"AFI"`, boot_mode 0, boot_dev `0x20`, uart 3, pad 0, 115200, ddr_size `0x10000000` (BOOT-013). boot_dev comes from block 0's boot code (0→`0x20`, 2→`0x22`, 3/5→`0x00`, 4→`0x40`), not from the ini byte printed as "bootdev= 0x22".
+
+U-Boot consumers:
+
+* boot_mode/boot_dev select `bootcmd` (BOOT-015).
+* uart_index becomes `console=ttyS3`.
+* boot_dev becomes `boot_dev=sd0` and `androidboot.bootdev=sd`.
+* ddr_size becomes `gd->ram_size` and the DT `/memory reg=<0 0x10000000>` (BOOT-017).
+
+When the magic is absent, U-Boot assumes PRODUCE and runs `ramboot`. The resume path (`0xb40664e4`) does not rewrite the AFI (PR #6).

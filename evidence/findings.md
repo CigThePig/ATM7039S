@@ -860,9 +860,9 @@ Limits: Not finding the product tree in these repositories does not prove it is 
 
 ## BOOT-007
 
-The Koriki v1.0 U-Boot default environment sets bootcmd=run ramboot with ramboot=bootm ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r} (kernel_addr_r=0x7fc0, ramdisk_addr_r=0x1ffffc0, fdt_addr_r=0x03800000). The fatload- and uEnv.txt-based mmcboot/setbootenv commands exist but are not reached from bootcmd, so on the default path the kernel, ramdisk and DTB are already in memory before U-Boot runs and uEnv.txt is not imported.
+Revised (PR #5): the Koriki v1.0 and stock U-Boot default environment sets bootcmd=run ramboot with ramboot=bootm ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r} (kernel_addr_r=0x7fc0, ramdisk_addr_r=0x1ffffc0, fdt_addr_r=0x03800000), but that text does not describe the card boot: check_boot_flag replaces bootcmd with run mmcboot after the environment is loaded (BOOT-015), and mmcboot imports uEnv.txt and fatloads the kernel, RAM disk and DTB before bootm (BOOT-016). The original reading, that the images are already in memory before U-Boot runs and uEnv.txt is not imported, is refuted.
 
-**Confidence:** inferred · **Scope:** release-binary · **Validation:** static-inspection
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
 
 Evidence:
 
@@ -870,7 +870,9 @@ Evidence:
 
 - [miaui-gpu-rg35xx / src/kernel-rg35xx/TEST_BOOT.md: 'The pre-loader reads p1:/uImage directly (U-Boot's bootcmd is ramboot, and it does not read uEnv.txt)'](https://github.com/miaui-cfw/MiaUI-GPU-RG35XX)
 
-Limits: Static environment text: the early loader or a stored environment could override bootcmd at runtime. Implies the early loader reads the FAT partition, which has not been traced in its code. Prediction P-UENV tests it from /proc/cmdline. Contradicted by RetroArch alpha 0.1, which ships no ramdisk.img, has no root= in its DTB /chosen or kernel image, and sets root=/dev/mmcblk0p2 only in uEnv.txt, with a U-Boot that has the same ramboot bootcmd (C-UENV). Either uEnv.txt is applied by another stage or the static reading is wrong.
+- [anbernic-stock-archive / evidence/firmware/stock-boot-chain.json releases.koriki-v1.0.handoff (uEnv.txt init=/init reaches /chosen bootargs)](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: The environment text is verified; its runtime override is reproduced by emulation (BOOT-015), not observed on hardware. History: this finding was "inferred" in PR #3 with the opposite conclusion; RetroArch alpha 0.1 (C-UENV) and Koriki's init=/init are consistent with the revision. Prediction P-UENV still provides the hardware confirmation.
 
 ## FW-011
 
@@ -1018,7 +1020,7 @@ Evidence:
 
 - [anbernic-stock-archive / bootloader.img dd seek=4097 count=448](https://archive.org/details/RG35XX_original_firmwares)
 
-Limits: The checksum rule and directory layout are recovered from data that satisfy them, not from a specification or the Boot ROM. Which blocks the ROM loads, and in what order, is not established. The 0xb4060000 load address is now declared by the image itself, which strengthens but does not prove BOOT-004's address hypothesis (no MMU/physical map was observed).
+Limits: The checksum rule and directory layout are recovered from data that satisfy them, not from a specification or the Boot ROM. Which blocks the ROM loads, and in what order, is not established. The 0xb4060000 load address is now declared by the image itself, which strengthens but does not prove BOOT-004's address hypothesis (no MMU/physical map was observed). PR #5: the transitions between blocks are traced in BOOT-012/013; only block 0 is entered by the ROM on the SD paths.
 
 ## BOOT-010
 
@@ -1036,7 +1038,7 @@ Evidence:
 
 - [koriki-v1.0-release / equals stock-230309 U-Boot](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
 
-Limits: The purpose of the per-release 5 KiB area is unknown; it lies at 0xb4063800, where the loader's SPI-NAND path looks for an "SFVD" parameter backup, but no read of it on the SD path was established. Whether the ODT/drive change fixes a field problem is not documented.
+Limits: The per-release 5 KiB area lies inside bootloader.ini and is best explained by app.bin's write-back of uninitialised SRAM (BOOT-019, inferred); it lies at 0xb4063800, where the loader's SPI-NAND path looks for an "SFVD" parameter backup, but no read of it on the SD path was established. Whether the ODT/drive change fixes a field problem is not documented.
 
 ## MEM-005
 
@@ -1249,3 +1251,183 @@ Evidence:
 - [anbernic-stock-archive / evidence/firmware/stock-ddr-timing.json (timings.density_mib, tRFC_ns_selected)](https://archive.org/details/RG35XX_original_firmwares)
 
 Limits: The values are reproduced exactly; the JEDEC reading of MR0 and the 2 Gb die size are interpretations (the latter from MEM-006's write-back agreement). Whether the PHY passes MR0 to the DRAM unchanged, and what the DRAM does with WR code 000, are not established. A longer tRFC is conservative, not an error.
+
+## BOOT-012
+
+Loader block 0 (loader 0x0-0x200, linked at SRAM 0xb4060000, identical in all four stock releases) chooses a boot code from MMIO 0xb01600a0 (CMU_DEVCLKEN0 in the related S500 clock tree): bit 7 set gives code 2, bit 4 set gives code 0, neither gives a test of SRAM word 0xb4060408 against the A32 word 0xeb0001d0 (equal: code 4, otherwise code 5). It stores the code at 0xb4064c00. For codes 0 and 2 it calls SRAM 0xb4060400 with r9=4, r0=0x102b (disk sector 4139 = loader offset 0x5400), r1=0x50 sectors and r2=0xb4065400, then branches to 0xb4065400, the bootloader.bin code entry. Codes 4 and 5 call routines in loader 0x400-0x1e00 and the 0x200-0x400 reader (linked for 0xb4061200; there its call to 0xb4060140 reaches the block-0 word-sum routine and compares sum+0x1234 with the ActBrm trailer). Loader 0x400-0x1e00, including 0xb4060400, is all zero in every image, so on the SD paths the read service at 0xb4060400 is provided outside the image, by the Boot ROM; r9 selects the service. Unrecoverable failures end in blx 0xffff0140 after the console line "load fail to adfu".
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / block 0 dispatch, literal pool 0x164-0x18c](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / reader linked for 0xb4061200](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / all-zero hole containing 0xb4060400](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / "load fail to adfu" then 0xffff0140 (0xb40654a0)](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-boot-chain.json releases.*.loader.block0 (Unicorn runs for each bit/signature hypothesis)](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: The MMIO value and the SRAM word are parameters of the emulation, not observations. Which bit the Boot ROM leaves set after an SD0 boot is not observed; only code 0 leads to a working SD boot (code 2 selects run emmcboot on mmc 1, codes 4/5 select NOR/NAND readers), so a booting stock card implies the bit-4 path, while the mainline S500 clock driver names bit 4 the NAND gate and bit 5 SD0 (C-DEVCLK). ROM code, its media search, retry order and checks are not in any image and are not reconstructed.
+
+## BOOT-013
+
+bootloader.bin (entry 0xb4065400) loads every later pre-Linux stage itself, through the ROM read service (r9=4: r0=sector, r1=count, r2=destination; 0xb4065b24 splits reads into 256-sector chunks). On the SD paths (codes 0 and 2) it reads disk 0x202600 (sector 4115, 8 sectors: bootloader.ini 0x0-0x1000) to 0xb4062400 (0xb4065d04); after DRAM initialisation and the AFI write (0xb40665d0, 0xb4066588) it reads disk 0x219200 (sector 4297, 248 sectors: app.bin) to DRAM 0x1000 and verifies it with the ActBrm rule over 0x1f000 bytes (0xb4065d8c, 0xb40654c8); it then reads the U-Boot uImage header from disk 0x300000 (sector 6144) to DRAM 0x300000, takes size, load and entry from it big-endian, and reads ((size+0x1ff)>>9)+1 sectors from sector 6144 to the load address 0x05000000 (0xb4065bf0, "load uboot: load address is 0x5000000, entry point is 0x5000040"). It finally executes blx 0x1000 with r0 = U-Boot entry (0x05000040). No loader stage checks the uImage magic or CRC (neither bootloader.bin nor app.bin contains the magic, the CRC-32 polynomial or its table). The boot code maps to AFI boot_dev 0->0x20 (sd0), 1/2/6/7->0x22, 3/5->0x00, 4->0x40, always with boot_mode 0 (0xb4066588).
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / bootloader.bin main and ActBrm verifier](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / chunked read, load_uboot, load_ini, load_app](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / AFI writer and boot-code map](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-boot-chain.json releases.*.loader.main (Unicorn: every storage read, console line, AFI bytes and r0 at app entry)](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-boot-chain.json releases.*.loader.boot_code_map](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Emulated with the disk image as storage (every read succeeds), the DRAM routine replaced by a success with 256 MiB (MEM-006 hypothesis), and PMIC/clock/console helpers stubbed; those helpers do not touch the load parameters. The resume path (0xb40664e4 -> 0xb40690d0, PR #6) skips the AFI write and was not traced further. Corrects the earlier dossier statement that app.bin loads and checksums U-Boot (C-APPBIN).
+
+## BOOT-014
+
+app.bin (DRAM 0x1000) does not load U-Boot. Its entry saves r0 (the U-Boot entry passed by bootloader.bin) at 0xb4060018, sets CPSR to 0xd3 (SVC, IRQ and FIQ masked), calls 0x8190 and, if that returns 0, jumps to the saved address. 0x8190 reads a chip identity through 0xbc3c (MMIO 0xb01b00e0 and 0xb0150000/0xb0150004); if the check fails it prints "Error: 0xca00d001, please reburn system" and never enters U-Boot. Otherwise, when the SRAM word at 0xb4062800 (bootloader.ini+0x400) is not "SFVD", 0x806c stores "SFVD" and the value 0xc582bb73 there and writes the whole SRAM bootloader.ini image back to the boot medium: for codes 0 and 2 it tail-calls its own MMC block writer 0x851c with sector 0x1013 (disk 0x202600 = loader 0x2400), 20 sectors, source 0xb4062400 (CMD24/CMD25, CMD12); codes 4 and 5 use SPI-NOR (0x7e54) and NAND (0x7f20) writers. All four stock images and Koriki v1.0 already hold "SFVD" 0xc582bb73 at ini+0x400, so no write happens on their first boot as shipped.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / entry 0x1000-0x1034](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / write-back 0x806c and its literal pool (0x1013, 0xb4062400, 20)](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / main 0x8190](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / chip/eFuse check 0xbc3c](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / SFVD record](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-boot-chain.json releases.*.loader.app_entry, app_writeback, ini_sfvd](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Static analysis only; app.bin was not emulated (its main touches undocumented eFuse registers). The meaning of 0xb0150000 and of the accepted chip-identity range is not established. The write-back modifies the boot card whenever the SFVD record is missing, which matters for any replacement loader and for the hardware test plan. The trigger is evaluated on every boot and compares only the 4-byte magic at disk 0x202a00; the hash-verified Koriki v1.0 V3 baseline image carries it (SFVD, 0xc582bb73), so no write is expected there. Modified boot images must preserve it or be expected to change on the card; see reports/spare-card-risk.md and boot_chain.py sfvd.
+
+## BOOT-015
+
+In every stock U-Boot the default bootcmd=run ramboot is replaced before autoboot. init_sequence_r (20231014: 0x05089304-0x05089374) runs check_boot_flag (20231014: 0x050076c0) after initr_env. Executed with its own AFI getters, it prints "bootmode = %d" and sets bootcmd from the AFI at 0xb4060300: boot_mode 1 (PRODUCE) or a missing "AFI" magic (the getter then returns 1) gives "run ramboot" and bootdelay 0; otherwise boot_dev 0x00/0x01 gives "run nandboot", 0x22 gives "run emmcboot", and every other value, including the loader's SD value 0x20, gives "run mmcboot" with devif=mmc. Because the setenv follows initr_env, no stored environment can keep ramboot on a normal boot. ramboot (bootm of addresses already in RAM) is therefore the PRODUCE/USB-download path, not the card boot path.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / check_boot_flag](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / init_sequence_r](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / boot_mode getter](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / default environment](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-boot-chain.json releases.*.uboot.check_boot_flag, init_sequence_r, afi_getters](https://archive.org/details/RG35XX_original_firmwares)
+
+- [uboot / common/board_r.c](https://github.com/rg35xx-cfw/u-boot_s500#L100-L124)
+
+Limits: Emulation replaces setenv and printf with recorders; the getters and memcmp run from the image. The AFI contents are the loader-emulation result (BOOT-013), not a capture. Matches the public source except that boot_dev 0x01 also selects NAND.
+
+## BOOT-016
+
+The stock kernel, RAM disk and device tree are loaded by U-Boot's mmcboot script from the microSD card. mmcargs sets devpart ${mmcdev}:${bootpart} = 0:1. mmc 0 is SD0 (0xb0230000): board_mmc_init (20231014: 0x05004108) registers enabled actions,owl-mmc nodes of U-Boot's embedded DTB in order (SD0, then SD2 at 0xb0238000) with dev_index = (reg - 0xb0230000) >> 14. Partition 1 is GPT entry 1 (MISC, LBA 16384, FAT16) on stock and MBR entry 1 (FAT32) on Koriki. setbootenv fatloads uEnv.txt to scriptaddr 0x04400000 (the stock file is named uenv.txt; U-Boot's FAT lookup is case-insensitive) and imports it with env import -t, runs uenvcmd (stock: "setenv os_type linux;", which nothing reads: the string os_type is absent from the binary), tries boot.scr (absent), then mboot fatloads uImage to kernel_addr_r 0x7fc0, ramdisk.img to ramdisk_addr_r 0x1ffffc0 and kernel.dtb to fdt_addr_r 0x03800000 and runs bootm on the three addresses.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / default environment (mmcboot, mmcargs, setbootenv, mboot, addresses)](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / board_mmc_init](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / embedded FDT mmc nodes](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-boot-chain.json releases.*.boot_files, uboot.embedded_fdt](https://archive.org/details/RG35XX_original_firmwares)
+
+- [uboot / fs/fat/fat.c](https://github.com/rg35xx-cfw/u-boot_s500#L896-L1081)
+
+- [uboot / disk/part.c](https://github.com/rg35xx-cfw/u-boot_s500#L250-L290)
+
+Limits: The hush scripts and file names are verified data; U-Boot's FAT and partition code were not emulated, so the case-insensitive match and EFI-before-DOS partition probing rest on the pinned source plus the presence of the EFI routines in the binary. If SD0 failed to initialise, SD2 would become mmc 0 (registration order). Refutes the MiaUI statement that the pre-loader reads p1:/uImage.
+
+## BOOT-017
+
+Linux handoff of the stock firmware, reproduced by executing U-Boot's image_setup_linux (20231014: 0x05014c50) on the shipped files: the legacy kernel uImage (load = entry = 0x8000, uncompressed type, CRC-checked because verify=yes) is used in place because 0x7fc0+0x40 = 0x8000 (XIP); the RAM disk payload stays at 0x2000000 and the DTB at 0x03800000 because initrd_high and fdt_high are 0xffffffff. image_setup_libfdt sets /chosen bootargs, writes /memory reg = <0 ram_size>, shrinks the blob and adds /memreserve/ entries for the DTB itself and for the RAM disk, and writes linux,initrd-start/end (stock 20231014: 0x2000000/0x20a3600). owl_boot_fdt_setup (0x0500456c) then rewrites bootargs as console=ttyS<AFI uart> <uEnv.txt bootargs> androidboot.dvfslevel=0x705x [allenS500=1 when gd->flags bit 20] androidboot.bootdev=sd boot_dev=sd0 [androidboot.serialno=<SN>], i.e. for stock "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 loglevel=4 androidboot.dvfslevel=0x705x androidboot.bootdev=sd boot_dev=sd0". boot_jump_linux (0x050037fc) calls cleanup_before_linux (IRQ/FIQ masked, I-cache off, D-cache and MMU off after a flush; outer-cache hooks empty) and jumps to 0x8000 with r0=0, r1=0 (bi_arch_number is never written; env machid unset) and r2=0x03800000. ram_size is the AFI ddr_size when at least 8 MiB, else 0x1f000000.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / image_setup_linux](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / image_setup_libfdt](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / owl_boot_fdt_setup](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / bootargs helper (mode 1 prepend, 2 append)](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / boot_jump_linux](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / cleanup_before_linux](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / dram_init](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-boot-chain.json releases.*.handoff, handoff_bootargs, bootargs, memory_map, uboot.cleanup, uboot.bi_arch_number](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Runtime-dependent terms are conditional: ram_size follows DRAM detection (256 MiB only under the MEM-006 hypothesis), allenS500=1 follows GPIOC6 (BOOT-011), androidboot.serialno follows read_mi_item("SN"), which was replaced by a failure; charger mode (gd->flags bit 18) and PRODUCE add other terms. The LMB was modelled as one bank without reservations, which cannot change the in-place placements. Whether the 3.10 kernel takes its command line from /chosen or from a built-in CONFIG_CMDLINE was not checked. The kernel decompressor and Linux reservations after entry are outside this trace.
+
+## BOOT-018
+
+Stock U-Boot stores its environment redundantly on MMC device 1 at byte offsets 0x5000 and 0x25000, 0x20000 bytes each (env_relocate_spec 20231014: 0x05009a70; offset helper 0x050098e4; find_mmc_device(1)). With U-Boot's embedded DTB, mmc 1 is the SD2 controller (eMMC slot), not the microSD card. None of the four stock images and not Koriki v1.0 holds a CRC-valid environment at those offsets of the card image. On an SD-only board the default environment is therefore used, and the bootcmd override of BOOT-015 applies regardless.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / env_relocate_spec](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / offset helper](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-boot-chain.json releases.*.uboot.env_storage](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Whether an eMMC is fitted on any RG35XX board, and so whether mmc 1 exists at run time, is not established; a saveenv on such hardware would write to it.
+
+## BOOT-019
+
+The per-release 5 KiB high-entropy area (loader 0x3800-0x4c00) is part of bootloader.ini (ini+0x1400-0x2800), a region no traced code reads on the SD path: bootloader.bin reloads only ini 0x0-0x1000, while app.bin's write-back (BOOT-014) stores 20 sectors (ini 0x0-0x2800) from SRAM. The area is therefore best explained as uninitialised SRAM contents captured when each master card was first booted. ini+0x1000-0x1400 (SRAM 0xb4063400), identical in all releases, holds A32 code that uses the same 0xb4060400 service ABI: it reads one sector to 0xb4060000 from sectors 1, 0x1001, 0x2001 and 0x3001 (2 MiB stride), verifies it with 0xb4062e58 and records a status nibble at 0xb4071f10, consistent with a fragment of the Boot ROM's SRAM-resident media search; sector 0x1001 is where the stock loader starts (4097).
+
+**Confidence:** inferred · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / SRAM 0xb4063400 fragment](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / per-release area](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-boot-chain.json comparison.components (ini 0x1000-0x1400 identical, ini 0x1400-0x2800 differs)](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Interpretation. The area could also have been written by a vendor image tool; nothing proves it is SRAM noise, and the fragment's link to the ROM is circumstantial (same service ABI, references to absent SRAM code, the 4097 candidate). No evidence that the area is a signature or encrypted payload was found, and nothing reads it on the SD path.
+
+## BOOT-020
+
+Across stock 221203, 221223, 230309 and 20231014 the pre-kernel boot sequence is identical in every traced step (block 0, bootloader.bin and app.bin bytes; storage reads; AFI; check_boot_flag table; default environment; uEnv.txt; handoff placements). U-Boot 221203 and 221223 differ only in the build banner; normalised function hashes match. 230309 is a rebuild from an "sdk-s500" tree that adds the GPIOC6 strap (probe 0x05025e5c called from power_init_board after "begin to check power!" when boot_mode != 1), the allenS500=1 bootargs term and an lcd_spics2_gpios property. 20231014 differs from 230309 in one instruction of the nv3052c panel init (mov r2,#0x1e0 -> movw r2,#0x1fb at 0x0501d9e4), plus its bootloader.ini DRAM ODT/drive bytes (BOOT-010). Only the allenS500 term changes what reaches Linux.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / strap probe](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / power_init_board](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-boot-chain.json comparison; releases.*.uboot.variant_strap](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Normalised hashes mask branch and literal offsets; the 221223->230309 rebuild changes layout too much for one-to-one function matching, so differences there were enumerated by string set and by the traced boot steps, not by complete function pairing. Panel-register meaning of the 20231014 change is not established.
