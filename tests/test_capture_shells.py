@@ -63,7 +63,8 @@ class ShellPortabilityTests(unittest.TestCase):
         bindir = self.tmp / 'bb'
         bindir.mkdir()
         listed = subprocess.run([bb, '--list'], capture_output=True, text=True).stdout.split()
-        for applet in listed:
+        # `busybox --list` omits the busybox applet itself on some builds (Ubuntu's package).
+        for applet in set(listed) | {'busybox'}:
             os.symlink(bb, bindir / applet)
         r = self.check([bb, 'sh'], {'PATH': str(bindir), 'ATM_CAPTURE_PATH': str(bindir)}, 'busybox')
         self.assertTrue(r['capture']['environment']['busybox'].startswith('BusyBox'))
