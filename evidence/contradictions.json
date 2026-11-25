@@ -131,5 +131,16 @@
     ],
     "status": "Unresolved. Most likely the SoC supports 32-bit DRAM while this board populates a 16-bit interface, but that is board inference, not evidence. Whether lanes 2/3 are disabled at run time depends on which conditional path executes.",
     "next_validation": "Board photograph of the DRAM package(s) and part number; or a read-only serial boot log showing the \"DRAM init ... x%dbus ... Ok:DCU_CFG\" lines. No register access."
+  },
+  {
+    "id": "C-INI-RECORD",
+    "issue": "MEM-005 reads the bootloader.ini record at +0x1c (256 MiB, 1 chip select, rcc 0x48) as the DRAM configuration. MEM-006 shows that on cold boot the ini word at +0x2c selects the record at +0x4c (cs 0, rcc 0, capacity 0), so chip selects, row/column codes and capacity are detected, and the +0x1c record is what the success path writes back.",
+    "findings": [
+      "MEM-005",
+      "MEM-006",
+      "DDR-002"
+    ],
+    "status": "Resolved statically for the cold-boot path in favour of MEM-006. MEM-005's copy routine and field offsets remain correct; its 'configured 256 MiB' is an expected detection result, not an input. The shipped +0x1c values match the write-back only under the single-rank x16 2 Gb hypothesis.",
+    "next_validation": "A read-only serial log of a normal boot (no register access). For 20231014 the reconstruction predicts, in order: \"DRAM init mode0,type16,2cs,x16bus,rcc0x0,wrodt2,rdodt2,drv9,468MHz.@180525_R...\", a \"Fail:...\" lane-status line, the same line with 1cs, then \"Ok:DCU_CFG:0x202c,256MByte Cap.\"; older releases print wrodt1,rdodt1,drvc. A different sequence falsifies the training or probe hypotheses, not the formulas."
   }
 ]

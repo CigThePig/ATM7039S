@@ -89,7 +89,13 @@ def list_members(path):
             data = json.loads(subprocess.run(['lsar', '-j', str(path)], capture_output=True, text=True,
                                              timeout=600, check=True).stdout)
             for e in data['lsarContents']:
-                members.append(dict(name=e['XADFileName'], size=int(e.get('XADFileSize', 0)),
+                size = int(e.get('XADFileSize', 0))
+                # unar/lsar 1.10.1 sign-extends RAR5 sizes >= 2 GiB through 32 bits (e.g. 2**64 - 329777152 for
+                # a 3,965,190,144-byte member). Such a size is unknown, not huge: the copy limit and the
+                # manifest's expanded size/hash still bound and check the extracted bytes.
+                if size >= 1 << 63:
+                    size = None
+                members.append(dict(name=e['XADFileName'], size=size,
                                     packed=int(e.get('XADCompressedSize', 0)),
                                     directory=bool(e.get('XADIsDirectory')), special=bool(e.get('XADIsLink')),
                                     crc32=None, method=e.get('XADCompressionName')))
@@ -154,7 +160,7 @@ def extract(path, member, outdir, limit=DEFAULT_LIMIT, out_name=None):
         raise KeyError('member not in archive: ' + member)
     if entry['directory'] or entry['special']:
         raise ValueError('only regular file members can be extracted')
-    if entry['size'] > limit:
+    if entry['size'] is not None and entry['size'] > limit:
         raise ValueError('declared member size exceeds ceiling')
     name = out_name or PurePosixPath(entry['name']).name
     if '/' in name or name in ('', '.', '..'):

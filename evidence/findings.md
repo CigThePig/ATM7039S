@@ -1185,3 +1185,67 @@ Evidence:
 - [anbernic-stock-archive / copy of ini+0x0e/0x0f/0x10](https://archive.org/details/RG35XX_original_firmwares)
 
 Limits: Static; a later loader or U-Boot path could still override the index, and U-Boot's own environment says ttyS2. The pre-registered prediction P-CONSOLE is left unchanged; a capture of /proc/cmdline remains the test. Pads and voltage for UART3 are not mapped.
+
+## MEM-006
+
+On the cold-boot path the stock loader does not initialise DRAM from the bootloader.ini record that MEM-005 describes. The loader entry (0xb4065424) calls 0xb40665d0 with r1=0; after the ini copy (0xb4065ff8) that caller tests the ini word at +0x2c (value 1 in all four releases) and, when non-zero, copies the second record (ini+0x4c, packed at 0xb407084c) over 0xb4070820 with the byte copy 0xb406af64 (0xb40666ac..0xb40666e4). The second record holds 468 MHz, x16 (bus_sel 1), type 0x10, ODT/drive equal to the primary record, but cs=0, rcc=0 and capacity 0. In mode 0 (wrapper 0xb40690b8) the DRAM routine forces capacity to 0x800 (2048 MiB), tries cs=2, and on a PUBL data-training error (PGSR 0x3f, code 0x1017fa11) retries with cs=1; with rcc&0xcc==0 it then probes columns and rows by writing 0x6996 at 2^(k+9)+4 / 2^(k+0x19+col)+4 and reading DRAM address 4, and computes capacity = 2^(row+col+bus+cs+3) MiB (8-bank case). On success 0xb4066280 writes the resulting block back over the in-SRAM ini primary record.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / loader entry call 0xb40665d0(r1=0)](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / ini+0x2c test and 12-byte record copy](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / mode-0 wrapper 0xb40690b8](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / DRAM routine 0xb40673f4 incl. literal pools](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / parameter block write-back 0xb4066280](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / primary (+0x1c) and second (+0x4c) DRAM records; selector word +0x2c](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-ddr-timing.json (bootloader_ini, console, ini_writeback)](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Instruction-level result, reproduced by bounded Unicorn emulation and an independent z3 interpreter; the training outcome, the probe result and therefore cs/rcc/capacity are hardware-dependent and were supplied by explicit hypotheses, not observed. Under a single-rank x16 2 Gb (256 MiB, 10 column / 14 row bits) hypothesis the firmware's own write-back reproduces the shipped primary record byte for byte in all four releases, and no other tested geometry does; that agreement is consistent with, but does not prove, the board's DRAM geometry. The probe result also depends on the DMM address map, which is modelled only as a wrap-around hypothesis. The resume path (mode 1, 0xb40690d0/0xb4069128) is not analysed.
+
+## DDR-002
+
+The DDR3 timing calculations of the stock DRAM routine 0xb40673f4 are reconstructed as closed formulas of the rounded clock F = 12*floor(clock/12) and the record fields, in five clock bands (F<=400, <=533, <668, <801, >=801). At the shipped 468 MHz (identical code in all four releases): CMU_DDRPLL 0x327 (F/12 | 0x300); tRFC 164 (350 ns class), tRP=tRCD 8 (15 ns), tRAS 18 (37.5 ns), tRC 26, tRRD 5 (10 ns), tFAW 24 (50 ns), tWR 8, tRTP=tWTR 4, CL 8, CWL 6, tXP 4, tXPDLL 12, tCKE 3, tCKESR 4, tCKSRE/X 5, tRSTL 70, tREFI 3650 cycles (7.8 us); uPCTL TOGCNT1U 0xea, TOGCNT100N 0x17, MCFG 0x68029, MCFG1 0x100, TREFI 0x7004e, TZQCSI 0x7210; PUBL PTR0 0x2a5766, PTR1 0x5439210, PTR2 0x3a96da0, DTPR0 0x34b28890, DTPR1 0xa400c0, DTPR2 0x10023200, MR0 0x1140, MR2 0x248, MR1 0x6 (221203/221223/230309, wrodt 1) or 0x42 (20231014, wrodt 2), ZQ0CR1 0x4c or 0x29; DFI write latency 2, read-data enable 3; DMM+0x80 0x598. MR1 and ZQ0CR1 are the only final-pass values that differ between releases. Every write of the final pass is attributed to a firmware call site and classed as constant, ini-derived, hardware-detected or reset-dependent.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / DRAM routine 0xb40673f4](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / division helpers 0xb406ad40/0xb406ae80](https://archive.org/details/RG35XX_original_firmwares)
+
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / PIR bits](https://github.com/u-boot/u-boot#L273-L288)
+
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / PGSR bits](https://github.com/u-boot/u-boot#L297-L306)
+
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / PTR0-2 field shifts](https://github.com/u-boot/u-boot#L309-L319)
+
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / SCTL/STAT states](https://github.com/u-boot/u-boot#L351-L368)
+
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / MCFG fields](https://github.com/u-boot/u-boot#L381-L399)
+
+- [anbernic-stock-archive / evidence/firmware/stock-ddr-timing.json (final_pass, timings, symbolic, model_vs_unicorn)](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Three methods agree exactly: Unicorn emulation of the instructions, our z3 interpreter over Capstone decoding (8 symbolic paths covering 100-1200 MHz, no dependence on clobbered registers), and a hand-written model (tools/ddr_model.py) at every integer clock 100-1200 MHz, for four hardware hypotheses and three reset seeds. They share the oracle rules for peripheral reads, so they validate the calculation, not the hardware: training results, ZQ codes, lane status and reset values are not known, and bits kept by read-modify-write from unknown reset values are flagged, not predicted. Register names come from the public DesignWare uPCTL/PUBL layout (IP identity is DDR-001's inference); field meanings beyond the firmware's own packing are interpretations. The LPDDR branch (type&0xf != 0) is not modelled. Never write these values to a running system.
+
+## DDR-003
+
+Two properties of the stock DDR3 calculation follow from DDR-002. (1) Timings are computed before capacity detection while the capacity field is forced to 2048 MiB, so the per-rank density used for tRFC is 2048 (cs=1) or 1024 (cs=2) MiB and tRFC always takes the 350 ns class, although the detected die is 2 Gb (256 MiB), for which the same table would give 160 ns. (2) MR0 is built as (CL-4)<<4 | 0x1100 | tWR<<9 with tWR in cycles (8), so the value 0x1140 has the JEDEC DDR3 write-recovery field A11:A9 = 0 and bit 12 set; read with the JESD79-3 MR0 table that is CL 8, BL8, DLL reset, precharge power-down fast exit and WR code 000.
+
+**Confidence:** inferred · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / DRAM routine 0xb40673f4 (tRFC table literals 110/160/260/350; MR0 packing)](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-ddr-timing.json (timings.density_mib, tRFC_ns_selected)](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: The values are reproduced exactly; the JEDEC reading of MR0 and the 2 Gb die size are interpretations (the latter from MEM-006's write-back agreement). Whether the PHY passes MR0 to the DRAM unchanged, and what the DRAM does with WR code 000, are not established. A longer tRFC is conservative, not an error.
