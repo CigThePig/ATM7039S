@@ -343,7 +343,13 @@ Releases 221203–230309 print `wrodt1,rdodt1,drvc`. The lane words are hardware
 * **Reset values** of the twelve RMW'd registers (§7.4).
 * **Register semantics** beyond the firmware's packing: uPCTL+0x148 (reserved in the RK3288 layout), DMM +0x00/+0x04/+0x0c/+0x10/+0x24/+0x64/+0x68/+0x80/+0x88, PUBL+0x3fc, DSGCR/ACIOCR/DXCCR/ODTCR constants, CMU_DDRPLL bit 9, MCFG bit 3.
 * **MR0 WR field**: whether the PHY forwards MR0 unchanged and how the DRAM treats WR code 000 (DDR-003).
-* **Not analysed**: the mode-1 resume path, the LPDDR branch, the memory test `0xb406631c`, anything that persists the write-back, and the pre-DRAM clock setup `0xb4069254`.
+* **Not analysed**: the mode-1 resume path, the LPDDR branch, the memory test `0xb406631c`, anything that persists the write-back, and the pre-DRAM clock setup `0xb4069254`. *Done in PR #6* ([report](dram-complete-reconstruction.md)): `0xb4069254` is an ADFU check, not a clock setup (C-PREDRAM-9254).
+
+**Corrections from PR #6** (this report's text above is kept as written):
+
+* §7.1: the codes `0x2a00fa11`, `0x9a00fa11`, `0xdf00fa11`, `0xf000fa11` and `0xc000fa11` are printed and then returned as `0x1747fa11` (C-FAILCODE).
+* §7.2 and `ddr_model.capacity_probe`: a row probe without an alias leaves the row code at 0 (13 rows); `0xf000fa11` is unreachable, because exponent 31 always ends the search first (C-PROBE-NOALIAS). The model is corrected; the committed evidence is unaffected because it covers only aliasing geometries.
+* §3 diagram: the write-back `0xb4066280` (and the AFI write) also run after a failed init (C-WRITEBACK-FAIL).
 * **Authenticity**: the four images come from a community mirror; no manufacturer checksum exists (FW-014).
 
 ## 11. Reproduce

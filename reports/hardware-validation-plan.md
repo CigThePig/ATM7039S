@@ -41,3 +41,24 @@ No new hardware procedure was executed. Prefer existing public logs first.
 | Storage slot mapping | Existing mount table/sysfs and logs | Read block-device ancestry and MMC probe messages | Connects OS device names to controllers; no assumption based on mmcblk numbering alone | Low file reads; do not mount/write/benchmark cards; save ancestry and exact firmware hash |
 
 These procedures require separate owner authorization even if described as low risk. Existing access is a prerequisite, not permission to enable ADB, alter boot arguments or write another card. No procedure begins with raw MMIO, PMIC, clocks or CPU-online writes. Passive UART work still requires established pads/voltages and separate approval; no opening or soldering is implied.
+
+## DRAM observations prepared by PR #6 (not executed)
+
+The [DRAM reconstruction](dram-complete-reconstruction.md) predicts exactly which strings and values a stock or Koriki v1.0 boot produces. The table separates what the existing read-only V3 capture can show from what only an early-boot serial log can show. None of these tests is authorized by this document.
+
+| Priority | Observation | Collected by | Confirms or refutes | What it cannot show |
+|---|---|---|---|---|
+| 1 | `MemTotal` (`/proc/meminfo`), System RAM ranges (`/proc/iomem`), `/memory` in the final DT | V3 (existing allowlist) | AFI `ddr_size` → U-Boot `/memory <0 0x10000000>` (P-RAM, MEM-010); a 512 MiB or 128 MiB result would refute the single-rank 2 Gb hypothesis | training path, rank retry, memory-test result (MemTotal alone does not prove DRAM training behaviour) |
+| 2 | `/proc/cpuinfo`, `/proc/cmdline` (`boot_dev=sd0`, `allenS500=1`), kernel version | V3 | board and boot identity (P-CPU, P-BOOTDEV, P-UENV) | the loader's DRAM decisions |
+| 3 | `/proc/device-tree` (final), `dmesg` memory and reservation lines | V3 | `/memreserve/`, initrd placement, kernel reservations around low memory | DTAR training area and DRAM 0x400 use (needs kernel analysis) |
+| 4 | Loader console: `DRAM init mode0,type16,2cs,…` → `Fail:<4 words>;` → `…1cs…` → `Ok:DCU_CFG:0x202c,256MByte Cap.` → `==ddr_test 256 MB ==` → `== ok==`; plus `PMU_CTL3 = 0x…`, `pmu_status = 0x…` | **UART only** (V7; pads and voltage not yet established; opening the device excluded) | cs 2 training failure and cs 1 success (MEM-006, DDR-004), probe result (MEM-009), memory-test result (MEM-007), real DXGSR0 lane words, PMIC flags at boot | nothing after the loader |
+| 5 | A suspend/resume cycle: `in s2`, `cpu_resume = …`, `DRAM init mode1,…`, `Ok:…` or `re-wakeup at …` | UART during an ordinary suspend (a separate approval; not part of V3) | MEM-008 and whether data survive (C-RESUME-DRAMRST) | — |
+
+A running Linux system cannot expose the early loader's training-status words or the memory-test output. Those are printed once on the loader's UART and are not stored. V3 confirms only the end result of the handoff.
+
+Additional restrictions for any future DRAM-related session, beyond the exclusions above:
+
+* no memory stress tests;
+* no `/dev/mem` reads of the AFI, DMM, uPCTL or PUBL;
+* no suspend experiments without a dedicated approval (resume failure powers the device off and re-arms an RTC alarm);
+* no card prepared without the `SFVD` marker (BOOT-014: app.bin would rewrite `bootloader.ini`, including the detected DRAM record).

@@ -1419,7 +1419,20 @@ def bootargs_model(uenv_bootargs, afi, gd_flags=0, sn=None, s500_strap=False, ha
 
 # --------------------------------------------------------------------------- top level
 
-def analyze(image_path, release, expected_sha=None, ram_mib=256):
+def dram_scenario_capacity(loader, scenario):
+    """Capacity reported to U-Boot when the stock loader's own DRAM code runs under a named, synthetic
+    hardware scenario (tools/dram_complete.py), instead of a supplied --ram-mib value."""
+    import dram_complete
+    mib, h = dram_complete.derived_capacity(loader, scenario)
+    if mib is None:
+        raise SystemExit(f'DRAM scenario {scenario!r}: loader does not reach U-Boot ({h["after_caller"]}, '
+                         f'DRAM return {h["dram_return"]})')
+    return mib, dict(scenario=scenario, dram_return=h['dram_return'], afi_ddr_size=hex(h['afi']['ddr_size']),
+                     uboot_ram_size=hex(h['uboot']['gd_ram_size']), console=[x for x in h['prints'] if 'Cap' in x or 'ddr_test' in x or x.startswith('==')],
+                     assumption='synthetic PUBL/uPCTL/PMIC responses and a DRAM aliasing hypothesis; not a hardware observation')
+
+
+def analyze(image_path, release, expected_sha=None, ram_mib=256, dram_scenario=None):
     p = Path(image_path)
     if expected_sha:
         h = hashlib.sha256()
@@ -1432,6 +1445,9 @@ def analyze(image_path, release, expected_sha=None, ram_mib=256):
     disk = Disk(f)
     app = loader[0x19000:0x38000]
     ub = Blob(payload, uboot['entry'], 'u-boot')
+    derived = None
+    if dram_scenario:
+        ram_mib, derived = dram_scenario_capacity(loader, dram_scenario)
     res = dict(format_version=1, tool='boot_chain.py', tool_version=TOOL_VERSION, release=release,
                image_sha256=expected_sha,
                components=dict(loader=dict(disk_offset=f'0x{LOADER_DISK:x}', size=len(loader), sha256=sha(loader),
@@ -1448,6 +1464,10 @@ def analyze(image_path, release, expected_sha=None, ram_mib=256):
                          ini_sfvd=dict(method='data', offset='loader 0x2800 (ini+0x400, SRAM 0xb4062800)',
                                        magic=loader[0x2800:0x2804].decode('latin1'),
                                        value=f"0x{struct.unpack_from('<I', loader, 0x2804)[0]:08x}"))
+    if derived:
+        res['loader']['main']['dram_outcome'] = derived
+        res['loader']['main']['models'][1] = (f'DRAM init outcome := derived by executing the loader DRAM code under '
+                                             f'scenario {dram_scenario!r}: {ram_mib} MiB (synthetic responses)')
     env = default_env(ub)
     cbf = find_check_boot_flag(ub)
     cbt = check_boot_flag_table(ub, cbf)
@@ -1783,6 +1803,8 @@ def main():
     a.add_argument('--release', required=True)
     a.add_argument('--sha256')
     a.add_argument('--ram-mib', type=int, default=256, help='DRAM outcome supplied to the loader emulation')
+    a.add_argument('--dram-scenario', help='derive the DRAM outcome instead by running the loader DRAM code under a '
+                                           'named dram_complete.py scenario (e.g. reference); overrides --ram-mib')
     t = sub.add_parser('trace', help='build the committed boot-stage evidence document')
     t.add_argument('inputs', nargs='+', type=Path)
     t.add_argument('output', type=Path)
@@ -1801,7 +1823,7 @@ def main():
         args.output.write_text(json.dumps(evidence_document(args.inputs, args.reference), indent=1) + '\n')
         return
     if args.cmd == 'analyze':
-        r = analyze(args.image, args.release, args.sha256, args.ram_mib)
+        r = analyze(args.image, args.release, args.sha256, args.ram_mib, args.dram_scenario)
         args.output.write_text(json.dumps(r, indent=1) + '\n')
     else:
         r = compare(args.inputs)

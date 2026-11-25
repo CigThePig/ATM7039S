@@ -1066,7 +1066,7 @@ Evidence:
 
 - [anbernic-stock-archive / evidence/firmware/stock-ddr-sequence.json](https://archive.org/details/RG35XX_original_firmwares)
 
-- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / struct rk3288_ddr_pctl and rk3288_ddr_publ](https://github.com/u-boot/u-boot#L9-L160)
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / struct rk3288_ddr_pctl and rk3288_ddr_publ](https://github.com/u-boot/u-boot/blob/9d67454e920b3908529c9fc642a8c911db040896/arch/arm/include/asm/arch-rockchip/ddr_rk3288.h#L9-L160)
 
 - [vendor-kernel / arch/arm/mach-owl/clocktree-atm7059.c / DDRPLLEN, DDRCH0/DMAC enable and DDR/DMAC reset bits](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/clocktree-atm7059.c#L151-L257)
 
@@ -1224,15 +1224,15 @@ Evidence:
 
 - [anbernic-stock-archive / division helpers 0xb406ad40/0xb406ae80](https://archive.org/details/RG35XX_original_firmwares)
 
-- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / PIR bits](https://github.com/u-boot/u-boot#L273-L288)
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / PIR bits](https://github.com/u-boot/u-boot/blob/9d67454e920b3908529c9fc642a8c911db040896/arch/arm/include/asm/arch-rockchip/ddr_rk3288.h#L273-L288)
 
-- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / PGSR bits](https://github.com/u-boot/u-boot#L297-L306)
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / PGSR bits](https://github.com/u-boot/u-boot/blob/9d67454e920b3908529c9fc642a8c911db040896/arch/arm/include/asm/arch-rockchip/ddr_rk3288.h#L297-L306)
 
-- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / PTR0-2 field shifts](https://github.com/u-boot/u-boot#L309-L319)
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / PTR0-2 field shifts](https://github.com/u-boot/u-boot/blob/9d67454e920b3908529c9fc642a8c911db040896/arch/arm/include/asm/arch-rockchip/ddr_rk3288.h#L309-L319)
 
-- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / SCTL/STAT states](https://github.com/u-boot/u-boot#L351-L368)
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / SCTL/STAT states](https://github.com/u-boot/u-boot/blob/9d67454e920b3908529c9fc642a8c911db040896/arch/arm/include/asm/arch-rockchip/ddr_rk3288.h#L351-L368)
 
-- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / MCFG fields](https://github.com/u-boot/u-boot#L381-L399)
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / MCFG fields](https://github.com/u-boot/u-boot/blob/9d67454e920b3908529c9fc642a8c911db040896/arch/arm/include/asm/arch-rockchip/ddr_rk3288.h#L381-L399)
 
 - [anbernic-stock-archive / evidence/firmware/stock-ddr-timing.json (final_pass, timings, symbolic, model_vs_unicorn)](https://archive.org/details/RG35XX_original_firmwares)
 
@@ -1431,3 +1431,181 @@ Evidence:
 - [anbernic-stock-archive / evidence/firmware/stock-boot-chain.json comparison; releases.*.uboot.variant_strap](https://archive.org/details/RG35XX_original_firmwares)
 
 Limits: Normalised hashes mask branch and literal offsets; the 221223->230309 rebuild changes layout too much for one-to-one function matching, so differences there were enumerated by string set and by the traced boot steps, not by complete function pairing. Panel-register meaning of the 20231014 change is not established.
+
+## MEM-007
+
+The stock loader's memory test 0xb406631c(capacity_MiB), called once from 0xb4066740 after a successful mode-0 DRAM init, computes N = capacity << 18 words and (A) stores value i at byte 4*i for i = 4, 8, 16 ... < N, then verifies them in order, printing 'addr:ddr_test fail <i>, 0x<read> ' at the first mismatch; (B) stores v = 0x10 + k*0x41114 at byte 4*v (stride 0x104450) for v < N and verifies, printing 'tmp:ddr_test fail <v>, 0x<read> '; otherwise it prints '== ok=='. It uses plain 32-bit LDR/STR, no cache, DMA or controller operation, saves nothing and restores nothing. It returns printf's value and the caller ignores it: a failure changes neither the record, the AFI nor the boot path. Because the highest phase-A address (capacity/2) aliases only the never-written byte 0, and the odd-multiple stride cannot alias within 256 points, a device half the claimed size under wrap-around passes; a quarter-size device is detected in phase A.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / memory test 0xb406631c and its literal pool](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / caller: argument from record+2/+3, return value unused](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-dram-complete.json](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Unicorn execution and an independent Python model agree on console text and every access in 14 synthetic RAM scenarios (wrap/open aliasing, injected read/write faults, stuck data bits, degenerate sizes) in all four releases. The RAM models are hypotheses; a modelled pass is not evidence that physical RAM passes. Whether accesses are cached depends on the Boot ROM's SCTLR state, which is unknown; the loader enables only the I-cache, after the test.
+
+## MEM-008
+
+Mode 1 of the stock DRAM routine is a suspend-to-RAM resume selected by PMIC state. pmu_init (0xb40699e8, PMIC type 2 fixed at its only call 0xb4066654) reads PMU_CTL3 (PMIC reg 3); with bit 4 (s2 flag) set and PMIC reg 0x14 bit 15 set it stores reg 8 | reg 0x5d << 16 as the resume vector at 0xb4070878 and sets 0xb4070874 = 1 (alarm-wake flag 0xb4070870 from reg 1). If both words are non-zero the caller 0xb40665d0 returns 2 before the ini+0x2c record swap, the DRAM init, the memory test, the write-back and the AFI write. Main then calls 0xb40664e4 -> 0xb4067094, which runs 0xb40690d0(record, 0) once on the ini primary (persisted) record: same CMU/reset/controller/PHY programming as mode 0, but no clock rounding, no forced 2048 MiB capacity (tRFC 160 ns class), PTR2 = F/10, PIR 0x3f instead of 0x7f, 8 MCMD PREA and 8 REF before PIR 0x81 training and 8 REF before GO_STATE, no rank/bus retry and no capacity probe (DCU_CFG from stored rcc/capacity). On success 0xb4066fd4 jumps to the vector (bit 31 set and alarm wake: DRAM re-enters self-refresh via 0xb4067248 and the PMIC powers off). On any failure 0xb4066eac sets a PMIC RTC alarm 3 s ahead, sets the s2 flag again and 0xb4066bf0 powers off. The loader reaches app.bin/U-Boot on this path only if the vector returns, in which case the AFI was never written.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / resume test in the DRAM caller](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / main: call 0xb40664e4 on return 2](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / pmu_init type-2 branch: s2 flag, vector, alarm flag](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / pre-wake CMU sequence](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / power-off routine](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / alarm re-arm and resume jump](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / resume dispatcher](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / mode-1 wrappers](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / mode-1 entry in 0xb40673f4](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / mode-1 PIR and MCMD bursts](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / mode-1 refresh before GO](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / probe skipped in mode 1](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-dram-complete.json](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: PMIC state, PUBL/uPCTL responses and the resume vector are synthetic (dram_complete.py Scenario/Pmic). The mode-1 register sequence is reproduced exactly by an independent model at every clock 100-1200 MHz in four releases. Not established: who writes PMIC regs 8/0x5d and reg 3 bit 4 (the kernel's suspend code was not analysed), the meaning of the PMIC registers beyond the loader's own strings, and whether PIR bit 5 (DRAMRST in the related RK3288 layout) pulses RESET# during resume (C-RESUME-DRAMRST), which bears on whether DRAM contents survive.
+
+## DDR-004
+
+Failure handling of the stock DRAM routine 0xb40673f4: ZQ0SR0 done, PGSR&7==7 and DFISTSTAT0 ready are each polled 101 times without delay (codes 0x2a00fa11, 0x9a00fa11, 0xdf00fa11); PGSR==0xf after the init PIR, PGSR after the training PIR other than 0x1f/0x3f, MCMD completion, uPCTL state transitions (0xb4067170) and CMDTSTAT are polled without bound. Every internal code whose low 24 bits are 0x00fa11 (ZQ, PHY init, DFI, probe 0xf000fa11, capacity 0xc000fa11) is printed as 'Fail: 0x...' and returned as 0x1747fa11 (0xb4068f34..0xb4068f50); only the training error 0x1017fa11 is returned unchanged. A training error (PGSR 0x3f) prints the four DXGSR0 words and, in mode 0 only, retries the whole pass with cs 2 -> 1 and bus x32 -> x16 (order (2,x32),(1,x32),(2,x16),(1,x16) when both are automatic); with no alternative left the record's cs/bus are restored and 0x1017fa11 is returned. The column probe takes code 3 when no alias appears; the row probe ends at the first alias or at exponent 31 (so its exponent-32 error 0xf000fa11 is unreachable) and otherwise leaves row code 0 when no alias is found, so a device larger than the probe range is reported as 13 rows.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / ZQ and PHY-init polls](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / init PIR, training PIR and DFI polls](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / column and row probe loops](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / failure codes, collapse, retry logic](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / uPCTL state walker](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-dram-complete.json](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: All PUBL/uPCTL responses are explicitly synthetic scenarios; no training, ZQ or lane-status value of a real RG35XX is known. Poll bounds are iteration counts whose duration depends on bus timing. Corrects PR #4 (C-FAILCODE, C-PROBE-NOALIAS); the readable model now mirrors the probe exactly (48 geometries, 0 mismatches against Unicorn).
+
+## DDR-005
+
+The stock loader's non-DDR3 branch (record type & 0xf != 0) is an LPDDR2/LPDDR3-class path: PUBL DCR 0x1000000c (DDRMD field 4, DDRMD_LPDDR2_LPDDR3 in the public RK3288 layout) instead of 0xb, PIR 0x5f (DRAMRST omitted) instead of 0x7f, MR1/MR2/MR3 instead of MR0/MR1/MR2, DSGCR 0xf1001807, its own timing tables (tRFC 90/130/210 ns classes, read latency 3..12 by clock band) and uPCTL+0x148 = 0. The exact type byte 1 selects uPCTL MCFG memory-type 3 (LPDDR2_EN in the RK3288 layout); other non-zero low nibbles select 1, which that layout does not define; PUBL+0x3fc = 1 is written only for type byte 2. The type byte's high nibble 1 (stock value 0x10) skips the idle self-refresh setup (MCFG1 |= 0x60 or 0x20 and a wait for STAT 0x15). No shipped record selects the branch.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / type test](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / LPDDR timing calculations](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / MR0 vs MR3](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / PUBL+0x3fc, DSGCR and PIR by type](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / type high nibble: idle self-refresh](https://archive.org/details/RG35XX_original_firmwares)
+
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / DDRMD values](https://github.com/u-boot/u-boot/blob/9d67454e920b3908529c9fc642a8c911db040896/arch/arm/include/asm/arch-rockchip/ddr_rk3288.h#L322-L328)
+
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / MDDR_EN/LPDDR2_EN](https://github.com/u-boot/u-boot/blob/9d67454e920b3908529c9fc642a8c911db040896/arch/arm/include/asm/arch-rockchip/ddr_rk3288.h#L383-L384)
+
+- [anbernic-stock-archive / evidence/firmware/stock-dram-complete.json](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Recovered by emulation for four type values and four clocks in both modes, not by an independent model. Which JEDEC LPDDR generation a type value targets, and the meaning of the MR values written, are not established. Applicability of the RK3288 register names to the ATM7039S is inferred (DDR-001).
+
+## DDR-006
+
+Register interpretations for the stock DRAM sequence: uPCTL+0x148 (reserved in the RK3288 layout) is TREFI_MEM_DDR3, named tref_mem_ddr3 at that offset in U-Boot's RK322x uPCTL layout, consistent with the firmware writing tREFI in memory clocks (F*78/10) for DDR3 and 0 for LPDDR; PUBL PIR values decode as CLRSR, INIT|DLLSRST|DLLLOCK|ZCAL|ITMSRST|DRAMRST|DRAMINIT (0x7f), the same without DRAMINIT (0x3f) or DRAMRST (0x5f), and INIT|QSTRN (0x81); DCR 0xb is DDRMD 3 with 8 banks. The self-refresh entry 0xb4067248 (SCTL GO, SLEEP, wait STAT 0x45 = Low_power with lp_trig 4) then writes ACIOCR 0x1bfc3c18, DXCCR 0x80c, DSGCR 0xc5fc0000, sets DMM+0 bit 1 and pulses DMM+0 bit 28. uPCTL MCFG bit 3, CMU_DDRPLL bit 9, PUBL+0x3fc and the DMM registers remain without a public definition.
+
+**Confidence:** inferred · **Scope:** release-binary · **Validation:** static-inspection
+
+Evidence:
+
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/sdram_rk322x.h / uPCTL timing registers through tref_mem_ddr3 (0x148)](https://github.com/u-boot/u-boot/blob/9d67454e920b3908529c9fc642a8c911db040896/arch/arm/include/asm/arch-rockchip/sdram_rk322x.h#L72-L107)
+
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / PIR and PGSR bits](https://github.com/u-boot/u-boot/blob/9d67454e920b3908529c9fc642a8c911db040896/arch/arm/include/asm/arch-rockchip/ddr_rk3288.h#L272-L306)
+
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / SCTL/STAT encodings](https://github.com/u-boot/u-boot/blob/9d67454e920b3908529c9fc642a8c911db040896/arch/arm/include/asm/arch-rockchip/ddr_rk3288.h#L350-L368)
+
+- [anbernic-stock-archive / self-refresh entry](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / uPCTL+0x148 write](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-dram-complete.json](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Names come from Rockchip register layouts of the same DesignWare IP family; register revisions differ, and nothing here is a vendor statement about the ATM7039S. Bit-level meanings of ACIOCR/DXCCR/DSGCR/ODTCR values are not decoded; no power-on reset value is claimed.
+
+## MEM-009
+
+The stock capacity probe measures only the column width under its column-probe DCU_CFG setting and the total decoded address width under its row-probe setting; the bank count is taken from the record (rcc bits 1:0, 0 = 8 banks). Running the firmware's probe and memory test against 180 device geometries behind three DMM address-decode hypotheses, only an in-order column -> bank -> row decode of a single-rank device with 10 column and 14 row bits reproduces the shipped primary record (with 8 banks, i.e. a 2 Gb x16 DDR3 part; a 4-bank device would also, but is not DDR3). In 128 of the 180 runs the reported capacity differs from the device's, and 73 of those also pass the memory test (for example 12-row devices reported at twice their size).
+
+**Confidence:** inferred · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / probe and rcc handling](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-dram-complete.json](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: The DMM decode (field order, configured widths 8+col code / 13+row code / 8 banks, high bits ignored, absent rank floats) is a hypothesis; the result rules decode orders out rather than proving the remaining one. Bijective address hashing inside the decoded width is indistinguishable by this firmware. The board's DRAM geometry is not observed.
+
+## MEM-010
+
+DRAM parameters through the stock boot: the cold path selects the ini second record (ini+0x2c = 1), detects cs/rcc/capacity, and then on success and on failure alike writes the record back over the SRAM ini primary record (0xb4066280) and writes the AFI (0xb4066588) with ddr_size = capacity << 20; after a failure the capacity still holds the forced 2048 MiB (AFI 0x80000000) but main takes the ADFU exit, so U-Boot never consumes it and app.bin never persists it. On success the memory-test result is ignored and U-Boot sets gd->ram_size = ddr_size if >= 8 MiB, else 0x1f000000, and /memory = <0 ram_size>. The persisted primary record is consumed only by the resume path (and the SPI-NAND parameter restore 0xb40663f8), which programs it without checking it; a record with a wrong capacity or cs = 0 is programmed as stored. app.bin persists the SRAM ini only when SFVD is absent (BOOT-014).
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / success/failure joins before write-back and AFI](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / main: return-value dispatch and ADFU exit](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / SPI-NAND parameter restore](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / capacity to bytes](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-dram-complete.json](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-boot-chain.json (dram_init rule, getters)](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Caller-level emulation with synthetic PMIC and DRAM responses. boot_chain.py --dram-scenario derives the U-Boot input from these runs; the default --ram-mib path is unchanged. The real capacity of a board is not observed.
+
+## BOOT-021
+
+0xb4069254, called by the DRAM caller with the ini word +0x14 (1 in all releases) before DRAM init, is not a clock setup: it reads PMIC reg 0x35 ('pmu_status'), and if bit 1 is set clears it and enters ADFU through 0xb40691a4 (copy of ROM 0xffff5200 to SRAM, jump); otherwise, only when the ini word is non-zero and the boot code is not 0 (not SD0), it bit-bangs 32 bits on GPIO registers 0xb01b0018/1c/20 and enters ADFU if they read 0x55aa55aa. The DRAM prerequisites before 0xb40673f4 are the 24 MHz timer 0 (0xb4069440, 0xb0168008), the PMIC regulator writes of pmu_init (regs 0x51, 0x39, 0x11 0xe84f, 0x12 0x68cc, 0x14 0x80ca|(adjusted ini+0x1b)<<8, 0x15 0xe8ce, 0x16 0x334b, 0x29, 0x00) and a non-zero PMIC version register 0xdc; the DDR PLL, clock gates and resets are programmed inside the DRAM routine itself.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / ADFU checks](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / ROM re-entry](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / timer init and delays](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / pmu_init type-2 regulator writes](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / evidence/firmware/stock-dram-complete.json](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: The electrical meaning of the PMIC writes (likely regulator settings, possibly including the DRAM supply) is not established; the PMIC detection routine was stubbed in emulation. Corrects the PR #4 description of 0xb4069254 as a pre-DRAM clock setup (C-PREDRAM-9254).

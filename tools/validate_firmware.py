@@ -106,6 +106,26 @@ def boot_chain_checks(folder):
     return errors
 
 
+def dram_complete_checks(folder):
+    """Consistency of stock-dram-complete.json (PR #6) with the loader manifest and between its methods."""
+    p=folder/'stock-dram-complete.json'
+    if not p.exists():return []
+    errors=[]
+    try:
+        m=json.loads(p.read_text());loaders=json.loads((folder/'stock-loaders.json').read_text())['loaders']
+        if len({r['code_sha256'] for r in m['releases'].values()})!=1:errors.append('DRAM complete: code differs between releases')
+        for name,r in m['releases'].items():
+            if loaders.get(name,{}).get('sha256')!=r['loader_sha256']:errors.append('DRAM complete loader hash mismatch '+name)
+        for name,s in m['mode1_model_sweep_all'].items():
+            if s is None or s['mismatches']:errors.append('DRAM complete: mode-1 model/emulation disagreement '+name)
+        for name,row in m['memtest'].items():
+            if row['model_verdict']!=row.get('emulated_verdict'):errors.append('DRAM complete: memtest model/emulation disagreement '+name)
+        if not all(m['identical_across_releases'].values()):errors.append('DRAM complete: release-dependent behaviour not explained')
+        if 'synthetic' not in m['models']['note'].lower():errors.append('DRAM complete: modelling note missing')
+    except (KeyError,ValueError,OSError,TypeError) as e:errors.append('invalid DRAM complete evidence: '+str(e))
+    return errors
+
+
 def validate(root):
     errors=[];index={}
     folder=root/'evidence/firmware'
@@ -126,6 +146,7 @@ def validate(root):
                 index[key]=c
         except (KeyError,ValueError,OSError) as e:errors.append('invalid firmware manifest '+name+': '+str(e))
     errors.extend(stock_index(root,index))
+    errors.extend(dram_complete_checks(folder))
     cited=[(f['id'],e) for f in json.loads((root/'evidence/findings.json').read_text()) for e in f['evidence']]
     hw=root/'registers/canonical/hardware.json'
     if hw.exists():
