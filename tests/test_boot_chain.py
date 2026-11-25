@@ -267,6 +267,23 @@ class Parsers(unittest.TestCase):
             with self.assertRaises(bc.Unmodelled):
                 d.sectors(7, 2)
 
+    def test_sfvd_marker(self):
+        with tempfile.TemporaryDirectory() as d:
+            img = bytearray(0x206000)
+            path = Path(d) / 'x.img'
+            path.write_bytes(img)
+            r = bc.sfvd_status(path)
+            self.assertFalse(r['present'])
+            self.assertEqual((r['marker_disk_offset'], r['writeback_region']), ('0x202a00', '0x202600..0x204e00'))
+            img[0x202a00:0x202a08] = b'SFVD' + struct.pack('<I', 0xc582bb73)
+            path.write_bytes(img)
+            r = bc.sfvd_status(path)
+            self.assertTrue(r['present'])
+            self.assertEqual(r['value'], '0xc582bb73')
+            (Path(d) / 'short.img').write_bytes(b'\0' * 0x202000)
+            with self.assertRaises(ValueError):
+                bc.sfvd_status(Path(d) / 'short.img')
+
     def test_cformat(self):
         class E:
             def cstr(self, a):
@@ -410,6 +427,10 @@ class Evidence(unittest.TestCase):
         text = EVIDENCE.read_text()
         self.assertNotIn('/home/', text)
         self.assertLess(len(text), 400_000)
+
+    def test_sfvd_present_in_every_analysed_image(self):
+        for rel, r in self.d['releases'].items():
+            self.assertEqual(r['loader']['ini_sfvd']['magic'], 'SFVD', rel)
 
     def test_koriki_shares_the_stock_pre_kernel_chain(self):
         k = self.d['other_firmware']['koriki-v1.0']

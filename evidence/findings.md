@@ -1312,7 +1312,7 @@ Evidence:
 
 - [anbernic-stock-archive / evidence/firmware/stock-boot-chain.json releases.*.loader.app_entry, app_writeback, ini_sfvd](https://archive.org/details/RG35XX_original_firmwares)
 
-Limits: Static analysis only; app.bin was not emulated (its main touches undocumented eFuse registers). The meaning of 0xb0150000 and of the accepted chip-identity range is not established. The write-back modifies the boot card whenever the SFVD record is missing, which matters for any replacement loader and for the hardware test plan.
+Limits: Static analysis only; app.bin was not emulated (its main touches undocumented eFuse registers). The meaning of 0xb0150000 and of the accepted chip-identity range is not established. The write-back modifies the boot card whenever the SFVD record is missing, which matters for any replacement loader and for the hardware test plan. The trigger is evaluated on every boot and compares only the 4-byte magic at disk 0x202a00; the hash-verified Koriki v1.0 V3 baseline image carries it (SFVD, 0xc582bb73), so no write is expected there. Modified boot images must preserve it or be expected to change on the card; see reports/spare-card-risk.md and boot_chain.py sfvd.
 
 ## BOOT-015
 

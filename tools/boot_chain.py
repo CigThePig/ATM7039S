@@ -24,6 +24,7 @@ Usage::
 
     python tools/boot_chain.py analyze IMAGE --release NAME OUT.json [--sha256 HEX]
     python tools/boot_chain.py compare A.json B.json [C.json ...] OUT.json
+    python tools/boot_chain.py sfvd IMAGE   # exit 1 if app.bin would rewrite bootloader.ini
     python tools/boot_chain.py trace A.json B.json ... OUT.json [--reference stock-20231014]
 
 The layout knowledge (loader at sector 4097, U-Boot at 0x300000) is re-checked
@@ -1746,6 +1747,33 @@ def evidence_document(paths, reference):
                 releases={d['release']: compact(d) for d in docs})
 
 
+SFVD_DISK = LOADER_DISK + 0x2800   # bootloader.ini + 0x400 (SRAM 0xb4062800)
+INI_DISK = LOADER_DISK + 0x2400
+INI_WRITEBACK_SECTORS = 20
+
+
+def sfvd_status(image_path):
+    """Whether app.bin's write-back condition (BOOT-014) is armed for an image.
+
+    app.bin compares only the 32-bit magic at bootloader.ini+0x400 with "SFVD";
+    if it differs, it rewrites 20 sectors from disk 0x202600 on every boot.
+    """
+    with open(image_path, 'rb') as f:
+        f.seek(SFVD_DISK)
+        rec = f.read(8)
+        f.seek(INI_DISK)
+        ini = f.read(INI_WRITEBACK_SECTORS * SECTOR)
+    if len(rec) < 8 or len(ini) < INI_WRITEBACK_SECTORS * SECTOR:
+        raise ValueError('image too short for the stock loader layout')
+    present = rec[:4] == b'SFVD'
+    return dict(marker_disk_offset=f'0x{SFVD_DISK:x}', magic=rec[:4].hex(), present=present,
+                value=f"0x{struct.unpack('<I', rec[4:])[0]:08x}",
+                writeback_region=f'0x{INI_DISK:x}..0x{INI_DISK + INI_WRITEBACK_SECTORS * SECTOR:x}',
+                writeback_region_sha256=sha(ini),
+                consequence='no loader write-back expected' if present else
+                'app.bin would rewrite the 20-sector bootloader.ini region on boot (BOOT-014)')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest='cmd', required=True)
@@ -1759,10 +1787,16 @@ def main():
     t.add_argument('inputs', nargs='+', type=Path)
     t.add_argument('output', type=Path)
     t.add_argument('--reference', default='stock-20231014')
+    v = sub.add_parser('sfvd', help='check the SFVD marker that suppresses app.bin\'s ini write-back')
+    v.add_argument('image', type=Path)
     c = sub.add_parser('compare')
     c.add_argument('inputs', nargs='+', type=Path)
     c.add_argument('output', type=Path)
     args = ap.parse_args()
+    if args.cmd == 'sfvd':
+        r = sfvd_status(args.image)
+        print(json.dumps(r, indent=1))
+        raise SystemExit(0 if r['present'] else 1)
     if args.cmd == 'trace':
         args.output.write_text(json.dumps(evidence_document(args.inputs, args.reference), indent=1) + '\n')
         return
