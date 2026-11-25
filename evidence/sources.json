@@ -331,5 +331,59 @@
     "examined": "2026-11-23",
     "license_status": "Toolchain not redistributed",
     "scope": "research-host cross compilation (GCC 7.3.0, binutils 2.29.1); not firmware evidence"
+  },
+  {
+    "id": "anbernic-stock-archive",
+    "url": "https://archive.org/details/RG35XX_original_firmwares",
+    "revision": "archive.org item RG35XX_original_firmwares (uploaded 2024-03-28); four archives pinned by SHA-256 in evidence/firmware/acquisitions.json",
+    "type": "firmware-mirror",
+    "examined": "2026-11-24",
+    "license_status": "Proprietary manufacturer firmware; not redistributed. Hashes, metadata and original analysis only.",
+    "scope": "Original RG35XX stock releases 221203, 221223, 230309 and 20231014 (dual system); community mirror, not manufacturer-authenticated"
+  },
+  {
+    "id": "anbernic-drive",
+    "url": "https://drive.google.com/drive/folders/1tJOUt3hW6VwbqgsCRb96TMQz6yRA2GAn",
+    "revision": "unpinned folder listing retrieved 2026-11-24 (linked from win.anbernic.com/download/270.html)",
+    "type": "vendor-download-folder",
+    "examined": "2026-11-24",
+    "license_status": "Listing read only; file download refused (Drive quota exceeded)",
+    "scope": "Manufacturer distribution names, dates and sizes for the 20231014 dual-system release"
+  },
+  {
+    "id": "stock-230309-independent",
+    "url": "https://archive.org/details/anbernicrg35xxstockfirmware",
+    "revision": "archive.org item anbernicrg35xxstockfirmware; 35XX-64GB230309EN.IMG MD5 d3053e5d0ac98b67651e3017b7082843 (metadata only, not downloaded)",
+    "type": "firmware-mirror-metadata",
+    "examined": "2026-11-24",
+    "license_status": "Metadata read only",
+    "scope": "Independent cross-check of the 230309 image bytes"
+  },
+  {
+    "id": "u-boot-mainline",
+    "url": "https://github.com/u-boot/u-boot",
+    "revision": "9d67454e920b3908529c9fc642a8c911db040896 (sparse: arch/arm/include/asm/arch-rockchip)",
+    "type": "source-repository",
+    "examined": "2026-11-24",
+    "license_status": "GPL-2.0+; register struct layout used for offset comparison only, not imported",
+    "scope": "Public DesignWare uPCTL/PUBL register layout (Rockchip RK3288 definitions) used to name ATM7039S loader DRAM accesses"
+  },
+  {
+    "id": "ghidra-11.4.2",
+    "url": "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_11.4.2_build/ghidra_11.4.2_PUBLIC_20250826.zip",
+    "revision": "ghidra_11.4.2_PUBLIC_20250826.zip; locally computed SHA-256 795a02076af16257bd6f3f4736c4fc152ce9ff1f95df35cd47e2adc086e037a6",
+    "type": "host-tool",
+    "examined": "2026-11-24",
+    "license_status": "Apache-2.0 tool; not redistributed",
+    "scope": "research-host headless analysis (function extents, call graph); not firmware evidence"
+  },
+  {
+    "id": "tinyhack-demo-adb",
+    "url": "https://github.com/yohanes/rg35xx-stock-sdl-demo/blob/8dbe95d60558740893a57593d792e388c0932ba9/ADB_ON.sh",
+    "revision": "8dbe95d60558740893a57593d792e388c0932ba9 ADB_ON.sh",
+    "type": "source-file",
+    "examined": "2026-11-24",
+    "license_status": "Read; not imported",
+    "scope": "Prior community ADB enablement route via /sys/monitor/usb_port and android_usb gadget on stock firmware"
   }
 ]

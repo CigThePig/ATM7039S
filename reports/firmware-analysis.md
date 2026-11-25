@@ -60,3 +60,7 @@ python tools/arm_refs.py /tmp/new-components/early-region.bin /tmp/early-refs.js
 The output manifests are deterministic and can be compared directly with committed JSON. Extraction refuses existing filenames. To reproduce the U-Boot reference inventory, remove its 64-byte header into a separate scratch component, then use `--start 0x4194 --end 0x42d0`. The payload hash is recorded in the reference inventory. All files are static inputs; nothing is mounted or run.
 
 The FAT reader is bounded to its partition, selected files are capped at 32 MiB, gzip output at 64 MiB per stream, and acquisition expansion at the exact manifest length with an 8 GiB ceiling. Mature parsers are still untrusted-input software: use a process-level timeout/memory limit for unfamiliar images. GPT, extended partitions, FIT handling, arbitrary encrypted loaders, complete CPIO extraction and filesystem recovery remain unsupported and are not silently guessed.
+
+## Stock firmware
+
+Anbernic's own releases (221203, 221223, 230309, 20231014 dual system) are now acquired from a mirror, hash-pinned and inventoried. Koriki v1.0's early loader and U-Boot are byte-identical to stock 230309. See [the stock dossier](anbernic-stock-reverse-engineering.md) and `evidence/firmware/stock-*.json`. Stock images use GPT, which [`image_inventory.py`](../tools/image_inventory.py) parses (`firmware_catalogue.py` still rejects it by design).

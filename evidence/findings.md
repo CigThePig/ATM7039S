@@ -975,3 +975,213 @@ Evidence:
 - [vendor-kernel / arch/arm/boot/dts/rg35xx_atm7039.dts](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/boot/dts/rg35xx_atm7039.dts#L1-L20)
 
 Limits: Property-level FDT comparison with the repository parser. Unlike the Koriki DTB (DT-003), this public-source-era DTB keeps the source's vdd-core/vdd-gpu DCDC regulator nodes; whether booting them is electrically safe is not established.
+
+## FW-014
+
+Four Anbernic stock releases for the original RG35XX (221203, 221223, 230309 and the 20231014 dual-system image) were acquired from a community archive.org mirror and pinned by SHA-256. The manufacturer download page links a Google Drive folder whose listing shows "35XX双-20231014-EN4GB.rar" (490M, 10/16/23); the mirrored RAR is 513,778,207 bytes (489.97 MiB), its single member keeps that manufacturer name, its RAR mtime is 2023-10-16, and the kernel and U-Boot uImage timestamps inside are 2023-10-14. The 230309 image bytes equal a second, independently uploaded mirror (MD5 d3053e5d0ac98b67651e3017b7082843).
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-download / RG35XX download page links Drive folder 1tJOUt3hW6VwbqgsCRb96TMQz6yRA2GAn](https://win.anbernic.com/download/270.html)
+
+- [anbernic-drive / system + 64G ROM folder: 35XX双-20231014-EN4GB.rar, 10/16/23; Drive warning page reports 490M; download refused (quota exceeded) 2026-11-24](https://drive.google.com/drive/folders/1tJOUt3hW6VwbqgsCRb96TMQz6yRA2GAn)
+
+- [anbernic-stock-archive / evidence/firmware/acquisitions.json entries for RG35XX-20231014-EN4GB.rar, RG35XX-64GB230309EN.rar, RG35XX-EN-221223.rar, RG35XX-221203.zip](https://archive.org/details/RG35XX_original_firmwares)
+
+- [stock-230309-independent / 35XX-64GB230309EN.IMG MD5 metadata](https://archive.org/details/anbernicrg35xxstockfirmware)
+
+Limits: No manufacturer checksum exists and the manufacturer file itself could not be downloaded, so byte-level authenticity is not established; agreement of name, size (to Drive's rounding), dates and an independent mirror is circumstantial. The three older images are 1 GiB truncations of 64 GB card images; partitions beyond 1 GiB are absent.
+
+## FW-015
+
+Stock images use GPT behind a protective MBR (header and entry-array CRCs valid; backup header valid in the full 20231014 image) with four Basic-data partitions: MISC (FAT16, OEM "MAKEBOOT", 10 MiB at 0x800000), SYSTEM (ext4 "system", 512 MiB at 0x1200000), CONFIG (ext4, 1 KiB blocks) and a FAT32 ROM partition at 0x40000000. Non-zero bytes outside partitions are the GPT, a 448-sector loader at 0x200200 and a U-Boot uImage at 0x300000. Koriki v1.0 instead uses a plain MBR with the same two raw offsets.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / partition_table and raw_regions](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Image-file layout only; it does not show how the Boot ROM selects media or which card the owner's unit shipped with.
+
+## BOOT-009
+
+The stock raw loader is a container of ActBrm-terminated blocks and a PACK directory. Each block ends with "ActBrm", 0xAA 0x55 and a 32-bit word equal to the sum of the block's little-endian words (up to that word) plus 0x1234; four such blocks validate in every release. A PACK directory at loader offset 0x2000 lists bootloader.bin (414 sectors at 0, load 0xb4060000), bootloader.ini (20 sectors at sector 18, load 0xb4062400) and app.bin (200 sectors at sector 200, load 0x00001000). The stock MISC/DMENU.BIN updater writes bootloader.img to sector 4097 with count=448, matching the observed extent.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / trailers, pack](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / bootloader.img dd seek=4097 count=448](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: The checksum rule and directory layout are recovered from data that satisfy them, not from a specification or the Boot ROM. Which blocks the ROM loads, and in what order, is not established. The 0xb4060000 load address is now declared by the image itself, which strengthens but does not prove BOOT-004's address hypothesis (no MMU/physical map was observed).
+
+## BOOT-010
+
+All executable loader content (blocks at 0x0-0x2000, the PACK directory, bootloader.bin code from 0x4c00 to 0x33c00 and app.bin) is byte-identical across stock 221203, 221223, 230309 and 20231014. Only bootloader.ini differs: 20231014 changes the DRAM record from rdodt=1, wrodt=1, drv=0xc to rdodt=2, wrodt=2, drv=0x9, and a 5 KiB high-entropy area at 0x3800-0x4bff differs in every release. The Koriki v1.0 early window (0x200200-0x300000) and U-Boot uImage are byte-identical to stock 230309.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / dram_config](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / dram_config; equals koriki-v1.0](https://archive.org/details/RG35XX_original_firmwares)
+
+- [koriki-v1.0-release / equals stock-230309 disk bytes 0x200200..0x300000](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / equals stock-230309 U-Boot](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: The purpose of the per-release 5 KiB area is unknown; it lies at 0xb4063800, where the loader's SPI-NAND path looks for an "SFVD" parameter backup, but no read of it on the SD path was established. Whether the ODT/drive change fixes a field problem is not documented.
+
+## MEM-005
+
+The producer of the 0xb4070820 parameter block (MEM-004) is the loader routine at 0xb4065ff8, which copies fields from bootloader.ini (0xb4062400): ini+0x1c DDR clock (468 MHz) to block+0, ini+0x20 capacity (256 MiB) to block+2, and ini+0x24..0x2a bus-width selector (1, printed as x16), chip selects (1), type (0x10), rcc (0x48), rdodt, wrodt and drv to block+4..+0xa; ini+0x0e/0x0f/0x10 (UART 3, pad 0, 115200) feed the AFI UART fields. Field names come from the loader's own format string "DRAM init mode%d,type%d,%dcs,x%dbus,rcc0x%x,wrodt%d,rdodt%d,drv%x,%dMHz.@180525_R".
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / ini-to-parameter-block copy](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / DRAM init printf arguments (format string at 0xb406b1f8)](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / size helper used for AFI ddr_size](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Static dataflow. The loader also contains capacity scan/test code ("ddr_cap", "row_col", "scan", "==ddr_test %d MB ==") and a path that rewrites block+2/+3, so the AFI ddr_size may be detected rather than configured at run time. 256 MiB is configuration, not a measurement; usable Linux memory is not established.
+
+## DDR-001
+
+The stock loader's DRAM bring-up function (0xb40673f4, 6,752 bytes per Ghidra) programs two blocks absent from the ATM7039-labelled header and public device trees: 0xb01c0000 and 0xb01c8000. 128 of 129 static accesses fall exactly on registers of the public DesignWare uPCTL and PUBL layouts (U-Boot ddr_rk3288.h), in a standard order: SCTL/STAT, PUBL ACIOCR/DXCCR/DSGCR, ACDLLCR DLL reset, PIR, DFI update timings (4/10/8), TOGCNT1U/TOGCNT100N, TINIT=200, POWCTL then POWSTAT, MCFG, MR1/MR2, PTR0-2, DTPR0-2, DTAR, ODT/ZQ, per-lane DXGCR (bit 0 set only on lanes 2 and 3 on some paths), PIR=0x81, all uPCTL timing registers, SCFG, DFI configuration and DXGSR status reads. Before it, CMU_DDRPLL bit 8 is cleared and CMU_DEVCLKEN0 mask 0xa / CMU_DEVRST0 mask 0x5 are toggled, which the vendor clock tree names DDRPLLEN, DDRCH0/DMAC clock and DDR/DMAC reset.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / evidence/firmware/stock-ddr-sequence.json](https://archive.org/details/RG35XX_original_firmwares)
+
+- [u-boot-mainline / arch/arm/include/asm/arch-rockchip/ddr_rk3288.h / struct rk3288_ddr_pctl and rk3288_ddr_publ](https://github.com/u-boot/u-boot#L9-L160)
+
+- [vendor-kernel / arch/arm/mach-owl/clocktree-atm7059.c / DDRPLLEN, DDRCH0/DMAC enable and DDR/DMAC reset bits](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/clocktree-atm7059.c#L151-L257)
+
+Limits: Offset agreement supports, but does not prove, DesignWare IP identity; field meanings, reset values and timing derivations are unverified for ATM7039S. Computed operand values are not recovered. These registers must never be written from a running system: they control live DRAM.
+
+## BOOT-011
+
+From stock 230309 onward, U-Boot reads GPIO 70 (GPIO_CDAT 0xb01b0020 bit 6) once at boot: when set it records gd->flags bit 20, prints "-----s500" and appends "allenS500=1" to bootargs; otherwise it prints "-----a7039". The kernel's __setup("allenS500=") handler allen_check_cpu_type sets a flag read by allen_get_cpu_s500, whose only callers make atc260x_power_probe use charger_led2_ctl/work_led2_ctl/low_power_led2_ctl (GPIO 78/80/79) instead of the GPIO 22/18/21 properties, and atc2603c_init use earphone_detect2_gpios. Stock 221203/221223 U-Boot and kernels, the GarlicOS kernel and Koriki v1.0's kernel lack this logic.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / uboot_variant_strap (VA 0x05025e5c, 0x05021898, 0x05004670)](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / allen_check_cpu_type 0xc0a20b74; consumers atc260x_power_probe 0xc0463598, atc2603c_init 0xc0a4d4a4](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / charger_led_ctl/charger_led2_ctl etc. / /i2c@b0174000/atc2603c@65/atc260x-power](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: The strap is sampled in code; which boards pull GPIOC6 high is unknown. "s500"/"a7039" are vendor labels: they show two board variants with different LED/earphone wiring were supported from early 2023, not that the variants use different silicon. Community reports of a hardware change around February 2023 are consistent but not proven related. Koriki v1.0 boots the identical 230309 U-Boot, so it also receives allenS500=1 on strapped boards; its kernel has no allenS500 handler, and how it chooses between its *_ctl and *_ctl_new properties was not traced.
+
+## FW-016
+
+All four stock kernels are Linux 3.10.37 built by flower@flower-B85M-D2V with Linaro GCC 4.7.3 (2013.04): #18 (2022-12-03), #46 (2022-12-23), #17 (2023-02-25) and #42 (2023-10-14). They contain 119 of the 122 Koriki v1.0 functions absent from public source (FW-009), lacking only bta_test_init, bta_test_waiting_turn_over and owl_get_dsi_gamma_val. 230309 and 20231014 have identical function sets and sizes and differ only in the embedded-initramfs region. By exact anchor symbols, stock (and the GarlicOS kernel) additionally contain the Actions USB port monitor (umonitor_core_init, usb_hal_set_cmu_usbpll), xHCI, USB serial and CDC-ACM host drivers, ext2, PWM LEDs, Owl CPU-hotplug policy and joydev, and lack EHCI, Bluetooth (btusb, rfcomm), fbcon, squashfs, CVBS output, the VDE/VCE video engines and i2c-dev. Binder, exFAT, dwc3 and the Android composite gadget are present in both.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / kernels, comparisons](https://archive.org/details/RG35XX_original_firmwares)
+
+- [koriki-v1.0-release / comparison stock-20231014 vs koriki-v1.0](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Symbol-level comparison from recovered kallsyms; function sizes are upper bounds. Different compilers (4.7.3 vs 4.9.4) prevent body-level stock/Koriki comparison. The stock kernel source was not found. Subsystem presence is judged from one anchor symbol each (evidence/firmware/stock-kernels.json subsystem_anchor_presence); suffix-normalised diff lists over-report differences because inlining changes helper symbols.
+
+## FW-017
+
+The stock 20231014 dual-system image also carries the GarlicOS boot set (ROM partition /CFW/OS/BOOT/GARLIC): its kernel is Linux 3.10.37 by blackseraph@Pandemonium, #116, 2023-04-06, built with the same Linaro GCC 4.7.3 as stock. Of 34,640 functions it shares with stock 230309, 34,597 have equal sizes and 31,458 have equal normalised bodies; it lacks only the four allen_check_cpu_type/allen_get_cpu_s500 symbols. Its RAMDISK.IMG and def_config.bin are byte-identical to stock 221203's.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / evidence/firmware/stock-kernels.json comparison garlic-in-stock-20231014 vs stock-230309](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Shows GarlicOS's kernel was built from essentially the stock source tree with the stock toolchain; it does not identify the GarlicOS 1.4.9 release on the owner's card or its full root filesystem.
+
+## GPU-011
+
+Stock firmware does not use the SGX GPU: its KERNEL.DTB marks /gpu@b0300000 "disabled", init.rc never loads pvrsrvkm.ko or dc_owl.ko, and the SYSTEM partition has no EGL/GLES/services userspace (UI uses SDL 1.2 on /dev/fb0). The bundled pvrsrvkm.ko is a different DDK from Koriki's: "SGX_DDK_Android_RSCompute sgxddk 1.12@3052601", non-DRM (depends empty), using ION import and Android native sync and importing owl_powergate_power_on/off, module_clk_enable, regulator_set_voltage and owl_mmu_import_buffer_on_dc, whereas Koriki's is "SGX_DDK_Linux_XOrg sgxddk MAIN@3625561" built on DRM with the OMAPLFB display bridge.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / modinfo, DDK string, imports (evidence/firmware/stock-platform.json gpu)](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / status disabled / /gpu@b0300000](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / /init.rc insmod lines](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Static; a user-installed program could still load the module. The DDK 1.12 microkernel/firmware and matching userspace are absent, so the stock module documents an ABI generation, not a working stack.
+
+## USB-002
+
+Stock init.rc starts the Actions USB port monitor (/sys/monitor/usb_port/config/run 5, idpin_debug 1) and later in the same boot trigger forces host role ("usb3.0 force host": idpin_debug 0, run 0, usb_con_msg USB_A_IN). adbd is declared disabled and is never started by init; device mode with mass_storage,adb (VID 10d6, PID 0c02) is only configured by ramdisk scripts usbmond.sh/usbdbg.sh that init does not call. default.prop sets ro.secure=0 and ro.debuggable=1, which starts a console shell service. The monitor driver (umonitor_*) exists in the stock kernel but not in Koriki v1.0's.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / /init.rc lines recorded in evidence/firmware/stock-platform.json init_usb; /default.prop; /usbmond.sh](https://archive.org/details/RG35XX_original_firmwares)
+
+- [tinyhack-demo-adb / ADB_ON.sh uses the same monitor and gadget controls](https://github.com/yohanes/rg35xx-stock-sdl-demo/blob/8dbe95d60558740893a57593d792e388c0932ba9/ADB_ON.sh)
+
+- [tinyhack / reported launcher replacement to start ADB](https://tinyhack.com/2023/12/31/reverse-engineering-rg35xx-stock-firmware/)
+
+Limits: Explains statically why ADB needs a user script on stock (consistent with Tinyhack); actual role switching, VBUS behaviour and whether the console shell is reachable over a physical UART need a device test.
+
+## UI-002
+
+The stock SYSTEM partition is a reused Actions Android 4.4.2 (KOT49H) build for an ATM7051H demo board: build.prop shows "Demo_7051H-user 4.4.2 KOT49H eng.songzhining.20161121.190628", ro.product.board=atm7051H_demo_q88_hd, ro.board.platform=ATM702X, model ToyCloud, USB VID 10d6. The launcher chain is init -> /loadapp.sh -> /system/dmenu/dmenu_ln -> dmenu.bin; in the 20231014 dual-system image MISC/DMENU.BIN is a boot switcher that copies CFW/OS/BOOT/STOCK or GARLIC onto MISC and also applies bootloader.img/u-boot-dtb.img updates.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / ro.build.* and ro.product.*](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / boot set switching and updater](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Build properties describe the reused userspace's origin, not the SoC; "ATM702X"/"7051H" are vendor platform labels.
+
+## DT-005
+
+Stock KERNEL.DTB (identical in 230309 and 20231014) differs from the Koriki v1.0 KERNEL.DTB in four nodes only: the root model ("Actions GS705A board" in stock), /gpu@b0300000 status (disabled in stock, okay in Koriki) and the ATC2603C audio and power nodes, where the same alternative GPIOs are named earphone_detect2_gpios/*_led2_ctl in stock and earphone_detect_gpios_new/*_ctl_new in Koriki.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / research.py tree/compare](https://archive.org/details/RG35XX_original_firmwares)
+
+- [koriki-v1.0-release / KERNEL.DTB](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Property-level comparison; it does not show which properties each kernel consumes beyond the code paths traced in BOOT-011.
+
+## UART-003
+
+Every examined loader (stock 221203, 221223, 230309, 20231014 and Koriki v1.0, which equals 230309) configures UART index 3, pad 0 and 115200 baud in bootloader.ini (+0x0e, +0x0f, +0x10); the loader routine 0xb4065ff8 copies these to 0xb407082c/0xb4070830/0xb4070834, from which the AFI uart fields are written (BOOT-004). U-Boot prepends console=ttyS<AFI uart_index> (BOOT-006) and both the stock and Koriki DTBs enable serial@b0126000 (UART3). Statically, the expected kernel console is ttyS3.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [anbernic-stock-archive / dram_config uart_index/uart_pad/uart_baudrate (all five loaders)](https://archive.org/details/RG35XX_original_firmwares)
+
+- [anbernic-stock-archive / copy of ini+0x0e/0x0f/0x10](https://archive.org/details/RG35XX_original_firmwares)
+
+Limits: Static; a later loader or U-Boot path could still override the index, and U-Boot's own environment says ttyS2. The pre-registered prediction P-CONSOLE is left unchanged; a capture of /proc/cmdline remains the test. Pads and voltage for UART3 are not mapped.

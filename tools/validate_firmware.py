@@ -5,6 +5,64 @@ from pathlib import Path
 import re
 
 
+HEX64=re.compile('[0-9a-f]{64}')
+
+
+def stock_index(root,index):
+    """Index and sanity-check the stock-firmware manifests (inventories, loaders, kernels, platform)."""
+    errors=[];folder=root/'evidence/firmware'
+    for p in sorted(folder.glob('stock-*-inventory.json')):
+        key=str(p.relative_to(root))
+        try:
+            m=json.loads(p.read_text());total=m['size']
+            if not HEX64.fullmatch(m['sha256']) or total%512:errors.append('invalid inventory identity '+key)
+            index[key]=dict(sha256=m['sha256'],size=total)
+            parts=m['partition_table']['partitions']
+            for x in parts:
+                if not 0<x['offset']<x['offset']+x['size']<=total:errors.append(f'partition outside image {key}#{x["index"]}')
+            for a,b in zip(sorted(parts,key=lambda x:x['offset']),sorted(parts,key=lambda x:x['offset'])[1:]):
+                if a['offset']+a['size']>b['offset']:errors.append('overlapping partitions '+key)
+            for r in m['raw_regions']:
+                if not 0<=r['offset']<r['offset']+r['size']<=total:errors.append(f'raw region outside image {key}')
+                if 'sha256' in r:index[f'{key}#raw:0x{r["offset"]:x}']=dict(sha256=r['sha256'],size=r['size'])
+            for part in m['partitions']:
+                label=part['name'] or str(part['index'])
+                for f in part['files']:
+                    if f.get('type')!='file':continue
+                    if not HEX64.fullmatch(f['sha256']) or f['size']<0 or f['size']>part['size']:errors.append(f'invalid file record {key}#{label}:{f["path"]}')
+                    index[f'{key}#{label}:{f["path"]}']=dict(sha256=f['sha256'],size=f['size'])
+        except (KeyError,ValueError,OSError) as e:errors.append('invalid stock inventory '+key+': '+str(e))
+    p=folder/'stock-loaders.json'
+    if p.exists():
+        key=str(p.relative_to(root))
+        try:
+            for name,l in json.loads(p.read_text())['loaders'].items():
+                index[f'{key}#{name}']=dict(sha256=l['sha256'],size=l['size'])
+                if not all(t['valid'] for t in l['trailers']):errors.append(f'invalid ActBrm trailer recorded in {key}#{name}')
+                for mem in (l.get('pack') or {}).get('members',[]):
+                    lo,hi=mem['byte_range']
+                    if not 0<=lo<hi<=l['size']:errors.append(f'PACK member outside loader {key}#{name}:{mem["name"]}');continue
+                    index[f'{key}#{name}:{mem["name"]}']=dict(sha256=mem['sha256'],size=hi-lo)
+        except (KeyError,ValueError,OSError) as e:errors.append('invalid loader manifest: '+str(e))
+    for name,sections in (('stock-platform.json',('uboot',)),('stock-kernels.json',('kernels',))):
+        p=folder/name
+        if not p.exists():continue
+        key=str(p.relative_to(root))
+        try:
+            m=json.loads(p.read_text())
+            for rel,v in m['uboot' if 'uboot' in sections else 'kernels'].items():
+                if 'uboot' in sections:index[f'{key}#uboot:{rel}']=dict(sha256=v['sha256'],size=v['size'])
+                else:
+                    index[f'{key}#uimage:{rel}']=dict(sha256=v['uimage_sha256'],size=v['uimage_size'])
+                    index[f'{key}#image:{rel}']=dict(sha256=v['image_sha256'],size=v['image_size'])
+        except (KeyError,ValueError,OSError) as e:errors.append('invalid manifest '+key+': '+str(e))
+    p=folder/'stock-ddr-sequence.json'
+    if p.exists():
+        m=json.loads(p.read_text())
+        if m['named']+m['unnamed']!=m['accesses'] or len(m['sequence'])!=m['accesses']:errors.append('inconsistent DDR sequence counts')
+    return errors
+
+
 def validate(root):
     errors=[];index={}
     folder=root/'evidence/firmware'
@@ -24,14 +82,20 @@ def validate(root):
                     errors.append('invalid disk component bounds '+key)
                 index[key]=c
         except (KeyError,ValueError,OSError) as e:errors.append('invalid firmware manifest '+name+': '+str(e))
-    for f in json.loads((root/'evidence/findings.json').read_text()):
-        for e in f['evidence']:
+    errors.extend(stock_index(root,index))
+    cited=[(f['id'],e) for f in json.loads((root/'evidence/findings.json').read_text()) for e in f['evidence']]
+    hw=root/'registers/canonical/hardware.json'
+    if hw.exists():
+        for b in json.loads(hw.read_text())['blocks']:
+            cited+=[(b['id'],e) for e in b['evidence']]
+            cited+=[(r['id'],e) for r in b['registers'] for e in r['evidence']]
+    for owner,e in cited:
             if 'artifact' not in e:continue
             c=index.get(e['artifact'])
-            if c is None:errors.append('unknown binary artifact '+f['id']);continue
-            if e.get('sha256')!=c['sha256']:errors.append('binary evidence hash mismatch '+f['id'])
+            if c is None:errors.append('unknown binary artifact '+owner+' '+e['artifact']);continue
+            if e.get('sha256')!=c['sha256']:errors.append('binary evidence hash mismatch '+owner)
             if 'offset_start' in e and not 0 <= e['offset_start'] < e.get('offset_end',e['offset_start']+1) <= c['size']:
-                errors.append('binary evidence range outside artifact '+f['id'])
+                errors.append('binary evidence range outside artifact '+owner)
     for name in ['early-afi-refs.json','uboot-afi-refs.json']:
         p=folder/name
         try:

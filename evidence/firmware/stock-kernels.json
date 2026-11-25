@@ -1,0 +1,418 @@
+{
+ "format_version": 1,
+ "tools": [
+  "boot_payloads.py",
+  "kallsyms.py",
+  "kernel_compare.py"
+ ],
+ "kernels": {
+  "stock-221203": {
+   "uimage_sha256": "9b38769538ec1338a5e56a43ea1186e162af31cebac357bf790c15bacf1349a8",
+   "uimage_size": 5594968,
+   "uimage_timestamp_utc": "2022-12-02T16:38:36+00:00",
+   "uimage_name": "Linux-3.10.37",
+   "load": "0x8000",
+   "image_sha256": "1eb863499f23856ec70e306f107a1c20bdee0894b648353e95f6c97e99295a4d",
+   "image_size": 11544332,
+   "linux_version": "Linux version 3.10.37 (flower@flower-B85M-D2V) (gcc version 4.7.3 20130328 (prerelease) (crosstool-NG linaro-1.13.1-4.7-2013.04-20130415 - Linaro GCC 2013.04) ) #18 SMP PREEMPT Sat Dec 3 00:38:31 CST 2022",
+   "kallsyms_num_syms": 71710,
+   "kallsyms_name_set_sha256": "257515f4fbc76794aacb055ca1f476209feb942b5293f82b461860aa44f0b84c",
+   "text_functions": 34641,
+   "vendor_122_present": 119,
+   "vendor_122_absent": [
+    "bta_test_init",
+    "bta_test_waiting_turn_over",
+    "owl_get_dsi_gamma_val"
+   ]
+  },
+  "stock-221223": {
+   "uimage_sha256": "18ccd46b8b7ce0a0c10c72f84cac1394e9ec7032fe18e4001976d2e7cbbb7fdf",
+   "uimage_size": 5593304,
+   "uimage_timestamp_utc": "2022-12-23T06:52:06+00:00",
+   "uimage_name": "Linux-3.10.37",
+   "load": "0x8000",
+   "image_sha256": "932c94a9561527dfd2c173ed3b14e1836860c541abd97a7a8d74bcf9f802c471",
+   "image_size": 11544332,
+   "linux_version": "Linux version 3.10.37 (flower@flower-B85M-D2V) (gcc version 4.7.3 20130328 (prerelease) (crosstool-NG linaro-1.13.1-4.7-2013.04-20130415 - Linaro GCC 2013.04) ) #46 SMP PREEMPT Fri Dec 23 14:52:01 CST 2022",
+   "kallsyms_num_syms": 71710,
+   "kallsyms_name_set_sha256": "257515f4fbc76794aacb055ca1f476209feb942b5293f82b461860aa44f0b84c",
+   "text_functions": 34641,
+   "vendor_122_present": 119,
+   "vendor_122_absent": [
+    "bta_test_init",
+    "bta_test_waiting_turn_over",
+    "owl_get_dsi_gamma_val"
+   ]
+  },
+  "stock-230309": {
+   "uimage_sha256": "b6cb04d59e412585619b55eadecd6380476e93303978986e25058155d3c66587",
+   "uimage_size": 5595368,
+   "uimage_timestamp_utc": "2023-02-25T02:09:21+00:00",
+   "uimage_name": "Linux-3.10.37",
+   "load": "0x8000",
+   "image_sha256": "e99391073d7f27e946133de741151959b53930ecc5bdeb64ed3b023294f23987",
+   "image_size": 11552524,
+   "linux_version": "Linux version 3.10.37 (flower@flower-B85M-D2V) (gcc version 4.7.3 20130328 (prerelease) (crosstool-NG linaro-1.13.1-4.7-2013.04-20130415 - Linaro GCC 2013.04) ) #17 SMP PREEMPT Sat Feb 25 10:09:16 CST 2023",
+   "kallsyms_num_syms": 71717,
+   "kallsyms_name_set_sha256": "9474c9f0cc835902c19cab62d7a18ab4fdbd3515a4ce658010d77bcef3b63e5d",
+   "text_functions": 34644,
+   "vendor_122_present": 119,
+   "vendor_122_absent": [
+    "bta_test_init",
+    "bta_test_waiting_turn_over",
+    "owl_get_dsi_gamma_val"
+   ]
+  },
+  "stock-20231014": {
+   "uimage_sha256": "3dc735f015dac350ea1228c5e56a0e3d95876df41a32a28209aad20c7309712f",
+   "uimage_size": 5595368,
+   "uimage_timestamp_utc": "2023-10-14T07:13:31+00:00",
+   "uimage_name": "Linux-3.10.37",
+   "load": "0x8000",
+   "image_sha256": "56ad73417910f6466a165cfdf2679c91edf8eb17d59fb02841292a20a7f8f769",
+   "image_size": 11552524,
+   "linux_version": "Linux version 3.10.37 (flower@flower-B85M-D2V) (gcc version 4.7.3 20130328 (prerelease) (crosstool-NG linaro-1.13.1-4.7-2013.04-20130415 - Linaro GCC 2013.04) ) #42 SMP PREEMPT Sat Oct 14 15:13:26 CST 2023",
+   "kallsyms_num_syms": 71717,
+   "kallsyms_name_set_sha256": "9474c9f0cc835902c19cab62d7a18ab4fdbd3515a4ce658010d77bcef3b63e5d",
+   "text_functions": 34644,
+   "vendor_122_present": 119,
+   "vendor_122_absent": [
+    "bta_test_init",
+    "bta_test_waiting_turn_over",
+    "owl_get_dsi_gamma_val"
+   ]
+  },
+  "garlic-in-stock-20231014": {
+   "uimage_sha256": "1942cdac2445802d39415f7abbe50a70952fc0f350c99cc2f6878464183e8e8f",
+   "uimage_size": 5595656,
+   "uimage_timestamp_utc": "2023-04-06T18:32:01+00:00",
+   "uimage_name": "Linux-3.10.37",
+   "load": "0x8000",
+   "image_sha256": "9d6dabe11fa0e876a225531dd22c46d3efa05ccdde73a8fab633c1d14e616c95",
+   "image_size": 11511564,
+   "linux_version": "Linux version 3.10.37 (blackseraph@Pandemonium) (gcc version 4.7.3 20130328 (prerelease) (crosstool-NG linaro-1.13.1-4.7-2013.04-20130415 - Linaro GCC 2013.04) ) #116 SMP PREEMPT Thu Apr 6 20:31:58 CEST 2023",
+   "kallsyms_num_syms": 71716,
+   "kallsyms_name_set_sha256": "05b2ebe691e8338b7858c18569e09bf19a41cbda00ce33c8566ab00b0dc7ffd2",
+   "text_functions": 34641,
+   "vendor_122_present": 119,
+   "vendor_122_absent": [
+    "bta_test_init",
+    "bta_test_waiting_turn_over",
+    "owl_get_dsi_gamma_val"
+   ]
+  },
+  "koriki-v1.0": {
+   "uimage_sha256": "1b792401ae06904c85441a07f7e3b7fe32e80aef2a85211ef529fefee461f174",
+   "uimage_size": 5541472,
+   "uimage_timestamp_utc": "2023-07-17T20:23:52+00:00",
+   "uimage_name": "Linux-3.10.37",
+   "load": "0x8000",
+   "image_sha256": "5883f67328823b10e2e82576d5e043a3ff4c78b2095644250008bf640622fc5e",
+   "image_size": 11533588,
+   "linux_version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #75 SMP PREEMPT Mon Jul 17 20:23:47 UTC 2023",
+   "kallsyms_num_syms": 71514,
+   "kallsyms_name_set_sha256": "538fcc0bcf1bdeda466c4fb8c0f9c90897b7b78c276d61b633c206cacb7f1539",
+   "text_functions": 34604,
+   "vendor_122_present": 122,
+   "vendor_122_absent": []
+  }
+ },
+ "comparisons": {
+  "stock-221203 vs stock-221223": {
+   "format_version": 1,
+   "tool": "kernel_compare.py",
+   "text_base": "0xc0008000",
+   "a_functions": 34641,
+   "b_functions": 34641,
+   "common": 34641,
+   "common_same_size": 34639,
+   "common_same_normalised_body": 34366,
+   "ambiguous_names_excluded": {
+    "a": 281,
+    "b": 281
+   },
+   "note": "a_only/b_only compare exact names; *_base_names strip GCC clone suffixes first",
+   "a_only_base_names_count": 0,
+   "b_only_base_names_count": 0,
+   "a_only_base_names": [],
+   "b_only_base_names": []
+  },
+  "stock-221223 vs stock-230309": {
+   "format_version": 1,
+   "tool": "kernel_compare.py",
+   "text_base": "0xc0008000",
+   "a_functions": 34641,
+   "b_functions": 34644,
+   "common": 34640,
+   "common_same_size": 34631,
+   "common_same_normalised_body": 31570,
+   "ambiguous_names_excluded": {
+    "a": 281,
+    "b": 281
+   },
+   "note": "a_only/b_only compare exact names; *_base_names strip GCC clone suffixes first",
+   "a_only_base_names_count": 1,
+   "b_only_base_names_count": 4,
+   "a_only_base_names": [
+    "__irf_end"
+   ],
+   "b_only_base_names": [
+    "__setup_allen_check_cpu_type",
+    "__setup_str_allen_check_cpu_type",
+    "allen_check_cpu_type",
+    "allen_get_cpu_s500"
+   ]
+  },
+  "stock-230309 vs stock-20231014": {
+   "format_version": 1,
+   "tool": "kernel_compare.py",
+   "text_base": "0xc0008000",
+   "a_functions": 34644,
+   "b_functions": 34644,
+   "common": 34644,
+   "common_same_size": 34644,
+   "common_same_normalised_body": 34530,
+   "ambiguous_names_excluded": {
+    "a": 281,
+    "b": 281
+   },
+   "note": "a_only/b_only compare exact names; *_base_names strip GCC clone suffixes first",
+   "a_only_base_names_count": 0,
+   "b_only_base_names_count": 0,
+   "a_only_base_names": [],
+   "b_only_base_names": []
+  },
+  "garlic-in-stock-20231014 vs stock-230309": {
+   "format_version": 1,
+   "tool": "kernel_compare.py",
+   "text_base": "0xc0008000",
+   "a_functions": 34641,
+   "b_functions": 34644,
+   "common": 34640,
+   "common_same_size": 34597,
+   "common_same_normalised_body": 31458,
+   "ambiguous_names_excluded": {
+    "a": 281,
+    "b": 281
+   },
+   "note": "a_only/b_only compare exact names; *_base_names strip GCC clone suffixes first",
+   "a_only_base_names_count": 1,
+   "b_only_base_names_count": 4,
+   "a_only_base_names": [
+    "__irf_end"
+   ],
+   "b_only_base_names": [
+    "__setup_allen_check_cpu_type",
+    "__setup_str_allen_check_cpu_type",
+    "allen_check_cpu_type",
+    "allen_get_cpu_s500"
+   ]
+  },
+  "stock-20231014 vs koriki-v1.0": {
+   "format_version": 1,
+   "tool": "kernel_compare.py",
+   "text_base": "0xc0008000",
+   "a_functions": 34644,
+   "b_functions": 34604,
+   "common": 32869,
+   "common_same_size": 17792,
+   "common_same_normalised_body": 5601,
+   "ambiguous_names_excluded": {
+    "a": 281,
+    "b": 254
+   },
+   "note": "a_only/b_only compare exact names; *_base_names strip GCC clone suffixes first",
+   "a_only_base_names_count": 913,
+   "b_only_base_names_count": 741
+  }
+ },
+ "subsystem_anchor_presence": {
+  "note": "Presence of one exact anchor symbol per subsystem in recovered kallsyms. Suffix-normalised name diffs alone over-report differences because inlining changes helper symbols.",
+  "table": {
+   "Actions USB port monitor": {
+    "anchor": "umonitor_core_init",
+    "stock-221203": true,
+    "stock-230309": true,
+    "stock-20231014": true,
+    "garlic-in-stock-20231014": true,
+    "koriki-v1.0": false
+   },
+   "USB HAL monitor ops": {
+    "anchor": "usb_hal_set_cmu_usbpll",
+    "stock-221203": true,
+    "stock-230309": true,
+    "stock-20231014": true,
+    "garlic-in-stock-20231014": true,
+    "koriki-v1.0": false
+   },
+   "xHCI host": {
+    "anchor": "xhci_run",
+    "stock-221203": true,
+    "stock-230309": true,
+    "stock-20231014": true,
+    "garlic-in-stock-20231014": true,
+    "koriki-v1.0": false
+   },
+   "USB serial core": {
+    "anchor": "usb_serial_probe",
+    "stock-221203": true,
+    "stock-230309": true,
+    "stock-20231014": true,
+    "garlic-in-stock-20231014": true,
+    "koriki-v1.0": false
+   },
+   "USB CDC ACM host": {
+    "anchor": "acm_probe",
+    "stock-221203": true,
+    "stock-230309": true,
+    "stock-20231014": true,
+    "garlic-in-stock-20231014": true,
+    "koriki-v1.0": false
+   },
+   "ext2": {
+    "anchor": "ext2_fill_super",
+    "stock-221203": true,
+    "stock-230309": true,
+    "stock-20231014": true,
+    "garlic-in-stock-20231014": true,
+    "koriki-v1.0": false
+   },
+   "PWM LED driver": {
+    "anchor": "led_pwm_probe",
+    "stock-221203": true,
+    "stock-230309": true,
+    "stock-20231014": true,
+    "garlic-in-stock-20231014": true,
+    "koriki-v1.0": false
+   },
+   "Owl CPU hotplug policy": {
+    "anchor": "owl_pm_hotplug_init",
+    "stock-221203": true,
+    "stock-230309": true,
+    "stock-20231014": true,
+    "garlic-in-stock-20231014": true,
+    "koriki-v1.0": false
+   },
+   "joystick device (joydev)": {
+    "anchor": "joydev_connect",
+    "stock-221203": true,
+    "stock-230309": true,
+    "stock-20231014": true,
+    "garlic-in-stock-20231014": true,
+    "koriki-v1.0": false
+   },
+   "variant flag": {
+    "anchor": "allen_check_cpu_type",
+    "stock-221203": false,
+    "stock-230309": true,
+    "stock-20231014": true,
+    "garlic-in-stock-20231014": false,
+    "koriki-v1.0": false
+   },
+   "Binder": {
+    "anchor": "binder_ioctl",
+    "stock-221203": true,
+    "stock-230309": true,
+    "stock-20231014": true,
+    "garlic-in-stock-20231014": true,
+    "koriki-v1.0": true
+   },
+   "exFAT": {
+    "anchor": "exfat_fill_super",
+    "stock-221203": true,
+    "stock-230309": true,
+    "stock-20231014": true,
+    "garlic-in-stock-20231014": true,
+    "koriki-v1.0": true
+   },
+   "EHCI host": {
+    "anchor": "ehci_run",
+    "stock-221203": false,
+    "stock-230309": false,
+    "stock-20231014": false,
+    "garlic-in-stock-20231014": false,
+    "koriki-v1.0": true
+   },
+   "Bluetooth USB": {
+    "anchor": "btusb_probe",
+    "stock-221203": false,
+    "stock-230309": false,
+    "stock-20231014": false,
+    "garlic-in-stock-20231014": false,
+    "koriki-v1.0": true
+   },
+   "RFCOMM": {
+    "anchor": "rfcomm_init",
+    "stock-221203": false,
+    "stock-230309": false,
+    "stock-20231014": false,
+    "garlic-in-stock-20231014": false,
+    "koriki-v1.0": true
+   },
+   "fbcon": {
+    "anchor": "fbcon_init",
+    "stock-221203": false,
+    "stock-230309": false,
+    "stock-20231014": false,
+    "garlic-in-stock-20231014": false,
+    "koriki-v1.0": true
+   },
+   "squashfs": {
+    "anchor": "squashfs_fill_super",
+    "stock-221203": false,
+    "stock-230309": false,
+    "stock-20231014": false,
+    "garlic-in-stock-20231014": false,
+    "koriki-v1.0": true
+   },
+   "CVBS output": {
+    "anchor": "cvbs_panel_probe",
+    "stock-221203": false,
+    "stock-230309": false,
+    "stock-20231014": false,
+    "garlic-in-stock-20231014": false,
+    "koriki-v1.0": true
+   },
+   "video decoder (VDE)": {
+    "anchor": "vde_probe",
+    "stock-221203": false,
+    "stock-230309": false,
+    "stock-20231014": false,
+    "garlic-in-stock-20231014": false,
+    "koriki-v1.0": true
+   },
+   "video encoder (VCE)": {
+    "anchor": "vce_probe",
+    "stock-221203": false,
+    "stock-230309": false,
+    "stock-20231014": false,
+    "garlic-in-stock-20231014": false,
+    "koriki-v1.0": true
+   },
+   "i2c-dev": {
+    "anchor": "i2cdev_open",
+    "stock-221203": false,
+    "stock-230309": false,
+    "stock-20231014": false,
+    "garlic-in-stock-20231014": false,
+    "koriki-v1.0": true
+   },
+   "dwc3": {
+    "anchor": "dwc3_probe",
+    "stock-221203": true,
+    "stock-230309": true,
+    "stock-20231014": true,
+    "garlic-in-stock-20231014": true,
+    "koriki-v1.0": true
+   },
+   "Android composite gadget": {
+    "anchor": "android_bind",
+    "stock-221203": true,
+    "stock-230309": true,
+    "stock-20231014": true,
+    "garlic-in-stock-20231014": true,
+    "koriki-v1.0": true
+   }
+  }
+ }
+}

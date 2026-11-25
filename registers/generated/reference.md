@@ -89,7 +89,7 @@ Generated from `registers/canonical/hardware.json`. These are software observati
 | candidate:VIDEO1_BASE | `0xb02e0500` | unknown | related-ATM7039-header | candidate-only | 26 |
 | candidate:VIDEO2_BASE | `0xb02e0600` | unknown | related-ATM7039-header | candidate-only | 26 |
 | candidate:VIDEO3_BASE | `0xb02e0700` | unknown | related-ATM7039-header | candidate-only | 26 |
-| candidate:DMM_BASE | `0xb0290000` | unknown | related-ATM7039-header | candidate-only | 25 |
+| candidate:DMM_BASE | `0xb0290000` | unknown | related-ATM7039-header | candidate-only | 29 |
 | candidate:NAND_BASE | `0xb0210000` | unknown | related-ATM7039-header | candidate-only | 28 |
 | candidate:SD0_BASE | `0xb0230000` | unknown | related-ATM7039-header | candidate-only | 14 |
 | candidate:SD1_BASE | `0xb0234000` | unknown | related-ATM7039-header | candidate-only | 14 |
@@ -127,6 +127,8 @@ Generated from `registers/canonical/hardware.json`. These are software observati
 | candidate:KEY_BASE | `0xb01a0000` | unknown | related-ATM7039-header | candidate-only | 9 |
 | candidate:LENSC_BASE | `0xb0140000` | unknown | related-ATM7039-header | candidate-only | 20 |
 | candidate:GPIO_MFP_PWM_BASE | `0xb01b0000` | unknown | related-ATM7039-header | candidate-only | 69 |
+| firmware:DDR_UPCTL | `0xb01c0000` | unknown | stock-loader-binary | candidate-only | 65 |
+| firmware:DDR_PUBL | `0xb01c8000` | unknown | stock-loader-binary | candidate-only | 29 |
 
 ## dt:/interrupt-controller@b0021000:0
 
@@ -1780,6 +1782,10 @@ Interrupt cells (raw): `[]`. Dependencies: Unknown on ATM7039S; consult vendor c
 | DMM_PC2 | `0x58` | unknown | unknown | unknown | inferred / related-ATM7039-header | 898 |
 | DMM_PC3 | `0x5c` | unknown | unknown | unknown | inferred / related-ATM7039-header | 899 |
 | DMM_DEBUG | `0x60` | unknown | unknown | unknown | inferred / related-ATM7039-header | 900 |
+| DMM_UNNAMED_064 | `0x64` | unknown | unknown | unknown | inferred / stock-loader-binary |  |
+| DMM_UNNAMED_068 | `0x68` | unknown | unknown | unknown | inferred / stock-loader-binary |  |
+| DMM_UNNAMED_080 | `0x80` | unknown | unknown | unknown | inferred / stock-loader-binary |  |
+| DMM_UNNAMED_088 | `0x88` | unknown | unknown | unknown | inferred / stock-loader-binary |  |
 
 ## candidate:NAND_BASE
 
@@ -3510,3 +3516,119 @@ Interrupt cells (raw): `[]`. Dependencies: Unknown on ATM7039S; consult vendor c
 | INTC_GPIOD_TYPE0 | `0x248` | unknown | unknown | unknown | inferred / related-ATM7039-header | 2147 |
 | INTC_GPIOD_TYPE1 | `0x24c` | unknown | unknown | unknown | inferred / related-ATM7039-header | 2148 |
 | INTC_GPIOE_TYPE | `0x250` | unknown | unknown | unknown | inferred / related-ATM7039-header | 2149 |
+
+## firmware:DDR_UPCTL
+
+Block absent from the ATM7039-labelled header and all public RG35XX device trees. Base, offsets and operation order come from static analysis of the Anbernic stock loader; 128 of 129 accesses across both DRAM blocks match the public DesignWare uPCTL layout, which supports but does not prove that IP identity. Field meanings, widths and reset values are unknown on ATM7039S.
+
+Evidence: anbernic-stock-archive::, u-boot-mainline:arch/arm/include/asm/arch-rockchip/ddr_rk3288.h:9
+
+Interrupt cells (raw): `[]`. Dependencies: Bring-up order observed in the stock loader: CMU_DDRPLL enable cleared, CMU_DEVCLKEN0 DDRCH0/DMAC gated, CMU_DEVRST0 DDR/DMAC reset pulsed, clocks re-enabled, DDR PLL reprogrammed, then this block. Never write from a running OS.
+
+| Register | Offset | Width | Access | Reset | Confidence / scope | Source line |
+|---|---|---|---|---|---|---|
+| DDR_UPCTL_SCFG | `0x0` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_SCTL | `0x4` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_STAT | `0x8` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_MCMD | `0x40` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_POWCTL | `0x44` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_POWSTAT | `0x48` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_CMDTSTAT | `0x4c` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TSTATEN | `0x50` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_MCFG1 | `0x7c` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_MCFG | `0x80` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_PPCFG | `0x84` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TOGCNT1U | `0xc0` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TINIT | `0xc4` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TRSTH | `0xc8` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TOGCNT100N | `0xcc` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TREFI | `0xd0` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TMRD | `0xd4` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TRFC | `0xd8` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TRP | `0xdc` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TRTW | `0xe0` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TAL | `0xe4` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TCL | `0xe8` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TCWL | `0xec` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TRAS | `0xf0` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TRC | `0xf4` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TRCD | `0xf8` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TRRD | `0xfc` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TRTP | `0x100` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TWR | `0x104` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TWTR | `0x108` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TEXSR | `0x10c` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TXP | `0x110` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TXPDLL | `0x114` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TZQCS | `0x118` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TZQCSI | `0x11c` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TDQS | `0x120` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TCKSRE | `0x124` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TCKSRX | `0x128` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TCKE | `0x12c` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TMOD | `0x130` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TRSTL | `0x134` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TZQCL | `0x138` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TMRR | `0x13c` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TCKESR | `0x140` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_TDPD | `0x144` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_RESERVED5_0 | `0x148` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_ECCCFG | `0x180` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFITCTRLDELAY | `0x240` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFIODTCFG | `0x244` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFIODTRANKMAP | `0x24c` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFITPHYWRDATA | `0x250` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFITPHYWRLAT | `0x254` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFITRDDATAEN | `0x260` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFITPHYRDLAT | `0x264` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFITPHYUPDTYPE0 | `0x270` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFITCTRLUPDMIN | `0x280` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFITCTRLUPDMAX | `0x284` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFITCTRLUPDDLY | `0x288` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFISTSTAT0 | `0x2c0` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFISTCFG0 | `0x2c4` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFISTCFG1 | `0x2c8` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFITDRAMCLKEN | `0x2d0` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFITDRAMCLKDIS | `0x2d4` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFISTCFG2 | `0x2d8` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_UPCTL_DFILPCFG0 | `0x2f0` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+
+## firmware:DDR_PUBL
+
+Block absent from the ATM7039-labelled header and all public RG35XX device trees. Base, offsets and operation order come from static analysis of the Anbernic stock loader; 128 of 129 accesses across both DRAM blocks match the public DesignWare PUBL layout, which supports but does not prove that IP identity. Field meanings, widths and reset values are unknown on ATM7039S.
+
+Evidence: anbernic-stock-archive::, u-boot-mainline:arch/arm/include/asm/arch-rockchip/ddr_rk3288.h:166
+
+Interrupt cells (raw): `[]`. Dependencies: Bring-up order observed in the stock loader: CMU_DDRPLL enable cleared, CMU_DEVCLKEN0 DDRCH0/DMAC gated, CMU_DEVRST0 DDR/DMAC reset pulsed, clocks re-enabled, DDR PLL reprogrammed, then this block. Never write from a running OS.
+
+| Register | Offset | Width | Access | Reset | Confidence / scope | Source line |
+|---|---|---|---|---|---|---|
+| DDR_PUBL_PIR | `0x4` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_PGCR | `0x8` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_PGSR | `0xc` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_ACDLLCR | `0x14` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_PTR_0 | `0x18` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_PTR_1 | `0x1c` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_PTR_2 | `0x20` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_ACIOCR | `0x24` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DXCCR | `0x28` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DSGCR | `0x2c` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DCR | `0x30` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DTPR_0 | `0x34` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DTPR_1 | `0x38` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DTPR_2 | `0x3c` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_MR_1 | `0x44` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_MR_2 | `0x48` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_ODTCR | `0x50` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DTAR | `0x54` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_ZQ0CR_1 | `0x184` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_ZQ0SR_0 | `0x188` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DATX8_0_DXGCR | `0x1c0` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DATX8_0_DXGSR_0 | `0x1c4` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DATX8_1_DXGCR | `0x200` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DATX8_1_DXGSR_0 | `0x204` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DATX8_2_DXGCR | `0x240` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DATX8_2_DXGSR_0 | `0x244` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DATX8_3_DXGCR | `0x280` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_DATX8_3_DXGSR_0 | `0x284` | unknown | unknown | unknown | inferred / stock-loader-binary; name from public DesignWare layout (hypothesis) |  |
+| DDR_PUBL_UNKNOWN_3FC | `0x3fc` | unknown | unknown | unknown | inferred / stock-loader-binary; outside the public layout |  |

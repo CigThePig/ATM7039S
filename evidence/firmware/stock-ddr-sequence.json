@@ -1,0 +1,981 @@
+{
+ "format_version": 1,
+ "tool": "map_accesses.py",
+ "component_sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+ "accesses": 129,
+ "named": 128,
+ "unnamed": 1,
+ "sequence": [
+  {
+   "offset": 29052,
+   "block": "uPCTL",
+   "register_offset": 8,
+   "register": "stat",
+   "operation": "read"
+  },
+  {
+   "offset": 29116,
+   "block": "uPCTL",
+   "register_offset": 4,
+   "register": "sctl",
+   "operation": "write",
+   "value": "0x4"
+  },
+  {
+   "offset": 29124,
+   "block": "uPCTL",
+   "register_offset": 8,
+   "register": "stat",
+   "operation": "read"
+  },
+  {
+   "offset": 29208,
+   "block": "uPCTL",
+   "register_offset": 4,
+   "register": "sctl",
+   "operation": "write"
+  },
+  {
+   "offset": 29216,
+   "block": "uPCTL",
+   "register_offset": 8,
+   "register": "stat",
+   "operation": "read"
+  },
+  {
+   "offset": 29320,
+   "block": "uPCTL",
+   "register_offset": 8,
+   "register": "stat",
+   "operation": "read"
+  },
+  {
+   "offset": 29356,
+   "block": "uPCTL",
+   "register_offset": 8,
+   "register": "stat",
+   "operation": "read"
+  },
+  {
+   "offset": 29376,
+   "block": "PUBL",
+   "register_offset": 36,
+   "register": "aciocr",
+   "operation": "write",
+   "value": "0x1bfc3c18"
+  },
+  {
+   "offset": 29388,
+   "block": "PUBL",
+   "register_offset": 40,
+   "register": "dxccr",
+   "operation": "write",
+   "value": "0x80c"
+  },
+  {
+   "offset": 29400,
+   "block": "PUBL",
+   "register_offset": 44,
+   "register": "dsgcr",
+   "operation": "write",
+   "value": "0xc5fc0000"
+  },
+  {
+   "offset": 32984,
+   "block": "PUBL",
+   "register_offset": 20,
+   "register": "acdllcr",
+   "operation": "write",
+   "value": "0x0"
+  },
+  {
+   "offset": 33004,
+   "block": "PUBL",
+   "register_offset": 20,
+   "register": "acdllcr",
+   "operation": "write",
+   "value": "0x40000000"
+  },
+  {
+   "offset": 33024,
+   "block": "PUBL",
+   "register_offset": 4,
+   "register": "pir",
+   "operation": "write",
+   "value": "0x10000000"
+  },
+  {
+   "offset": 33032,
+   "block": "PUBL",
+   "register_offset": 4,
+   "register": "pir",
+   "operation": "read"
+  },
+  {
+   "offset": 33052,
+   "block": "uPCTL",
+   "register_offset": 640,
+   "register": "dfitctrlupdmin",
+   "operation": "write",
+   "value": "0x4"
+  },
+  {
+   "offset": 33064,
+   "block": "uPCTL",
+   "register_offset": 644,
+   "register": "dfitctrlupdmax",
+   "operation": "write",
+   "value": "0xa"
+  },
+  {
+   "offset": 33076,
+   "block": "uPCTL",
+   "register_offset": 648,
+   "register": "dfitctrlupddly",
+   "operation": "write",
+   "value": "0x8"
+  },
+  {
+   "offset": 33100,
+   "block": "uPCTL",
+   "register_offset": 192,
+   "register": "togcnt1u",
+   "operation": "write"
+  },
+  {
+   "offset": 33136,
+   "block": "uPCTL",
+   "register_offset": 204,
+   "register": "togcnt100n",
+   "operation": "write"
+  },
+  {
+   "offset": 33148,
+   "block": "uPCTL",
+   "register_offset": 196,
+   "register": "tinit",
+   "operation": "write",
+   "value": "0xc8"
+  },
+  {
+   "offset": 33160,
+   "block": "uPCTL",
+   "register_offset": 200,
+   "register": "trsth",
+   "operation": "write"
+  },
+  {
+   "offset": 33212,
+   "block": "uPCTL",
+   "register_offset": 68,
+   "register": "powctl",
+   "operation": "write",
+   "value": "0x1"
+  },
+  {
+   "offset": 33232,
+   "block": "uPCTL",
+   "register_offset": 72,
+   "register": "powstat",
+   "operation": "read"
+  },
+  {
+   "offset": 33264,
+   "block": "uPCTL",
+   "register_offset": 128,
+   "register": "mcfg",
+   "operation": "write"
+  },
+  {
+   "offset": 33304,
+   "block": "uPCTL",
+   "register_offset": 124,
+   "register": "mcfg1",
+   "operation": "write"
+  },
+  {
+   "offset": 33316,
+   "block": "PUBL",
+   "register_offset": 48,
+   "register": "dcr",
+   "operation": "write"
+  },
+  {
+   "offset": 33356,
+   "block": "PUBL",
+   "register_offset": 68,
+   "register": "mr[1]",
+   "operation": "write"
+  },
+  {
+   "offset": 33368,
+   "block": "PUBL",
+   "register_offset": 72,
+   "register": "mr[2]",
+   "operation": "write"
+  },
+  {
+   "offset": 33380,
+   "block": "PUBL",
+   "register_offset": 24,
+   "register": "ptr[0]",
+   "operation": "write"
+  },
+  {
+   "offset": 33392,
+   "block": "PUBL",
+   "register_offset": 28,
+   "register": "ptr[1]",
+   "operation": "write"
+  },
+  {
+   "offset": 33404,
+   "block": "PUBL",
+   "register_offset": 32,
+   "register": "ptr[2]",
+   "operation": "write"
+  },
+  {
+   "offset": 33416,
+   "block": "PUBL",
+   "register_offset": 52,
+   "register": "dtpr[0]",
+   "operation": "write"
+  },
+  {
+   "offset": 33428,
+   "block": "PUBL",
+   "register_offset": 56,
+   "register": "dtpr[1]",
+   "operation": "write"
+  },
+  {
+   "offset": 33440,
+   "block": "PUBL",
+   "register_offset": 60,
+   "register": "dtpr[2]",
+   "operation": "write"
+  },
+  {
+   "offset": 33452,
+   "block": "PUBL",
+   "register_offset": 84,
+   "register": "dtar",
+   "operation": "write",
+   "value": "0x20000000"
+  },
+  {
+   "offset": 33476,
+   "block": "PUBL",
+   "register_offset": 40,
+   "register": "dxccr",
+   "operation": "write",
+   "value": "0x911"
+  },
+  {
+   "offset": 33488,
+   "block": "PUBL",
+   "register_offset": 80,
+   "register": "odtcr",
+   "operation": "write",
+   "value": "0x21"
+  },
+  {
+   "offset": 33556,
+   "block": "PUBL",
+   "register_offset": 388,
+   "register": "zq0cr[1]",
+   "operation": "write"
+  },
+  {
+   "offset": 33568,
+   "block": "PUBL",
+   "register_offset": 36,
+   "register": "aciocr",
+   "operation": "write",
+   "value": "0xbc03812"
+  },
+  {
+   "offset": 34196,
+   "block": "PUBL",
+   "register_offset": 40,
+   "register": "dxccr",
+   "operation": "write",
+   "value": "0x800"
+  },
+  {
+   "offset": 34208,
+   "block": "PUBL",
+   "register_offset": 80,
+   "register": "odtcr",
+   "operation": "write"
+  },
+  {
+   "offset": 34220,
+   "block": "PUBL",
+   "register_offset": 388,
+   "register": "zq0cr[1]",
+   "operation": "write"
+  },
+  {
+   "offset": 34232,
+   "block": "PUBL",
+   "register_offset": 36,
+   "register": "aciocr",
+   "operation": "write",
+   "value": "0xbc3f8f6"
+  },
+  {
+   "offset": 34244,
+   "block": "PUBL",
+   "register_offset": 448,
+   "register": "datx8[0].dxgcr",
+   "operation": "clear-bits",
+   "mask": "0x786"
+  },
+  {
+   "offset": 34256,
+   "block": "PUBL",
+   "register_offset": 512,
+   "register": "datx8[1].dxgcr",
+   "operation": "clear-bits",
+   "mask": "0x786"
+  },
+  {
+   "offset": 34268,
+   "block": "PUBL",
+   "register_offset": 576,
+   "register": "datx8[2].dxgcr",
+   "operation": "clear-bits",
+   "mask": "0x786"
+  },
+  {
+   "offset": 34280,
+   "block": "PUBL",
+   "register_offset": 640,
+   "register": "datx8[3].dxgcr",
+   "operation": "clear-bits",
+   "mask": "0x786"
+  },
+  {
+   "offset": 34304,
+   "block": "PUBL",
+   "register_offset": 80,
+   "register": "odtcr",
+   "operation": "set-bits",
+   "mask": "0x210000"
+  },
+  {
+   "offset": 34328,
+   "block": "PUBL",
+   "register_offset": 576,
+   "register": "datx8[2].dxgcr",
+   "operation": "set-bits",
+   "mask": "0x1"
+  },
+  {
+   "offset": 34340,
+   "block": "PUBL",
+   "register_offset": 640,
+   "register": "datx8[3].dxgcr",
+   "operation": "set-bits",
+   "mask": "0x1"
+  },
+  {
+   "offset": 34360,
+   "block": "PUBL",
+   "register_offset": 640,
+   "register": "datx8[3].dxgcr",
+   "operation": "clear-bits",
+   "mask": "0x1"
+  },
+  {
+   "offset": 34388,
+   "block": "PUBL",
+   "register_offset": 392,
+   "register": "zq0sr[0]",
+   "operation": "read"
+  },
+  {
+   "offset": 34420,
+   "block": "PUBL",
+   "register_offset": 1020,
+   "register": null,
+   "operation": "write",
+   "value": "0x1"
+  },
+  {
+   "offset": 34448,
+   "block": "PUBL",
+   "register_offset": 44,
+   "register": "dsgcr",
+   "operation": "write"
+  },
+  {
+   "offset": 34472,
+   "block": "PUBL",
+   "register_offset": 12,
+   "register": "pgsr",
+   "operation": "read"
+  },
+  {
+   "offset": 34520,
+   "block": "PUBL",
+   "register_offset": 8,
+   "register": "pgcr",
+   "operation": "write"
+  },
+  {
+   "offset": 34560,
+   "block": "PUBL",
+   "register_offset": 4,
+   "register": "pir",
+   "operation": "write"
+  },
+  {
+   "offset": 34568,
+   "block": "PUBL",
+   "register_offset": 12,
+   "register": "pgsr",
+   "operation": "read"
+  },
+  {
+   "offset": 34620,
+   "block": "uPCTL",
+   "register_offset": 64,
+   "register": "mcmd",
+   "operation": "write"
+  },
+  {
+   "offset": 34628,
+   "block": "uPCTL",
+   "register_offset": 64,
+   "register": "mcmd",
+   "operation": "read"
+  },
+  {
+   "offset": 34680,
+   "block": "uPCTL",
+   "register_offset": 64,
+   "register": "mcmd",
+   "operation": "write"
+  },
+  {
+   "offset": 34688,
+   "block": "uPCTL",
+   "register_offset": 64,
+   "register": "mcmd",
+   "operation": "read"
+  },
+  {
+   "offset": 34716,
+   "block": "PUBL",
+   "register_offset": 4,
+   "register": "pir",
+   "operation": "write",
+   "value": "0x81"
+  },
+  {
+   "offset": 34724,
+   "block": "PUBL",
+   "register_offset": 12,
+   "register": "pgsr",
+   "operation": "read"
+  },
+  {
+   "offset": 34764,
+   "block": "uPCTL",
+   "register_offset": 704,
+   "register": "dfiststat0",
+   "operation": "read"
+  },
+  {
+   "offset": 34784,
+   "block": "uPCTL",
+   "register_offset": 212,
+   "register": "tmrd",
+   "operation": "write"
+  },
+  {
+   "offset": 34796,
+   "block": "uPCTL",
+   "register_offset": 216,
+   "register": "trfc",
+   "operation": "write"
+  },
+  {
+   "offset": 34808,
+   "block": "uPCTL",
+   "register_offset": 220,
+   "register": "trp",
+   "operation": "write"
+  },
+  {
+   "offset": 34820,
+   "block": "uPCTL",
+   "register_offset": 228,
+   "register": "tal",
+   "operation": "write",
+   "value": "0x0"
+  },
+  {
+   "offset": 34832,
+   "block": "uPCTL",
+   "register_offset": 232,
+   "register": "tcl",
+   "operation": "write"
+  },
+  {
+   "offset": 34844,
+   "block": "uPCTL",
+   "register_offset": 236,
+   "register": "tcwl",
+   "operation": "write"
+  },
+  {
+   "offset": 34856,
+   "block": "uPCTL",
+   "register_offset": 240,
+   "register": "tras",
+   "operation": "write"
+  },
+  {
+   "offset": 34868,
+   "block": "uPCTL",
+   "register_offset": 244,
+   "register": "trc",
+   "operation": "write"
+  },
+  {
+   "offset": 34880,
+   "block": "uPCTL",
+   "register_offset": 248,
+   "register": "trcd",
+   "operation": "write"
+  },
+  {
+   "offset": 34892,
+   "block": "uPCTL",
+   "register_offset": 252,
+   "register": "trrd",
+   "operation": "write"
+  },
+  {
+   "offset": 34904,
+   "block": "uPCTL",
+   "register_offset": 256,
+   "register": "trtp",
+   "operation": "write"
+  },
+  {
+   "offset": 34916,
+   "block": "uPCTL",
+   "register_offset": 260,
+   "register": "twr",
+   "operation": "write"
+  },
+  {
+   "offset": 34928,
+   "block": "uPCTL",
+   "register_offset": 264,
+   "register": "twtr",
+   "operation": "write"
+  },
+  {
+   "offset": 34940,
+   "block": "uPCTL",
+   "register_offset": 268,
+   "register": "texsr",
+   "operation": "write"
+  },
+  {
+   "offset": 34956,
+   "block": "uPCTL",
+   "register_offset": 208,
+   "register": "trefi",
+   "operation": "write"
+  },
+  {
+   "offset": 34968,
+   "block": "uPCTL",
+   "register_offset": 328,
+   "register": "reserved5[0]",
+   "operation": "write"
+  },
+  {
+   "offset": 34980,
+   "block": "uPCTL",
+   "register_offset": 272,
+   "register": "txp",
+   "operation": "write"
+  },
+  {
+   "offset": 34992,
+   "block": "uPCTL",
+   "register_offset": 288,
+   "register": "tdqs",
+   "operation": "write"
+  },
+  {
+   "offset": 35004,
+   "block": "uPCTL",
+   "register_offset": 224,
+   "register": "trtw",
+   "operation": "write"
+  },
+  {
+   "offset": 35016,
+   "block": "uPCTL",
+   "register_offset": 292,
+   "register": "tcksre",
+   "operation": "write"
+  },
+  {
+   "offset": 35028,
+   "block": "uPCTL",
+   "register_offset": 296,
+   "register": "tcksrx",
+   "operation": "write"
+  },
+  {
+   "offset": 35040,
+   "block": "uPCTL",
+   "register_offset": 304,
+   "register": "tmod",
+   "operation": "write"
+  },
+  {
+   "offset": 35052,
+   "block": "uPCTL",
+   "register_offset": 300,
+   "register": "tcke",
+   "operation": "write"
+  },
+  {
+   "offset": 35064,
+   "block": "uPCTL",
+   "register_offset": 316,
+   "register": "tmrr",
+   "operation": "write"
+  },
+  {
+   "offset": 35076,
+   "block": "uPCTL",
+   "register_offset": 308,
+   "register": "trstl",
+   "operation": "write"
+  },
+  {
+   "offset": 35088,
+   "block": "uPCTL",
+   "register_offset": 280,
+   "register": "tzqcs",
+   "operation": "write"
+  },
+  {
+   "offset": 35100,
+   "block": "uPCTL",
+   "register_offset": 312,
+   "register": "tzqcl",
+   "operation": "write"
+  },
+  {
+   "offset": 35112,
+   "block": "uPCTL",
+   "register_offset": 276,
+   "register": "txpdll",
+   "operation": "write"
+  },
+  {
+   "offset": 35124,
+   "block": "uPCTL",
+   "register_offset": 284,
+   "register": "tzqcsi",
+   "operation": "write"
+  },
+  {
+   "offset": 35136,
+   "block": "uPCTL",
+   "register_offset": 320,
+   "register": "tckesr",
+   "operation": "write"
+  },
+  {
+   "offset": 35148,
+   "block": "uPCTL",
+   "register_offset": 324,
+   "register": "tdpd",
+   "operation": "write"
+  },
+  {
+   "offset": 35180,
+   "block": "uPCTL",
+   "register_offset": 64,
+   "register": "mcmd",
+   "operation": "write"
+  },
+  {
+   "offset": 35188,
+   "block": "uPCTL",
+   "register_offset": 64,
+   "register": "mcmd",
+   "operation": "read"
+  },
+  {
+   "offset": 35228,
+   "block": "uPCTL",
+   "register_offset": 64,
+   "register": "mcmd",
+   "operation": "write"
+  },
+  {
+   "offset": 35236,
+   "block": "uPCTL",
+   "register_offset": 64,
+   "register": "mcmd",
+   "operation": "read"
+  },
+  {
+   "offset": 35264,
+   "block": "uPCTL",
+   "register_offset": 0,
+   "register": "scfg",
+   "operation": "write",
+   "value": "0x700"
+  },
+  {
+   "offset": 35276,
+   "block": "uPCTL",
+   "register_offset": 612,
+   "register": "dfitphyrdlat",
+   "operation": "write",
+   "value": "0xa"
+  },
+  {
+   "offset": 35288,
+   "block": "uPCTL",
+   "register_offset": 592,
+   "register": "dfitphywrdata",
+   "operation": "write",
+   "value": "0x0"
+  },
+  {
+   "offset": 35308,
+   "block": "uPCTL",
+   "register_offset": 132,
+   "register": "ppcfg",
+   "operation": "write"
+  },
+  {
+   "offset": 35332,
+   "block": "uPCTL",
+   "register_offset": 588,
+   "register": "dfiodtrankmap",
+   "operation": "write"
+  },
+  {
+   "offset": 35344,
+   "block": "uPCTL",
+   "register_offset": 708,
+   "register": "dfistcfg0",
+   "operation": "write",
+   "value": "0x7"
+  },
+  {
+   "offset": 35356,
+   "block": "uPCTL",
+   "register_offset": 712,
+   "register": "dfistcfg1",
+   "operation": "write",
+   "value": "0x3"
+  },
+  {
+   "offset": 35368,
+   "block": "uPCTL",
+   "register_offset": 728,
+   "register": "dfistcfg2",
+   "operation": "write",
+   "value": "0x3"
+  },
+  {
+   "offset": 35380,
+   "block": "uPCTL",
+   "register_offset": 752,
+   "register": "dfilpcfg0",
+   "operation": "write",
+   "value": "0x70101"
+  },
+  {
+   "offset": 35392,
+   "block": "uPCTL",
+   "register_offset": 384,
+   "register": "ecccfg",
+   "operation": "write",
+   "value": "0x0"
+  },
+  {
+   "offset": 35404,
+   "block": "uPCTL",
+   "register_offset": 596,
+   "register": "dfitphywrlat",
+   "operation": "write"
+  },
+  {
+   "offset": 35416,
+   "block": "uPCTL",
+   "register_offset": 608,
+   "register": "dfitrddataen",
+   "operation": "write"
+  },
+  {
+   "offset": 35428,
+   "block": "uPCTL",
+   "register_offset": 724,
+   "register": "dfitdramclkdis",
+   "operation": "write",
+   "value": "0x2"
+  },
+  {
+   "offset": 35440,
+   "block": "uPCTL",
+   "register_offset": 720,
+   "register": "dfitdramclken",
+   "operation": "write",
+   "value": "0x2"
+  },
+  {
+   "offset": 35452,
+   "block": "uPCTL",
+   "register_offset": 576,
+   "register": "dfitctrldelay",
+   "operation": "write",
+   "value": "0x2"
+  },
+  {
+   "offset": 35464,
+   "block": "uPCTL",
+   "register_offset": 624,
+   "register": "dfitphyupdtype0",
+   "operation": "write",
+   "value": "0x1"
+  },
+  {
+   "offset": 35488,
+   "block": "uPCTL",
+   "register_offset": 580,
+   "register": "dfiodtcfg",
+   "operation": "write",
+   "value": "0x808"
+  },
+  {
+   "offset": 35512,
+   "block": "uPCTL",
+   "register_offset": 580,
+   "register": "dfiodtcfg",
+   "operation": "set-bits",
+   "mask": "0x202"
+  },
+  {
+   "offset": 35524,
+   "block": "uPCTL",
+   "register_offset": 80,
+   "register": "tstaten",
+   "operation": "write",
+   "value": "0x1"
+  },
+  {
+   "offset": 35532,
+   "block": "uPCTL",
+   "register_offset": 76,
+   "register": "cmdtstat",
+   "operation": "read"
+  },
+  {
+   "offset": 35548,
+   "block": "uPCTL",
+   "register_offset": 8,
+   "register": "stat",
+   "operation": "read"
+  },
+  {
+   "offset": 35604,
+   "block": "uPCTL",
+   "register_offset": 64,
+   "register": "mcmd",
+   "operation": "write"
+  },
+  {
+   "offset": 35612,
+   "block": "uPCTL",
+   "register_offset": 64,
+   "register": "mcmd",
+   "operation": "read"
+  },
+  {
+   "offset": 35676,
+   "block": "uPCTL",
+   "register_offset": 124,
+   "register": "mcfg1",
+   "operation": "set-bits"
+  },
+  {
+   "offset": 35692,
+   "block": "uPCTL",
+   "register_offset": 8,
+   "register": "stat",
+   "operation": "read"
+  },
+  {
+   "offset": 36708,
+   "block": "PUBL",
+   "register_offset": 452,
+   "register": "datx8[0].dxgsr[0]",
+   "operation": "read"
+  },
+  {
+   "offset": 36720,
+   "block": "PUBL",
+   "register_offset": 516,
+   "register": "datx8[1].dxgsr[0]",
+   "operation": "read"
+  },
+  {
+   "offset": 36732,
+   "block": "PUBL",
+   "register_offset": 580,
+   "register": "datx8[2].dxgsr[0]",
+   "operation": "read"
+  },
+  {
+   "offset": 36744,
+   "block": "PUBL",
+   "register_offset": 644,
+   "register": "datx8[3].dxgsr[0]",
+   "operation": "read"
+  }
+ ],
+ "layouts": [
+  {
+   "label": "uPCTL",
+   "base": "0xb01c0000",
+   "struct": "rk3288_ddr_pctl",
+   "header_sha256": "80567289822de6026fc0342695bcc45b01f86bec2f0ac7d52f2aa98316aca291",
+   "layout_bytes": 1024,
+   "matched_span": 32768
+  },
+  {
+   "label": "PUBL",
+   "base": "0xb01c8000",
+   "struct": "rk3288_ddr_publ",
+   "header_sha256": "80567289822de6026fc0342695bcc45b01f86bec2f0ac7d52f2aa98316aca291",
+   "layout_bytes": 704,
+   "matched_span": 32768
+  }
+ ],
+ "component": "stock-20231014 PACK member bootloader.bin (0x33c00 bytes, load 0xb4060000); offsets are member-relative",
+ "component_member_sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
+ "helpers": "--write-helper 0xb40670e8:r0:r1 --write-helper 0xb4065548:r0:r1 --write-helper 0xb4069194:r0:r1 --read-helper 0xb40670f0:r0 --read-helper 0xb406919c:r0 --clear-helper 0xb4067120:r0:r1 --set-helper 0xb4067140:r0:r1 --rmw-helper 0xb40670f8:r0:r1:r2 --rmw-helper 0xb4065550:r0:r1:r2",
+ "layout_source": "u-boot/u-boot 9d67454e920b3908529c9fc642a8c911db040896 arch/arm/include/asm/arch-rockchip/ddr_rk3288.h struct rk3288_ddr_pctl / rk3288_ddr_publ",
+ "reproduce": "mmio_refs.py bootloader.bin OUT --load 0xb4060000 --range 0x0:0x400 --range 0x2400:0x3800 --range 0x5400:0x19000; map_accesses.py OUT SEQ --block uPCTL:0xb01c0000:HEADER:rk3288_ddr_pctl:0x8000 --block PUBL:0xb01c8000:HEADER:rk3288_ddr_publ:0x8000 HELPERS",
+ "interpretation": "128 of 129 accesses land on registers named by the public DesignWare uPCTL/PUBL layout; PUBL+0x3fc lies outside it. This supports, but does not prove, that the ATM7039S DRAM controller and PHY use that IP. Operands are static constants; computed values (timings derived from bootloader.ini) are absent; conditional paths are listed without knowing which executes."
+}

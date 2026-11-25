@@ -95,3 +95,34 @@ See [firmware reproduction](../reports/firmware-analysis.md) for exact commands 
 | `validate_firmware.py` | Binary finding hash/range links and manifest integrity | Checks retained evidence, not hardware or availability of external inputs |
 
 The S500 CMU comparison fields are curated in `comparisons/cmu-fields.json` and applied by build_dataset.py without promoting target register reset/access values. Regeneration now preserves extra curated source/file provenance records; the previous builder would have silently dropped new records outside its fixed extraction list. This correction has a regression test.
+
+## Stock-firmware and binary-analysis tools
+
+Install `requirements-dev.txt`, `requirements-firmware.txt` and `capstone==5.0.6` in an isolated venv. RAR extraction needs `bsdtar` (libarchive) or `unar`. Ghidra is optional (11.4.2 headless with JDK 21 was used). Every tool reads ordinary files, writes only new outputs, and never executes input code. Tests use synthetic fixtures (`tests/test_stock_tools.py`).
+
+| Tool | Purpose | Deliberate limits |
+|---|---|---|
+| `acquire_firmware.py SOURCE OUT [--filename F] [--expand]` | Now also expands ZIP/RAR/7z by one pinned `expanded_member`, checked against the expanded SHA-256; `--filename` selects among several entries of one source; `max_bytes` raises the 8 GiB ceiling per entry | One named member only; never auto-extracts archives |
+| `archive_members.py list/extract` | Safe member listing and single-member streaming extraction (zipfile; bsdtar → unar → 7z fallback for RAR) | Rejects traversal, absolute/backslash/drive names, duplicates, symlinks/devices, oversize; deletes partial output |
+| `image_inventory.py IMAGE OUT [--summary-only P] [--include P:/prefix] [--allow-truncated] [--extract LIST DIR]` | MBR or GPT (CRCs, backup header, bounds, overlap), hashed raw regions with signatures, full FAT/ext file hashing, bounded extraction verified against the inventory hash | Truncated GPT images need an explicit flag; partitions past the end are listed, not read; out-of-scope partitions can be counted only |
+| `actions_loader.py REGION OUT` | Actions raw-loader parser: ActBrm trailer checksum rule, PACK directory, `bootloader.ini` DRAM/UART record | Layout recovered from observed releases, not a vendor spec |
+| `mmio_refs.py COMP OUT --load A [--range S:E] [--io-map V:P:S] [--functions F]` | Capstone A32/T32 sweep with constant propagation; MMIO loads/stores and accessor call arguments; canonical-model name lookup with ambiguity flag | Dataflow reset at branch targets and calls; candidates, not proven executions |
+| `map_accesses.py REFS OUT --block L:BASE:HDR:STRUCT[:SPAN] [--write/read/set/clear/rmw-helper ...]` | Names accesses from a public C register struct, in program order, with declared helper semantics | u32/array/nested-struct members only; names are layout hypotheses |
+| `kernel_compare.py A SYMS_A B SYMS_B OUT` | Function sets, sizes and normalised-body equality (A32 branch immediates and kernel-VA literals masked), GCC-suffix-normalised name diffs | Sizes are upper bounds; body inequality is not behavioural difference |
+| `ghidra_headless.py COMP OUT --ghidra DIR --base A [--entry E]` + `ghidra/*.java` | Throw-away Ghidra project; exports function extents, call edges and window constants | Never exports decompiler output or disassembly text |
+| `apply_firmware_registers.py` | Idempotently merges `registers/curated/firmware-observations.json` into the canonical model (also run by `build_dataset.py`) | Never sets widths, access, reset or hardware validation |
+
+Reproduce the stock analysis from an externally supplied image (hashes in `evidence/firmware/acquisitions.json`):
+
+```sh
+python tools/image_inventory.py stock-20231014.img inv.json --include ROMS:/CFW
+python -c "f=open('stock-20231014.img','rb');f.seek(0x200200);open('loader.bin','wb').write(f.read(448*512))"
+python tools/actions_loader.py loader.bin loaders.json
+python -c "open('bootloader.bin','wb').write(open('loader.bin','rb').read()[:0x33c00])"
+python tools/mmio_refs.py bootloader.bin refs.json --load 0xb4060000 --range 0x0:0x400 --range 0x2400:0x3800 --range 0x5400:0x19000
+python tools/map_accesses.py refs.json ddr.json --block uPCTL:0xb01c0000:ddr_rk3288.h:rk3288_ddr_pctl:0x8000 \
+  --block PUBL:0xb01c8000:ddr_rk3288.h:rk3288_ddr_publ:0x8000 --write-helper 0xb40670e8:r0:r1 --read-helper 0xb40670f0:r0 \
+  --clear-helper 0xb4067120:r0:r1 --set-helper 0xb4067140:r0:r1 --rmw-helper 0xb40670f8:r0:r1:r2
+```
+
+Compare outputs with `evidence/firmware/stock-loaders.json` and `stock-ddr-sequence.json`. The kernel scans use `--load 0xc0008000 --io-map 0xf8000000:0xb0000000:0x04000000` with function boundaries from `kallsyms.py`.

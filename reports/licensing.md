@@ -27,3 +27,14 @@ Remaining audit tasks: per-file notices for any proposed imported driver, actual
 ## Offline firmware continuation
 
 The Koriki disk image, boot-fix archive, bootloader region, modules, userspace libraries and compiler archive were acquired only as external research inputs. This PR includes independently written analysis, hashes, format/ELF metadata, bounded reference inventories and reproducible tools. It includes no firmware image, binary component, third-party library, PDF, bulk decompilation or substantial disassembly. Public download availability and a module's license metadata do not grant rights over the whole distribution. Original project additions remain MIT; external sources retain their own terms. Arm toolchain binaries and third-party parser dependencies are not vendored into this repository.
+
+## Anbernic stock firmware
+
+The four stock releases are proprietary manufacturer firmware obtained from a public community mirror (archive.org) for research. The manufacturer's own Drive copy could not be downloaded, and no manufacturer licence or redistribution statement accompanies the files. Treatment:
+
+- No image, partition, loader block, U-Boot, kernel, module, library, emulator, launcher, logo, BIOS or ROM is committed. ROM-partition contents other than the `/CFW` system tree were neither listed nor hashed.
+- Committed: SHA-256 hashes, sizes, paths, ELF/modinfo metadata, partition and container structure, short factual strings needed as evidence (version strings, a printf format, property names), offsets, and register addresses/values with operation order.
+- The DRAM sequence file is a register-level summary (address, operation, static operand), not disassembly. No decompiler output is committed. The Ghidra export contains function extents, call edges and constants only, with generated names removed.
+- The stock kernel is GPL-2.0 software distributed without accompanying source in these archives. Its binary is not redistributed here. Requesting source from the vendor is a separate, non-technical step.
+- The DesignWare uPCTL/PUBL layout is referenced from GPL-2.0+ U-Boot for offset comparison. No code was imported, and register names in the canonical model are labelled as hypotheses derived from that layout.
+- GarlicOS components found inside the dual-system image are treated like stock: hashes and metadata only, attributed to Black Seraph (GarlicOS).

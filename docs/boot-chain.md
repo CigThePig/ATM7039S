@@ -54,3 +54,18 @@ Stock, GarlicOS 1.4.9, historical Koriki and current KNULLI are not interchangea
 ## Continuation: hash-identified release evidence
 
 The next acquisition was completed for Koriki v1.0: a full image verifies both recipe offsets, and its early region contains an AFI writer matching released U-Boot consumers. See [firmware analysis](../reports/firmware-analysis.md) and [AFI handoff](afi-handoff.md). The source-stage table above remains a description of the original source baseline, not a release trace. ROM media rules, DDR training, final memory fixups and stock/Garlic equivalence remain unresolved.
+
+## Stock firmware reconstruction
+
+Four Anbernic stock releases are now hash-identified and analysed ([dossier](../reports/anbernic-stock-reverse-engineering.md), FW-014..017, BOOT-009..011, MEM-005, DDR-001). The stage map above is superseded for stock by:
+
+| Stage | Stock evidence | Status |
+|---|---|---|
+| Boot ROM | Not in the image | Unknown |
+| Raw loader at sector 4097 (448 sectors) | ActBrm-checksummed blocks + `PACK` directory: `bootloader.bin` @ `0xb4060000`, `bootloader.ini` @ `0xb4062400`, `app.bin` @ `0x1000` | Verified layout (BOOT-009) |
+| SRAM stage (`bootloader.bin`) | PLL setup (core/dev 600 MHz), PMIC early init, **DRAM init via uPCTL `0xb01c0000` + PUBL `0xb01c8000`**, AFI producer | Strongly supported (DDR-001, MEM-005) |
+| DRAM stage (`app.bin`) | Storage drivers; loads and checksums U-Boot | Verified strings/refs; identical in all releases |
+| U-Boot 2015.04 | GPIOC6 variant strap → `allenS500=1`; `bootcmd=run ramboot` | BOOT-011; kernel/ramdisk/DTB loader still unknown (BOOT-007) |
+| Kernel 3.10.37 (flower, GCC 4.7.3) | Android init; host-mode USB; launcher `dmenu.bin` | FW-016, USB-002, UI-002 |
+
+The disk image is GPT-partitioned (MISC/SYSTEM/CONFIG/ROMS) but keeps the same raw offsets as the CFW recipe. Koriki v1.0's whole pre-kernel chain (loader window and U-Boot) is byte-identical to stock 230309 (BOOT-010).
