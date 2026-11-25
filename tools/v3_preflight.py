@@ -47,6 +47,12 @@ BOOT_FILES = {'uImage': 'uImage', 'adb_uImage': 'adb_uImage', 'KERNEL.DTB': 'ker
               'uEnv.txt': 'uEnv.txt', 'batocera-boot.conf': 'batocera-boot.conf', '2100mAh-gpu.dtb': '2100mAh-gpu.dtb',
               '2600mAh-gpu.dtb': '2600mAh-gpu.dtb'}
 SAFE_SCRIPT_NAME = re.compile(r'[A-Za-z0-9._-]+\.sh')
+# Files and folders computers add to FAT cards on their own (Windows, macOS).
+OS_METADATA = {'system volume information', '.spotlight-v100', '.fseventsd', '.trashes', '.ds_store', '.temporaryitems'}
+
+
+def os_metadata(name):
+    return name.lower() in OS_METADATA or name.startswith('._')
 
 # Static lint: none of these may appear in the script outside comments.
 PROHIBITED = [
@@ -258,7 +264,7 @@ def check_boot_dir(folder, root=ROOT):
         out.append(result('card-overclocking', 'PASS' if oc in (None, 'none') else 'FAIL',
                           'overclocking unset' if oc is None else f'overclocking={oc}: must stay unset for the baseline'))
     extra = sorted(p.name for p in folder.iterdir() if p.name.lower() not in {n.lower() for n in BOOT_FILES}
-                   | {'boot', 'tools', 'boot_logo.bmp.gz', 'system volume information'})
+                   | {'boot', 'tools', 'boot_logo.bmp.gz'} and not os_metadata(p.name))
     out.append(result('card-boot-extra', 'WARN' if extra else 'PASS',
                       ('files not in the pinned image: ' + ', '.join(extra)) if extra else 'no extra top-level files'))
     marker = folder / 'boot' / 'autoresize'
@@ -274,7 +280,11 @@ def check_share_dir(folder, root=ROOT):
     if not ports.is_dir():
         return [result('card-ports', 'FAIL', f'{ports} does not exist: create roms/ports on the SHARE partition')]
     current = next(v for v in rc.known_versions(root) if v['status'] == 'current')
-    scripts = sorted(p for p in ports.iterdir() if p.is_file() and p.suffix.lower() == '.sh')
+    apple = sorted(p.name for p in ports.iterdir() if p.name.startswith('._'))
+    if apple:
+        out.append(result('card-macos-files', 'WARN', 'macOS metadata files in roms/ports would show up as extra menu '
+                          'entries: ' + ', '.join(apple) + '. Delete them (dot_clean -m on the folder, or rm).'))
+    scripts = sorted(p for p in ports.iterdir() if p.is_file() and p.suffix.lower() == '.sh' and not p.name.startswith('._'))
     matches = [p for p in scripts if file_sha(p) == current['sha256']]
     if len(matches) == 1 and len(scripts) == 1:
         out.append(result('card-script', 'PASS', f'{matches[0].name} is capture script version {current["version"]}'))

@@ -4,6 +4,8 @@
 
 **Running it on a device is test V3 in the [validation plan](../reports/hardware-validation-plan.md). It needs the device owner's explicit approval for that session.** Nothing in this repository grants that approval. The [readiness report](../reports/v3-hardware-validation-readiness.md) explains what was checked and what is still uncertain.
 
+For a fully detailed walkthrough, see **[V3-STEP-BY-STEP.md](V3-STEP-BY-STEP.md)**.
+
 The whole session is seven steps: verify and prepare a spare card, copy the script, boot normally, run one capture, shut down, copy the results, and analyse them on the computer.
 
 ## Before you start
@@ -11,7 +13,7 @@ The whole session is seven steps: verify and prepare a spare card, copy the scri
 | Requirement | Why |
 |---|---|
 | An **original 2022–2023 RG35XX** (Actions ATM7039S). Not the RG35XX Plus/H/SP/2024 or any H700 model. | Everything here was reconstructed for the ATM7039S. |
-| A **separate spare microSD card**, 4 GB or larger, that you are happy to erase. | It will be overwritten. **Never use the owner's GarlicOS card or the failing original card.** Keep both away from the computer while you image. |
+| A **separate spare microSD card**, 8 GB or larger, that you are happy to erase. The image is 4.30 GB, which does not fit on a "4 GB" card. | It will be overwritten. **Never use the owner's GarlicOS card or the failing original card.** Keep both away from the computer while you image. |
 | **Koriki v1.0** (`koriki-rg35xx-v1.0_20231112.img.gz`), fetched and checked by the tools below. | It is the only firmware whose every boot component is catalogued here ([why](../reports/test-firmware-selection.md)). |
 | Python 3.11+ with `pip install -r requirements-dev.txt -r requirements-firmware.txt`. | For the checks and the analysis. |
 | The handheld's battery charged beforehand, and **no charging cable during the test**. | Charging selects a different boot path (240 MHz cap, backlight off). |
@@ -95,7 +97,7 @@ The **raw folder is private**. It contains the board serial number (in the comma
 
 ### Handing over the evidence
 
-Send `summary.json`, `summary.md`, the two preflight outputs, the board revision printed on the circuit board if known (otherwise `unknown`), the date, and a note of anything that deviated from this procedure. The repository then records an observation in `evidence/observations.json` (below).
+Send `summary.json`, `summary.md`, the two preflight outputs, the board revision if it is already known (otherwise `unknown`; do not open the device to find it), the date, and a note of anything that deviated from this procedure. The repository then records an observation in `evidence/observations.json` (below).
 
 ## For maintainers: turning a capture into evidence
 

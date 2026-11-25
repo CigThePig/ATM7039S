@@ -77,6 +77,18 @@ class CardChecks(unittest.TestCase):
         self.assertEqual(r['card-script-name']['status'], 'FAIL')
         self.assertEqual(r['card-earlier-captures']['status'], 'WARN')
 
+    def test_macos_metadata(self):
+        shutil.copy(SCRIPT, self.share / 'roms/ports/ATM7039S-capture.sh')
+        (self.share / 'roms/ports/._ATM7039S-capture.sh').write_bytes(b'\0\x05\x16\x07')
+        r = by_id(pf.check_share_dir(self.share))
+        self.assertEqual(r['card-script']['status'], 'PASS')
+        self.assertEqual(r['card-macos-files']['status'], 'WARN')
+        boot = self.tmp / 'BOOT'
+        boot.mkdir()
+        (boot / '.Spotlight-V100').mkdir()
+        (boot / '._uImage').write_bytes(b'x')
+        self.assertEqual(by_id(pf.check_boot_dir(boot))['card-boot-extra']['status'], 'PASS')
+
     def test_missing_ports_folder(self):
         shutil.rmtree(self.share / 'roms')
         self.assertEqual(pf.check_share_dir(self.share)[0]['status'], 'FAIL')
