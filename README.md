@@ -54,7 +54,7 @@ A manufacturer-branded **329-page S500 document** was found and catalogued, with
 | Linux compatibility report | [driver assessment](reports/linux-compatibility.md), [structured report](reports/linux-compatibility.json) |
 | Reusable tools | [commands, installation and reproduction](tools/README.md) |
 | Coverage/gaps | [coverage](reports/coverage-matrix.md), [gaps](reports/knowledge-gaps.md) |
-| Hardware validation plan | [proposed tests; none executed](reports/hardware-validation-plan.md) |
+| Hardware validation plan | [proposed tests; none executed](reports/hardware-validation-plan.md); [V3 readiness (PR #7)](reports/v3-hardware-validation-readiness.md) |
 | Continuation roadmap | [ranked tasks](reports/next-investigations.md) |
 
 ## Reproduce and validate
