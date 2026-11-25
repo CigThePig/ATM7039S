@@ -184,6 +184,165 @@
       "inode": 26288,
       "size": 234,
       "sha256": "2c2652e074e7036090bb7154f246fbcb92c73935f871989bc73875a1c69fd528"
+    },
+    {
+      "id": "busybox",
+      "path": "/bin/busybox",
+      "inode": 18,
+      "size": 874132,
+      "sha256": "d43cac34bdffb5d89cd9505a8f1ccf82b7b716e87702d8c8dbfbd41ccc9aba23",
+      "elf": {
+        "machine": "EM_ARM",
+        "elf_class": 32,
+        "little_endian": true,
+        "type": "ET_DYN",
+        "needed": [
+          "libresolv.so.2",
+          "libc.so.6",
+          "ld-linux-armhf.so.3"
+        ]
+      }
+    },
+    {
+      "id": "ld-linux-armhf.so.3",
+      "path": "/lib/ld-linux-armhf.so.3",
+      "inode": 2531,
+      "size": 169952,
+      "sha256": "8c003c2a2352bd7c4c9eeee7cb9cd275af3f5afd53c17e26e284225bc91b9100",
+      "elf": {
+        "machine": "EM_ARM",
+        "elf_class": 32,
+        "little_endian": true,
+        "type": "ET_DYN",
+        "needed": []
+      }
+    },
+    {
+      "id": "libc.so.6",
+      "path": "/lib/libc.so.6",
+      "inode": 2538,
+      "size": 1278112,
+      "sha256": "d95eab9d00ddf1f00832089aa899840089429b6c0ced491491629b61c311b86f",
+      "elf": {
+        "machine": "EM_ARM",
+        "elf_class": 32,
+        "little_endian": true,
+        "type": "ET_DYN",
+        "needed": [
+          "ld-linux-armhf.so.3"
+        ]
+      }
+    },
+    {
+      "id": "libresolv.so.2",
+      "path": "/lib/libresolv.so.2",
+      "inode": 2549,
+      "size": 42356,
+      "sha256": "29bcb74f001a945047b731d41dd25cc079dd12b6f9876cc4b2fcd044d03d5815",
+      "elf": {
+        "machine": "EM_ARM",
+        "elf_class": 32,
+        "little_endian": true,
+        "type": "ET_DYN",
+        "needed": [
+          "libc.so.6"
+        ]
+      }
+    },
+    {
+      "id": "libm.so.6",
+      "path": "/lib/libm.so.6",
+      "inode": 2545,
+      "size": 263424,
+      "sha256": "84dfaa59213cb78074ffdef436db59a73bee910a8d07935d843c7afcde5016c1",
+      "elf": {
+        "machine": "EM_ARM",
+        "elf_class": 32,
+        "little_endian": true,
+        "type": "ET_DYN",
+        "needed": [
+          "libc.so.6"
+        ]
+      }
+    },
+    {
+      "id": "simplemenu",
+      "path": "/usr/bin/simplemenu",
+      "inode": 3080,
+      "size": 874520,
+      "sha256": "d6f1c2dc6f5002f2e54827d61e6635a77c48033e3c54625d28a692fee1386998",
+      "elf": {
+        "machine": "EM_ARM",
+        "elf_class": 32,
+        "little_endian": true,
+        "type": "ET_DYN",
+        "needed": [
+          "libSDL-1.2.so.0",
+          "libasound.so.2",
+          "libSDL_image-1.2.so.0",
+          "libSDL_ttf-2.0.so.0",
+          "libini.so.0",
+          "libz.so.1",
+          "libm.so.6",
+          "libc.so.6",
+          "ld-linux-armhf.so.3"
+        ]
+      }
+    },
+    {
+      "id": "invoker.dge",
+      "path": "/usr/bin/invoker.dge",
+      "inode": 2997,
+      "size": 469352,
+      "sha256": "662c3c640f295dee5fd068de67f2e171d8c9d05b8d423e9793429f6b2607d43d",
+      "elf": {
+        "machine": "EM_ARM",
+        "elf_class": 32,
+        "little_endian": true,
+        "type": "ET_EXEC"
+      }
+    },
+    {
+      "id": "cmd_invoker.dge",
+      "path": "/usr/bin/cmd_invoker.dge",
+      "inode": 2895,
+      "size": 1206,
+      "sha256": "d0ca3a93b15d7c9778dabf9fb7fc18fc9bc5f029f34a40ed6bafa0845a01b322"
+    },
+    {
+      "id": "S03checkfat",
+      "path": "/etc/init.d/S03checkfat",
+      "inode": 162,
+      "size": 702,
+      "sha256": "01f7a06059aa9341bf8a63dfb939f1cf61026aec941a2c19894afea66f9f946f"
+    },
+    {
+      "id": "S40swapit",
+      "path": "/etc/init.d/S40swapit",
+      "inode": 175,
+      "size": 118,
+      "sha256": "9b23a9eafdff2ec7e0559745483af6a2940fc9c6f539a9b5e1b65879320314a7"
+    },
+    {
+      "id": "fstab",
+      "path": "/etc/fstab",
+      "inode": 151,
+      "size": 672,
+      "sha256": "e575738d841e622510cb377e0d083518c03f3b937e51b6e8ac92a273b6bbc718"
+    },
+    {
+      "id": "simplemenu-config.ini",
+      "path": "/usr/share/simplemenu/.simplemenu/config.ini",
+      "inode": 26086,
+      "size": 325,
+      "sha256": "384a4c346d00f23ea190508bba03a77e69f785e47cfe9b15190a395336e05e4d"
+    },
+    {
+      "id": "koriki-version.txt",
+      "path": "/usr/share/simplemenu/Koriki/version.txt",
+      "inode": 26960,
+      "size": 4,
+      "sha256": "44804414f85bef9588f60086587fd6e8871b39123c831ec129624f4d81a95fea"
     }
   ],
   "container_size": 2411724800,

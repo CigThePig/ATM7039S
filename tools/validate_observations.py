@@ -6,8 +6,9 @@ Runs without device captures or firmware inputs. Called by `research.py validate
 import hashlib
 import json
 from pathlib import Path
+import re
 
-from runtime_capture import EVALUATORS, script_allowlist
+from runtime_capture import EVALUATORS, script_allowlist, script_essential
 
 SCHEMAS = {
     'evidence/sources.json': 'evidence/schemas/sources.schema.json',
@@ -60,10 +61,27 @@ def capture_version_errors(root):
     current = [v for v in versions if v['sha256'] == digest]
     if not current:
         errors.append('device/capture.sh changed without a new entry in device/capture-versions.json')
-    elif current[0]['allowlist'] != script_allowlist(script.read_text()):
-        errors.append('device/capture-versions.json allowlist differs from device/capture.sh')
+    else:
+        if current[0]['allowlist'] != script_allowlist(script.read_text()):
+            errors.append('device/capture-versions.json allowlist differs from device/capture.sh')
+        if current[0].get('essential', []) != script_essential(script.read_text()):
+            errors.append('device/capture-versions.json essential list differs from device/capture.sh')
+        if current[0].get('status') != 'current':
+            errors.append('device/capture.sh matches a version not marked current')
+        m = re.search(r'^CAPTURE_VERSION=(\d+)$', script.read_text(), re.M)
+        if not m or int(m.group(1)) != current[0]['version']:
+            errors.append('CAPTURE_VERSION in device/capture.sh differs from its registered version')
     if len({v['version'] for v in versions}) != len(versions):
         errors.append('duplicate capture script version number')
+    if len({v['sha256'] for v in versions}) != len(versions):
+        errors.append('duplicate capture script hash')
+    if [v['status'] for v in versions].count('current') != 1:
+        errors.append('exactly one capture script version must be current')
+    for v in versions:
+        allow = {line.split('|', 1)[0] for line in v['allowlist']}
+        missing = [x for x in v.get('essential', []) if x not in allow]
+        if missing:
+            errors.append(f"capture version {v['version']}: essential items not in its allowlist: {missing}")
     return errors
 
 
@@ -100,6 +118,10 @@ def cross_reference_errors(root):
                 errors.append(f"{o['id']}: summary carries capture integrity errors")
             if cap.get('fixture_root', 'none') != 'none':
                 errors.append(f"{o['id']}: summary was produced from a fixture, not a device")
+            if cap.get('path_override', 'none') != 'none':
+                errors.append(f"{o['id']}: summary was produced with a test PATH override")
+            if summary.get('format_version', 1) >= 2 and cap.get('trust') != 'authenticated':
+                errors.append(f"{o['id']}: summary is not authenticated (quarantined capture)")
             if o['procedure']['tool'] == 'device/capture.sh' and cap.get('script_sha256') != o['procedure']['tool_sha256']:
                 errors.append(f"{o['id']}: summary script hash differs from procedure.tool_sha256")
         obs[o['id']] = summary
@@ -134,6 +156,11 @@ def cross_reference_errors(root):
         errors += [f"{p['id']}: unknown finding {x}" for x in p['findings'] if x not in fids]
         errors += [f"{p['id']}: unknown contradiction {x}" for x in p['contradictions'] if x not in cids]
         errors += [f"{p['id']}: capture item {x} not in allowlist" for x in p['capture_items'] if x not in allowlist]
+        classes = [o['class'] for o in p['outcomes']]
+        if p['resolvable_by_v3'] != 'no' and not {'expected', 'alternative'} & set(classes):
+            errors.append(f"{p['id']}: no expected or alternative outcome")
+        if 'insufficient' not in classes:
+            errors.append(f"{p['id']}: no outcome for missing information")
     errors += [f"evaluator {x} has no prediction record" for x in EVALUATORS if x not in seen]
     for c in contradictions:
         for fid in c['findings']:

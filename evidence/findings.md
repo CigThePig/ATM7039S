@@ -1609,3 +1609,91 @@ Evidence:
 - [anbernic-stock-archive / evidence/firmware/stock-dram-complete.json](https://archive.org/details/RG35XX_original_firmwares)
 
 Limits: The electrical meaning of the PMIC writes (likely regulator settings, possibly including the DRAM supply) is not established; the PMIC detection routine was stubbed in emulation. Corrects the PR #4 description of 0xb4069254 as a pre-DRAM clock setup (C-PREDRAM-9254).
+
+## FW-018
+
+The Koriki v1.0 /uImage kernel has an empty built-in command line and no embedded configuration, and exports the device tree only through procfs. In the decompressed image the 1 KiB default_command_line initialiser (kallsyms VA 0xc0a62d00, initialised from CONFIG_CMDLINE in arch/arm/kernel/atags_parse.c) is all zero; there is no IKCFG_ST marker and no ikconfig symbol, so /proc/config.gz cannot exist; proc_device_tree_init and proc_device_tree_add_node are present (CONFIG_PROC_DEVICETREE: /proc/device-tree is a real procfs directory, not a link), while of_fdt_raw_init, of_node_add and __of_attach_node_sysfs are absent (no /sys/firmware/fdt, no /sys/firmware/devicetree). log_buf_len is 131072 (128 KiB ring buffer). The pinned vendor drivers/of/fdt.c carries a command-line backport: with CMDLINE_FROM_BOOTLOADER it copies /chosen bootargs, with CMDLINE_EXTEND it appends " " + bootargs to CONFIG_CMDLINE, with CMDLINE_FORCE it ignores bootargs; the Kconfig choice is hidden when CONFIG_CMDLINE is empty, which defaults to CMDLINE_FROM_BOOTLOADER. The kernel is therefore expected to use the bootloader-written /chosen bootargs unchanged.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / default_command_line (VA 0xc0a62d00, 1024 bytes, all zero)](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / log_buf_len (VA 0xc0aaa874) = 131072](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [vendor-kernel / drivers/of/fdt.c](https://github.com/rg35xx-cfw/s500_kernel#L671-L726)
+
+- [vendor-kernel / arch/arm/kernel/atags_parse.c](https://github.com/rg35xx-cfw/s500_kernel#L33-L33)
+
+- [vendor-kernel / arch/arm/Kconfig](https://github.com/rg35xx-cfw/s500_kernel#L2140-L2170)
+
+- [vendor-kernel / arch/arm/configs/rg35xx_atm7039_defconfig](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/configs/rg35xx_atm7039_defconfig#L100-L101)
+
+Limits: Options are inferred from symbol presence and initialised data (tools/kallsyms.py), not read from a configuration. CMDLINE_FORCE with an empty string cannot be excluded statically, but would give an empty /proc/cmdline, which V3 shows directly. The vendor fdt.c semantics are read from the pinned source tree, from which the release is not built (FW-008/009).
+
+## FW-019
+
+The Koriki v1.0 KERNEL.DTB describes memory with root #address-cells = #size-cells = 1 and a single node named /memory (device_type "memory", reg <0 0>), has no /reserved-memory node and no /memreserve/ entries, and carries vendor heap sizes in MiB under /reserved/tiny (fb 9, kinfo 1, carveout 0, dma 32) and /reserved/normal (fb 8, kinfo 1, carveout 64, dma 128). U-Boot replaces the /memory reg and adds /memreserve/ entries for the DTB and RAM disk (BOOT-017). The kernel prints "Reserved memory %uMB" and "Memory: %luk/%luk available, %luk reserved, %luK highmem". A 3.10 procfs export shows node properties but not the /memreserve/ block.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / /memory, /reserved](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / format strings "Reserved memory %uMB" and "Memory: %luk/%luk available, %luk reserved, %luK highmem"](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Which heap set (tiny or normal) the kernel selects, and whether the carve-outs are removed from or reserved inside System RAM, were not traced, so the expected MemTotal is not predicted numerically. The memory size in the running tree comes from U-Boot, not from this file.
+
+## FW-020
+
+Koriki v1.0 writes to the spare card on every boot beyond FW-005: S03checkfat unmounts /dev/mmcblk0p3 if mounted and runs fsck.vfat -aw on it (automatic repair of the SHARE partition, before S08populate mounts it), and the ramdisk init mounts the boot FAT partition read-write at /boot_root and moves it to /boot without remounting it read-only, then writes /boot_root/boot/reboot. S08populate mounts the SHARE partition with no options (vfat defaults), so files on it carry mode 0755 under the default umask. S02resize is triggered by the file /boot/boot/autoresize, which it deletes; it does not edit batocera-boot.conf.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / gzip cpio member init: do_mount, mount --move /boot_root /new_root/boot](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Script text, not an observed run. A capture interrupted by power loss can leave FAT inconsistencies that fsck.vfat -a repairs on the next boot, possibly by truncating or removing the capture files, so a capture must be copied off before the device is booted again. Reading files on /boot can update their FAT access date because the mount is read-write.
+
+## STOR-002
+
+The Koriki v1.0 kernel names MMC cards by role rather than by host index: it contains the strings "%s,sd0 as boot card,sd0 name tsd_card", "%s,sd2 as boot card,sd2 name tsd_card", "%s,sd0 as boot card,sd2 name card_to_card" and "force sd2(emmc) host emmc_boot_card", plus the device names emmc_boot_card and sd_card. Koriki's S03performance hard-codes /sys/devices/b0238000.mmc/mmc_host/mmc0/emmc_boot_card/block/mmcblk0 and /sys/devices/b0230000.mmc/mmc_host/mmc1/sd_card/block/mmcblk1. The pinned kernel source never sets GENHD_FL_REMOVABLE for MMC disks, so /sys/block/mmcblk*/removable reads 0 for SD cards and eMMC alike; the card type attribute (SD or MMC) distinguishes them.
+
+**Confidence:** verified · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / vendor MMC boot-card naming strings](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [vendor-kernel / drivers/mmc/card/block.c](https://github.com/rg35xx-cfw/s500_kernel#L2108-L2118)
+
+Limits: The conditions under which each naming string is printed were not traced. Script paths express the release author's expectation, not a probe. A device name such as mmcblk0 or emmc_boot_card does not by itself say whether the medium is removable.
+
+## UI-003
+
+SimpleMenu in Koriki v1.0 launches a GAMES entry through invoker.dge (static ARM binary) and cmd_invoker.dge, a bash script: for an entry whose exec is "#" it sets HOME=/userdata/system and SDL_NOMOUSE=1, runs eval "$3" & on the entry's path, polls the child every 3 s with kill -0, and restarts simplemenu when it exits. The .sh file is therefore executed directly by path (needing the execute bit, which vfat defaults provide, FW-020, and a file name without spaces or shell metacharacters, because the path is evaluated), with no terminal and no on-screen output. simplemenu also contains "echo %d > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq" and a CPU section in config.ini (normal_speed 1008000).
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / strings executeCommand, invoker.dge, scaling_max_freq](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: invoker.dge was not disassembled: the argument order it passes to cmd_invoker.dge ($1 "#/", $3 the entry path) and the working directory are inferred from cmd_invoker.dge. Whether simplemenu writes scaling_max_freq for a "#" entry, and with which value, was not traced. Not observed on hardware.

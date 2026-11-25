@@ -1,28 +1,38 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Pre-registered predictions for hardware tests",
-  "description": "Written before any capture. tools/runtime_capture.py evaluates each prediction and may only return a declared outcome id.",
+  "description": "Written before any capture. tools/runtime_capture.py evaluates each prediction and may only return a declared outcome id. A prediction is not an observation, and a matching outcome does not prove every assumption behind it.",
   "type": "array",
   "items": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "question", "test", "findings", "contradictions", "capture_items", "outcomes"],
+    "required": ["id", "question", "test", "basis", "findings", "contradictions", "capture_items", "resolvable_by_v3",
+                 "confidence", "limitations", "outcomes"],
     "properties": {
       "id": {"type": "string", "pattern": "^P-[A-Z0-9-]+$"},
       "question": {"type": "string", "minLength": 1},
       "test": {"type": "string", "pattern": "^V\\d+$"},
+      "basis": {"enum": ["firmware-derived", "software-model", "documentation-and-source", "hypothesis"],
+                "description": "Where the expected outcome comes from."},
       "findings": {"type": "array", "items": {"type": "string"}},
       "contradictions": {"type": "array", "items": {"type": "string"}},
       "capture_items": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+      "resolvable_by_v3": {"enum": ["yes", "partial", "no"],
+                           "description": "Whether an after-boot Linux capture can answer the question at all."},
+      "confidence": {"enum": ["verified", "strongly-supported", "inferred", "speculative", "unknown"],
+                     "description": "Confidence in the basis of the expected outcome, not in any hardware result."},
+      "limitations": {"type": "string", "minLength": 1},
       "outcomes": {
         "type": "array",
         "minItems": 2,
         "items": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["id", "condition", "implication"],
+          "required": ["id", "class", "condition", "implication"],
           "properties": {
             "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+            "class": {"enum": ["expected", "alternative", "unexpected", "insufficient", "review"],
+                      "description": "expected: what the reconstruction predicts; alternative: a pre-registered competing explanation; unexpected: contradicts the reconstruction; insufficient: missing information, never a negative result; review: needs a human."},
             "condition": {"type": "string", "minLength": 1},
             "implication": {"type": "string", "minLength": 1}
           }

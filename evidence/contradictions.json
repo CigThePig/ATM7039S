@@ -225,5 +225,17 @@
     ],
     "status": "Open. Not decidable offline without the PUBL v1 databook or a public driver for this PUBL revision with a resume path.",
     "next_validation": "Offline: a PUBL v1 databook or a vendor (e.g. older Rockchip RK30/RK3188) DDR driver with a self-refresh resume sequence. Hardware: a suspend/resume cycle with a read-only UART log (separate approval required)."
+  },
+  {
+    "id": "C-BOOTSLOT",
+    "issue": "Which MMC controller holds the TF1 boot card. U-Boot loads uImage, ramdisk.img and kernel.dtb with fatload mmc 0:1, and BOOT-016 reads mmc 0 as SD0 at 0xb0230000 (registration order SD0, SD2). Koriki's Linux scripts place the boot card (mmcblk0, emmc_boot_card) on b0238000 (SD2) and TF2 (sd_card) on b0230000, which also carries card-detect GPIO and the share_uart pin state.",
+    "findings": [
+      "BOOT-016",
+      "STOR-001",
+      "STOR-002",
+      "MMC-001"
+    ],
+    "status": "Open. Candidate explanations: the reconstruction of U-Boot's mmc numbering is wrong; SD0 fails to initialise with TF2 empty so SD2 becomes mmc 0 (BOOT-016 limitation); the vendor kernel enumerates the controllers differently from U-Boot; or Koriki's script paths are stale. Matters for any replacement bootloader, which must read the card from the right controller.",
+    "next_validation": "V3 (read-only): with TF2 empty, the sysfs ancestry of the disk mounted at /boot (block-sysfs, mounts) shows which controller holds the only card, which is also the controller U-Boot read from. Prediction P-BOOTDEV."
   }
 ]

@@ -111,6 +111,58 @@
     {
       "id": "apps-and-games.ini",
       "path": "/usr/share/simplemenu/.simplemenu/section_groups/apps and games.ini"
+    },
+    {
+      "id": "busybox",
+      "path": "/bin/busybox"
+    },
+    {
+      "id": "ld-linux-armhf.so.3",
+      "path": "/lib/ld-linux-armhf.so.3"
+    },
+    {
+      "id": "libc.so.6",
+      "path": "/lib/libc.so.6"
+    },
+    {
+      "id": "libresolv.so.2",
+      "path": "/lib/libresolv.so.2"
+    },
+    {
+      "id": "libm.so.6",
+      "path": "/lib/libm.so.6"
+    },
+    {
+      "id": "simplemenu",
+      "path": "/usr/bin/simplemenu"
+    },
+    {
+      "id": "invoker.dge",
+      "path": "/usr/bin/invoker.dge"
+    },
+    {
+      "id": "cmd_invoker.dge",
+      "path": "/usr/bin/cmd_invoker.dge"
+    },
+    {
+      "id": "S03checkfat",
+      "path": "/etc/init.d/S03checkfat"
+    },
+    {
+      "id": "S40swapit",
+      "path": "/etc/init.d/S40swapit"
+    },
+    {
+      "id": "fstab",
+      "path": "/etc/fstab"
+    },
+    {
+      "id": "simplemenu-config.ini",
+      "path": "/usr/share/simplemenu/.simplemenu/config.ini"
+    },
+    {
+      "id": "koriki-version.txt",
+      "path": "/usr/share/simplemenu/Koriki/version.txt"
     }
   ]
 }

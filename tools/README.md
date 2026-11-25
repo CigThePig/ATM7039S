@@ -73,8 +73,9 @@ Malformed/truncated FDTs, invalid reg geometry, unsupported flattened DTS syntax
 
 | Tool | Purpose | Deliberate limits |
 |---|---|---|
-| `device/capture.sh [PARENT]` | POSIX/BusyBox read-only collector for test V3; `--list` prints the allowlist | Fixed allowlist only; writes only its own output folder; no `/dev/mem`, I2C, power_supply, debugfs or writes |
-| `runtime_capture.py CAPTURE OUT` | Verifies item hashes, script version and allowlist; parses CPU/memory/storage/display/config/FDT; links kernel and DTB to catalogued firmware; CPU outcome hint | Hints are not findings; a capture describes one boot of one board |
+| `device/capture.sh [PARENT]` | POSIX/BusyBox read-only collector for test V3 (script version 3); `--list` prints the allowlist | Fixed allowlist only; size-bounded reads; per-item status; device tree only from approved kernel paths; writes only its own new output folder; no `/dev`, I2C, power_supply, debugfs or writes |
+| `runtime_capture.py CAPTURE OUT [--report MD] [--reference-dtb DTB]` | Authenticates the capture (script hash, version, allowlist, manifest, item hashes, `DONE`, write failures) or quarantines it; reads the device-tree tar without extracting it; structural DT, memory, boot-argument and storage models; evaluates every prediction; redacted JSON and Markdown | Hints are not findings; a capture describes one boot of one board |
+| `v3_preflight.py [--image] [--archive] [--boot-dir] [--share-dir] [--boot-region]` | Offline go/no-go: registered script and safety lint, pinned image and every catalogued component, `SFVD` marker, BusyBox applets, prepared-card files, raw card head | Verification only; never writes to an image or card |
 | `evidence/predictions.json` | Pre-registered outcomes for each V3 question; the parser may only return a declared outcome | Outcomes are hints for review, not findings |
 | `validate_observations.py` | JSON Schemas for sources/findings/contradictions/observations; observation-to-firmware/tool/summary links; hardware findings must cite observations | Called by `research.py validate`; checks records, not the truth of observations |
 

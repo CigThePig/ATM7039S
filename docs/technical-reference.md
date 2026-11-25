@@ -95,7 +95,7 @@ Selected resource observations:
 | UART0 | `0xb0120000` | `0x2000` | Register spacing is not resource size |
 | I2C0 | `0xb0170000` | `0x4000` | Child `reg` is a bus address |
 | GPIO | `0xb01b0000` | `0x40` | Pinmux/interrupt resources extend elsewhere |
-| SD0 / SD1 / SD2 | `0xb0230000` / `0xb0234000` / `0xb0238000` | `0x38` each | Slot mapping pending |
+| SD0 / SD1 / SD2 | `0xb0230000` / `0xb0234000` / `0xb0238000` | `0x38` each | Slot mapping open (C-BOOTSLOT): U-Boot reads `mmc 0` as SD0, Koriki's scripts put the boot card on SD2; V3 P-BOOTDEV decides |
 | DMA | `0xb0260000` | `0xd00` | Also referenced by NAND node |
 | LCD | `0xb02a0000` | `0x20c` | Separate display engine |
 | GPU | `0xb0300000` | `0x10000` | Gist disabled, modified DTB enabled |

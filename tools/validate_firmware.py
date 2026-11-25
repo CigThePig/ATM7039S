@@ -145,6 +145,13 @@ def validate(root):
                     errors.append('invalid disk component bounds '+key)
                 index[key]=c
         except (KeyError,ValueError,OSError) as e:errors.append('invalid firmware manifest '+name+': '+str(e))
+    # Decompressed kernel streams recorded by payload manifests are citable by stream index.
+    for p in sorted(folder.glob('*kernel-payload.json')):
+        try:
+            for i,s in enumerate(json.loads(p.read_text()).get('gzip_streams',[])):
+                if not re.fullmatch('[0-9a-f]{64}',s['sha256']) or s['size']<=0:errors.append('invalid gzip stream record '+p.name)
+                index[f'{p.relative_to(root)}#gzip_streams/{i}']=dict(sha256=s['sha256'],size=s['size'])
+        except (KeyError,ValueError,OSError) as e:errors.append('invalid payload manifest '+p.name+': '+str(e))
     errors.extend(stock_index(root,index))
     errors.extend(dram_complete_checks(folder))
     cited=[(f['id'],e) for f in json.loads((root/'evidence/findings.json').read_text()) for e in f['evidence']]

@@ -6,11 +6,11 @@ Covers booting the **unmodified Koriki v1.0 image from a spare card** (V3 baseli
 
 Every V3 write in this procedure lands on removable media. The evidence for that:
 
-- **Boot media is the TF1 card.** The ramdisk init mounts `/dev/mmcblk0p1`. Release scripts name `mmcblk0` under `b0238000.mmc/.../emmc_boot_card` and `mmcblk1` under `b0230000.mmc/.../sd_card`. U-Boot loads `uImage`, `ramdisk.img` and `kernel.dtb` from FAT on the card (BOOT-006). Prediction **P-BOOTDEV** checks the controller mapping at runtime.
-- **The Linux in this release cannot write NAND.** The DTB's `nand@b0210000` node has no status, but the release kernel contains no NAND compatible string and the rootfs ships no NAND or block modules (STOR-001). Prediction **P-NAND** checks `/proc/partitions` for any non-removable block device.
+- **Boot media is the TF1 card.** The ramdisk init mounts `/dev/mmcblk0p1`. Release scripts name `mmcblk0` under `b0238000.mmc/.../emmc_boot_card` and `mmcblk1` under `b0230000.mmc/.../sd_card`. U-Boot loads `uImage`, `ramdisk.img` and `kernel.dtb` from FAT on the card (BOOT-006). Which controller holds that card is itself open (**C-BOOTSLOT**: U-Boot's `mmc 0` is read as SD0 `0xb0230000`, Koriki's scripts put the boot card on `0xb0238000`). With TF2 empty only one card is present, so prediction **P-BOOTDEV** settles it from the sysfs ancestry of the disk mounted at `/boot`.
+- **The Linux in this release cannot write NAND.** The DTB's `nand@b0210000` node has no status, but the release kernel contains no NAND compatible string and the rootfs ships no NAND or block modules (STOR-001). Prediction **P-NAND** checks every enumerated block device: MMC disks by card **type** (SD or MMC), because the kernel reports `removable=0` for every MMC disk (STOR-002), and anything that is neither an MMC disk nor a kernel-virtual device (loop, ram, zram) as unexpected.
 - **No bootloader is written, provided the `SFVD` marker is present.** Nothing in the V3 *procedure* touches the raw region before the first partition (`0x200200`, `0x300000`). The *firmware*, however, can: on every boot where the 4-byte magic `SFVD` is missing from `bootloader.ini`+0x400 (disk `0x202a00`), app.bin writes 20 sectors from SRAM to disk `0x202600`–`0x204e00` (BOOT-014; see below). The hash-verified Koriki v1.0 image has the marker (`SFVD`, `0xc582bb73`), so the unmodified baseline does not write there. U-Boot does contain NAND commands; with this boot flow they are not exercised, but that is inferred, not observed.
 
-So removing the spare card and reinserting the owner's card should restore the previous state, **unless** the board has writable non-removable storage that something other than this Linux writes to. Nothing found so far suggests that, but it is not ruled out. P-NAND is the first check. If P-NAND reports `other-block-device`, stop and reassess before any further boot.
+So removing the spare card and reinserting the owner's card should restore the previous state, **unless** the board has writable non-removable storage that something other than this Linux writes to. Nothing found so far suggests that, but it is not ruled out. P-NAND is the first check. If P-NAND reports `non-removable-mmc` or `other-block-device`, stop and reassess before any further boot. `boot-card-only` supports, but cannot prove, the rollback model: a device Linux does not enumerate is invisible to it.
 
 ## What the baseline firmware itself changes
 
@@ -26,6 +26,8 @@ These are Koriki behaviours on every boot, separate from the capture tool (FW-00
 | MMC power control `on`, noop scheduler | Runtime sysfs | Baseline behaviour |
 | USB gadget modules, `idpin_debug=1` (S01adb) | Runtime sysfs | Baseline behaviour; ADB route uses this |
 | SSH (dropbear) unless `system.ssh.enabled=0` | Network service | Only reachable with a network adapter; none is used in V3 |
+| `S03checkfat`: `fsck.vfat -aw /dev/mmcblk0p3` on every boot (FW-020) | Spare card `SHARE` | Automatic repair can truncate or drop files left inconsistent by an interrupted capture: **copy the capture off before booting the card again** |
+| Boot partition mounted read-write at `/boot` (ramdisk init, FW-020) | Spare card FAT | Reading files there may update FAT access dates; the capture reads only `uEnv.txt` and `batocera-boot.conf` |
 
 Whether 1008000 kHz equals the stock frequency limit is unverified. Using an overclock setting would be an experiment, not a baseline.
 
@@ -62,12 +64,13 @@ The stock loader, which Koriki v1.0 uses byte for byte, can rewrite part of its 
 - First-boot partitioning can fail on a faulty card. Use a known-good spare and keep the downloaded image to re-flash it.
 - The ADB fallback boots a different kernel build (`adb_uImage`, build #19, FW-007). Record it as a modification, and restore `/uImage` afterwards.
 - **Do not boot the source-built DTB as is.** It adds `vdd-core-dcdc`/`vdd-gpu-dcdc` regulator nodes and a GPU supply that the release DTB lacks (DT-003). Letting Linux drive core and GPU voltages differently from shipping firmware is an electrical risk, not just a software one.
-- V4, booting a source-built kernel or modified DTB, changes the kernel and boot policy. A build now exists but has not been booted; it runs a different configuration from the release and needs its own review (see [build reproduction](build-reproduction.md)), and P-NAND should have returned `removable-only` first.
+- V4, booting a source-built kernel or modified DTB, changes the kernel and boot policy. A build now exists but has not been booted; it runs a different configuration from the release and needs its own review (see [build reproduction](build-reproduction.md)), and P-NAND should have returned `boot-card-only` first.
 
 ## Checklist before V3
 
 1. Owner approval recorded for this session (observation `approval`).
-2. Spare card flashed from the hash-verified image; write verified. Confirm `python tools/boot_chain.py sfvd` reports the marker for the image (it does for Koriki v1.0).
+2. `python tools/v3_preflight.py --image INPUTS/koriki-v1.0.img` reports 0 FAIL (image, every catalogued component and the `SFVD` marker). Spare card flashed from that image; write verified.
 3. **TF2 slot empty**, no charger cable, `overclocking` left unset.
 4. Boot once and power off from the menu, so first-boot resizing completes.
-5. Proceed with [device/README.md](../device/README.md).
+5. `python tools/v3_preflight.py --boot-dir ... --share-dir ...` reports 0 FAIL on the prepared card.
+6. Proceed with [device/README.md](../device/README.md). Afterwards, copy the capture off before the card is booted again.
