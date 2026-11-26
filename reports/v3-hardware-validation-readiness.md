@@ -137,7 +137,7 @@ The raw folder is private: the kernel command line, boot log and `/chosen` conta
 
 ## 11. Readiness assessment
 
-**Go for one first V3 capture, subject to:** recorded owner approval; `v3_preflight.py` with 0 FAIL and no unresolved WARN on the image, raw card before first boot, and prepared card (including the repeated raw check); a spare card only; TF2 empty; no cable; `overclocking` unset; one launch; power-off from the menu; and the capture copied off **before** the card is booted again.
+**Go for one first V3 capture, subject to:** recorded owner approval; `v3_preflight.py` with 0 FAIL and no unresolved WARN on the image, raw card before first boot, and prepared card (including the repeated raw check); a spare card only; TF2 empty; no cable; `overclocking` unset; one launch; normal shutdown with the documented shortcut; and the capture copied off **before** the card is booted again.
 
 **No-go** if any preflight FAIL is present, if the `SFVD` check fails, if the entry is absent (do not improvise another launch method), or if anything other than the registered script would run.
 

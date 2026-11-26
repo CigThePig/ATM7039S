@@ -178,7 +178,7 @@ After writing, the computer may show pop-ups about the card:
 * **macOS:** "The disk you inserted was not readable by this computer" → click **Ignore**.
 * **Never click "Format", "Initialize", "Scan" or "Repair".**
 
-Then eject the card: Windows: right-click the drive → **Eject**; macOS: drag it to the Bin / click ⏏; Linux: use your file manager's eject button. Remove the card.
+Keep the card inserted until the raw check in 3.4 passes. To eject afterwards: Windows: right-click the drive → **Eject**; macOS: drag it to the Bin / click ⏏; Linux: use your file manager's eject button. Remove the card only after 3.4.
 
 ---
 
@@ -298,7 +298,7 @@ Repeat Part 3.4 on the prepared card, confirming its current boot letter/device.
 
 ### 5.6 Eject
 
-Eject both drives of the card properly (see the end of 3.3), then remove the card.
+Eject both drives of the card properly (see the ejection instructions in 3.3), then remove the card.
 
 ---
 
@@ -323,7 +323,7 @@ Read each line aloud and tick it.
 
 1. Switch the handheld on. **Write down the time.**
 2. Wait for SimpleMenu to appear. Do not open anything yet.
-3. In SimpleMenu, switch to the section group called **"apps and games"**. Use SimpleMenu's normal way of changing section groups; the button for this has not been checked offline. Do not open any other app or setting while you look for it. If you cannot find the group, **stop** (switch off normally (Volume Up + Power)) and ask.
+3. In SimpleMenu, switch to the section group called **"apps and games"**. Use SimpleMenu's normal way of changing section groups; the button for this has not been checked offline. Do not open any other app or setting while you look for it. If you cannot find the group, **stop** (use Volume Up + Power to shut down) and ask.
 4. In "apps and games", open the list **GAMES**.
 5. Find the entry **ATM7039S-capture**.
    * **If it is not there: stop.** Switch off normally. Do not try any other way of starting it (no file managers, terminals, ADB or other apps). Write down what the GAMES list shows.

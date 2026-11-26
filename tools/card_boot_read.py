@@ -71,13 +71,16 @@ def read_windows_disk(number):
     if handle == ctypes.c_void_p(-1).value:
         raise OSError(f'cannot open spare card read-only (Windows error {ctypes.get_last_error()}); use an administrator terminal')
     try:
-        buf = ctypes.create_string_buffer(HEAD_SIZE)
+        # Align the buffer for raw devices that impose sector alignment.
+        alignment = 65536
+        buf = ctypes.create_string_buffer(HEAD_SIZE + alignment)
+        address = (ctypes.addressof(buf) + alignment - 1) & ~(alignment - 1)
         count = wintypes.DWORD()
-        if not read(handle, buf, HEAD_SIZE, ctypes.byref(count), None):
+        if not read(handle, ctypes.c_void_p(address), HEAD_SIZE, ctypes.byref(count), None):
             raise OSError(f'raw card read failed (Windows error {ctypes.get_last_error()})')
         if count.value != HEAD_SIZE:
             raise ValueError('short raw card read')
-        return buf.raw
+        return ctypes.string_at(address, HEAD_SIZE)
     finally:
         close(handle)
 

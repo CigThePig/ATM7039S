@@ -47,7 +47,7 @@ A capture taken after Linux has booted shows what the boot chain **handed over**
    python tools/acquire_firmware.py koriki-v1.0-release INPUTS --expand
    python tools/v3_preflight.py --image INPUTS/koriki-v1.0.img --archive INPUTS/koriki-v1.0.img.gz --json /private/results/preflight-image.json
    ```
-   The preflight must end with **0 FAIL**. It confirms the loader, U-Boot, kernel, DTBs, RAM disk and boot configuration are the catalogued ones, that the `SFVD` marker is present (without it the loader rewrites part of the card on every boot), and that the image's BusyBox has every command the script needs. It only reads; it never repairs anything.
+   The preflight must end with **0 FAIL, 0 WARN**. It confirms the loader, U-Boot, kernel, DTBs, RAM disk and boot configuration are the catalogued ones, that the `SFVD` marker is present (without it the loader rewrites part of the card on every boot), and that the image's BusyBox has every command the script needs. It only reads; it never repairs anything.
 2. **Identify the right card before writing.** Remove every other memory card and USB drive from the computer. Insert only the spare card. In balenaEtcher, the target list must show one drive of the spare card's size. On Linux, compare `lsblk -o NAME,SIZE,MODEL,TRAN,RM` before and after inserting it; the new removable entry is the card. If in doubt, stop.
 3. Write `INPUTS/koriki-v1.0.img` to the card with balenaEtcher (it verifies the write) or `dd`. Do not open or "repair" the card afterwards in any disk utility.
 4. Before any boot, follow the mandatory raw-card verification in [Part 3.4](V3-STEP-BY-STEP.md#34-mandatory-raw-boot-region-verification-before-the-first-boot). All three raw checks must PASS. Put the card in **TF1**, leave TF2 empty, no cable. Switch on and wait. The first boot shows a "Resizing Partition — Do not switch off your device!" screen, then the menu. Power off with Volume Up + Power, the documented [Koriki v1.0 shutdown shortcut](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0). A short Power press suspends. This first boot turns partition 3 into a FAT32 partition labelled `SHARE`.
@@ -57,7 +57,7 @@ A capture taken after Linux has booted shows what the boot chain **handed over**
    ```sh
    python tools/v3_preflight.py --boot-dir /path/to/BOOT --share-dir /path/to/SHARE --json /private/results/preflight-prepared.json
    ```
-   Again **0 FAIL**. Expected warnings: none. It confirms the boot files are unchanged, `overclocking` is unset, exactly one registered script is in `roms/ports`, and no earlier capture folder is left there.
+   Again **0 FAIL, 0 WARN**. It confirms the boot files are unchanged, `overclocking` is unset, exactly one registered script is in `roms/ports`, and no earlier capture folder is left there.
 8. Repeat the mandatory raw check after first boot (save `preflight-raw-prepared.json`), then eject safely.
 
 Use the guided Windows `--windows-boot-letter` or POSIX `--card-device` helper. No `dd` or raw dump is required. Save the JSON to a private local folder outside the SD card and project. Stop on any FAIL or unresolved WARN.
@@ -88,7 +88,7 @@ Not part of this test: opening other apps or settings, Wi-Fi, ADB, USB cables, c
    python tools/runtime_capture.py PATH/atm-capture-... summary.json --report summary.md \
        --reference-dtb PATH/TO/BOOT/KERNEL.DTB
    ```
-   The first line of `summary.md` must say **State: authenticated-complete**. `authenticated-partial` means some essential item is missing (listed); `quarantined` means the capture failed an integrity check and must not be used as evidence (the reason is listed). `--reference-dtb` compares the running device tree with the card's `KERNEL.DTB`, which shows exactly what U-Boot changed.
+   Look for **State: authenticated-complete** near the top of `summary.md`. `authenticated-partial` means some essential item is missing (listed); `quarantined` means the capture failed an integrity check and must not be used as evidence (the reason is listed). `--reference-dtb` compares the running device tree with the card's `KERNEL.DTB`, which shows exactly what U-Boot changed.
 5. Re-check the card with `--boot-dir`, `--share-dir`, and `--json` (save `preflight-after.json`), then repeat the raw check (`preflight-raw-after.json`). A warning about the new capture folder is expected; report every FAIL or unexpected WARN.
 
 ### Privacy

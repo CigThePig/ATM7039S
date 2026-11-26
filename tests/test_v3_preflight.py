@@ -103,7 +103,7 @@ class CardChecks(unittest.TestCase):
     def test_boot_dir(self):
         boot = self.tmp / 'BOOT'
         (boot / 'boot').mkdir(parents=True)
-        (boot / 'UENV.TXT').write_text(cf.UENV)  # FAT is case-insensitive
+        (boot / 'UENV.TXT').write_bytes(cf.UENV.encode('utf-8'))  # FAT is case-insensitive
         (boot / 'batocera-boot.conf').write_text('overclocking=extreme\n')
         (boot / 'boot/autoresize').write_text('')
         (boot / 'experimental.dtb').write_bytes(b'x')
