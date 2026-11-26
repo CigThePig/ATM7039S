@@ -137,8 +137,12 @@ The raw folder is private: the kernel command line, boot log and `/chosen` conta
 
 ## 11. Readiness assessment
 
-**Go for one first V3 capture, subject to:** recorded owner approval; `v3_preflight.py` with 0 FAIL on the image and on the prepared card; a spare card only; TF2 empty; no cable; `overclocking` unset; one launch; power-off from the menu; and the capture copied off **before** the card is booted again.
+**Go for one first V3 capture, subject to:** recorded owner approval; `v3_preflight.py` with 0 FAIL and no unresolved WARN on the image, raw card before first boot, and prepared card (including the repeated raw check); a spare card only; TF2 empty; no cable; `overclocking` unset; one launch; power-off from the menu; and the capture copied off **before** the card is booted again.
 
 **No-go** if any preflight FAIL is present, if the `SFVD` check fails, if the entry is absent (do not improvise another launch method), or if anything other than the registered script would run.
 
 **Limitations of the first capture:** it describes one boot of one board under one firmware. It cannot show the Boot ROM, loader or U-Boot output, DRAM training, the memory test, physical DRAM size or `/memreserve/`, and it cannot prove the absence of storage Linux does not enumerate. A matching prediction confirms the end state of the reconstruction, not every step behind it. CI passing is not evidence of physical readiness: the items in §10 remain untested assumptions until the session.
+
+## Operator follow-up: host compatibility and raw-card checks
+
+The exact [Koriki v1.0 release notes](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0) document Volume Up + Power as shutdown and short Power as suspend/resume. This is upstream documentation, not a hardware observation. Forced power-off remains an emergency deviation with filesystem risk. The operator guide requires raw-card checks before first boot, after preparation, and after capture. On Windows the helper resolves the boot letter using Storage cmdlets and opens the physical disk with GENERIC_READ only ([Microsoft CreateFileW](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew)). Windows physical raw access and actual launcher/shutdown behaviour still require hardware verification. All six preflights save JSON on the host. Capture script bytes and version are unchanged.

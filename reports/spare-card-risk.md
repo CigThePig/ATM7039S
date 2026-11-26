@@ -70,7 +70,7 @@ The stock loader, which Koriki v1.0 uses byte for byte, can rewrite part of its 
 
 1. Owner approval recorded for this session (observation `approval`).
 2. `python tools/v3_preflight.py --image INPUTS/koriki-v1.0.img` reports 0 FAIL (image, every catalogued component and the `SFVD` marker). Spare card flashed from that image; write verified.
-3. **TF2 slot empty**, no charger cable, `overclocking` left unset.
-4. Boot once and power off from the menu, so first-boot resizing completes.
-5. `python tools/v3_preflight.py --boot-dir ... --share-dir ...` reports 0 FAIL on the prepared card.
+3. Verify the actual flashed card's loader, U-Boot and SFVD before any boot using [the read-only card check](../device/V3-STEP-BY-STEP.md#34-mandatory-raw-boot-region-verification-before-the-first-boot). **TF2 slot empty**, no charger cable, `overclocking` left unset.
+4. Boot once and power off normally (Volume Up + Power per the exact release notes), so first-boot resizing completes.
+5. `python tools/v3_preflight.py --boot-dir ... --share-dir ...` reports 0 FAIL and 0 WARN on the prepared card; repeat the raw check before capture.
 6. Proceed with [device/README.md](../device/README.md). Afterwards, copy the capture off before the card is booted again.

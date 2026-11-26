@@ -3,7 +3,7 @@
 This guide takes you from nothing to a finished, checked V3 capture. Follow it **in order** and do **every** step, including the ones that look unnecessary. Every step says what to do, what you should see, and what to do if you see something else.
 
 * **What V3 is:** you boot a spare microSD card with an unmodified copy of the Koriki v1.0 firmware on the original RG35XX handheld. You then run one small script that **only reads** information the running system already reports, and saves it to the card. Afterwards you check and analyse that information on a computer.
-* **What V3 is not:** it does not change the handheld, its firmware, its settings, or any card other than the spare card. It does not flash anything to the handheld itself.
+* **What V3 is not:** the capture does not change persistent settings or flash the handheld. Koriki itself writes to the spare card and may change runtime clock policy. Rollback is strongly supported, not yet proven on hardware.
 * **Permission:** the device owner must have approved this session **before** you start. This guide is not that approval.
 * **Time needed:** about 1–2 hours, most of it downloading and writing the card.
 
@@ -45,10 +45,10 @@ The owner's two cards are **not** on this list on purpose.
 
 ## Part 1: Set up the computer (one time only)
 
-### 1.1 Install Python 3.11 or newer
+### 1.1 Install Python 3.11 (recommended; CI-tested minor version)
 
-* **Windows:** download the latest Python 3 installer from https://www.python.org/downloads/. Run it, **tick "Add python.exe to PATH"** on the first screen, then click "Install Now".
-* **macOS:** download the latest Python 3 installer from https://www.python.org/downloads/ and run it.
+* **Windows:** download a Python 3.11 installer from https://www.python.org/downloads/. Run it, **tick "Add python.exe to PATH"** on the first screen, then click "Install Now".
+* **macOS:** download a Python 3.11 installer from https://www.python.org/downloads/ and run it.
 * **Linux:** use your distribution's Python 3.11 or newer (for example `sudo apt install python3 python3-pip python3-venv` on Ubuntu 24.04).
 
 Check it. Open a terminal: on Windows press Start, type `PowerShell`, press Enter; on macOS open Applications → Utilities → Terminal; on Linux open any terminal. Then type:
@@ -57,7 +57,7 @@ Check it. Open a terminal: on Windows press Start, type `PowerShell`, press Ente
 python --version
 ```
 
-On macOS and Linux type `python3 --version` instead. You should see `Python 3.11.x` or a higher number. **If the number is lower than 3.11, or the command is not found, stop and fix the installation first.**
+On macOS and Linux type `python3 --version` instead. Prefer `Python 3.11.x`; newer versions are not the CI baseline and may lack compatible pinned dependency wheels. **If the number is lower than 3.11, or the command is not found, stop and fix the installation first.**
 
 In the rest of this guide, commands are written with `python`. **On macOS and Linux, type `python3` wherever this guide says `python`.**
 
@@ -104,7 +104,9 @@ python tools/v3_preflight.py --help
 
 You should see a help text that starts with `usage: v3_preflight.py`. If you see "No such file", you are not in the project folder; repeat 1.4.
 
-**Every command from here on is typed in this terminal, in the project folder.**
+**Every command from here on is typed in this terminal, in the project folder, except the elevated terminal explicitly required for raw-card reads.**
+
+Create a new private local results folder outside the project and cloud sync now. Replace `RESULTS` in every command with its actual path, keeping quotes. Do not put results on the SD card.
 
 ### 1.5 Install the helper libraries
 
@@ -132,7 +134,7 @@ python tools/acquire_firmware.py koriki-v1.0-release inputs --expand
 ### 2.2 Check the image, the firmware components and the script
 
 ```
-python tools/v3_preflight.py --image inputs/koriki-v1.0.img --archive inputs/koriki-v1.0.img.gz
+python tools/v3_preflight.py --image inputs/koriki-v1.0.img --archive inputs/koriki-v1.0.img.gz --json "RESULTS/preflight-image.json"
 ```
 
 It takes about 10–30 seconds. The **last line must be exactly**:
@@ -141,9 +143,9 @@ It takes about 10–30 seconds. The **last line must be exactly**:
 0 FAIL, 0 WARN. No FAIL. Resolve any WARN, then follow device/README.md.
 ```
 
-Above it you should see 20 lines, all starting with `PASS`: the script checks, the archive, the image, the components from `2100mAh-gpu.dtb` to `uImage`, `sfvd`, `rootfs-files` and `busybox-applets`.
+Above it you should see checks all starting with `PASS`: the script checks, the archive, the image, the components from `2100mAh-gpu.dtb` to `uImage`, `sfvd`, `rootfs-files` and `busybox-applets`.
 
-* **Any `FAIL`: stop. Do not continue.** Copy the whole output into your notes and ask.
+* **Any `FAIL` or unresolved `WARN`: stop. Do not continue.** Copy the whole output into your notes and ask.
 * A `FAIL` on the `sfvd` line is especially important. It means the loader would rewrite part of the card on every boot. That image must not be used, and the tool will not repair it.
 
 ---
@@ -180,6 +182,28 @@ Then eject the card: Windows: right-click the drive → **Eject**; macOS: drag i
 
 ---
 
+### 3.4 Mandatory raw boot-region verification (before the first boot)
+
+Check the actual card's loader and U-Boot hashes and SFVD marker independently of the computer image. If Etcher already ejected the card, unplug and reinsert it, dismissing any format/repair prompts. No raw dump is saved.
+
+**Windows:** find the spare card's boot partition (containing `uImage` and `KERNEL.DTB`) in File Explorer and note its letter. Open PowerShell as administrator and navigate to the project folder with `Set-Location "YOUR PROJECT FOLDER"`. If the partition has no letter or you cannot identify it, stop and ask; do not initialize or format anything.
+
+```
+python tools/v3_preflight.py --windows-boot-letter E --json "RESULTS/preflight-raw-before-first-boot.json"
+```
+
+Replace E with the actual boot partition letter. The helper resolves the disk via Windows Storage cmdlets, rejects system/boot disks, non-USB/SD/MMC disks and unexpected partition layouts, and opens the physical disk read-only. Access denied or an unsupported reader means stop and ask, not disable safeguards.
+
+**Linux/macOS:** identify the newly inserted whole card (not a partition) with `lsblk -o NAME,SIZE,MODEL,TRAN,RM` or `diskutil list`. Confirm its identity and size. Use the read-only helper with the actual device (macOS example: /dev/rdiskN); use your Python environment with sufficient read permission.
+
+```
+python3 tools/v3_preflight.py --card-device /dev/sdX --json "RESULTS/preflight-raw-before-first-boot.json"
+```
+
+All three `card-raw:` checks (early-region.bin, u-boot.uimage, sfvd) must PASS with 0 FAIL and 0 WARN. Image SKIP is expected because Part 2 checked it already. If any check fails or is missing, **do not boot**. Eject safely, then return to the normal terminal.
+
+---
+
 ## Part 4: First boot (lets the firmware finish preparing the card)
 
 1. Make sure the handheld is **switched off**, the **charging cable is unplugged**, and **both card slots are empty**.
@@ -187,9 +211,7 @@ Then eject the card: Windows: right-click the drive → **Eject**; macOS: drag i
    * If you cannot find the TF1/TF2 labels, or you are not sure which slot is TF1, **stop and ask**. Do not guess.
 3. Switch the handheld on with its power button.
 4. The first boot is slower. You will see a screen titled **"Resizing Partition"** that says **"Do not switch off your device!"**, with a list of steps (Syncing disk data, Checking disk table, … Formatting partition as FAT32 …). **Do not touch anything. Wait** until the menu (SimpleMenu) appears. This can take a few minutes.
-5. When the menu appears, **switch the handheld off normally** using the menu's shutdown or power-off option.
-   * The exact location of that option in Koriki's menu has not been checked offline. Look for it; do not change any other setting while looking.
-   * If you cannot find a shutdown option within a couple of minutes, press and hold the power button until the screen goes dark, and write down that you did so.
+5. When the menu appears, **switch the handheld off normally** with Volume Up + Power together, the documented shutdown shortcut in the [exact Koriki v1.0 release notes](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0). A short Power press suspends/resumes; do not use it. This shortcut is documented, not yet observed on this device. Wait until the screen and power indicator are off, then another 10 seconds. If shutdown cannot be confirmed, stop and seek advice. A long Power hold is an emergency fallback only, may interrupt writes, and must be recorded; do not proceed to capture without review.
 6. Write in your notes: date, time, "first boot completed", and anything unusual.
 7. Remove the card from TF1.
 
@@ -239,13 +261,13 @@ Rules for this file:
 ### 5.4 Check the prepared card
 
 ```
-python tools/v3_preflight.py --boot-dir BOOTDRIVE --share-dir SHAREDRIVE
+python tools/v3_preflight.py --boot-dir BOOTDRIVE --share-dir SHAREDRIVE --json "RESULTS/preflight-prepared.json"
 ```
 
 Examples:
 
-* Windows: `python tools/v3_preflight.py --boot-dir E:\ --share-dir F:\`
-* macOS: `python3 tools/v3_preflight.py --boot-dir "/Volumes/NO NAME" --share-dir /Volumes/SHARE`. Put quotes around a name that contains spaces.
+* Windows: `python tools/v3_preflight.py --boot-dir E:\ --share-dir F:\ --json "RESULTS/preflight-prepared.json"`
+* macOS: `python3 tools/v3_preflight.py --boot-dir "/Volumes/NO NAME" --share-dir /Volumes/SHARE --json "RESULTS/preflight-prepared.json"`. Put quotes around a name that contains spaces.
 
 The last line must say **`0 FAIL, 0 WARN`**. You should see `PASS` for:
 
@@ -270,14 +292,9 @@ What to do if it reports a problem:
 | `card-macos-files WARN` | In Terminal: `dot_clean -m /Volumes/SHARE/roms/ports`, then run 5.4 again. |
 | `card-boot-extra WARN` | Files were added to the boot partition. Write down their names and ask. |
 
-### 5.5 Optional, experienced users only: check the card's boot region
+### 5.5 Mandatory repeat of the raw-card check
 
-This confirms on the card itself that the loader region is untouched. Skip it if you are not comfortable with `dd`.
-
-1. Linux/macOS: find the card's device name (`lsblk` on Linux, `diskutil list` on macOS; for example `/dev/sdX` or `/dev/diskN`).
-2. Read the first 4 MiB of the card **into a new file**: `sudo dd if=/dev/sdX of=card-head.bin bs=1M count=4`
-   * `if=` (input) must be the card. `of=` (output) must be the new file `card-head.bin`. Never swap them.
-3. Check it: `python tools/v3_preflight.py --boot-region card-head.bin`. All lines must be `PASS`.
+Repeat Part 3.4 on the prepared card, confirming its current boot letter/device. Save as `preflight-raw-prepared.json`. All three raw checks must PASS with 0 FAIL and 0 WARN. A mismatch means stop, not repair.
 
 ### 5.6 Eject
 
@@ -306,13 +323,13 @@ Read each line aloud and tick it.
 
 1. Switch the handheld on. **Write down the time.**
 2. Wait for SimpleMenu to appear. Do not open anything yet.
-3. In SimpleMenu, switch to the section group called **"apps and games"**. Use SimpleMenu's normal way of changing section groups; the button for this has not been checked offline. Do not open any other app or setting while you look for it. If you cannot find the group, **stop** (switch off normally) and ask.
+3. In SimpleMenu, switch to the section group called **"apps and games"**. Use SimpleMenu's normal way of changing section groups; the button for this has not been checked offline. Do not open any other app or setting while you look for it. If you cannot find the group, **stop** (switch off normally (Volume Up + Power)) and ask.
 4. In "apps and games", open the list **GAMES**.
 5. Find the entry **ATM7039S-capture**.
    * **If it is not there: stop.** Switch off normally. Do not try any other way of starting it (no file managers, terminals, ADB or other apps). Write down what the GAMES list shows.
    * If you see two similar entries, for example one starting with `._`, stop and ask. That is a leftover macOS file (see 5.3 and 5.4).
 6. Select **ATM7039S-capture** and launch it **once**, the same way you would launch a game. **Write down the time.**
-7. **There is no progress screen.** The menu disappears, the screen may stay dark or unchanged, and the menu comes back by itself when the capture has finished. Normally this takes under a minute.
+7. **No progress screen is expected.** Static launcher analysis predicts that the menu disappears, the screen may stay dark or unchanged, and the menu comes back when the script exits. Under a minute is an estimate, not a measured hardware result.
 8. **Do not press any button while you wait. Wait at least 3 minutes** before deciding that something is wrong.
 9. When the menu is back, write down the time and "menu returned".
 
@@ -321,8 +338,8 @@ Read each line aloud and tick it.
 | You see | Do this |
 |---|---|
 | The menu comes back immediately, within 1–2 seconds | Do **not** launch it again. Switch off normally (Part 8). On the computer, check for an `atm-capture-…` folder (Part 9). Write down what happened. |
-| Nothing comes back after 5 minutes | Write down the time and exactly what is on screen. Press and hold the power button until the screen goes dark. Take the card to the computer (Part 9). **Do not retry.** |
-| The handheld restarts by itself | Let it reach the menu, **do not launch anything**, switch off normally. Write it down. Go to Part 9. |
+| Nothing comes back after 5 minutes | Write down the time and exactly what is on screen. Try the documented Volume Up + Power shutdown shortcut. If unresponsive, a long power-button hold is an emergency fallback that can interrupt writes. Only remove the card once power is off; record any forced shutdown. Take the card to the computer (Part 9). **Do not retry.** |
+| The handheld restarts by itself | Let it reach the menu, **do not launch anything**, switch off normally (Volume Up + Power). Write it down. Go to Part 9. |
 | Anything else unusual (error text, strange screen) | Photograph or write down the exact text. Then follow the line above that fits best. |
 
 **Things you must not do during the test:** open other apps or games, open settings, connect Wi-Fi or USB, plug in the charger, use sleep or suspend, insert anything into TF2, change CPU or display settings, or run the capture a second time "to be sure".
@@ -331,9 +348,8 @@ Read each line aloud and tick it.
 
 ## Part 8: Switch off
 
-1. Switch the handheld off **using the menu's shutdown or power-off option** (the same one as in Part 4). Do not use sleep or suspend.
-   * If there is no shutdown option, press and hold the power button until the screen goes dark. The capture has already saved and flushed its files, so this is safe once the menu has returned. Write down that you did it.
-2. Wait 10 seconds after the screen goes dark.
+1. Switch off normally with **Volume Up + Power** as in Part 4. Do not use sleep or suspend. If normal shutdown cannot be confirmed, stop and seek advice; a long power-button hold is an emergency fallback only. Even after the script flushes its files, Koriki can have pending writes. Record forced shutdown and treat the capture as potentially incomplete.
+2. Wait 10 seconds after the screen and power indicator are off.
 3. Remove the card from TF1.
 4. **Do not switch the handheld on again with this card.** On every boot, Koriki runs an automatic repair of the SHARE partition, which could damage or delete an unfinished capture.
 
@@ -341,7 +357,7 @@ Read each line aloud and tick it.
 
 ## Part 9: Copy the results to the computer
 
-1. Make a new, private folder on the computer for the results, for example `Documents/RG35XX-V3-<today's date>`. It must not be inside the project folder or any cloud-synced folder that other people can see.
+1. Use the private results folder created in Part 1 (outside the project and cloud sync).
 2. Insert the card into the computer (dismiss any Format/Scan pop-up as in 3.3).
 3. Open `SHARE/roms/ports/`. You should see:
    * `ATM7039S-capture.sh` (the script);
@@ -389,12 +405,12 @@ You may also see `"admissible_as_evidence": true`, which is what you want, and a
 With the card still in the computer:
 
 ```
-python tools/v3_preflight.py --boot-dir BOOTDRIVE --share-dir SHAREDRIVE
+python tools/v3_preflight.py --boot-dir BOOTDRIVE --share-dir SHAREDRIVE --json "RESULTS/preflight-after.json"
 ```
 
 * **Expected now:** one `WARN` on `card-earlier-captures`, because the new capture folder is on the card. That is fine.
-* **Any `FAIL` on a `card-boot:` line must be reported.** It would mean the boot partition changed during the session.
-* If you did 5.5, you may repeat it with a new file name (`card-head-after.bin`) and run `--boot-region card-head-after.bin`. All lines must still be `PASS`.
+* **Any `FAIL` or unexpected `WARN` must be reported**, including rootfs and boot configuration mismatches.
+* Repeat Part 3.4 after copying the capture off, using `preflight-raw-after.json`. All three raw checks must still PASS. Report any failure or missing check; do not repair or boot again.
 
 Then eject the card. Keep it unchanged and switched off until the results have been reviewed. Do not reuse it yet.
 
@@ -405,7 +421,7 @@ Then eject the card. Keep it unchanged and switched off until the results have b
 **Private: never share or upload.** Keep these only in your private results folder:
 
 * the `atm-capture-…` folder (it contains the handheld's serial number);
-* `card-head.bin` and `card-head-after.bin`, if you made them.
+* Any raw card dump made separately (the new helper does not create one).
 
 **Shareable:** these are redacted, with serial numbers, card IDs and network addresses removed. Read them once before sharing anyway.
 
@@ -415,7 +431,7 @@ Then eject the card. Keep it unchanged and switched off until the results have b
 Hand over:
 
 1. `summary.json` and `summary.md`;
-2. the full text output of the two preflight runs in 5.4 and Part 11 (and 2.2);
+2. the six saved preflight JSON files (image, raw before first boot, prepared, raw prepared, after, raw after). Review paths and identifiers before sharing; include any error output and note missing files;
 3. your notes (Appendix B), including every time you wrote down and anything that differed from this guide;
 4. the board revision **only if it is already known**. Otherwise write `unknown`. **Do not open the handheld to find out.**
 
@@ -451,16 +467,18 @@ Spare card brand / size:
 Project files from: branch ______ downloaded on ______
 
 2.2 image check result (last line):
-Part 4 first boot: start time ____  menu appeared ____  switched off ____ (menu option / power button)
+Part 4 first boot: start time ____  menu appeared ____  switched off ____ (normal shortcut / emergency forced shutdown)
 Anything unusual on first boot:
 5.4 card check result (last line):
-5.5 boot-region check done? yes/no  result:
+3.4 raw before first boot result:
+5.5 raw prepared result:
+Part 11 raw after result:
 
 Part 6 checklist all ticked? yes/no
 Part 7: power on ____  launched ____  menu returned ____
 What the screen did while waiting:
 Anything unusual:
-Part 8: switched off ____ (menu option / power button)
+Part 8: switched off ____ (normal shortcut / emergency forced shutdown)
 Part 9: capture folder name(s):
 Part 10: state = ____________  errors/essential_not_ok:
 Part 11 card re-check result:

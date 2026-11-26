@@ -6,7 +6,7 @@ Run it on a computer before (and, optionally, after) the physical session:
     python tools/v3_preflight.py                          # the capture package only
     python tools/v3_preflight.py --image INPUTS/koriki-v1.0.img [--archive INPUTS/koriki-v1.0.img.gz]
     python tools/v3_preflight.py --boot-dir /media/BOOT --share-dir /media/SHARE   # the prepared card
-    python tools/v3_preflight.py --boot-region card-head.bin   # optional raw read of the card's first 4 MiB
+    python tools/v3_preflight.py --boot-region card-head.bin   # existing raw read of the card's first 4 MiB
 
 Checks, each reported as PASS, FAIL, WARN or SKIP:
 
@@ -32,6 +32,7 @@ from pathlib import Path
 import re
 import shutil
 import sys
+import card_boot_read
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import runtime_capture as rc  # noqa: E402
@@ -136,7 +137,7 @@ def check_script(path, root=ROOT):
 
 
 def acquisition(root=ROOT):
-    return next(x for x in json.loads((root / 'evidence/firmware/acquisitions.json').read_text()) if x['source'] == SOURCE)
+    return next(x for x in json.loads((root / 'evidence/firmware/acquisitions.json').read_text(encoding='utf-8')) if x['source'] == SOURCE)
 
 
 def file_sha(path):
@@ -177,8 +178,8 @@ def check_image(path, root=ROOT):
     p = Path(path)
     if p.stat().st_size != a['expanded_size']:
         return [result('image', 'FAIL', f"{p.name} is {p.stat().st_size} bytes, expected {a['expanded_size']}")]
-    plan = json.loads((root / 'evidence/firmware/koriki-v1.0-plan.json').read_text())
-    committed = json.loads((root / 'evidence/firmware/koriki-v1.0.json').read_text())
+    plan = json.loads((root / 'evidence/firmware/koriki-v1.0-plan.json').read_text(encoding='utf-8'))
+    committed = json.loads((root / 'evidence/firmware/koriki-v1.0.json').read_text(encoding='utf-8'))
     try:
         fresh = firmware_catalogue.catalogue(p, plan)
     except ValueError as e:
@@ -208,8 +209,8 @@ def check_rootfs(image, root=ROOT):
     from firmware_catalogue import Window
     from pyfatfs.PyFatFS import PyFatBytesIOFS
     from dissect.extfs import ExtFS
-    cat = json.loads((root / 'evidence/firmware/koriki-v1.0-rootfs.json').read_text())
-    committed = json.loads((root / 'evidence/firmware/koriki-v1.0.json').read_text())
+    cat = json.loads((root / 'evidence/firmware/koriki-v1.0-rootfs.json').read_text(encoding='utf-8'))
+    committed = json.loads((root / 'evidence/firmware/koriki-v1.0.json').read_text(encoding='utf-8'))
     part = next(x for x in committed['partitions'] if x['index'] == 1)
     out, bad = [], []
     with open(image, 'rb') as raw, PyFatBytesIOFS(Window(raw, part['offset'], part['size'])) as fs:
@@ -247,7 +248,7 @@ def find_ci(folder, name):
 def check_boot_dir(folder, root=ROOT):
     out = []
     folder = Path(folder)
-    comps = {c['id']: c for c in json.loads((root / 'evidence/firmware/koriki-v1.0.json').read_text())['components']}
+    comps = {c['id']: c for c in json.loads((root / 'evidence/firmware/koriki-v1.0.json').read_text(encoding='utf-8'))['components']}
     for name, cid in BOOT_FILES.items():
         p = find_ci(folder, name)
         if p is None:
@@ -259,7 +260,7 @@ def check_boot_dir(folder, root=ROOT):
                           f"{name} {'equals' if ok else 'DIFFERS from'} the catalogued file"))
     conf = find_ci(folder, 'batocera-boot.conf')
     if conf:
-        vals = rc.conf_values(conf.read_text(errors='replace'))
+        vals = rc.conf_values(conf.read_text(encoding='utf-8', errors='replace'))
         oc = vals.get('overclocking')
         out.append(result('card-overclocking', 'PASS' if oc in (None, 'none') else 'FAIL',
                           'overclocking unset' if oc is None else f'overclocking={oc}: must stay unset for the baseline'))
@@ -281,7 +282,7 @@ def check_card_rootfs(folder, root=ROOT):
     It holds the init scripts, launcher and BusyBox the safety analysis read, so the top-level
     boot files matching is not enough. Hashing it reads about 2.4 GB from the card.
     """
-    cat = json.loads((root / 'evidence/firmware/koriki-v1.0-rootfs.json').read_text())
+    cat = json.loads((root / 'evidence/firmware/koriki-v1.0-rootfs.json').read_text(encoding='utf-8'))
     boot = find_ci(folder, 'boot')
     container = find_ci(boot, 'BATOCERA') if boot is not None and boot.is_dir() else None
     if container is None or not container.is_file():
@@ -330,8 +331,12 @@ def check_share_dir(folder, root=ROOT):
 
 def check_boot_region(path, root=ROOT):
     """A raw read of the card from offset 0, at least through the end of U-Boot."""
-    comps = {c['id']: c for c in json.loads((root / 'evidence/firmware/koriki-v1.0.json').read_text())['components']}
-    data = Path(path).read_bytes()
+    with open(path, 'rb') as f:
+        return check_boot_bytes(f.read(card_boot_read.HEAD_SIZE), root)
+
+
+def check_boot_bytes(data, root=ROOT):
+    comps = {c['id']: c for c in json.loads((root / 'evidence/firmware/koriki-v1.0.json').read_text(encoding='utf-8'))['components']}
     out = []
     for cid in ('early-region.bin', 'u-boot.uimage'):
         loc = comps[cid]['location']
@@ -343,10 +348,9 @@ def check_boot_region(path, root=ROOT):
         out.append(result('card-raw:' + cid, 'PASS' if ok else 'FAIL',
                           f"{cid} on the card {'equals' if ok else 'DIFFERS from'} the catalogue"))
     if len(data) >= 0x204e00:
-        import boot_chain
-        sf = boot_chain.sfvd_status(path)
-        out.append(result('card-raw:sfvd', 'PASS' if sf['present'] else 'FAIL',
-                          f"SFVD marker on the card: {'present' if sf['present'] else 'MISSING (bootloader.ini will be rewritten)'}"))
+        present = data[0x202a00:0x202a04] == b'SFVD'
+        out.append(result('card-raw:sfvd', 'PASS' if present else 'FAIL',
+                          f"SFVD marker on the card: {'present' if present else 'MISSING (bootloader.ini will be rewritten)'}"))
     return out
 
 
@@ -364,8 +368,16 @@ def run(args, root=ROOT):
         results += check_boot_dir(args.boot_dir, root)
     if args.share_dir:
         results += check_share_dir(args.share_dir, root)
-    if args.boot_region:
-        results += check_boot_region(args.boot_region, root)
+    if args.boot_region or getattr(args, 'windows_boot_letter', None) or getattr(args, 'card_device', None):
+        try:
+            if args.boot_region:
+                results += check_boot_region(args.boot_region, root)
+            elif getattr(args, 'windows_boot_letter', None):
+                results += check_boot_bytes(card_boot_read.read_windows_card(args.windows_boot_letter), root)
+            else:
+                results += check_boot_bytes(card_boot_read.read_posix_card(args.card_device), root)
+        except (OSError, ValueError) as e:
+            results.append(result('card-raw:read', 'FAIL', f'{e}; do not boot the card'))
     return results
 
 
@@ -376,9 +388,14 @@ def main():
     p.add_argument('--archive', type=Path, help='downloaded koriki-v1.0.img.gz')
     p.add_argument('--boot-dir', type=Path, help="mounted first (boot) partition of the prepared card")
     p.add_argument('--share-dir', type=Path, help='mounted SHARE partition of the prepared card')
-    p.add_argument('--boot-region', type=Path, help='raw read of the card from byte 0, at least 4 MiB')
+    raw = p.add_mutually_exclusive_group()
+    raw.add_argument('--boot-region', type=Path, help='existing raw read of the card from byte 0, at least 4 MiB')
+    raw.add_argument('--windows-boot-letter', help='Windows: spare card boot partition drive letter (e.g. E); administrator required')
+    raw.add_argument('--card-device', help='Linux/macOS: confirmed whole spare card device; read-only')
     p.add_argument('--json', type=Path, help='also write the results as JSON')
     a = p.parse_args()
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(errors='backslashreplace')
     results = run(a)
     width = max(len(r['id']) for r in results)
     for r in results:
@@ -388,7 +405,7 @@ def main():
     print(f"\n{len(fails)} FAIL, {len(warns)} WARN. " + ('Not ready: fix every FAIL.' if fails else
           'No FAIL. Resolve any WARN, then follow device/README.md.'))
     if a.json:
-        a.json.write_text(json.dumps(results, indent=2) + '\n')
+        a.json.write_text(json.dumps(results, indent=2) + '\n', encoding='utf-8')
     raise SystemExit(1 if fails else 0)
 
 

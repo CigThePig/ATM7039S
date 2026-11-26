@@ -7,10 +7,13 @@ import shutil
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'tests'))
+import card_boot_read as raw
 import v3_preflight as pf  # noqa: E402
 import capture_fixture as cf  # noqa: E402
 
@@ -151,6 +154,53 @@ class CardChecks(unittest.TestCase):
         self.assertTrue(set(pf.REQUIRED_APPLETS) <= set(got))
         self.assertIsNone(pf.busybox_applets(b'nothing here'))
 
+
+class RawCardChecks(unittest.TestCase):
+    def test_windows_drive_resolution(self):
+        info = dict(Number=7, Bus='USB', IsBoot=False, IsSystem=False,
+                    Offset=raw.BOOT_OFFSET, PartitionSize=raw.BOOT_SIZE,
+                    DiskSize=16000000000)
+        with patch.object(raw.subprocess, 'run') as run:
+            run.return_value = subprocess.CompletedProcess([], 0, json.dumps(info), '')
+            self.assertEqual(raw.windows_disk_number('e:'), 7)
+            self.assertIn("Get-Partition -DriveLetter 'E'", run.call_args.args[0][-1])
+            for change in (dict(IsBoot=True), dict(IsSystem=True), dict(Bus='NVMe'),
+                           dict(Offset=0), dict(Number=None), dict(PartitionSize=1)):
+                run.return_value.stdout = json.dumps(info | change)
+                with self.assertRaises(ValueError):
+                    raw.windows_disk_number('E')
+            run.reset_mock()
+            with self.assertRaises(ValueError):
+                raw.windows_disk_number('E; write')
+            run.assert_not_called()
+
+    def test_raw_bytes_no_dump(self):
+        data = bytearray(raw.HEAD_SIZE)
+        data[0x202a00:0x202a04] = b'SFVD'
+        r = by_id(pf.check_boot_bytes(data))
+        self.assertEqual(r['card-raw:sfvd']['status'], 'PASS')
+        self.assertEqual(r['card-raw:early-region.bin']['status'], 'FAIL')
+
+    def test_raw_read_failure_is_fail(self):
+        from types import SimpleNamespace
+        args = SimpleNamespace(script=SCRIPT, archive=None, image=None, boot_dir=None,
+                               share_dir=None, boot_region=None, windows_boot_letter='E',
+                               card_device=None)
+        with patch.object(raw, 'read_windows_card', side_effect=OSError('access denied')):
+            self.assertEqual(by_id(pf.run(args))['card-raw:read']['status'], 'FAIL')
+
+    def test_json_utf8_and_ascii_console(self):
+        import research
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / 'summary.json'
+            research.save(path, {'text': '\u2714\u2718'})
+            self.assertEqual(json.loads(path.read_text(encoding='utf-8'))['text'], '\u2714\u2718')
+            out = Path(d) / 'preflight.json'
+            r = subprocess.run([sys.executable, str(ROOT / 'tools/v3_preflight.py'),
+                                '--json', str(out)], env=dict(os.environ, PYTHONIOENCODING='ascii'),
+                               capture_output=True, text=True, encoding='ascii')
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertTrue(out.is_file())
 
 @unittest.skipUnless(image(), 'needs ATM_FIRMWARE_DIR with the expanded koriki-v1.0.img')
 class PinnedImageChecks(unittest.TestCase):

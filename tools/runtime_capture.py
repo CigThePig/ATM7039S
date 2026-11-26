@@ -64,12 +64,12 @@ def script_essential(text):
 
 
 def known_versions(root=ROOT):
-    return json.loads((root / 'device/capture-versions.json').read_text())
+    return json.loads((root / 'device/capture-versions.json').read_text(encoding='utf-8'))
 
 
 def read_info(path):
     info = {}
-    for line in path.read_text(errors='replace').splitlines():
+    for line in path.read_text(encoding='utf-8', errors='replace').splitlines():
         if '=' in line:
             k, v = line.split('=', 1)
             info[k] = v
@@ -77,7 +77,7 @@ def read_info(path):
 
 
 def read_manifest(path, fmt=None):
-    lines = path.read_text(errors='replace').splitlines()
+    lines = path.read_text(encoding='utf-8', errors='replace').splitlines()
     header = lines[0].split('\t') if lines else []
     fmts = [f for f, cols in MANIFEST_COLUMNS.items() if cols == header]
     if not fmts or (fmt is not None and fmt not in fmts):
@@ -133,7 +133,7 @@ def verify(capture, root=ROOT):
     elif info['manifest_sha256'] != manifest_sha:
         errors.append('manifest.tsv hash differs from capture-info.txt')
     rows = read_manifest(capture / 'manifest.tsv', fmt)
-    recorded = [x for x in (capture / 'allowlist.txt').read_text(errors='replace').splitlines() if x]
+    recorded = [x for x in (capture / 'allowlist.txt').read_text(encoding='utf-8', errors='replace').splitlines() if x]
     if version is not None and recorded != version['allowlist']:
         errors.append('recorded allowlist differs from the known script version')
     if [f"{r['id']}|{r['kind']}|{r['target']}" for r in rows] != recorded:
@@ -179,7 +179,7 @@ def verify(capture, root=ROOT):
             errors.append(f"item marked {row['status']} but file absent " + row['id'])
         err = capture / 'items' / (row['id'] + '.err')
         if err.is_file():
-            entry['stderr'] = err.read_text(errors='replace')[:2000]
+            entry['stderr'] = err.read_text(encoding='utf-8', errors='replace')[:2000]
         files.append(entry)
     if (capture / 'items').is_dir():
         for p in sorted((capture / 'items').iterdir()):
@@ -706,7 +706,7 @@ def catalogued_components(root=ROOT):
     comps, versions = [], []
     folder = root / 'evidence/firmware'
     for p in sorted(folder.glob('*.json')):
-        m = json.loads(p.read_text())
+        m = json.loads(p.read_text(encoding='utf-8'))
         if isinstance(m, dict):
             for c in m.get('components', []):
                 comps.append(dict(manifest=str(p.relative_to(root)), id=c['id'], sha256=c['sha256'], size=c.get('size')))
@@ -718,7 +718,7 @@ def catalogued_components(root=ROOT):
 
 def koriki_handoff(root=ROOT):
     """The reconstructed Koriki v1.0 U-Boot -> Linux handoff (BOOT-017), from committed evidence."""
-    d = json.loads((root / 'evidence/firmware/stock-boot-chain.json').read_text())
+    d = json.loads((root / 'evidence/firmware/stock-boot-chain.json').read_text(encoding='utf-8'))
     rel = d['releases']['koriki-v1.0']
     runs = rel['handoff']
     return dict(
@@ -925,7 +925,7 @@ def cpu_hint(cpu):
 # ---------------------------------------------------------------- pre-registered predictions
 
 def load_predictions(root=ROOT):
-    return json.loads((root / 'evidence/predictions.json').read_text())
+    return json.loads((root / 'evidence/predictions.json').read_text(encoding='utf-8'))
 
 
 def mib(n):
@@ -1463,7 +1463,7 @@ def main():
     result = parse(a.capture, reference_dtb=a.reference_dtb)
     research.save(a.output, result)
     if a.report:
-        a.report.write_text(render_report(result))
+        a.report.write_text(render_report(result), encoding='utf-8')
     c = result['capture']
     print(json.dumps(dict(state=c['state'], admissible_as_evidence=c['admissible_as_evidence'], errors=c['errors'],
                           warnings=c['warnings'], essential_not_ok=c['essential_not_ok'],
