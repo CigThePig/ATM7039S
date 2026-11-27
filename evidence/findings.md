@@ -2012,4 +2012,30 @@ Evidence:
 
 - [koriki-v1.0-release / evidence/firmware/adfu-loopback.json persistent_state, scenarios init-*, full_path, dram_stage, downstream](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
 
+- [koriki-v1.0-release / evidence/firmware/sd2-dram-comparison.json, static_gpio_address_scan and downstream_gpio_accesses; no downstream access in the executed cold, failure, retry and resume cases](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
 Limits: Absence of a downstream dependency holds for constant-address accesses and for the executed synthetic paths; computed accesses are counted, not resolved. Whether app.bin 0x9430 or U-Boot runs a pad rewrite on the shipped path was not traced. Electrical consequences of a pull-less DAT0 and the changed latches are unknown. It does not show that DRAM behaves the same on hardware.
+
+## BOOT-028
+
+Through the executed DRAM caller and main outcome dispatch, boot codes 0 and 2 agree after their verified boot-word reads, the ADFU GPIO loopback accesses and the AFI boot-device byte are accounted for. This holds for the normal-continuation, returned-failure, bounded poll and resume scenarios across all five hash-verified releases. The ideal-loopback control takes ADFU before DRAM for code 2 and continues for code 0.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / evidence/firmware/sd2-dram-comparison.json, releases, distinct_pairs and normalization](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: The Boot ROM, electrical training, I2C transport and pad coupling are outside this result. Full comparison boundaries begin at the supplied SRAM INI and start through main 0xb4065420; later app.bin and U-Boot execution use separate evidence.
+
+## MEM-012
+
+On both boot codes, the stock DRAM caller can produce AFI stores and SRAM INI write-back after an initialization error, and main takes the recovery branch. A diagnostic memory-test failure after successful initialization still reaches the next-stage boundary. Actual stores and the main branch are independently observable in the synthetic trace. A boot-classified success and physical memory reliability are different properties.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / evidence/firmware/sd2-dram-comparison.json, distinct_pairs: terminal, memory_test, record_final and afi](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: AFI and diagnostic data are from synthetic RAM. OBS-001 constrains the kernel address range and DT memory property only.

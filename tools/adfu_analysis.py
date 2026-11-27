@@ -197,7 +197,7 @@ def _level(rule, window, c11_now, sent):
 
 
 def reference_model(k, boot_code, arg, pmic_status, initial, c10_rule, read_semantics='mixed', pmic_fail=False,
-                    undriven=0, idle_level=0, other_inputs=None):
+                    undriven=0, idle_level=0, other_inputs=None, observe=None):
     """Statement of 0xb4069254 written from the instructions. k: decoded_constants()."""
     out = dict(gpio_test=False, pmic_writes=[], gpio_writes=[], delays_ms=0, received=None, sent=[],
                samples=[], decision=None)
@@ -216,7 +216,7 @@ def reference_model(k, boot_code, arg, pmic_status, initial, c10_rule, read_sema
         out['gpio_test'] = True
         window = -1
 
-        def rd(a):
+        def read_value(a):
             if a != k['dat'] or read_semantics == 'latch':
                 return regs[a]
             v, oe, ie = 0, regs[k['outen']], regs[k['inen']]
@@ -234,9 +234,17 @@ def reference_model(k, boot_code, arg, pmic_status, initial, c10_rule, read_sema
                     v |= (undriven & 1) << bit
             return v
 
+        def rd(a):
+            v = read_value(a)
+            if observe is not None:
+                observe('r', a, v)
+            return v
+
         def wr(a, v):
             regs[a] = v & 0xFFFFFFFF
             out['gpio_writes'].append((a, regs[a]))
+            if observe is not None:
+                observe('w', a, regs[a])
 
         wr(k['pull_register'], rd(k['pull_register']) & ~k['pull_clear'])
         in_saved, out_saved = rd(k['inen']), rd(k['outen'])

@@ -222,13 +222,13 @@
   },
   {
     "id": "C-RESUME-DRAMRST",
-    "issue": "The resume init issues PIR 0x3f, whose bit 5 is DRAMRST (RESET# pulse) in the related RK3288 PUBL layout, while every other feature of mode 1 (no DRAMINIT, PREA/REF bursts, no probe or memory test, a jump to a kernel resume vector, reads of kernel-left data at DRAM 0x400) presumes DRAM contents survive self-refresh. A DDR3 RESET# pulse would void that. Mode 1 also shortens tDINIT2 to about 100 ns and sends 0x3f for LPDDR types, which have no RESET#.",
+    "issue": "The resume init issues PIR 0x3f, whose bit 5 is DRAMRST (RESET# pulse) in the related RK3288 PUBL layout, while every other feature of mode 1 (no DRAMINIT, PREA/REF bursts, no probe or memory test, a jump to a kernel resume vector, reads of kernel-left data at DRAM 0x400) presumes DRAM contents survive self-refresh. A DDR3 RESET# pulse would remove the assumption of valid retained contents. Mode 1 also shortens tDINIT2 to about 100 ns and sends 0x3f for LPDDR types, which have no RESET#.",
     "findings": [
       "MEM-008",
       "DDR-006"
     ],
-    "status": "Open. Not decidable offline without the PUBL v1 databook or a public driver for this PUBL revision with a resume path.",
-    "next_validation": "Offline: a PUBL v1 databook or a vendor (e.g. older Rockchip RK30/RK3188) DDR driver with a self-refresh resume sequence. Hardware: a suspend/resume cycle with a read-only UART log (separate approval required)."
+    "status": "Open. Both boot codes execute the same mode-1 PIR 0x3f writes and resume flow in emulation. RK3288 cold boot requests DRAMRST and DRAMINIT together. Microchip SAMA7D6 documents that its matching bit-5 reset can run independently of bit 6. Neither relates the behavior to a verified ATM7039S PHY revision. Register traces do not observe RESET# or data retention.",
+    "next_validation": "Find revision-specific ATM7039S PUBL documentation, direct vendor resume source or independent evidence of the PHY revision and pad reset behavior."
   },
   {
     "id": "C-BOOTSLOT",
@@ -250,7 +250,7 @@
   },
   {
     "id": "C-PREDRAM-PATH",
-    "issue": "The DRAM and loader reconstruction (PR #4-#6) modelled the code-0 (SD0) path. On the observed code-2 path the pre-DRAM routine 0xb4069254 also performs the GPIO 0x55aa55aa ADFU handshake that is skipped for code 0 (BOOT-021), and app.bin/bootloader.bin branches keyed on the boot code were exercised only for code 0 in the committed DRAM evidence.",
+    "issue": "The DRAM reconstruction in PR #4–#6 primarily exercised code 0 (SD0). The code-2 (SD2) hypothesis from OBS-001 adds the GPIO 0x55aa55aa recovery handshake in 0xb4069254. Does it change DRAM caller behavior, and can the comparison be transferred to board and Boot ROM state across boot media?",
     "findings": [
       "BOOT-021",
       "BOOT-022",
@@ -261,10 +261,12 @@
       "GPIO-003",
       "GPIO-004",
       "MEM-010",
-      "PMIC-002"
+      "PMIC-002",
+      "BOOT-028",
+      "MEM-012"
     ],
-    "status": "Open (narrowed further by the PR #9 ADFU work). Established offline: the only code-dependent pre-DRAM operation is the adfu_check loopback (BOOT-025); its algorithm and precedence are reconstructed and agree with an independent model in 41 synthetic scenarios (BOOT-026); its pins are SD0 DAT0/DAT1 by the vendor pinctrl data (GPIO-003); it leaves PULLCTL1 bit 17 cleared and CDAT bit 11 = 0, with other CDAT bits dependent on unknown read semantics, and nothing later in the loader or the reference-scenario DRAM caller touches those registers (GPIO-004). GPIO assumptions tested: two read semantics, undriven/idle levels, eight initial states, ideal, absent, inverted, delayed, partial, pseudorandom and interrupted inputs. Not resolved: Boot ROM state per boot medium, the TF2 DAT0/DAT1 wiring and pad behaviour (mux priority, floating DAT0), the real GPIO read semantics, and the non-reference DRAM scenarios for code 2.",
-    "next_validation": "Offline: a public ATM7039S/S500 datasheet section on GPIO data-read and GPIO-vs-MFP priority; mainline pinctrl-s500.c/pinctrl-owl.c as a second source for the SD0_D0 pull field; a board schematic or photograph of the TF2 slot. Physical (not authorised): an early read-only serial log of a stock SD2 boot would show \"pmu_status = 0x...\" and whether the loader continues past adfu_check.",
+    "status": "Open, with the caller-level comparison completed. The five pinned releases independently reproduce the same DRAM caller behavior for both boot codes under the tested synthetic states, after the verified ADFU GPIO accesses, boot-word reads and AFI device byte are accounted for (BOOT-028). No DRAM scenario consumed the persistent GPIO values in the executed firmware. An exact synthetic echo sends code 2 to ADFU before DRAM. Boot ROM state per medium, TF2 pad wiring and semantics, physical training and electrical coupling remain open.",
+    "next_validation": "The remaining questions require applicable SoC, board or Boot ROM evidence and observations of the physical early boot state. No additional hardware observation is authorized by the SD2 DRAM study.",
     "observations": [
       "OBS-001"
     ]

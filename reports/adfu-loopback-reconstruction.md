@@ -11,6 +11,8 @@ Scope: the early loader's ADFU decision routine `adfu_check` `0xb4069254`, its G
 | Tools | [`tools/adfu_analysis.py`](../tools/adfu_analysis.py), [`tools/gpio_model.py`](../tools/gpio_model.py), and opt-in extensions of `predram_analysis.Trace` and `dram_complete.Harness` |
 | Tests | [`tests/test_adfu_analysis.py`](../tests/test_adfu_analysis.py) |
 
+The [SD2 DRAM caller comparison](sd2-dram-reconstruction.md) carries the persistent GPIO state into the cold, retry, failure and resume paths. It found no subsequent accesses to those exact addresses in the executed caller scenarios. The physical pad behavior remains open.
+
 ## 1. Executive summary
 
 * **The algorithm is reconstructed at instruction level, and the earlier description holds with refinements.**

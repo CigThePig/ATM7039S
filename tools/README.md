@@ -189,3 +189,17 @@ Tests: `tests/test_adfu_analysis.py`. `ATM_FIRMWARE_DIR` re-runs scenarios. With
 ### V3 operator recovery
 
 **The lab (Windows/Linux; macOS uses the manual procedure)** (`ATM7039S-Lab.cmd`, `start-lab.sh` → `lab_launch.py` → `python -m v3lab`) runs the whole computer side of a V3 session; see [v3lab/README.md](v3lab/README.md). `boot_chain.py boot-path IMAGE OUT --release R --observation evidence/observations/OBS-001.json` executes every boot-device hypothesis end to end and compares the resulting command line with an observation ([report](../reports/sd2-boot-path-reconciliation.md)). `v3_preflight.py --phase auto|fresh|prepared|post-capture [--image] [--baseline]` checks the card's root filesystem by byte hash before the first boot and semantically afterwards. `v3_rootfs_review.py --phase prepared|post-capture` (3.0) is the stand-alone form of that check with a private report in `lab-data/rootfs-review/`; the 2.x diagnostic used during OBS-001 is superseded (its report stays as evidence). `v3_operator.ps1` is a legacy fallback.
+
+## SD2 DRAM caller comparison
+
+`sd2_dram_analysis.py` executes the DRAM caller and main's continuation decision in Unicorn with new synthetic PMIC, RAM, GPIO and training state for each boot code. `--firmware-dir FW` selects a directory of hash-pinned expanded images. The evidence command verifies all five images; the other execution commands accept `--release` and default to Koriki v1.0.
+
+```sh
+python tools/sd2_dram_analysis.py list
+python tools/sd2_dram_analysis.py run --firmware-dir FW --scenario reference --detail
+python tools/sd2_dram_analysis.py run --firmware-dir FW --scenario mixed-gpio-resume --boot-code 2
+python tools/sd2_dram_analysis.py suite --firmware-dir FW --release stock-20231014 --group resume
+python tools/sd2_dram_analysis.py evidence --firmware-dir FW OUT.json
+```
+
+`run` without `--boot-code` compares both paths. The `run` and `suite` commands support repeatable `--mmio ADDRESS=WORD` and a stage `--limit`. `suite --group` accepts `cold`, `resume`, `memory`, `gpio`, `geometry`, `control` or `all`. The [report](../reports/sd2-dram-reconstruction.md) explains each terminal outcome, raw trace and result field. Set `ATM_FIRMWARE_DIR=FW` to enable the optional five-release evidence regeneration tests in `tests/test_sd2_dram_analysis.py`.

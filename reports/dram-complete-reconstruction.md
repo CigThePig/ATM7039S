@@ -4,6 +4,8 @@ Scope: the **original 2022–2023 RG35XX** (Actions ATM7039S), the four hash-pin
 
 Findings: **MEM-007 … MEM-010, DDR-004 … DDR-006, BOOT-021**. Contradictions: **C-PROBE-NOALIAS**, **C-FAILCODE**, **C-WRITEBACK-FAIL**, **C-PREDRAM-9254** (all resolved by instructions) and **C-RESUME-DRAMRST** (open). Evidence: [`evidence/firmware/stock-dram-complete.json`](../evidence/firmware/stock-dram-complete.json). Tool: [`tools/dram_complete.py`](../tools/dram_complete.py), plus a mode-1 path in [`tools/ddr_model.py`](../tools/ddr_model.py) and `--dram-scenario` in [`tools/boot_chain.py`](../tools/boot_chain.py). Tests: [`tests/test_dram_complete.py`](../tests/test_dram_complete.py).
 
+The [SD2 DRAM caller comparison](sd2-dram-reconstruction.md) independently executes both boot codes through the actual caller and main return dispatch. The earlier mode-0/mode-1, retry, failure, write-back and diagnostic findings transfer under the tested synthetic assumptions. The comparison also captures actual AFI stores and terminal PC.
+
 ## 1. Executive summary
 
 1. **"Mode 1" is suspend-to-RAM resume, decided by the PMIC.**

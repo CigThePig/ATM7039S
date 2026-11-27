@@ -8,6 +8,8 @@ Scope: the original RG35XX (ATM7039S) early loader, from loader block 0 to the c
 **Tool:** [`tools/predram_analysis.py`](../tools/predram_analysis.py). **Tests:** [`tests/test_predram.py`](../tests/test_predram.py).
 **Developer reference:** [docs/predram-initialization.md](../docs/predram-initialization.md).
 
+The subsequent [SD2 DRAM caller comparison](sd2-dram-reconstruction.md) extends the reference scenario to 52 paired cases per release. It retains the early ADFU distinction and follows normal continuation, failures and resume through the DRAM caller.
+
 ## 1. Executive summary
 
 * **The pre-DRAM sequence is reconstructed and reproducible.** In order:

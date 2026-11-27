@@ -362,11 +362,11 @@
   {
     "id": "u-boot-mainline",
     "url": "https://github.com/u-boot/u-boot",
-    "revision": "9d67454e920b3908529c9fc642a8c911db040896 (sparse: arch/arm/include/asm/arch-rockchip)",
+    "revision": "9d67454e920b3908529c9fc642a8c911db040896 (sparse: arch/arm/include/asm/arch-rockchip and drivers/ram/rockchip/sdram_rk3288.c)",
     "type": "source-repository",
     "examined": "2026-11-24",
     "license_status": "GPL-2.0+; register struct layout used for offset comparison only, not imported",
-    "scope": "Public DesignWare uPCTL/PUBL register layout (Rockchip RK3288 definitions) used to name ATM7039S loader DRAM accesses. PR #6 also compares the RK322x uPCTL layout (sdram_rk322x.h: tref_mem_ddr3 at 0x148); layout comparison only, nothing imported."
+    "scope": "Public DesignWare uPCTL/PUBL register layout (Rockchip RK3288 definitions) used to name ATM7039S loader DRAM accesses. PR #6 also compares the RK322x uPCTL layout (sdram_rk322x.h: tref_mem_ddr3 at 0x148); PR #9 also compares the RK3288 DDR3 cold-boot PIR sequence as an analogy for C-RESUME-DRAMRST. No code imported."
   },
   {
     "id": "ghidra-11.4.2",

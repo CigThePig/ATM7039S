@@ -204,3 +204,65 @@ GitHub Actions was not observed by this session.
 3. Trace app.bin `0x9430`'s indirect callers and U-Boot's SD0 pad set-up, to state whether bit 17 is restored before Linux.
 4. Optionally run the remaining PR #6 DRAM scenarios with `boot_code=2, gpio=GpioModel(...)`. This is cheap but deliberately not done.
 5. Physical (not authorized): an early read-only serial log of a stock SD2 boot would show `pmu_status = 0x…` and that the loader continues past the test.
+
+---
+
+# SD2 DRAM caller and memory handoff comparison
+
+## Completed experiments
+
+- Started from reviewed PR head `1161869009bbaf62d4fa2ea516d7f6b3c5ff5c41`. Verified the expanded Koriki v1.0 and Anbernic 221203, 221223, 230309 and 20231014 images, their loader regions and instruction/literal anchors. The shared bootloader code-region SHA-256 is `6b17b88c92e4d9f90f3f123e4a340b692d001bada4f78f24889481b73adf6ea9`.
+- Executed 52 pairs per release, 520 runs, through main's real DRAM caller and outcome dispatch. The 17 cold, 12 resume, nine DMM, six GPIO, five diagnostic-fault and three control cases all use independent synthetic model state in each run. The 255 matching pairs preserve raw trace hashes. All five exact-echo controls diverge at early ADFU for code 2.
+- Sampled ARM registers at every phase boundary. Code 2 can leave different caller-saved registers, LR and NZCV at the ADFU return. The paired trace checks full CPU agreement from the DRAM boundary onward.
+- Tested the actual boot-code getter at its caller, ADFU and AFI sites. The word resides at `0xb4064c00`; `0xb40664f0` is the getter. Normal cold code 0 and code 2 differ in the AFI device byte `0x20`/ `0x22`; both emit size `0x10000000` under the 256 MiB reference model.
+- Repeated the 180-case isolated DMM study for Koriki. It gives 64 observable outcome groups, 128 wrong capacity reports and 73 wrong capacities with a passing diagnostic. The eight overlapping caller examples reproduce the isolated outcomes. The ninth extends the tested width boundary.
+- Rechecked the independent models, with 140 core-programming sequence comparisons, 215 diagnostic replays, 445 internal-to-returned-code comparisons and 500 ADFU model comparisons. Each comparison is scoped by its supported inputs. The programmable status responses, device geometry and reset values remain shared assumptions.
+- Under the tested seeded GPIO states, `PULLCTL1[17]` stays cleared and `CDAT[11]` stays low after code 2's normal return. No subsequently executed DRAM path consumes the persistent GPIO words. The pad-region `MEM_MARGIN_CTRL1` RMW is common to both codes. Its physical meaning is still a candidate from the vendor header.
+- 221203, 221223 and 230309 reproduce all 52 Koriki pair records exactly. 20231014 has changed ODT/drive input bytes in both records, with matching changes in MR1, ZQ0CR1, console and write-back. A few instruction-budget cases have shifted final poll counts or PCs across variants. All 20231014 code-0/code-2 comparisons preserve the matching behavior and the exact-echo difference.
+
+## Corrected assumptions and open questions
+
+The new harness models per-rank diagnostic RAM when a patched primary record skips the alias probe. The inherited DMM-write-counter heuristic previously used column wrap during this diagnostic and produced an artificial failure. The legacy harness retains its original semantics for historic evidence reproduction. The historical geometry sweep releases Unicorn mappings as it runs, with identical result data.
+
+`BOOT-028` records the paired caller result. `MEM-012` records the distinction between the diagnostic, AFI stores and main's actual next-stage or recovery dispatch. `C-PREDRAM-PATH` stays open for initial medium-specific ROM and physical pad/DRAM state, with the caller-level comparison completed. `C-RESUME-DRAMRST` stays open. SAMA7D6 documents a similar PIR layout with a reset action independent of DRAMINIT, so the absence of bit 6 gives no general guarantee. No public material examined identifies the ATM7039S behavior.
+
+OBS-001 directly constrains SD2, controller `0xb0238000`, the command line and the kernel-addressable 256 MiB range. Live AFI, physical memory geometry, PMIC voltages, reset state, serial output and analog training remain unobserved.
+
+## Handoff format and entry points
+
+`tools/sd2_dram_analysis.py` exposes the `run`, `suite`, `evidence` and `list` commands. The single-run envelope carries `format_version`, verified `firmware`, input `assumptions`, scenario `inputs` and `result`. Use `run --boot-code 2` for a single SD2 result. Omit the boot code for a pair. Add `--detail` for ordered trace and full snapshots.
+
+| Result field | Meaning |
+|---|---|
+| `boot_code`, `boot_code_observed`, `adfu` | Requested seed, readback SRAM word and executed ADFU argument/test outcome |
+| `dram_entry`, `record_selection`, `record_final`, `capacity_mib` | Entry record/state, actual source of the working parameters, final decoded/raw record, capacity from a successful core return. Resume capacity comes from the stored primary. |
+| `caller_return`, `dram_return`, `terminal`, `outcome` | A32 call and core return values when present, exact boundary or failure PC, and the classified run result |
+| `main_continuation_boundary_reached` | Instructions arrived at main `0xb4065440`, before loading app.bin or U-Boot |
+| `afi` | All 16 before/final bytes, decoded fields, observed store count, generation status and a separate changed-bytes flag |
+| `ini_initial`, `ini_final`, `ini_primary_stores` | Both record byte sequences and selector, with observed SRAM primary-record store count |
+| `memory_test`, `training`, `selected_mmio_final` | Diagnostic status/access counts, each training attempt and its synthetic response, selected terminal state |
+| `synthetic_or_unmodelled`, `trace` | Named access assumptions and pre-normalization SHA-256 of the ordered event sequence |
+
+A consumer can use cold `outcome`, `main_continuation_boundary_reached` and `afi.generated` together before interpreting `afi.bytes`. Some failed initialization paths store a plausible AFI before main dispatches to recovery. Diagnostic failure can still reach the loading boundary. Resume paths have their own terminal classifications and no AFI generation. A later integration can use this result API while retaining the current boot-chain tool's legacy capacity input; this work leaves that integration for separate review.
+
+```sh
+python tools/sd2_dram_analysis.py run --firmware-dir FW --scenario reference --detail
+python tools/sd2_dram_analysis.py suite --firmware-dir FW --release stock-20231014 --group resume
+python tools/sd2_dram_analysis.py evidence --firmware-dir FW OUT.json
+ATM_FIRMWARE_DIR=FW python -m unittest tests.test_sd2_dram_analysis -v
+ATM_FIRMWARE_DIR=FW ATM7039S_STOCK_LOADERS=LOADERS ATM_SOURCES_DIR=SRC \
+  python -m unittest tests.test_dram_complete tests.test_ddr_timing tests.test_adfu_analysis tests.test_predram tests.test_boot_chain -v
+```
+
+The result schema, state boundaries, full assumptions, observations and source references are in the [SD2 DRAM report](sd2-dram-reconstruction.md). Local execution used Python 3.12, Unicorn 2.1.4 and Capstone 5.0.6.
+
+## Validation in this session
+
+| Check | Local result |
+|---|---|
+| `python -m unittest discover -s tests -v` | 497 tests run, 470 passed, 27 skipped without optional firmware or host tools |
+| Historical firmware-backed `test_dram_complete`, `test_ddr_timing`, `test_adfu_analysis`, `test_predram` and `test_boot_chain` | 138 passed, no skips. The full PR #6 DRAM evidence regenerated byte-for-byte, including the historical clock and DMM sweeps. ADFU, pre-DRAM and boot-chain evidence also regenerated. |
+| New firmware-backed comparison | Five-release byte reproduction, AFI store and resume-target controls run with verified images |
+| Integrity, generation and render commands | Validation reports zero errors. Generated register products match and both Markdown catalogues and the reference site render. |
+| Browser lab smoke and Linux launcher self-test | Passed with simulated browser API. The Linux self-test reported disk discovery unavailable in this environment. |
+| Windows-specific checks | Preserved in GitHub Actions. Linux local execution does not cover these jobs. |

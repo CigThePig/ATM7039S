@@ -3193,7 +3193,7 @@
      "sha256": "4bef495f5edeafa4982430ddd7fdfb01469595ca48837d7ee6c769ff5f3abe27",
      "offset_start": 29580,
      "offset_end": 29584,
-     "section": "DRAM init read-modify-write: clear 0xffff, set 0x3ff",
+     "section": "DRAM init read-modify-write clears low 16 bits and sets 0x3ff. SD0/SD2 paired traces confirm the same access on both paths, separate from the ADFU GPIO direction, latch and pull registers (BOOT-028).",
      "curated": "firmware-observations"
     }
    ]

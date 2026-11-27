@@ -104,6 +104,8 @@ The [DRAM reconstruction](../reports/dram-complete-reconstruction.md) completes 
 
 The code from block 0 to the DRAM init call is reconstructed in [docs/predram-initialization.md](predram-initialization.md) ([report](../reports/sd2-predram-reconstruction.md); BOOT-024/025, CLK-007, UART-004, PMIC-002, GPIO-002). For the observed code-2 path it is the same instruction path as code 0, except that `adfu_check` adds a 32 × 1 ms GPIO loopback test. Executed in emulation, the two codes differ only by that block, up to and through DRAM init (reference scenario). Boot ROM state is not covered, so C-PREDRAM-PATH stays open. The [ADFU loopback reconstruction](../reports/adfu-loopback-reconstruction.md) shows the test uses the TF2 slot's DAT0/DAT1 pads, enters ADFU only on an exact echo, and never reaches DRAM init on that exit (BOOT-026/027, GPIO-003/004).
 
+The [SD2 DRAM comparison](../reports/sd2-dram-reconstruction.md) extends the cold reference comparison to training, faults, geometry and resume. It executes the main branch from the DRAM caller return and either reaches the continuation boundary before app.bin/U-Boot loading, reaches an ADFU/recovery boundary, or transfers through a synthetic resume path. Both codes report the same DRAM result in the tested continuing cases.
+
 ## Physical observation OBS-001 (2026-11-27) and the PR #8 reconciliation
 
 The tables above follow the **code-0 / AFI `0x20` branch** (SD0). OBS-001's running kernel reported `boot_dev=sd2` and its boot card on controller `0xb0238000`. PR #8 executed every branch end to end from the image ([report](../reports/sd2-boot-path-reconciliation.md), BOOT-022/023, STOR-003): the observed unit takes the **code-2 / AFI `0x22` branch**, and the stage map for it is

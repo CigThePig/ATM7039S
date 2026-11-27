@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Check firmware evidence links, hashes and ranges without requiring binary inputs."""
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -174,6 +175,50 @@ def adfu_checks(folder):
             errors.append('ADFU decision reached DRAM init')
     except (KeyError,ValueError,OSError,TypeError) as e:errors.append('invalid ADFU evidence: '+str(e))
     return errors
+def sd2_dram_checks(folder):
+    """Verify committed comparison coverage and trace provenance without firmware inputs."""
+    path = folder / 'sd2-dram-comparison.json'
+    errors = []
+    try:
+        doc = json.loads(path.read_bytes())
+        releases, objects = doc['releases'], doc['distinct_pairs']
+        pinned = {m['expanded_filename']: m for m in json.loads((folder / 'acquisitions.json').read_bytes())
+                  if 'expanded_filename' in m}
+        loaders = json.loads((folder / 'stock-loaders.json').read_bytes())['loaders']
+        if set(releases) != {'koriki-v1.0', 'stock-221203', 'stock-221223', 'stock-230309', 'stock-20231014'}:
+            errors.append('SD2 DRAM: missing pinned release')
+        for name, release in releases.items():
+            meta = pinned[release['file']]
+            if (not release['verified'] or release['actual_sha256'] != meta['expanded_sha256']
+                    or release['expected_sha256'] != meta['expanded_sha256']
+                    or release['verified_size'] != meta['expanded_size']
+                    or release['loader_sha256'] != loaders[name]['sha256']):
+                errors.append('SD2 DRAM: provenance mismatch ' + name)
+            if release['pairs'].keys() != doc['scenarios'].keys():
+                errors.append('SD2 DRAM: incomplete scenarios for ' + name)
+            for scenario, obj in release['pairs'].items():
+                result = objects[obj]
+                cmp = result['comparison']
+                if not cmp['boot_code_provenance_ok'] or not cmp['gpio_reference_agreement']:
+                    errors.append(f'SD2 DRAM: boot-code or GPIO evidence mismatch {name} {scenario}')
+                if cmp['same_after_expected_differences'] != (scenario != 'gpio-exact-echo'):
+                    errors.append(f'SD2 DRAM: unexplained paired difference {name} {scenario}')
+                for boot_code, run in result['runs'].items():
+                    if run['boot_code_observed'] != int(boot_code) or not HEX64.fullmatch(run['trace']['sha256']):
+                        errors.append(f'SD2 DRAM: missing raw evidence {name} {scenario} code {boot_code}')
+        for key, obj in objects.items():
+            data = json.dumps(obj, sort_keys=True, ensure_ascii=True, separators=(',', ':')).encode('ascii')
+            if hashlib.sha256(data).hexdigest() != key:
+                errors.append('SD2 DRAM: content-addressed pair digest mismatch ' + key)
+        if not doc['obs_001']['memory_property_matches'] or not doc['obs_001']['previous_command_line_agrees']:
+            errors.append('SD2 DRAM: observation reconciliation mismatch')
+        if doc['geometry']['devices'] != len(doc['geometry']['runs']):
+            errors.append('SD2 DRAM: geometry baseline incomplete')
+    except (KeyError, ValueError, OSError, TypeError) as e:
+        errors.append('Invalid SD2 DRAM evidence: ' + str(e))
+    return errors
+
+
 def validate(root):
     errors=[];index={}
     folder=root/'evidence/firmware'
@@ -204,6 +249,7 @@ def validate(root):
     errors.extend(dram_complete_checks(folder))
     errors.extend(predram_checks(folder))
     errors.extend(adfu_checks(folder))
+    errors.extend(sd2_dram_checks(folder))
     cited=[(f['id'],e) for f in json.loads((root/'evidence/findings.json').read_text()) for e in f['evidence']]
     hw=root/'registers/canonical/hardware.json'
     if hw.exists():

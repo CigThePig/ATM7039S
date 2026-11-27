@@ -62,6 +62,8 @@ So code 2 adds about 32 ms of requested delay and leaves two bits changed.
 
 A reusable synthetic GPIO model is in `tools/gpio_model.py`. Under emulation, codes 0 and 2 give identical sequences otherwise, both up to `0xb40690b8` and (with the PR #6 harness, reference scenario) through DRAM init. The AFI `boot_dev` written after DRAM init is `0x20` vs `0x22`.
 
+The [extended SD2 DRAM comparison](../reports/sd2-dram-reconstruction.md) re-executes both code paths with seeded GPIO, PMIC, DRAM and fault scenarios across five releases. The ordered trace records matching DRAM entry and downstream access data with the explicitly modeled loopback latch/pull differences.
+
 ## Timer and delays (CLK-007)
 
 * Timer n control word: `0xb0168008 + 12n`; count word: control + 8. The loader uses n = 0.

@@ -5064,6 +5064,10 @@
       {
         "source": "koriki-v1.0-release",
         "section": "evidence/firmware/adfu-loopback.json persistent_state, scenarios init-*, full_path, dram_stage, downstream"
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "section": "evidence/firmware/sd2-dram-comparison.json, static_gpio_address_scan and downstream_gpio_accesses; no downstream access in the executed cold, failure, retry and resume cases"
       }
     ],
     "supporting_evidence": [
@@ -5078,6 +5082,65 @@
       "BOOT-025",
       "BOOT-026",
       "GPIO-003",
+      "MEM-010",
+      "BOOT-028"
+    ]
+  },
+  {
+    "id": "BOOT-028",
+    "subsystem": "boot",
+    "confidence": "strongly-supported",
+    "classification": "reverse-engineering-result",
+    "scope": "release-binary",
+    "claim": "Through the executed DRAM caller and main outcome dispatch, boot codes 0 and 2 agree after their verified boot-word reads, the ADFU GPIO loopback accesses and the AFI boot-device byte are accounted for. This holds for the normal-continuation, returned-failure, bounded poll and resume scenarios across all five hash-verified releases. The ideal-loopback control takes ADFU before DRAM for code 2 and continues for code 0.",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "section": "evidence/firmware/sd2-dram-comparison.json, releases, distinct_pairs and normalization"
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "anbernic-stock-archive"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "The Boot ROM, electrical training, I2C transport and pad coupling are outside this result. Full comparison boundaries begin at the supplied SRAM INI and start through main 0xb4065420; later app.bin and U-Boot execution use separate evidence.",
+    "related_findings": [
+      "BOOT-022",
+      "BOOT-025",
+      "BOOT-026",
+      "GPIO-004",
+      "MEM-010",
+      "MEM-012"
+    ]
+  },
+  {
+    "id": "MEM-012",
+    "subsystem": "memory",
+    "confidence": "strongly-supported",
+    "classification": "reverse-engineering-result",
+    "scope": "release-binary",
+    "claim": "On both boot codes, the stock DRAM caller can produce AFI stores and SRAM INI write-back after an initialization error, and main takes the recovery branch. A diagnostic memory-test failure after successful initialization still reaches the next-stage boundary. Actual stores and the main branch are independently observable in the synthetic trace. A boot-classified success and physical memory reliability are different properties.",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "section": "evidence/firmware/sd2-dram-comparison.json, distinct_pairs: terminal, memory_test, record_final and afi"
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "anbernic-stock-archive"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "AFI and diagnostic data are from synthetic RAM. OBS-001 constrains the kernel address range and DT memory property only.",
+    "related_findings": [
+      "BOOT-028",
+      "MEM-007",
+      "MEM-009",
       "MEM-010"
     ]
   }

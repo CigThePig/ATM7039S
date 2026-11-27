@@ -40,6 +40,7 @@ Usage::
 import argparse
 from dataclasses import dataclass, field, asdict
 import hashlib
+import gc
 import json
 from pathlib import Path
 import struct
@@ -743,7 +744,7 @@ def mode_comparison(loader):
 def mode1_model_sweep(loader, clocks=range(100, 1201)):
     """Unicorn mode 1 against ddr_model.run(mode=1) at every clock (primary record, reference hardware)."""
     bad = []
-    for clk in clocks:
+    for step, clk in enumerate(clocks, 1):
         h = Harness(loader)
         h.call(de.F_INI_COPY, r0=de.INI_LOAD)
         h.uc.mem_write(de.PARAM, clk.to_bytes(2, 'little'))
@@ -754,6 +755,9 @@ def mode1_model_sweep(loader, clocks=range(100, 1201)):
         if [(int(w['address'], 16), int(w['value'], 16)) for w in h.writes] != [(w.address, w.value) for w in m['writes']] \
                 or [p['text'] for p in h.prints] != m['prints'] or (ret == 0) != (m['result'] == '0x0'):
             bad.append(clk)
+        del h
+        if step % 8 == 0:
+            gc.collect()
     return dict(clocks=[min(clocks), max(clocks)], count=len(clocks), mismatches=bad)
 
 
@@ -841,6 +845,11 @@ def geometry_study(loader):
                                          reported_capacity_mib=h.param()['capacity_mib'] if ret == 0 else None,
                                          rcc=hex(h.param()['rcc']), cs=h.param()['cs'], writeback=wb,
                                          equals_shipped_primary=wb == shipped, memtest_last_line=mt))
+                        # Unicorn holds bound-method hook cycles. Reclaim their mapped pages
+                        # during the sweep, before exhausting the process's mapping limit.
+                        del h
+                        if len(rows) % 8 == 0:
+                            gc.collect()
     groups = {}
     for r in rows:
         k = (r['return_value'], r['reported_capacity_mib'], r['rcc'], r['cs'], r['memtest_last_line'])
