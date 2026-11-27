@@ -1,6 +1,6 @@
 # Read-only Windows operator helper. No raw disk access or device writes.
 param(
-    [Parameter(Mandatory=$true)][ValidateSet('Setup','Prepared','Analyse','Postflight')][string]$Action,
+    [Parameter(Mandatory=$true)][ValidateSet('Setup','Prepared','Analyse','Postflight','RootfsReview')][string]$Action,
     [string]$CaptureFolder,
     [string]$Results = (Join-Path $HOME 'Downloads\ATM7039S-V3-results')
 )
@@ -29,6 +29,10 @@ try {
     $share = Get-TestVolume 'SHARE'
     if ($boot.Disk -ne $share.Disk) { throw 'BATOCERA and SHARE are not on the same disk.' }
     if (-not (Test-Path (Join-Path $boot.Path 'KERNEL.DTB') -PathType Leaf)) { throw 'Missing KERNEL.DTB.' }
+    if ($Action -eq 'RootfsReview') {
+        Invoke-Python -Arguments @('tools/v3_rootfs_review.py','--card',(Join-Path $boot.Path 'boot\BATOCERA'))
+        return
+    }
     $Results = [IO.Path]::GetFullPath($Results)
     $resultPartition = Get-Partition -DriveLetter $Results.Substring(0,1)
     if ($resultPartition.DiskNumber -eq $boot.Disk) { throw 'Results must be on the computer, not the card.' }

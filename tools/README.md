@@ -166,3 +166,7 @@ Tests: `tests/test_boot_chain.py` covers hand-encoded A32 fixtures (call trackin
 | `dram_complete.py resume LOADER --case NAME` / `memtest LOADER --capacity N --ram wrap:MiB` | One resume case or memory-test run, as JSON | Same models |
 
 Tests: `tests/test_dram_complete.py` (models, boundary values, committed evidence, harness RAM/fault mechanics on hand-encoded A32). `ATM7039S_STOCK_LOADERS=DIR` re-runs the firmware-backed comparisons.
+
+### V3 operator recovery
+
+`v3_operator.ps1` provides Windows setup, prepared/postflight and analysis actions with automatic labelled volume detection. `python tools/v3_rootfs_review.py` (Windows auto-detection or explicit `--card`) stages verified local ext4 snapshots, compares reachable file trees, checkpoints hashes and metadata in `.v3-rootfs-review/` and saves a private report. It reads the card and original image without modifying them. A mismatch remains a preflight FAIL until reviewed; the diagnostic is not an override. Keep its cache/report private and off the card. See [OBS-001](../reports/v3-first-hardware-capture.md).

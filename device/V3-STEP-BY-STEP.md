@@ -287,7 +287,7 @@ What to do if it reports a problem:
 | Message | What to do |
 |---|---|
 | `card-boot:… DIFFERS` or `missing` | Stop; preserve the card and report the mismatch. |
-| `card-rootfs FAIL` | Do not boot or reflash automatically. First boot can modify the ext4 container, as in OBS-001. Use the read-only diagnostic and obtain explicit review of the specific differences. A catalogue hash mismatch remains a FAIL until reviewed. |
+| `card-rootfs FAIL` | Do not boot or reflash automatically. First boot can modify the ext4 container, as in OBS-001. Run `python tools/v3_rootfs_review.py` on Windows (or supply `--card /path/to/boot/BATOCERA` on other platforms) and obtain explicit review of the specific differences. A catalogue hash mismatch remains a FAIL until reviewed. |
 | `card-overclocking FAIL` | Do not edit the file by hand. Start again from Part 3. |
 | `card-first-boot WARN` | The first boot did not finish. Repeat Part 4. |
 | `card-script FAIL` | The copied file is not the registered script. Delete it, then repeat 5.3 exactly. |
@@ -508,4 +508,4 @@ Those need a different, separately approved test. A missing item in the results 
 
 ## Windows operator helper
 
-From the project folder, use `powershell -NoProfile -File tools/v3_operator.ps1 -Action Setup`, `-Action Prepared`, or `-Action Analyse -CaptureFolder 'C:\path\to\private\atm-capture-...'`, or `-Action Postflight`. This helper detects labelled mounted partitions on the same disk, saves local outputs, and never formats, flashes, boots or copies the capture script to a card. It does not replace mandatory raw checks or the owner's checklist. See [OBS-001 report](../reports/v3-first-hardware-capture.md).
+From the project folder, use `powershell -NoProfile -File tools/v3_operator.ps1 -Action Setup`, `-Action Prepared`, or `-Action Analyse -CaptureFolder 'C:\path\to\private\atm-capture-...'`, or `-Action Postflight`. This helper detects labelled mounted partitions on the same disk, saves local outputs, and never formats, flashes, boots or copies the capture script to a card. It does not replace mandatory raw checks or the owner's checklist. The rootfs diagnostic stages verified local snapshots, requires about 5 GB extra space, saves progress in a gitignored cache, and can be restarted with the same command. Its private report is `.v3-rootfs-review/report.json`; it is not an automatic preflight override. See [OBS-001 report](../reports/v3-first-hardware-capture.md).

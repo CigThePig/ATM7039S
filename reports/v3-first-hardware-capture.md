@@ -34,3 +34,7 @@ The original container SHA-256 matches the catalogue. After first boot the card 
 ## Offline follow-up
 
 Trace all boot-code and MMC paths against SD2 evidence before changing the reconstructed boot chain. Preserve competing explanations until supported; use early serial only under a separate approved plan. Fix operator tooling before another physical test: automatic drive discovery, UTF-8, dependency setup, progress, verified local snapshots, resumable checkpoints, readable errors, no raw dumps by default, and no bypass of unknown mismatches. Keep private capture and local caches out of version control.
+
+## Diagnostic implementation
+
+The working local-snapshot and SQLite recovery diagnostic from the session is now in `tools/v3_rootfs_review.py`. It checks source availability before scanning, re-verifies local snapshots, commits checkpoints every 50 paths or five seconds between paths, detects the boot volume on Windows and runs with background CPU priority. The scan can be restarted; partial file copies restart, completed copies and matching checkpoints are reused. The tool produces a private report including added and removed records; a human must review a mismatch against the live card's current hash and scope. No blanket allowlist or bypass is provided. Regression tests use synthetic filesystem nodes; actual Windows integration and pinned firmware testing remain necessary.

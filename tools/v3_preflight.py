@@ -294,7 +294,7 @@ def check_card_rootfs(folder, root=ROOT):
     ok = digest == cat['container_sha256']
     return [result('card-rootfs', 'PASS' if ok else 'FAIL',
                    'boot/BATOCERA ' + ('equals' if ok else 'DIFFERS from') + ' the catalogued root filesystem' +
-                   ('' if ok else '; first boot can change ext4 metadata and runtime paths. Preserve card and run the read-only rootfs review; do not reflash or bypass automatically.'),
+                   ('' if ok else '; first boot can change ext4 metadata and runtime paths. Preserve card and run python tools/v3_rootfs_review.py; do not reflash or bypass automatically.'),
                    sha256=digest, expected_sha256=cat['container_sha256'])]
 
 
