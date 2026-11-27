@@ -126,6 +126,31 @@ def dram_complete_checks(folder):
     return errors
 
 
+def predram_checks(folder):
+    """Consistency of sd2-predram.json (PR #9) with the loader manifest, the findings ledger and its own rules."""
+    p=folder/'sd2-predram.json'
+    if not p.exists():return []
+    errors=[]
+    try:
+        m=json.loads(p.read_text());loaders=json.loads((folder/'stock-loaders.json').read_text())['loaders']
+        fids={f['id'] for f in json.loads((folder.parent/'findings.json').read_text())}
+        for name,r in m['releases'].items():
+            if loaders.get(name,{}).get('sha256')!=r['loader_sha256']:errors.append('pre-DRAM loader hash mismatch '+name)
+            if not r.get('verified') or r.get('actual_sha256')!=r.get('expected_sha256'):errors.append('pre-DRAM image not verified '+name)
+        if len({r['bootloader_code_sha256'] for r in m['releases'].values()})!=1:errors.append('pre-DRAM: code differs between releases')
+        if m['release_comparison'] and not m['release_comparison']['all_function_code_identical']:
+            errors.append('pre-DRAM: function difference not explained')
+        for f in m['findings']:
+            if f not in fids:errors.append('pre-DRAM evidence cites unknown finding '+f)
+        for r in m['register_inventory']:
+            if r['boot_code_condition'] not in ('both','code 0 only','code 2 only') and not r['boot_code_condition'].startswith('scenario-only'):
+                errors.append('pre-DRAM: bad boot_code_condition at '+r['instruction_address'])
+            if r['access_type']=='read' and r.get('read_value_source') not in m['synthetic_rules']:
+                errors.append('pre-DRAM: read without a named synthetic rule at '+r['instruction_address'])
+        for lab,run in m['runs'].items():
+            if run['result']['error']:errors.append('pre-DRAM run error '+lab)
+    except (KeyError,ValueError,OSError,TypeError) as e:errors.append('invalid pre-DRAM evidence: '+str(e))
+    return errors
 def validate(root):
     errors=[];index={}
     folder=root/'evidence/firmware'
@@ -154,6 +179,7 @@ def validate(root):
         except (KeyError,ValueError,OSError) as e:errors.append('invalid payload manifest '+p.name+': '+str(e))
     errors.extend(stock_index(root,index))
     errors.extend(dram_complete_checks(folder))
+    errors.extend(predram_checks(folder))
     cited=[(f['id'],e) for f in json.loads((root/'evidence/findings.json').read_text()) for e in f['evidence']]
     hw=root/'registers/canonical/hardware.json'
     if hw.exists():

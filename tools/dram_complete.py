@@ -616,9 +616,12 @@ RESUME_CASES = [
 ]
 
 
-def run_caller(loader, pmic, scenario, ini_patch=None, ram=None, follow_resume=True, limit=3_000_000):
-    """Execute 0xb40665d0(ini, 0) as main does, then, on return 2, 0xb40664e4 (main's resume branch)."""
-    h = Harness(loader, scenario=scenario, pmic=pmic, ram=ram, limit=limit)
+def run_caller(loader, pmic, scenario, ini_patch=None, ram=None, follow_resume=True, limit=3_000_000, boot_code=0):
+    """Execute 0xb40665d0(ini, 0) as main does, then, on return 2, 0xb40664e4 (main's resume branch).
+
+    boot_code is the word block 0 leaves at 0xb4064c00. The committed PR #6 evidence uses the default 0 (SD0 path);
+    predram_analysis.py compares 0 and 2 through here (PR #9)."""
+    h = Harness(loader, scenario=scenario, pmic=pmic, ram=ram, limit=limit, boot_code=boot_code)
     for off, b in (ini_patch or {}).items():
         h.uc.mem_write(de.INI_LOAD + off, bytes(b))
     afi_before = bytes(h.uc.mem_read(AFI, 16))
