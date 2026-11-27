@@ -215,6 +215,8 @@ def dram_case(name):
 
 
 class Execution:
+    loader_type = Loader
+
     def __init__(self, disk, loader, identity, scenario, detail):
         self.disk, self.identity, self.scenario, self.detail = disk, identity, scenario, detail
         self.graph = StageGraph(identity['actual_sha256'], sd2.digest(vars(scenario)))
@@ -224,8 +226,8 @@ class Execution:
         if scenario.pmic_pending:
             self.case.pmic[0x35] = 2
         self.clock_gate = {'sd0': 0x10, 'sd2': 0x80}[scenario.medium]
-        self.loader = Loader(loader, disk, self.case, self.clock_gate, scenario.fault == 'rom-read',
-                             scenario.fault == 'sfvd-absent')
+        self.loader = self.loader_type(loader, disk, self.case, self.clock_gate, scenario.fault == 'rom-read',
+                                       scenario.fault == 'sfvd-absent')
         self.dram_result = None
         self.environment = None
         self.environment_attempts = None

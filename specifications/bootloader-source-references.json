@@ -1,0 +1,71 @@
+[
+  {
+    "id": "arm-linux-boot-protocol",
+    "source": "linux",
+    "revision": "adc218676eef25575469234709c2d87185ca223a",
+    "path": "Documentation/arch/arm/booting.rst",
+    "git_blob_sha1": "5974e37b3d2029eab0eb92a45818cf5f976e0690",
+    "line_ranges": [
+      [
+        77,
+        81
+      ],
+      [
+        130,
+        142
+      ],
+      [
+        186,
+        234
+      ]
+    ],
+    "license": "Linux kernel documentation; no file-specific SPDX in the inspected file",
+    "scope": "ARM Linux software interface; target kernel policy must be verified separately"
+  },
+  {
+    "id": "atc2603c-register-layout",
+    "source": "linux",
+    "revision": "adc218676eef25575469234709c2d87185ca223a",
+    "path": "include/linux/mfd/atc260x/atc2603c.h",
+    "git_blob_sha1": "07ac640ef3e13858145e9582ec404031314c54cc",
+    "line_ranges": [
+      [
+        26,
+        48
+      ],
+      [
+        67,
+        83
+      ],
+      [
+        107,
+        124
+      ],
+      [
+        196,
+        199
+      ]
+    ],
+    "license": "GPL-2.0+",
+    "scope": "ATC2603C source layout; fitted RG35XX part, revision and pin semantics remain unverified"
+  },
+  {
+    "id": "atc2603c-regulator-driver",
+    "source": "linux",
+    "revision": "adc218676eef25575469234709c2d87185ca223a",
+    "path": "drivers/regulator/atc260x-regulator.c",
+    "git_blob_sha1": "3e9f8fd54fca8fe9059ccf37df86b0fd494e3f56",
+    "line_ranges": [
+      [
+        209,
+        224
+      ],
+      [
+        300,
+        312
+      ]
+    ],
+    "license": "GPL-2.0+",
+    "scope": "Upstream ATC2603C regulator model; does not identify board rails or electrical behavior"
+  }
+]

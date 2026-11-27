@@ -207,3 +207,14 @@ python tools/sd2_dram_analysis.py evidence --firmware-dir FW OUT.json
 ## Unified boot chain
 
 `unified_boot_chain.py` verifies a locally available pinned image and follows the supported SD path through the pre-kernel boundary. Run `python tools/unified_boot_chain.py list` for releases and scenarios. Use `run --firmware-dir FW --coverage --compare-obs` for the reference, `run --detail --output trace.json` with a firmware directory for local events and snapshots, and `evidence --firmware-dir FW OUT.json` to regenerate the combined results. [Architecture and command details](../docs/boot-chain-emulation.md)
+
+## Bootloader initialization contract
+
+| Command | Purpose |
+|---|---|
+| `python tools/bootloader_contract.py generate` | Generate the structured contract and Markdown operation reference from the curated source and pinned evidence |
+| `python tools/bootloader_contract.py validate` | Check deterministic outputs, evidence and operand references, conditional edges, event order, terminal paths and delivered state |
+| `python tools/bootloader_contract.py compare` | Show configuration and selected reference results across the five pinned releases |
+| `ATM_FIRMWARE_DIR=FW python tools/bootloader_contract.py replay --check` | Execute 16 selected cases from pinned expanded images and compare the ordered artifact byte for byte |
+
+The `replay` command without `--check` regenerates the trace. Ordinary validation runs without firmware or emulator dependencies. [Reproduction and scope](../docs/bootloader-initialization-contract.md#18-dependencies-provenance-and-reproduction)

@@ -18,6 +18,7 @@ jobs:
       - name: Lab launcher self-test (fresh venv, as the operator runs it)
         run: ./start-lab.sh selftest | tee selftest.txt && grep -q 'selftest OK' selftest.txt
       - run: python tools/research.py validate
+      - run: python tools/bootloader_contract.py validate
       - run: python tools/research.py generate --check
       - run: python tools/render_catalogue.py
       - run: git diff --exit-code -- evidence/catalogue.md evidence/findings.md

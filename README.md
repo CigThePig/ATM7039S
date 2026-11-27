@@ -89,3 +89,7 @@ This builds on work by macromorgan, Yohanes Nugroho/Tinyhack, rg35xx-cfw and KNU
 ## Unified boot-chain reconstruction
 
 The offline tool joins live block-0, pre-DRAM, DDR and app.bin execution with bounded U-Boot routines and the selected boot files. The five pinned firmware images reach a reconstructed Linux entry under the reference models. [Architecture](docs/boot-chain-emulation.md) · [Research report](reports/unified-boot-chain-reconstruction.md)
+
+## Independent bootloader initialization specification
+
+The contract follows the stock initialization path from the modeled Boot ROM boundary to the Linux entry. It records which behaviors existing stages consume, which conditions need hardware evidence, and what each independent implementation profile would require. [Specification](docs/bootloader-initialization-contract.md) · [Operations and dependencies](docs/bootloader-operation-reference.md)
