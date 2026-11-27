@@ -6,6 +6,7 @@ header, so other web pages and other computers cannot drive it. Long work runs i
 background thread; the page polls for progress, so the window never freezes and the
 computer stays usable.
 """
+import contextlib
 import http.server
 import json
 import logging
@@ -63,6 +64,13 @@ class Lab:
             h.close()
             self.log.removeHandler(h)
 
+    def stop_and_wait(self):
+        """Do not release the process lock while a worker can still write state."""
+        if self.thread and self.thread.is_alive():
+            if self.job:
+                self.job.cancel()
+            self.thread.join()
+
     # ---- state for the page
     def state(self):
         s = self.session
@@ -78,6 +86,7 @@ class Lab:
         a, gz, img = steps._image_paths(self.env)
         removable = []
         target_matches = False
+        access_problem = None
         try:
             candidates = disks.flash_candidates(self.env.inventory())
             for d in candidates:
@@ -85,10 +94,13 @@ class Lab:
             if self.session and len(candidates) == 1 and self.session.data.get('card'):
                 target_matches = disks.compatible_binding(self.session.data['card'],
                     disks.media_binding(candidates[0], self.session.data['salt']))
+                if target_matches:
+                    access_problem = steps.raw_access_problem(self.env, candidates[0])
         except Exception as e:  # listing is advisory here; Etcher shows the authoritative list
             self.log.warning('flash listing failed: %s', e)
         return dict(image=str(img), image_ready=img.exists(), removable=removable,
-                    target_unique=len(removable) == 1 and img.exists() and target_matches)
+                    access_problem=access_problem,
+                    target_unique=len(removable) == 1 and img.exists() and target_matches and not access_problem)
 
     # ---- actions
     def new_session(self):
@@ -178,14 +190,20 @@ class Lab:
             candidates = disks.flash_candidates(self.env.inventory())
             if len(candidates) != 1:
                 raise SessionError('connect exactly one marked spare card before continuing; do not flash')
+            problem = steps.raw_access_problem(self.env, candidates[0])
+            if problem:
+                raise SessionError(problem)
             # Save the compatibility binding only after all physical confirmations.
             self.session.confirm(step_id, answers)
             self.session.data['card'] = dict(disks.media_binding(candidates[0], self.session.data['salt']),
                                              first_seen_stage='before-flash')
             self.session.save()
         else:
-            if step_id == 'flash' and not self.flash_info()['target_unique']:
-                raise SessionError('exactly one matching removable disk and the verified image are required; do not flash')
+            if step_id == 'flash':
+                info = self.flash_info()
+                if not info['target_unique']:
+                    raise SessionError(info['access_problem'] or
+                                       'exactly one matching removable disk and the verified image are required; do not flash')
             self.session.confirm(step_id, answers)
         self.problem, self.last_lines = None, []
         self.log.info('step %s confirmed by operator', step_id)
@@ -286,9 +304,9 @@ class Server(socketserver.ThreadingMixIn, http.server.HTTPServer):
     allow_reuse_address = False
 
 
-def serve(lab, port=0, open_browser=True, ready=None):
+def serve(lab, port=0, open_browser=True, ready=None, *, lock_held=False):
     token = secrets.token_urlsafe(24)
-    with instance_lock(lab.data / 'lab.lock'):
+    with (contextlib.nullcontext() if lock_held else instance_lock(lab.data / 'lab.lock')):
         srv = Server(('127.0.0.1', port), None)
         real = srv.server_address[1]
         srv.RequestHandlerClass = make_handler(lab, token, real)
@@ -309,4 +327,4 @@ def serve(lab, port=0, open_browser=True, ready=None):
             if lab.job:
                 lab.job.cancel()
             srv.server_close()
-            time.sleep(0.2)
+            lab.stop_and_wait()

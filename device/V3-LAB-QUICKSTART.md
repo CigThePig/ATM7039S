@@ -39,3 +39,9 @@ Press **More options → Make a diagnostic bundle** and send that zip file. Raw 
 The detailed manual procedure (only if the lab cannot be used) is [V3-STEP-BY-STEP.md](V3-STEP-BY-STEP.md).
 
 On USB readers the software may not be able to distinguish two physically identical cards. Your label and confirmation are essential; the lab checks the prepared card's contents again before writing. A third read-only administrator prompt is expected after capture on Windows.
+
+### Linux card access
+
+Before you flash, the lab checks that your account can open the identified spare **whole disk** read-only. Linux may deny this even if its files are mounted. If the lab blocks you, ask your system administrator to grant read-only access to that specific device (not a partition); do not run the whole lab as root or change permissions on unrelated disks. The permission can disappear when the card is unplugged, so the raw checks also explain how to recover if access is lost. All three raw checks remain mandatory. Never flash while the lab reports a blocked target.
+
+Use either the browser or the CLI with a given lab-data folder, not both at once. The Windows PowerShell fallback uses the same local Python environment created by its Setup action.

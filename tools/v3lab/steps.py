@@ -13,7 +13,9 @@ import json
 import os
 from pathlib import Path
 import platform
+import re
 import shutil
+import stat
 import socket
 import sys
 
@@ -365,13 +367,56 @@ def compare_raw(previous, results):
                  detail='raw loader, U-Boot and SFVD match the checked baseline')]
 
 
+def linux_raw_permission_message(path):
+    return (f'Linux raw-device read access is required for {path}. Ask your system administrator '
+            'to grant your account read-only access to this identified spare whole-disk device '
+            '(not a partition). The lab will not elevate or change permissions itself. '
+            'Do not run the entire lab as root or grant access to unrelated disks. '
+            'After reconnecting the card, access may need to be granted again. '
+            'Keep the card unchanged and retry once access is available.')
+
+
+def probe_linux_raw_access(path):
+    """Open only the identified whole block device read-only, without reading or writing it."""
+    if not isinstance(path, str) or not re.fullmatch(r'/dev/(?:sd[a-z]+|mmcblk[0-9]+)', path):
+        raise ValueError('not a supported whole spare-card block device')
+    fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK | os.O_NOFOLLOW)
+    try:
+        if not stat.S_ISBLK(os.fstat(fd).st_mode):
+            raise ValueError('not a whole block device')
+    finally:
+        os.close(fd)
+
+
+def raw_access_problem(env, card):
+    """Before flashing on Linux, verify that the mandatory later raw read is possible.
+
+    The injected raw reader is an offline test seam, not an operator override.
+    """
+    if not sys.platform.startswith('linux') or env.raw_reader is not None:
+        return None
+    path = card.get('path')
+    try:
+        probe_linux_raw_access(path)
+    except PermissionError:
+        return linux_raw_permission_message(path) + ' Do not flash until this check passes.'
+    except (OSError, ValueError) as e:
+        return f'Cannot open the identified spare whole-disk device read-only ({e}). Do not flash; reconnect it and retry.'
+    return None
+
+
 def default_raw_reader(card):
-    """Read the first 4 MiB of the card. Windows needs one administrator approval for this read."""
+    """Read the first 4 MiB. Windows elevates only this read; Linux requires prior read access."""
     import card_boot_read as cbr
     if os.name == 'nt':
         from . import elevate
         return elevate.raw_head(card['number'], expected_size=card['size'])
-    return cbr.read_posix_card(card['path'])
+    try:
+        return cbr.read_posix_card(card['path'])
+    except PermissionError as e:
+        if sys.platform.startswith('linux'):
+            raise StoreError(linux_raw_permission_message(card['path'])) from e
+        raise
 
 
 def step_check_prepared(env, session, job):

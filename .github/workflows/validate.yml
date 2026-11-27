@@ -71,6 +71,9 @@ jobs:
             $errs = $null; [void][System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $f), [ref]$null, [ref]$errs)
             if ($errs) { $errs | Format-List; throw "parse errors in $f" }
           }
+      - name: Windows fallback uses its configured environment (simulated volumes)
+        shell: pwsh
+        run: ./tests/windows_fallback_smoke.ps1
       - name: Windows disk inventory command runs without administrator rights
         shell: pwsh
         run: python -c "import sys; sys.path.insert(0,'tools'); from v3lab import disks; d=disks.collect(); print(len(d),'disks'); print(disks.public_view(disks.identify(d))['status'])"

@@ -11,6 +11,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $env:PYTHONUTF8 = '1'
 $root = Split-Path -Parent $PSScriptRoot
+$labPython = Join-Path $root '.venv-lab\Scripts\python.exe'
 function Get-TestVolume([string]$Label) {
     $vol = @(Get-Volume -FileSystemLabel $Label | Where-Object DriveLetter)
     if ($vol.Count -ne 1) { throw "Expected one mounted $Label partition. Check Disk Management; never format." }
@@ -20,7 +21,7 @@ function Get-TestVolume([string]$Label) {
     return @{ Path = "$($vol[0].DriveLetter):\"; Disk = $part.DiskNumber }
 }
 function Invoke-Python([string[]]$Arguments) {
-    & python @Arguments
+    & $labPython @Arguments
     if ($LASTEXITCODE -ne 0) { throw "Python exited with code $LASTEXITCODE. Preserve the card and report the output." }
 }
 Push-Location $root
@@ -28,7 +29,13 @@ try {
     if ($Action -eq 'Setup') {
         Write-Host 'Setup is now automatic: double-click ATM7039S-Lab.cmd (it creates .venv-lab without administrator rights).'
         & cmd /c (Join-Path $root 'ATM7039S-Lab.cmd') selftest
+        if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $labPython -PathType Leaf)) {
+            throw 'Lab setup failed. Run Setup again and review the launcher output.'
+        }
         return
+    }
+    if (-not (Test-Path -LiteralPath $labPython -PathType Leaf)) {
+        throw 'Lab Python environment is missing. Run this helper with -Action Setup first.'
     }
     $boot = Get-TestVolume 'BATOCERA'
     $share = Get-TestVolume 'SHARE'
@@ -50,7 +57,7 @@ try {
     } else {
         $prefix = if ($Action -eq 'Prepared') {'preflight-prepared'} else {'preflight-after'}
         $phaseArgs = if ($Action -eq 'Prepared') { @('--phase','prepared','--image',$Image) } else { @('--phase','post-capture','--baseline',$Baseline) }
-        & python tools/v3_preflight.py --boot-dir ($boot.Path + '.') --share-dir ($share.Path + '.') @phaseArgs --json (Join-Path $Results "$prefix.json") | Tee-Object -FilePath (Join-Path $Results "$prefix.txt")
+        & $labPython tools/v3_preflight.py --boot-dir ($boot.Path + '.') --share-dir ($share.Path + '.') @phaseArgs --json (Join-Path $Results "$prefix.json") | Tee-Object -FilePath (Join-Path $Results "$prefix.txt")
         if ($LASTEXITCODE -ne 0) { throw "Preflight failed; preserved results in $Results. Do not boot or reflash automatically." }
     }
     Write-Host "Results saved in $Results. Review for identifiers before sharing."

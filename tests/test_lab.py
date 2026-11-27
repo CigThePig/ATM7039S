@@ -733,6 +733,27 @@ class SimulatedSession(Tmp):
         self.assertFalse(r.ok)
         self.assertIn('UNEXPLAINED', ' '.join(r.lines))
 
+    def test_linux_raw_access_blocks_before_flash_and_after_reconnect(self):
+        self.run_step('computer')
+        self.run_step('firmware')
+        self.env.raw_reader = None
+        with mock.patch.object(steps.sys, 'platform', 'linux'), mock.patch.object(
+                steps, 'probe_linux_raw_access', side_effect=PermissionError('denied')):
+            with self.assertRaisesRegex(session.SessionError, 'read-only access'):
+                self.confirm('insert-blank')
+            self.assertEqual(self.lab.session.current()['id'], 'insert-blank')
+        with mock.patch.object(steps.sys, 'platform', 'linux'), mock.patch.object(steps, 'probe_linux_raw_access'):
+            self.confirm('insert-blank')
+            self.assertTrue(self.lab.flash_info()['target_unique'])
+        with mock.patch.object(steps.sys, 'platform', 'linux'), mock.patch.object(
+                steps, 'probe_linux_raw_access', side_effect=PermissionError('reconnected')):
+            info = self.lab.flash_info()
+            self.assertFalse(info['target_unique'])
+            self.assertIn('Do not flash', info['access_problem'])
+            with self.assertRaisesRegex(session.SessionError, 'read-only access'):
+                self.confirm('flash')
+            self.assertEqual(self.lab.session.current()['id'], 'flash')
+
     def test_flash_ambiguous_targets_block_before_confirmation(self):
         self.run_step('computer')
         self.run_step('firmware')
@@ -933,6 +954,78 @@ class DiagnosticsTests(Tmp):
         self.assertIn('id="copy-image-path"', page)
         self.assertIn('navigator.clipboard.writeText(S.extra.flash.image)', page)
         self.assertNotIn('onclick="navigator.clipboard.writeText', page)
+
+
+class CliLockTests(Tmp):
+    def test_all_cli_entry_points_refuse_held_lock_before_loading_session(self):
+        import subprocess
+        env = {**os.environ, 'PYTHONPATH': str(ROOT / 'tools'), 'PYTHONUTF8': '1'}
+        data = self.tmp / 'shared data'
+        s = session.Session.create(data / 'sessions')
+        before = s.path.read_bytes()
+        with store.instance_lock(data / 'lab.lock'):
+            for command in ('open', 'run', 'confirm', 'new', 'status', 'bundle'):
+                with self.subTest(command=command):
+                    result = subprocess.run([sys.executable, '-m', 'v3lab', command, '--data', str(data),
+                                             '--no-browser'], env=env, input='', capture_output=True,
+                                            text=True, encoding='utf-8', timeout=15)
+                    self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                    self.assertIn('another copy of the lab', result.stderr)
+                    self.assertEqual(s.path.read_bytes(), before)
+            self.assertEqual(len(list((data / 'sessions').glob('*/session.json'))), 1)
+            self.assertFalse((data / 'logs').exists())
+        result = subprocess.run([sys.executable, '-m', 'v3lab', 'status', '--data', str(data)],
+                                env=env, capture_output=True, text=True, encoding='utf-8', timeout=15)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('Check this computer', result.stdout)
+
+    def test_worker_is_joined_before_shutdown(self):
+        lab = app.Lab(ROOT, self.tmp)
+        job = jobs.Job('test')
+        stopped = threading.Event()
+        def work():
+            while not job.cancelled:
+                time.sleep(0.01)
+            stopped.set()
+        lab.job = job
+        lab.thread = threading.Thread(target=work, daemon=True)
+        lab.thread.start()
+        try:
+            lab.stop_and_wait()
+            self.assertTrue(stopped.is_set())
+            self.assertFalse(lab.thread.is_alive())
+        finally:
+            job.cancel()
+            lab.thread.join(2)
+            lab.close()
+
+
+class LinuxRawPermissionTests(unittest.TestCase):
+    def test_probe_uses_read_only_and_closes_descriptor(self):
+        # Use fake OS calls, including Linux-only flag constants on Windows.
+        with mock.patch.object(steps.os, 'O_NONBLOCK', 2048, create=True), mock.patch.object(
+                steps.os, 'O_NOFOLLOW', 131072, create=True), mock.patch.object(
+                steps.os, 'open', return_value=42) as opened, mock.patch.object(
+                steps.os, 'fstat') as inspected, mock.patch.object(steps.os, 'close') as closed:
+            inspected.return_value.st_mode = steps.stat.S_IFBLK
+            steps.probe_linux_raw_access('/dev/sdz')
+            opened.assert_called_once_with('/dev/sdz', steps.os.O_RDONLY | 2048 | 131072)
+            closed.assert_called_once_with(42)
+            inspected.return_value.st_mode = steps.stat.S_IFREG
+            with self.assertRaisesRegex(ValueError, 'not a whole block'):
+                steps.probe_linux_raw_access('/dev/sdz')
+            self.assertEqual(closed.call_count, 2)
+            with self.assertRaises(ValueError):
+                steps.probe_linux_raw_access('/dev/sdz1')
+            self.assertEqual(opened.call_count, 2)
+
+    def test_raw_read_permission_error_remains_a_blocking_failure(self):
+        import card_boot_read
+        with mock.patch.object(steps.sys, 'platform', 'linux'), mock.patch.object(
+                steps.os, 'name', 'posix'), mock.patch.object(card_boot_read, 'read_posix_card',
+                                                           side_effect=PermissionError('denied')):
+            with self.assertRaisesRegex(store.StoreError, 'read-only access'):
+                steps.default_raw_reader({'path':'/dev/sdz'})
 
 
 class LauncherTests(unittest.TestCase):

@@ -6,6 +6,7 @@ import sys
 
 from .app import Lab, serve
 from .session import Session, SessionError
+from .store import StoreError, instance_lock
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -21,9 +22,25 @@ def main(argv=None):
         sys.stdout.reconfigure(errors='backslashreplace')
     if a.command == 'selftest':
         return selftest()
-    lab = Lab(ROOT, a.data)
+    data = Path(a.data or ROOT / 'lab-data').resolve()
+    try:
+        # Lock before Lab.__init__ loads the last session, including for the
+        # browser launcher. Every entry point shares the same data-directory lock.
+        with instance_lock(data / 'lab.lock'):
+            lab = Lab(ROOT, data)
+            try:
+                return run_locked(a, lab)
+            finally:
+                lab.stop_and_wait()
+                lab.close()
+    except (StoreError, SessionError) as e:
+        print(str(e), file=sys.stderr)
+        return 1
+
+
+def run_locked(a, lab):
     if a.command == 'open':
-        serve(lab, a.port, not a.no_browser)
+        serve(lab, a.port, not a.no_browser, lock_held=True)
         return 0
     if a.command == 'new':
         lab.new_session()

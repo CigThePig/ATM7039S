@@ -93,7 +93,7 @@ function render() {
             <button id="copy-image-path">Copy the file path</button>
             <p>3. <b>Select target</b>: choose the spare card. Removable disks connected now:</p>
             <ul>${f.removable.map(d => `<li>${esc(d.model)} — ${d.size_gb} GB (${esc(d.bus)})</li>`).join('') || '<li>none found: is the card inserted?</li>'}</ul>
-            <p>${f.target_unique ? 'Check that the single disk is your marked spare card before pressing Flash.' : '<b>STOP:</b> no unique removable target or firmware image is available. Do not flash.'} 4. Press <b>Flash</b> only after confirming the target and wait for “Flash Complete!”.
+            <p>${f.target_unique ? 'Check that the single disk is your marked spare card before pressing Flash.' : '<b>STOP:</b> ' + esc(f.access_problem || 'No unique removable target or firmware image is available. Do not flash.')} 4. Press <b>Flash</b> only after confirming the target and wait for “Flash Complete!”.
             If Windows then asks to format a disk, press <b>Cancel</b>.</p>`;
     }
     h += `<form id="cl">${cur.checklist.map((c,i) => `<label class="check"><input type="checkbox" data-i="${i}"><span>${esc(c)}</span></label>`).join('')}</form>
