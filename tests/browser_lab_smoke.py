@@ -29,7 +29,7 @@ with sync_playwright() as pw:
     page.route('http://127.0.0.1:8765/**', route)
     page.goto('http://127.0.0.1:8765/')
     page.locator('#copy-image-path').click()
-    assert page.evaluate('navigator.clipboard.readText()') == PATH
+    page.wait_for_function('async expected => (await navigator.clipboard.readText()) === expected', arg=PATH)
     page.locator('#cl input').check()
     assert page.locator('#done').is_enabled()
     state['extra']['flash']['target_unique'] = False
