@@ -614,21 +614,6 @@ def predram_subgraph(funcs):
                             'version 0 (0xb4069f2c) or < 0 (0xb406a194)')])
 
 
-def dram_side_effects(code):
-    """Does the DRAM routine (and what it calls) touch the GPIO/pad block or the PMIC? Static, constant-address only."""
-    funcs = call_graph(code, roots=(DRAM_COLD,), stop_at=())
-    rows = static_accesses(code, funcs)
-    gpio = sorted({r['address'] for r in rows if r['address'] and 0xB01B0000 <= int(r['address'], 16) < 0xB01B0300})
-    pmic = sorted({h32(f) for f, r in funcs.items() if r and any(c['target'] in (h32(0xB4069610), h32(0xB40696C0),
-                   h32(0xB40697F4), h32(0xB40697F8), h32(0xB406AC10), h32(0xB406AC60)) for c in r['calls'])})
-    unresolved = sum(1 for r in rows if r['region'] == 'unresolved')
-    return dict(functions=len([f for f in funcs if funcs[f]]), gpio_pad_addresses=gpio, pmic_callers=pmic,
-                unresolved_accesses=unresolved, mmio_blocks=sorted({h32(int(r['address'], 16) & ~0xFFF) for r in rows
-                                                                    if r['region'] == 'mmio'}),
-                note='Constant-address and accessor-call accesses only; unresolved (computed) accesses are counted, not '
-                     'resolved, so absence is static evidence, not proof.')
-
-
 def dram_stage_comparison(loader):
     """Re-run the PR #6 DRAM caller (dram_complete.run_caller, reference scenario only) with boot codes 0 and 2 and
     diff the complete MMIO write and read sequences. All PUBL/uPCTL/PMIC responses there are synthetic."""
@@ -1477,7 +1462,6 @@ def evidence(docs, reference):
         call_graph=graph,
         predram_graph=pre,
         other_reachable_from_main=sorted(f'{h32(f)} {NAMES.get(f) or ""}'.strip() for f in funcs if f not in pre_set),
-        dram_routine_static=dram_side_effects(code),
         call_order=dict(code0=r0['functions_entered'], code2=r2['functions_entered']),
         block0=block0_static(code),
         boot_code=dict(writers=block0_writers(code), references=boot_code_references(code, funcs),
@@ -1584,8 +1568,8 @@ def environment(code, funcs, r0, r2, sysops):
             'to an odd address occurs on the path (decoded).',
             'main clears the loader globals 0xb4070800..0xb407087b (memset, 0xb406540c) before anything else (decoded).',
             'main reloads bootloader.ini (8 sectors) to 0xb4062400 through the Boot ROM service (decoded, executed).',
-            'The only CP15 instructions in code reachable from main before DRAM init are none; SCTLR is read and '
-            'written (bit 12, I-cache) only by 0xb4065fc0/0xb4065fdc, which run after DRAM init or on the ADFU exit; '
+            'No CP15 instruction runs before DRAM init: SCTLR is read and written (bit 12, I-cache) only by '
+            '0xb4065fc0/0xb4065fdc, which main calls after dram_caller returns or on its ADFU exit; '
             'VBAR is written (0xffff0000) only in rom_reentry_adfu 0xb406921c (decoded).',
             'No instruction on the pre-DRAM path writes SP, CPSR or SPSR; no MMU, D-cache or cache maintenance '
             'operation exists in the reachable code (decoded).',

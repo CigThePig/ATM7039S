@@ -99,7 +99,7 @@
    "Block 0 and main execute in A32 (ARM) state: every analysed instruction decodes as A32 and no BX/BLX to an odd address occurs on the path (decoded).",
    "main clears the loader globals 0xb4070800..0xb407087b (memset, 0xb406540c) before anything else (decoded).",
    "main reloads bootloader.ini (8 sectors) to 0xb4062400 through the Boot ROM service (decoded, executed).",
-   "The only CP15 instructions in code reachable from main before DRAM init are none; SCTLR is read and written (bit 12, I-cache) only by 0xb4065fc0/0xb4065fdc, which run after DRAM init or on the ADFU exit; VBAR is written (0xffff0000) only in rom_reentry_adfu 0xb406921c (decoded).",
+   "No CP15 instruction runs before DRAM init: SCTLR is read and written (bit 12, I-cache) only by 0xb4065fc0/0xb4065fdc, which main calls after dram_caller returns or on its ADFU exit; VBAR is written (0xffff0000) only in rom_reentry_adfu 0xb406921c (decoded).",
    "No instruction on the pre-DRAM path writes SP, CPSR or SPSR; no MMU, D-cache or cache maintenance operation exists in the reachable code (decoded)."
   ],
   "inherited_from_boot_rom": [
@@ -6155,14 +6155,6 @@
   "0xb406af30",
   "0xffff0140"
  ],
- "dram_routine_static": {
-  "functions": 23,
-  "gpio_pad_addresses": [],
-  "pmic_callers": [],
-  "unresolved_accesses": 122,
-  "mmio_blocks": [],
-  "note": "Constant-address and accessor-call accesses only; unresolved (computed) accesses are counted, not resolved, so absence is static evidence, not proof."
- },
  "call_order": {
   "code0": [
    "main",
