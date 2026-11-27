@@ -1,5 +1,7 @@
 # Stock boot-chain reconstruction (PR #5)
 
+> **PR #8 note.** This report follows the code-0 / AFI `0x20` (SD0) branch. The physical observation OBS-001 showed that the original RG35XX's TF1 slot is on **SD2**, and the unit takes the code-2 / AFI `0x22` / `emmcboot` branch, traced in [sd2-boot-path-reconciliation.md](sd2-boot-path-reconciliation.md). The functions and addresses below remain correct; the statements that a working SD boot needs code 0 (§4) and that `mmc 0` holds the boot card (§1, §6) apply only to the `0x20` branch. Kept unchanged as the historical record.
+
 Scope: the **original 2022–2023 RG35XX** (Actions ATM7039S), four hash-pinned Anbernic stock releases (221203, 221223, 230309, 20231014), with Koriki v1.0 as a control. Everything here was done offline. No device, card, register, clock or power state was touched, and no firmware or disassembly listing is committed: the repository holds addresses, hashes, short firmware strings and original analysis only.
 
 Findings: **BOOT-012 … BOOT-020**, revised **BOOT-007**; contradictions **C-UENV** (resolved), **C-APPBIN**, **C-DEVCLK**, **C-OPAQUE**. Machine-readable trace: [`evidence/firmware/stock-boot-chain.json`](../evidence/firmware/stock-boot-chain.json). Tool: [`tools/boot_chain.py`](../tools/boot_chain.py).

@@ -1,5 +1,7 @@
 # Running hardware test V3: the complete step-by-step procedure
 
+> **Fallback procedure.** Use [the lab](V3-LAB-QUICKSTART.md) (`ATM7039S-Lab.cmd`) instead whenever possible: it automates every computer step here, finds the card by disk identity, keeps progress across restarts and replaces the byte-level `card-rootfs` check, which always fails after the first boot, with the phase-aware check. If you do follow this guide, run step 5.4 with `--image` so the prepared card is compared semantically: `python tools/v3_preflight.py --boot-dir … --share-dir … --image inputs/koriki-v1.0.img`.
+
 This guide takes you from nothing to a finished, checked V3 capture. Follow it **in order** and do **every** step, including the ones that look unnecessary. Every step says what to do, what you should see, and what to do if you see something else.
 
 * **What V3 is:** you boot a spare microSD card with an unmodified copy of the Koriki v1.0 firmware on the original RG35XX handheld. You then run one small script that **only reads** information the running system already reports, and saves it to the card. Afterwards you check and analyse that information on a computer.
@@ -287,7 +289,7 @@ What to do if it reports a problem:
 | Message | What to do |
 |---|---|
 | `card-boot:… DIFFERS` or `missing` | Stop; preserve the card and report the mismatch. |
-| `card-rootfs FAIL` | Do not boot or reflash automatically. First boot can modify the ext4 container, as in OBS-001. Run `python tools/v3_rootfs_review.py` on Windows (or supply `--card /path/to/boot/BATOCERA` on other platforms) and obtain explicit review of the specific differences. A catalogue hash mismatch remains a FAIL until reviewed. |
+| `card-rootfs FAIL` | Do not boot or reflash automatically. After the first boot the container legitimately changes (FW-021); `v3_preflight.py --image …` compares it semantically with the first-boot rules. A FAIL there means an **unexplained** change: keep the card as it is and send the report (`python tools/v3_rootfs_review.py --phase prepared --image …` writes it to `lab-data/rootfs-review/`). |
 | `card-overclocking FAIL` | Do not edit the file by hand. Start again from Part 3. |
 | `card-first-boot WARN` | The first boot did not finish. Repeat Part 4. |
 | `card-script FAIL` | The copied file is not the registered script. Delete it, then repeat 5.3 exactly. |

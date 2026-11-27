@@ -17,7 +17,7 @@ Session date: 2026-11-27 (host-side date; device clock reported 2022 and is not 
 | Clock policy | 240–1488 MHz exposed; scaling_max and scaling_cur 1008 MHz, performance governor. | Exposed OPPs are not validated safe limits; no overclocking authorized. |
 | Memory | DT and /proc/iomem each describe 256 MiB; MemTotal 237548 KiB; boot log available 150452 KiB; 32 MB vendor reservation and 48 MiB CMA reported. | Distinct quantities; physical capacity, AFI and DRAM training not directly observed. Do not subtract reservations twice. |
 | Console | ttyS3 in running cmdline. | No early UART or ROM console observed. |
-| Boot | boot_dev=sd2, androidboot.bootdev=sd; /boot mmcblk0p1, SD media, controller 0xb0238000; host_id 2 -> index 0. | Resolves Linux side of C-BOOTSLOT for this session; exact ROM/AFI/U-Boot path not directly observed. |
+| Boot | boot_dev=sd2, androidboot.bootdev=sd; /boot mmcblk0p1, SD media, controller 0xb0238000; host_id 2 -> index 0. | Resolves Linux side of C-BOOTSLOT for this session; exact ROM/AFI/U-Boot path not directly observed. **PR #8:** the whole chain is reproduced offline (code 2, AFI 0x22, emmcboot, mmc 1 = SD2); see [the reconciliation](sd2-boot-path-reconciliation.md). |
 | Boot arguments | /chosen and /proc/cmdline agree; missing predicted sd0, extra sd2. | Equality does not alone prove exact CONFIG_CMDLINE policy or executed U-Boot branch. |
 | Strap | allenS500=1 in cmdline. | Consistent with strap-high reconstruction; not direct GPIO measurement. |
 | Initrd | DT initrd bounds match reconstructed addresses; kernel frees 3728 KiB. | No /memreserve/ export or direct U-Boot trace. |
@@ -33,8 +33,12 @@ The original container SHA-256 matches the catalogue. After first boot the card 
 
 ## Offline follow-up
 
+> Done in PR #8: boot-path trace ([report](sd2-boot-path-reconciliation.md)), further analysis of the summary ([report](v3-additional-analysis.md)), the phase-aware rootfs verifier and the lab ([retrospective](v3-session-retrospective.md)). The text below is the plan as written right after the session.
+
 Trace all boot-code and MMC paths against SD2 evidence before changing the reconstructed boot chain. Preserve competing explanations until supported; use early serial only under a separate approved plan. Fix operator tooling before another physical test: automatic drive discovery, UTF-8, dependency setup, progress, verified local snapshots, resumable checkpoints, readable errors, no raw dumps by default, and no bypass of unknown mismatches. Keep private capture and local caches out of version control.
 
 ## Diagnostic implementation
+
+> Superseded by PR #8: `tools/v3_rootfs_review.py` 3.0 and the lab use the audited verifier in `tools/v3lab/rootfs.py`. Audit findings on the 2.x diagnostic described below: it compared raw inode numbers (so legitimately re-created entries such as `/etc/dropbear` appear as inode changes), compared device numbers by only two bytes of the 60-byte block map, had no ext4 feature or health gate, and found the card by volume label only. Its OBS-001 result is consistent with the new verifier, which classifies the same four differences as three expected first-boot changes and one bookkeeping change.
 
 The working local-snapshot and SQLite recovery diagnostic from the session is now in `tools/v3_rootfs_review.py`. It checks source availability before scanning, re-verifies local snapshots, commits checkpoints every 50 paths or five seconds between paths, detects the boot volume on Windows and runs with background CPU priority. The scan can be restarted; partial file copies restart, completed copies and matching checkpoints are reused. The tool produces a private report including added and removed records; a human must review a mismatch against the live card's current hash and scope. No blanket allowlist or bypass is provided. Regression tests use synthetic filesystem nodes; actual Windows integration and pinned firmware testing remain necessary.

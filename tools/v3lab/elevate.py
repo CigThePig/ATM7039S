@@ -13,7 +13,6 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
-import time
 
 
 def _check_disk(number):
@@ -52,9 +51,12 @@ def raw_head(number, timeout=300):
     out = work / 'head.bin'
     args = ['-X', 'utf8', '-m', 'v3lab.elevate', '--disk', str(int(number)), '--out', str(out)]
     tools = str(Path(__file__).resolve().parents[1])
-    ps_args = ','.join("'" + a.replace("'", "''") + "'" for a in args)
-    cmd = (f"$p = Start-Process -FilePath '{sys.executable}' -ArgumentList {ps_args} "
-           f"-WorkingDirectory '{tools}' -Verb RunAs -WindowStyle Hidden -Wait -PassThru; exit $p.ExitCode")
+    q = lambda s: "'" + str(s).replace("'", "''") + "'"   # PowerShell single-quoted literal
+    # Start-Process joins -ArgumentList with spaces and does not quote, so quote each argument for the
+    # child's command line (paths under C:\Users\First Last\ contain spaces).
+    ps_args = ','.join(q('"' + a + '"') for a in args)
+    cmd = (f"$p = Start-Process -FilePath {q(sys.executable)} -ArgumentList {ps_args} "
+           f"-WorkingDirectory {q(tools)} -Verb RunAs -WindowStyle Hidden -Wait -PassThru; exit $p.ExitCode")
     try:
         subprocess.run(['powershell.exe', '-NoProfile', '-NonInteractive', '-Command', cmd],
                        capture_output=True, text=True, timeout=timeout)

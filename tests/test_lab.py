@@ -703,6 +703,12 @@ class SimulatedSession(Tmp):
         self.assertEqual(st['status'], 'blocked')
         self.assertIn('not the card this session started with', self.lab.problem['what'])
 
+    def test_same_card_in_another_reader_is_accepted(self):
+        self.advance_to_prepared()
+        self.world.card.model = 'Built-in SD card reader'
+        st = self.run_step('check-prepared')
+        self.assertEqual(st['status'], 'complete', self.lab.problem)
+
     def test_tampered_boot_loader_fails_fresh_check(self):
         self.assertEqual(self.run_step('computer')['status'], 'complete')
         self.run_step('firmware')
@@ -781,6 +787,22 @@ class SimulatedSession(Tmp):
         self.assertNotIn(self.lab.session.data['salt'].encode(), body)
         box['srv'].shutdown()
         t.join(10)
+
+
+class ElevationTests(Tmp):
+    def test_elevated_read_command_quotes_paths_and_reports_decline(self):
+        from v3lab import elevate
+        seen = {}
+
+        def fake_run(cmd, **kw):
+            seen['cmd'] = cmd[-1]
+            return mock.Mock(returncode=1)
+        with mock.patch('subprocess.run', fake_run), mock.patch.object(sys, 'executable', r"C:\Users\O'Brien Smith\python.exe"):
+            with self.assertRaisesRegex(OSError, 'not approved'):
+                elevate.raw_head(3)
+        self.assertIn("'C:\\Users\\O''Brien Smith\\python.exe'", seen['cmd'])
+        self.assertIn('-Verb RunAs', seen['cmd'])
+        self.assertIn("'\"--disk\"','\"3\"'", seen['cmd'])
 
 
 class DiagnosticsTests(Tmp):

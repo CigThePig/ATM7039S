@@ -77,7 +77,7 @@ U-Boot consumers:
 
 * boot_mode/boot_dev select `bootcmd` (BOOT-015).
 * uart_index becomes `console=ttyS3`.
-* boot_dev becomes `boot_dev=sd0` and `androidboot.bootdev=sd`.
+* boot_dev becomes `boot_dev=sd0` and `androidboot.bootdev=sd` for AFI `0x20`, and `boot_dev=sd2` for AFI `0x22`. OBS-001 showed `sd2`: the observed unit's loader wrote `0x22` (block-0 code 2), see [the reconciliation](../reports/sd2-boot-path-reconciliation.md).
 * ddr_size becomes `gd->ram_size` and the DT `/memory reg=<0 0x10000000>` (BOOT-017).
 
 When the magic is absent, U-Boot assumes PRODUCE and runs `ramboot`. The resume path (`0xb40664e4`) does not rewrite the AFI (PR #6).

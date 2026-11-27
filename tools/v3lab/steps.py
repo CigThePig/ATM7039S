@@ -76,10 +76,13 @@ def _card(env, session, expect_stage):
     if found['status'] == 'ambiguous':
         raise StoreError('more than one Koriki card is connected. Leave only the spare test card in.')
     card = found['card']
-    phys = disks.fingerprint(dict(size=card['size'], model=card.get('model', ''), partitions=[]), session.data['salt'])
+    # Exact capacity only: the reader's model changes if the card moves to another reader. Two cards of the
+    # same model and capacity cannot be told apart here; the system-file comparison against the session's
+    # own baseline then catches a swapped card.
+    phys = disks.fingerprint(dict(size=card['size'], model='', partitions=[]), session.data['salt'])
     known = session.data.get('card')
     if known and known.get('physical') != phys:
-        raise StoreError('this is not the card this session started with (different size or reader model). '
+        raise StoreError('this is not the card this session started with (different capacity). '
                          'Put the session\'s spare card back in, or start a new session.')
     stage = found.get('stage') or ''
     if expect_stage == 'not-yet-booted' and stage != 'not-yet-booted':

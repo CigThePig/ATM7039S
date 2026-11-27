@@ -1,4 +1,6 @@
-# Future non-destructive validation plan — not executed
+# Future non-destructive validation plan
+
+> V3 has been executed once (OBS-001, 2026-11-27; [report](v3-first-hardware-capture.md), [retrospective](v3-session-retrospective.md)). V1, V2 and V4–V7 have not. A ranked proposal for what to ask next is in [next-hardware-research.md](next-hardware-research.md); it authorizes nothing.
 
 The owner's working GarlicOS card and failing factory card are excluded. Do not image, repair, repartition or stress either one. None of these procedures is authorization to modify hardware, launch services, write registers, change clocks/voltages or boot an experimental image. Every actual test requires a separate concrete approval. A software read may still have hardware side effects; direct MMIO is not treated as inherently safe.
 

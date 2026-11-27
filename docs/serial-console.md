@@ -6,7 +6,7 @@ Scope: **Koriki v1.0** release bytes plus the pinned vendor kernel and U-Boot so
 
 | Layer | Evidence | Effect |
 |---|---|---|
-| `uEnv.txt` | `bootargs=earlyprintk clk_ignore_unused selinux=0 init=/init` | **Applied (C-UENV resolved offline).** `check_boot_flag` replaces `bootcmd=run ramboot` with `run mmcboot`, which imports `uEnv.txt` before loading the images (BOOT-015/016). P-UENV is now a confirmation test. |
+| `uEnv.txt` | `bootargs=earlyprintk clk_ignore_unused selinux=0 init=/init` | **Applied (C-UENV resolved offline; confirmed by OBS-001).** `check_boot_flag` replaces `bootcmd=run ramboot` with `run mmcboot` (AFI 0x20) or `run emmcboot` (AFI 0x22, the observed unit); both import `uEnv.txt` before loading the images (BOOT-015/016/022). |
 | Release DTB `/chosen` | `bootargs = "earlyprintk clk_ignore_unused selinux=0"` | No `console=`; this is the base command line U-Boot extends if `uEnv.txt` is not applied |
 | U-Boot environment | `console=ttyS2,115200`, `baudrate=115200`, `stdout=serial` | U-Boot's own variable; not referenced by the boot commands found |
 | U-Boot FDT fixup | Release binary contains `console=ttyS%d`; source `owl_boot_fdt.c:181–183` prepends `console=ttyS<AFI uart_index>` | **The kernel console index comes from the early loader's AFI record at runtime** |
@@ -17,6 +17,8 @@ Scope: **Koriki v1.0** release bytes plus the pinned vendor kernel and U-Boot so
 The release DTB enables **UART0, UART3 and UART5** and disables UART1, 2, 4 and 6. If the runtime index is 0, 3 or 5, the kernel console has a configured controller. If it is 2, which matches U-Boot's environment default, the kernel has no enabled controller for it. Prediction **P-CONSOLE** in `evidence/predictions.json` records these outcomes. The V3 capture's `/proc/cmdline` settles it with no extra procedure.
 
 ## UART over the SD slot (lead only)
+
+> PR #8: OBS-001 shows the console is `ttyS3` (UART3, AFI `uart_pad` 0) and that TF2 is the SD0 controller. The pin-sharing lead below concerns **UART5** on SD0's pins, so a breakout in TF2 would most likely not carry the boot console (inference; see [next-hardware-research.md](../reports/next-hardware-research.md)).
 
 The second card controller, `mmc@b0230000`, has a second pinctrl state named `share_uart2_5`. It selects a `uart5` function on pin groups `mfp2_19_17` and `mfp2_16_14` while keeping SD0 command and clock. Release scripts expose this controller as `mmcblk1` (`sd_card`), which is the TF2 slot. The vendor `gl520x_mmc` driver defines `PINCTRL_UART_PIN "share_uart2_5"`, but switches to it only when the node carries `sdio_uart_supported`. **The Koriki v1.0 DTB does not carry that property**, so Linux on this release does not route UART5 to TF2.
 
