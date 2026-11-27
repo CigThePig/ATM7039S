@@ -96,3 +96,7 @@ When the magic is absent, U-Boot assumes PRODUCE and runs `ramboot`. The resume 
 | Capacity ≥ 4096 MiB in the record | wraps to 0 (`cap << 20`, 32-bit) | fallback `0x1f000000` |
 
 `boot_chain.py analyze --dram-scenario NAME` derives the size from the loader's own DRAM code instead of `--ram-mib`.
+
+## What a running Linux can confirm (PR #7)
+
+The V3 capture sees the end of this chain only: the `/memory` node U-Boot wrote (P-RAM), the `/chosen` initrd location (P-INITRD) and the AFI-derived `console=ttyS3` and `boot_dev=sd0` terms (P-CONSOLE, P-AFI-BOOTDEV). A `/memory` of `0x1f000000` would mean U-Boot's fallback, i.e. no valid AFI size. The physical DRAM size and the loader's own decisions are not observable after boot. The 3.10 procfs tree does not export `/memreserve/` (FW-019).

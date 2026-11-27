@@ -3955,5 +3955,256 @@
       "BOOT-013",
       "MEM-008"
     ]
+  },
+  {
+    "id": "FW-018",
+    "subsystem": "kernel",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "claim": "The Koriki v1.0 /uImage kernel has an empty built-in command line and no embedded configuration, and exports the device tree only through procfs. In the decompressed image the 1 KiB default_command_line initialiser (kallsyms VA 0xc0a62d00, initialised from CONFIG_CMDLINE in arch/arm/kernel/atags_parse.c) is all zero; there is no IKCFG_ST marker and no ikconfig symbol, so /proc/config.gz cannot exist; proc_device_tree_init and proc_device_tree_add_node are present (CONFIG_PROC_DEVICETREE: /proc/device-tree is a real procfs directory, not a link), while of_fdt_raw_init, of_node_add and __of_attach_node_sysfs are absent (no /sys/firmware/fdt, no /sys/firmware/devicetree). log_buf_len is 131072 (128 KiB ring buffer). The pinned vendor drivers/of/fdt.c carries a command-line backport: with CMDLINE_FROM_BOOTLOADER it copies /chosen bootargs, with CMDLINE_EXTEND it appends \" \" + bootargs to CONFIG_CMDLINE, with CMDLINE_FORCE it ignores bootargs; the Kconfig choice is hidden when CONFIG_CMDLINE is empty, which defaults to CMDLINE_FROM_BOOTLOADER. The kernel is therefore expected to use the bootloader-written /chosen bootargs unchanged.",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/kernel-payload.json#gzip_streams/0",
+        "sha256": "5883f67328823b10e2e82576d5e043a3ff4c78b2095644250008bf640622fc5e",
+        "offset_start": 10857728,
+        "offset_end": 10858752,
+        "section": "default_command_line (VA 0xc0a62d00, 1024 bytes, all zero)"
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/kernel-payload.json#gzip_streams/0",
+        "sha256": "5883f67328823b10e2e82576d5e043a3ff4c78b2095644250008bf640622fc5e",
+        "offset_start": 11151476,
+        "offset_end": 11151480,
+        "section": "log_buf_len (VA 0xc0aaa874) = 131072"
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/of/fdt.c",
+        "line_start": 671,
+        "line_end": 726
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/kernel/atags_parse.c",
+        "line_start": 33,
+        "line_end": 33
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/Kconfig",
+        "line_start": 2140,
+        "line_end": 2170
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/configs/rg35xx_atm7039_defconfig",
+        "line_start": 100,
+        "line_end": 101
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Options are inferred from symbol presence and initialised data (tools/kallsyms.py), not read from a configuration. CMDLINE_FORCE with an empty string cannot be excluded statically, but would give an empty /proc/cmdline, which V3 shows directly. The vendor fdt.c semantics are read from the pinned source tree, from which the release is not built (FW-008/009).",
+    "related_findings": [
+      "FW-003",
+      "FW-008",
+      "FW-009",
+      "BOOT-017",
+      "CPU-001"
+    ]
+  },
+  {
+    "id": "FW-019",
+    "subsystem": "memory",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "claim": "The Koriki v1.0 KERNEL.DTB describes memory with root #address-cells = #size-cells = 1 and a single node named /memory (device_type \"memory\", reg <0 0>), has no /reserved-memory node and no /memreserve/ entries, and carries vendor heap sizes in MiB under /reserved/tiny (fb 9, kinfo 1, carveout 0, dma 32) and /reserved/normal (fb 8, kinfo 1, carveout 64, dma 128). U-Boot replaces the /memory reg and adds /memreserve/ entries for the DTB and RAM disk (BOOT-017). The kernel prints \"Reserved memory %uMB\" and \"Memory: %luk/%luk available, %luk reserved, %luK highmem\". A 3.10 procfs export shows node properties but not the /memreserve/ block.",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#kernel.dtb",
+        "sha256": "ad4b8b4dd98fbb95bde8854ff0bd9c2e870c3c0c21f27be0122c741f36686f0f",
+        "offset_start": 0,
+        "offset_end": 28111,
+        "node": "/memory, /reserved"
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/kernel-payload.json#gzip_streams/0",
+        "sha256": "5883f67328823b10e2e82576d5e043a3ff4c78b2095644250008bf640622fc5e",
+        "offset_start": 0,
+        "offset_end": 11533588,
+        "section": "format strings \"Reserved memory %uMB\" and \"Memory: %luk/%luk available, %luk reserved, %luK highmem\""
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Which heap set (tiny or normal) the kernel selects, and whether the carve-outs are removed from or reserved inside System RAM, were not traced, so the expected MemTotal is not predicted numerically. The memory size in the running tree comes from U-Boot, not from this file.",
+    "related_findings": [
+      "MEM-001",
+      "MEM-010",
+      "BOOT-017"
+    ]
+  },
+  {
+    "id": "FW-020",
+    "subsystem": "firmware",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "claim": "Koriki v1.0 writes to the spare card on every boot beyond FW-005: S03checkfat unmounts /dev/mmcblk0p3 if mounted and runs fsck.vfat -aw on it (automatic repair of the SHARE partition, before S08populate mounts it), and the ramdisk init mounts the boot FAT partition read-write at /boot_root and moves it to /boot without remounting it read-only, then writes /boot_root/boot/reboot. S08populate mounts the SHARE partition with no options (vfat defaults), so files on it carry mode 0755 under the default umask. S02resize is triggered by the file /boot/boot/autoresize, which it deletes; it does not edit batocera-boot.conf.",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#S03checkfat",
+        "sha256": "01f7a06059aa9341bf8a63dfb939f1cf61026aec941a2c19894afea66f9f946f",
+        "offset_start": 0,
+        "offset_end": 702
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#S08populate",
+        "sha256": "8c63454c02dc52002c1c45485e35775690f15b42ae5a9144ff2be530da10d39c",
+        "offset_start": 0,
+        "offset_end": 1639
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#S02resize",
+        "sha256": "42c1d78008f70371f8375eb7bcd40429a5d87e4a92c33a1c2e4086ca6b01d8f1",
+        "offset_start": 0,
+        "offset_end": 3545
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#ramdisk.img",
+        "sha256": "a64bfd03833d7b748dc4ef8121c3c8245c244993c3fccb97880cfa889ff788a9",
+        "offset_start": 0,
+        "offset_end": 3818481,
+        "section": "gzip cpio member init: do_mount, mount --move /boot_root /new_root/boot"
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Script text, not an observed run. A capture interrupted by power loss can leave FAT inconsistencies that fsck.vfat -a repairs on the next boot, possibly by truncating or removing the capture files, so a capture must be copied off before the device is booted again. Reading files on /boot can update their FAT access date because the mount is read-write.",
+    "related_findings": [
+      "FW-005",
+      "FW-006",
+      "UI-003"
+    ]
+  },
+  {
+    "id": "STOR-002",
+    "subsystem": "storage",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "claim": "The Koriki v1.0 kernel names MMC cards by role rather than by host index: it contains the strings \"%s,sd0 as boot card,sd0 name tsd_card\", \"%s,sd2 as boot card,sd2 name tsd_card\", \"%s,sd0 as boot card,sd2 name card_to_card\" and \"force sd2(emmc) host emmc_boot_card\", plus the device names emmc_boot_card and sd_card. Koriki's S03performance hard-codes /sys/devices/b0238000.mmc/mmc_host/mmc0/emmc_boot_card/block/mmcblk0 and /sys/devices/b0230000.mmc/mmc_host/mmc1/sd_card/block/mmcblk1. The pinned kernel source never sets GENHD_FL_REMOVABLE for MMC disks, so /sys/block/mmcblk*/removable reads 0 for SD cards and eMMC alike; the card type attribute (SD or MMC) distinguishes them.",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/kernel-payload.json#gzip_streams/0",
+        "sha256": "5883f67328823b10e2e82576d5e043a3ff4c78b2095644250008bf640622fc5e",
+        "offset_start": 9854652,
+        "offset_end": 9855175,
+        "section": "vendor MMC boot-card naming strings"
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#S03performance",
+        "sha256": "437ae00adef34b602dc671bcaa4c2dc8feeb85733e5fb4becf1dc73a622aa0f3",
+        "offset_start": 0,
+        "offset_end": 468
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/mmc/card/block.c",
+        "line_start": 2108,
+        "line_end": 2118
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "vendor-kernel"
+    ],
+    "contradictory_evidence": [
+      "BOOT-016"
+    ],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "The conditions under which each naming string is printed were not traced. Script paths express the release author's expectation, not a probe. A device name such as mmcblk0 or emmc_boot_card does not by itself say whether the medium is removable.",
+    "related_findings": [
+      "STOR-001",
+      "MMC-001",
+      "BOOT-016"
+    ]
+  },
+  {
+    "id": "UI-003",
+    "subsystem": "firmware",
+    "confidence": "strongly-supported",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "claim": "SimpleMenu in Koriki v1.0 launches a GAMES entry through invoker.dge (static ARM binary) and cmd_invoker.dge, a bash script: for an entry whose exec is \"#\" it sets HOME=/userdata/system and SDL_NOMOUSE=1, runs eval \"$3\" & on the entry's path, polls the child every 3 s with kill -0, and restarts simplemenu when it exits. The .sh file is therefore executed directly by path (needing the execute bit, which vfat defaults provide, FW-020, and a file name without spaces or shell metacharacters, because the path is evaluated), with no terminal and no on-screen output. simplemenu also contains \"echo %d > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq\" and a CPU section in config.ini (normal_speed 1008000).",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#cmd_invoker.dge",
+        "sha256": "d0ca3a93b15d7c9778dabf9fb7fc18fc9bc5f029f34a40ed6bafa0845a01b322",
+        "offset_start": 0,
+        "offset_end": 1206
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#simplemenu",
+        "sha256": "d6f1c2dc6f5002f2e54827d61e6635a77c48033e3c54625d28a692fee1386998",
+        "offset_start": 0,
+        "offset_end": 874520,
+        "section": "strings executeCommand, invoker.dge, scaling_max_freq"
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#invoker.dge",
+        "sha256": "662c3c640f295dee5fd068de67f2e171d8c9d05b8d423e9793429f6b2607d43d",
+        "offset_start": 0,
+        "offset_end": 469352
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0-rootfs.json#simplemenu-config.ini",
+        "sha256": "384a4c346d00f23ea190508bba03a77e69f785e47cfe9b15190a395336e05e4d",
+        "offset_start": 0,
+        "offset_end": 325
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "invoker.dge was not disassembled: the argument order it passes to cmd_invoker.dge ($1 \"#/\", $3 the entry path) and the working directory are inferred from cmd_invoker.dge. Whether simplemenu writes scaling_max_freq for a \"#\" entry, and with which value, was not traced. Not observed on hardware.",
+    "related_findings": [
+      "UI-001",
+      "FW-005",
+      "FW-020"
+    ]
   }
 ]

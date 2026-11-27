@@ -98,3 +98,15 @@ Remaining, in order of value:
 4. **Offline: PUBL v1 semantics** for PIR bit 5 in resume (C-RESUME-DRAMRST), DSGCR/ACIOCR/DXCCR fields, PUBL+0x3fc and the DMM block, from any vendor databook or an older Synopsys-PUBL driver.
 5. **Offline: ATC260x PMIC register meanings** for the pre-DRAM regulator writes.
 6. A clean-room DDR3 stage can now be written from DDR-002 and §13.1 of the report. It must not run on hardware without the approvals in the validation plan.
+
+## Status after the V3 refresh (PR #7, 2026-11-25)
+
+**Done offline** ([readiness report](v3-hardware-validation-readiness.md); FW-018..020, STOR-002, UI-003; C-BOOTSLOT opened). Capture script version 3, the parser, 16 pre-registered predictions and `tools/v3_preflight.py` are ready for an approved V3 session; the script was run under Koriki v1.0's own BusyBox through qemu. The PR #5 open item "check the stock kernel for `CONFIG_CMDLINE`/`CMDLINE_FORCE`" is answered for Koriki v1.0: the built-in command line is empty (FW-018), and V3's P-CMDLINE-SRC distinguishes FROM_BOOTLOADER, EXTEND and FORCE at runtime.
+
+Remaining, in order of value:
+
+1. **The approved V3 session itself** (separate owner approval): one capture settles P-BOOTARGS, P-CMDLINE-SRC, P-RAM, P-INITRD, P-AFI-BOOTDEV, P-STRAP and C-BOOTSLOT at once.
+2. **Offline: trace U-Boot's MMC device numbering** against the runtime answer to C-BOOTSLOT (registration order, SD0 initialisation failure with TF2 empty, `board_mmc_init`), so a replacement bootloader reads the right controller.
+3. **Offline: which vendor heap set (`/reserved/tiny` or `/reserved/normal`) the kernel selects**, and whether carve-outs are removed from or reserved inside System RAM, to predict MemTotal numerically.
+4. **Offline: disassemble `invoker.dge`** to confirm the arguments and working directory it gives `cmd_invoker.dge` (UI-003).
+5. Early serial capture (V7 review first) for everything P-DRAM-LOG marks as unobservable from Linux.

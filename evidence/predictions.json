@@ -1,13 +1,15 @@
 [
   {
     "id": "P-CPU",
-    "question": "Does the discrepancy between the quad-core product claim and two DT CPU nodes come from SCU discovery, a software cap, runtime policy or startup failure?",
+    "question": "Does the gap between the quad-core product claim and the two DT CPU nodes come from SCU discovery, a software cap, runtime policy or startup failure?",
     "test": "V3",
+    "basis": "documentation-and-source",
     "findings": [
       "CPU-001",
       "CPU-002",
       "DT-002",
-      "ID-001"
+      "ID-001",
+      "FW-018"
     ],
     "contradictions": [
       "C-CPU"
@@ -17,42 +19,59 @@
       "cpu-possible",
       "cpu-present",
       "cpu-online",
+      "cpuinfo",
       "cmdline",
-      "kconfig"
+      "device-tree"
     ],
+    "resolvable_by_v3": "partial",
+    "confidence": "inferred",
+    "limitations": "The SCU count is only visible if the owl_smp_init_cpus line is still in the 128 KiB log buffer (FW-018). No outcome identifies silicon: a software cap does not prove four usable cores exist, and two online CPUs at capture time can reflect hotplug policy. No outcome is pre-selected as expected.",
     "outcomes": [
       {
         "id": "software-cap",
+        "class": "alternative",
         "condition": "SCU ncores >= 4 and possible mask has <= 2 CPUs",
-        "implication": "Supports a software limit (powersave, nr_cpus or DT); C-CPU narrows to which mechanism."
+        "implication": "Supports a software limit (powersave, nr_cpus, maxcpus or DT); values list which limits appear in cmdline and dmesg."
       },
       {
         "id": "policy-or-startup",
+        "class": "alternative",
         "condition": "SCU ncores >= 4, possible and present >= 4, online <= 2",
         "implication": "Points to hotplug policy or secondary-core startup failure."
       },
       {
         "id": "four-online",
+        "class": "alternative",
         "condition": "SCU ncores >= 4 and online >= 4",
         "implication": "Four usable cores at capture time under this firmware."
       },
       {
         "id": "scu-two",
+        "class": "alternative",
         "condition": "SCU ncores == 2",
         "implication": "Hardware reports two cores; requires silicon revision/SCU interpretation research."
       },
       {
         "id": "no-scu-line",
+        "class": "insufficient",
         "condition": "masks present but no ncores line in dmesg",
-        "implication": "Masks recorded; kernel differs from source or log rotated."
+        "implication": "Masks recorded; the log rotated or the kernel differs from source. Not a negative result."
+      },
+      {
+        "id": "inconsistent-masks",
+        "class": "unexpected",
+        "condition": "online not within present, or present not within possible",
+        "implication": "Kernel exports contradict each other; review the raw files."
       },
       {
         "id": "unclassified",
+        "class": "review",
         "condition": "any other combination",
         "implication": "Manual review."
       },
       {
         "id": "incomplete",
+        "class": "insufficient",
         "condition": "CPU masks missing",
         "implication": "Not evaluable."
       }
@@ -62,248 +81,155 @@
     "id": "P-CONSOLE",
     "question": "Which UART does the kernel console use under Koriki v1.0?",
     "test": "V3",
+    "basis": "firmware-derived",
     "findings": [
       "UART-001",
       "UART-002",
-      "BOOT-006"
+      "UART-003",
+      "BOOT-006",
+      "BOOT-017"
     ],
     "contradictions": [],
     "capture_items": [
       "cmdline"
     ],
+    "resolvable_by_v3": "yes",
+    "confidence": "strongly-supported",
+    "limitations": "Shows the console the kernel was told to use, i.e. the AFI uart_index after U-Boot. It does not show that any signal is present on accessible pads (V7).",
     "outcomes": [
       {
-        "id": "enabled-uart",
-        "condition": "exactly one console=ttySN with N in {0,3,5}",
-        "implication": "Identifies the console UART and, through BOOT-006, the runtime AFI uart_index. Narrows serial feasibility review (V7)."
+        "id": "ttys3",
+        "class": "expected",
+        "condition": "exactly one console=ttyS3",
+        "implication": "Confirms AFI uart_index 3 reaching Linux (UART-003, BOOT-017)."
+      },
+      {
+        "id": "other-enabled-uart",
+        "class": "unexpected",
+        "condition": "exactly one console=ttyS0 or ttyS5",
+        "implication": "A different enabled UART: the AFI uart_index or U-Boot fixup differs from the reconstruction; ttyS5 is the getters' no-magic fallback."
       },
       {
         "id": "disabled-uart",
+        "class": "unexpected",
         "condition": "exactly one console=ttySN with N in {1,2,4,6}",
         "implication": "Console names a UART disabled in the DTB; no kernel console output expected there."
       },
       {
         "id": "no-console",
+        "class": "unexpected",
         "condition": "no console= argument",
         "implication": "U-Boot fixup in BOOT-006 did not run or differs from source."
       },
       {
         "id": "multiple",
-        "condition": "more than one console= argument",
+        "class": "review",
+        "condition": "more than one console= argument, or a non-ttyS console",
         "implication": "Manual review."
       },
       {
         "id": "not-evaluable",
+        "class": "insufficient",
         "condition": "cmdline missing",
         "implication": "Not evaluable."
       }
     ]
   },
   {
-    "id": "P-BOOTDEV",
-    "question": "Which MMC controller holds the boot card, and what boot device does U-Boot report?",
+    "id": "P-BOOTARGS",
+    "question": "Does the running kernel receive exactly the command line reconstructed for Koriki v1.0 (BOOT-017)?",
     "test": "V3",
+    "basis": "firmware-derived",
     "findings": [
-      "STOR-001",
       "BOOT-006",
-      "MMC-001"
-    ],
-    "contradictions": [],
-    "capture_items": [
-      "block-links",
-      "cmdline"
-    ],
-    "outcomes": [
-      {
-        "id": "boot-card-on-b0238000",
-        "condition": "mmcblk0 sysfs path contains b0238000.mmc",
-        "implication": "Matches the release scripts: TF1 boot card on the third MMC controller."
-      },
-      {
-        "id": "boot-card-on-b0230000",
-        "condition": "mmcblk0 sysfs path contains b0230000.mmc",
-        "implication": "Contradicts STOR-001 script expectations."
-      },
-      {
-        "id": "other",
-        "condition": "mmcblk0 under another parent",
-        "implication": "Manual review."
-      },
-      {
-        "id": "not-evaluable",
-        "condition": "block links missing or no mmcblk0",
-        "implication": "Not evaluable."
-      }
-    ]
-  },
-  {
-    "id": "P-NAND",
-    "question": "Does the running kernel expose any NAND or other non-removable block storage?",
-    "test": "V3",
-    "findings": [
-      "STOR-001"
-    ],
-    "contradictions": [],
-    "capture_items": [
-      "partitions",
-      "block-links"
-    ],
-    "outcomes": [
-      {
-        "id": "removable-only",
-        "condition": "all block devices are mmcblk*, loop*, ram*, zram* or swap-backed",
-        "implication": "Supports the spare-card rollback assumption in reports/spare-card-risk.md for this firmware."
-      },
-      {
-        "id": "other-block-device",
-        "condition": "a nand*, mtdblock* or other block device is present",
-        "implication": "Reassess V4 rollback risk before any further test."
-      },
-      {
-        "id": "not-evaluable",
-        "condition": "partitions missing",
-        "implication": "Not evaluable."
-      }
-    ]
-  },
-  {
-    "id": "P-RAM",
-    "question": "How much RAM does the boot chain hand to Linux?",
-    "test": "V3",
-    "findings": [
-      "MEM-001",
-      "MEM-003",
-      "MEM-004"
+      "BOOT-015",
+      "BOOT-016",
+      "BOOT-017",
+      "BOOT-011"
     ],
     "contradictions": [
-      "C-RAM"
+      "C-UENV"
     ],
     "capture_items": [
-      "fdt",
-      "iomem",
-      "meminfo"
+      "cmdline",
+      "dmesg"
     ],
+    "resolvable_by_v3": "yes",
+    "confidence": "strongly-supported",
+    "limitations": "The comparison ignores only the conditional androidboot.serialno term. A match confirms the U-Boot bootargs assembly and the AFI-derived terms on this boot; it does not exercise ramboot, charger or PRODUCE paths.",
     "outcomes": [
       {
-        "id": "ram-256mib-class",
-        "condition": "FDT memory size, else iomem System RAM total, between 192 and 320 MiB",
-        "implication": "Consistent with the 256 MB specification in C-RAM."
+        "id": "match",
+        "class": "expected",
+        "condition": "/proc/cmdline, without androidboot.serialno, equals one of the two predicted strings byte for byte (strap low or high)",
+        "implication": "Confirms the emulated owl_boot_fdt_setup result, including uEnv.txt spacing."
       },
       {
-        "id": "ram-512mib-class",
-        "condition": "between 384 and 544 MiB",
-        "implication": "Consistent with the U-Boot 496 MiB fallback or a 512 MiB part; compare with AFI ddr_size."
+        "id": "whitespace-differs",
+        "class": "alternative",
+        "condition": "same tokens in the same order, different spacing",
+        "implication": "Assembly matches; spacing handling differs from the emulation (review the bootargs helper model)."
       },
       {
-        "id": "other",
-        "condition": "any other size",
-        "implication": "Manual review."
+        "id": "tokens-differ",
+        "class": "unexpected",
+        "condition": "tokens missing or added relative to the closest prediction",
+        "implication": "The runtime boot path or uEnv.txt differs from the reconstruction; values list missing and extra tokens."
       },
       {
         "id": "not-evaluable",
-        "condition": "no FDT memory node and iomem missing or zeroed",
+        "class": "insufficient",
+        "condition": "cmdline missing",
         "implication": "Not evaluable."
       }
     ]
   },
   {
-    "id": "P-KERNEL",
-    "question": "Is the running kernel the catalogued /uImage build?",
+    "id": "P-CMDLINE-SRC",
+    "question": "Does the kernel take its command line unchanged from /chosen/bootargs, as an empty built-in CONFIG_CMDLINE implies (FW-018)?",
     "test": "V3",
+    "basis": "firmware-derived",
     "findings": [
-      "FW-003",
-      "FW-007",
-      "FW-011"
+      "FW-018",
+      "BOOT-017"
     ],
     "contradictions": [],
     "capture_items": [
-      "version"
+      "cmdline",
+      "device-tree"
     ],
+    "resolvable_by_v3": "yes",
+    "confidence": "strongly-supported",
+    "limitations": "Needs the exported device tree. The vendor fdt.c distinguishes FROM_BOOTLOADER (copy), EXTEND (CONFIG_CMDLINE + \" \" + bootargs) and FORCE (bootargs ignored); the build option itself is not exported because the kernel has no IKCONFIG.",
     "outcomes": [
       {
-        "id": "uimage-build",
-        "condition": "/proc/version equals the kernel-payload.json string",
-        "implication": "Observation can be read against catalogued /uImage bytes."
+        "id": "chosen-used",
+        "class": "expected",
+        "condition": "/proc/cmdline equals /chosen/bootargs",
+        "implication": "The kernel used the bootloader arguments unchanged: CMDLINE_FROM_BOOTLOADER with an empty CONFIG_CMDLINE."
       },
       {
-        "id": "adb-uimage-build",
-        "condition": "/proc/version equals the adb-kernel-payload.json string",
-        "implication": "ADB kernel in use; record as a modification."
+        "id": "chosen-extended",
+        "class": "unexpected",
+        "condition": "/proc/cmdline ends with \" \" + /chosen/bootargs",
+        "implication": "CMDLINE_EXTEND: the built-in prefix is reported in values."
       },
       {
-        "id": "koriki-1031-build",
-        "condition": "/proc/version equals the koriki-1031-kernel-payload.json string (build #40)",
-        "implication": "Card runs the Koriki 1.0.3.1 stock-like kernel, not the selected v1.0 baseline; record it as the firmware under test."
+        "id": "chosen-ignored",
+        "class": "unexpected",
+        "condition": "/proc/cmdline does not contain /chosen/bootargs",
+        "implication": "CMDLINE_FORCE or a non-DT boot path; boot-argument predictions then describe U-Boot, not the kernel."
       },
       {
-        "id": "other",
-        "condition": "no catalogued match",
-        "implication": "Card differs from the pinned image; observation is not linked to catalogued bytes."
+        "id": "chosen-bootargs-absent",
+        "class": "unexpected",
+        "condition": "device tree exported but /chosen/bootargs missing",
+        "implication": "U-Boot did not write bootargs into the tree, contradicting BOOT-017."
       },
       {
         "id": "not-evaluable",
-        "condition": "version missing",
-        "implication": "Not evaluable."
-      }
-    ]
-  },
-  {
-    "id": "P-KCONFIG",
-    "question": "Does the release kernel export its configuration, and what CPU limit does it build in?",
-    "test": "V3",
-    "findings": [
-      "CPU-001"
-    ],
-    "contradictions": [
-      "C-CPU"
-    ],
-    "capture_items": [
-      "kconfig"
-    ],
-    "outcomes": [
-      {
-        "id": "nr-cpus-4",
-        "condition": "/proc/config.gz has CONFIG_NR_CPUS=4",
-        "implication": "Release config matches the pinned defconfig for this option."
-      },
-      {
-        "id": "nr-cpus-other",
-        "condition": "CONFIG_NR_CPUS present with another value",
-        "implication": "Release config differs from defconfig; revisit CPU-001 applicability."
-      },
-      {
-        "id": "absent",
-        "condition": "no /proc/config.gz",
-        "implication": "Release config remains unknown."
-      }
-    ]
-  },
-  {
-    "id": "P-GPU",
-    "question": "Is the catalogued PowerVR kernel module loaded under normal operation?",
-    "test": "V3",
-    "findings": [
-      "GPU-008"
-    ],
-    "contradictions": [],
-    "capture_items": [
-      "modules",
-      "pvr-version"
-    ],
-    "outcomes": [
-      {
-        "id": "pvr-loaded",
-        "condition": "pvrsrvkm in /proc/modules",
-        "implication": "Bundled module set is in use; compare /proc/pvr/version with GPU-008."
-      },
-      {
-        "id": "pvr-not-loaded",
-        "condition": "modules readable, pvrsrvkm absent",
-        "implication": "Graphics stack not loaded at capture time (or built in)."
-      },
-      {
-        "id": "not-evaluable",
-        "condition": "modules missing",
+        "class": "insufficient",
+        "condition": "cmdline or device tree missing",
         "implication": "Not evaluable."
       }
     ]
@@ -312,6 +238,7 @@
     "id": "P-UENV",
     "question": "Is uEnv.txt applied, or does the kernel command line come only from the DTB /chosen plus U-Boot's fixup?",
     "test": "V3",
+    "basis": "firmware-derived",
     "findings": [
       "BOOT-006",
       "BOOT-007",
@@ -324,20 +251,586 @@
     "capture_items": [
       "cmdline"
     ],
+    "resolvable_by_v3": "yes",
+    "confidence": "strongly-supported",
+    "limitations": "init=/init occurs only in uEnv.txt. Its presence confirms mmcboot imported the file on this boot.",
     "outcomes": [
       {
         "id": "uenv-not-applied",
+        "class": "unexpected",
         "condition": "cmdline lacks init=/init (present only in uEnv.txt)",
         "implication": "Contradicts BOOT-015/BOOT-016 (offline reconstruction predicts uEnv.txt is applied); would mean the runtime boot differs from the traced code, e.g. a different AFI boot_mode."
       },
       {
         "id": "uenv-applied",
+        "class": "expected",
         "condition": "cmdline contains init=/init",
         "implication": "Confirms BOOT-015/BOOT-016 (offline prediction): check_boot_flag selects mmcboot and uEnv.txt bootargs reach the kernel."
       },
       {
         "id": "not-evaluable",
+        "class": "insufficient",
         "condition": "cmdline missing",
+        "implication": "Not evaluable."
+      }
+    ]
+  },
+  {
+    "id": "P-AFI-BOOTDEV",
+    "question": "Which boot device code did the loader record in the AFI, as reported by U-Boot's boot_dev term?",
+    "test": "V3",
+    "basis": "firmware-derived",
+    "findings": [
+      "BOOT-012",
+      "BOOT-013",
+      "BOOT-017"
+    ],
+    "contradictions": [
+      "C-DEVCLK"
+    ],
+    "capture_items": [
+      "cmdline"
+    ],
+    "resolvable_by_v3": "yes",
+    "confidence": "strongly-supported",
+    "limitations": "boot_dev=sd0 confirms block-0 boot code 0 (AFI boot_dev 0x20), and therefore that the ROM left the clock bit block 0 tests; it does not say which gate that bit is (C-DEVCLK) or which physical slot holds the card (P-BOOTDEV).",
+    "outcomes": [
+      {
+        "id": "sd0",
+        "class": "expected",
+        "condition": "boot_dev=sd0",
+        "implication": "Block-0 code 0 and AFI boot_dev 0x20 on this boot (BOOT-012/013)."
+      },
+      {
+        "id": "sd2",
+        "class": "unexpected",
+        "condition": "boot_dev=sd2",
+        "implication": "Block-0 code 2: U-Boot would have taken the emmcboot path; contradicts the reconstruction for an SD boot."
+      },
+      {
+        "id": "other",
+        "class": "unexpected",
+        "condition": "another boot_dev value",
+        "implication": "Review the AFI boot_dev mapping."
+      },
+      {
+        "id": "absent",
+        "class": "unexpected",
+        "condition": "no boot_dev term",
+        "implication": "The vendor bootargs fixup did not run (PRODUCE path or different U-Boot)."
+      },
+      {
+        "id": "not-evaluable",
+        "class": "insufficient",
+        "condition": "cmdline missing",
+        "implication": "Not evaluable."
+      }
+    ]
+  },
+  {
+    "id": "P-STRAP",
+    "question": "Which board variant does U-Boot's GPIOC6 strap report (allenS500=1)?",
+    "test": "V3",
+    "basis": "firmware-derived",
+    "findings": [
+      "BOOT-011",
+      "BOOT-017"
+    ],
+    "contradictions": [],
+    "capture_items": [
+      "cmdline"
+    ],
+    "resolvable_by_v3": "yes",
+    "confidence": "strongly-supported",
+    "limitations": "Both outcomes are legitimate. The strap selects LED/earphone GPIO wiring in the stock kernel; Koriki v1.0's kernel ignores it (BOOT-011). It identifies a board variant, not a silicon revision.",
+    "outcomes": [
+      {
+        "id": "strap-low",
+        "class": "alternative",
+        "condition": "no allenS500 term",
+        "implication": "GPIOC6 read low (\"a7039\" variant)."
+      },
+      {
+        "id": "strap-high",
+        "class": "alternative",
+        "condition": "allenS500=1",
+        "implication": "GPIOC6 read high (\"s500\" variant): record it with the board revision."
+      },
+      {
+        "id": "other-value",
+        "class": "unexpected",
+        "condition": "allenS500 with another value",
+        "implication": "U-Boot differs from the analysed 230309 build."
+      },
+      {
+        "id": "not-evaluable",
+        "class": "insufficient",
+        "condition": "cmdline missing",
+        "implication": "Not evaluable."
+      }
+    ]
+  },
+  {
+    "id": "P-RAM",
+    "question": "Does the memory U-Boot describes to Linux, and what Linux accepts, match the reference 256 MiB DRAM handoff (AFI ddr_size 0x10000000 -> /memory <0 0x10000000>)?",
+    "test": "V3",
+    "basis": "software-model",
+    "findings": [
+      "MEM-001",
+      "MEM-004",
+      "MEM-006",
+      "MEM-010",
+      "BOOT-017",
+      "FW-019"
+    ],
+    "contradictions": [
+      "C-RAM"
+    ],
+    "capture_items": [
+      "device-tree",
+      "iomem",
+      "meminfo",
+      "dmesg",
+      "cmdline"
+    ],
+    "resolvable_by_v3": "partial",
+    "confidence": "inferred",
+    "limitations": "Physical DRAM capacity and the AFI value are not observable after boot; the DT /memory node is U-Boot's copy of the AFI size when it is at least 8 MiB. Vendor carve-outs (/reserved heaps, \"Reserved memory N MB\") make MemTotal well below the DT size by design. A missing device tree is never read as a different capacity.",
+    "outcomes": [
+      {
+        "id": "reference-256mib",
+        "class": "expected",
+        "condition": "one DT /memory bank <0 0x10000000>, and iomem, the boot-log total and MemTotal all fit inside it",
+        "implication": "Consistent with the reference single-rank 2 Gb x16 handoff (MEM-006, MEM-010). Not proof of DRAM training behaviour."
+      },
+      {
+        "id": "other-supported-size",
+        "class": "alternative",
+        "condition": "one bank at 0 of 128, 512 or 1024 MiB, consistent with the kernel view",
+        "implication": "A different detected capacity: refutes the single-rank 2 Gb hypothesis for this board (MEM-006)."
+      },
+      {
+        "id": "uboot-fallback",
+        "class": "unexpected",
+        "condition": "one bank of 0x1f000000 (496 MiB)",
+        "implication": "U-Boot's fallback: the AFI ddr_size was below 8 MiB or absent, which the cold-boot path does not produce (MEM-010)."
+      },
+      {
+        "id": "sources-disagree",
+        "class": "unexpected",
+        "condition": "kernel System RAM, boot-log total or MemTotal exceed or fall outside the DT banks",
+        "implication": "Memory sources contradict each other; review reservations and the raw files."
+      },
+      {
+        "id": "cmdline-limited",
+        "class": "review",
+        "condition": "mem= or memmap= on the command line",
+        "implication": "The kernel view is limited by boot arguments; DT and kernel totals are not comparable."
+      },
+      {
+        "id": "unexpected-layout",
+        "class": "unexpected",
+        "condition": "several banks, a non-zero base, a malformed reg or an unlisted size",
+        "implication": "Unexpected memory description; record it with the raw tree."
+      },
+      {
+        "id": "kernel-view-only",
+        "class": "insufficient",
+        "condition": "no DT memory node captured, but iomem or meminfo present",
+        "implication": "Only memory accepted by Linux is known; the U-Boot description is unobserved. Not a capacity result."
+      },
+      {
+        "id": "not-evaluable",
+        "class": "insufficient",
+        "condition": "no memory source captured",
+        "implication": "Not evaluable."
+      }
+    ]
+  },
+  {
+    "id": "P-INITRD",
+    "question": "Does the device tree carry the initrd location U-Boot is reconstructed to write (linux,initrd-start 0x2000000, end 0x23a43b1), and did the kernel accept it?",
+    "test": "V3",
+    "basis": "firmware-derived",
+    "findings": [
+      "BOOT-016",
+      "BOOT-017"
+    ],
+    "contradictions": [],
+    "capture_items": [
+      "device-tree",
+      "dmesg"
+    ],
+    "resolvable_by_v3": "partial",
+    "confidence": "strongly-supported",
+    "limitations": "The matching /memreserve/ entries are not exported through /proc/device-tree and cannot be checked from V3. The end address depends on the RAMDISK.IMG size, so a modified ramdisk changes it.",
+    "outcomes": [
+      {
+        "id": "as-reconstructed",
+        "class": "expected",
+        "condition": "/chosen initrd start and end equal the BOOT-017 values and no rejection line is logged",
+        "implication": "Confirms in-place RAM disk placement (initrd_high = 0xffffffff)."
+      },
+      {
+        "id": "different-placement",
+        "class": "unexpected",
+        "condition": "initrd properties present with other values",
+        "implication": "U-Boot placement differs; compare with RAMDISK.IMG on the card."
+      },
+      {
+        "id": "absent",
+        "class": "unexpected",
+        "condition": "/chosen present without initrd properties",
+        "implication": "No RAM disk handed over; contradicts the mboot path."
+      },
+      {
+        "id": "kernel-rejected",
+        "class": "unexpected",
+        "condition": "dmesg reports the initrd disabled or overwritten",
+        "implication": "The kernel refused the handoff region."
+      },
+      {
+        "id": "not-evaluable",
+        "class": "insufficient",
+        "condition": "no device tree or no /chosen",
+        "implication": "Not evaluable."
+      }
+    ]
+  },
+  {
+    "id": "P-BOOTDEV",
+    "question": "Which MMC controller holds the card whose first partition Linux mounts at /boot (TF2 empty)?",
+    "test": "V3",
+    "basis": "firmware-derived",
+    "findings": [
+      "STOR-001",
+      "STOR-002",
+      "BOOT-016",
+      "MMC-001"
+    ],
+    "contradictions": [
+      "C-BOOTSLOT"
+    ],
+    "capture_items": [
+      "block-sysfs",
+      "mounts",
+      "dmesg",
+      "cmdline"
+    ],
+    "resolvable_by_v3": "yes",
+    "confidence": "inferred",
+    "limitations": "With only one card inserted, the controller that holds it is also the one U-Boot read the kernel from. Koriki's scripts and U-Boot's registration order disagree about which controller that is (C-BOOTSLOT), so neither outcome is pre-selected.",
+    "outcomes": [
+      {
+        "id": "boot-card-on-b0238000",
+        "class": "alternative",
+        "condition": "the /boot disk sysfs path contains b0238000.mmc",
+        "implication": "Matches Koriki's scripts (STOR-001); then U-Boot's mmc 0 is not SD0 at 0xb0230000 as BOOT-016 reads it, or SD0 failed to initialise."
+      },
+      {
+        "id": "boot-card-on-b0230000",
+        "class": "alternative",
+        "condition": "the /boot disk sysfs path contains b0230000.mmc",
+        "implication": "Matches U-Boot mmc 0 = SD0 (BOOT-016); Koriki's hard-coded sysfs paths (S03performance) would then miss the boot card."
+      },
+      {
+        "id": "second-card-present",
+        "class": "review",
+        "condition": "more than one MMC disk enumerated",
+        "implication": "Procedure deviation: TF2 was not empty. Koriki mounts and writes a TF2 card."
+      },
+      {
+        "id": "other",
+        "class": "unexpected",
+        "condition": "the /boot disk sits under another parent",
+        "implication": "Manual review."
+      },
+      {
+        "id": "not-evaluable",
+        "class": "insufficient",
+        "condition": "no block listing or no /boot mount of an mmcblk partition",
+        "implication": "Not evaluable."
+      }
+    ]
+  },
+  {
+    "id": "P-NAND",
+    "question": "Does the running kernel enumerate any storage other than the boot SD card (eMMC, NAND/MTD or other block devices)?",
+    "test": "V3",
+    "basis": "firmware-derived",
+    "findings": [
+      "STOR-001",
+      "STOR-002"
+    ],
+    "contradictions": [],
+    "capture_items": [
+      "block-sysfs",
+      "mmc-sysfs",
+      "partitions",
+      "mounts"
+    ],
+    "resolvable_by_v3": "partial",
+    "confidence": "strongly-supported",
+    "limitations": "Linux on this release has no NAND driver, so absence of NAND devices is expected and does not prove no NAND is fitted. MMC disks report removable=0 by kernel design; media type comes from the card type attribute (SD or MMC).",
+    "outcomes": [
+      {
+        "id": "boot-card-only",
+        "class": "expected",
+        "condition": "exactly one MMC disk, of card type SD; every other block device is virtual (loop, ram, zram)",
+        "implication": "Supports the spare-card rollback assumption (reports/spare-card-risk.md) for this firmware, within the limits above."
+      },
+      {
+        "id": "additional-card",
+        "class": "review",
+        "condition": "a second SD card is enumerated",
+        "implication": "TF2 not empty: procedure deviation, not a storage finding."
+      },
+      {
+        "id": "non-removable-mmc",
+        "class": "unexpected",
+        "condition": "an MMC disk whose card type is MMC (eMMC or MMC card)",
+        "implication": "Fitted or attached eMMC visible: reassess V4 rollback risk before any further test."
+      },
+      {
+        "id": "other-block-device",
+        "class": "unexpected",
+        "condition": "a nand*, mtd* or other non-virtual block device",
+        "implication": "Reassess V4 rollback risk before any further test."
+      },
+      {
+        "id": "type-unknown",
+        "class": "insufficient",
+        "condition": "an MMC disk whose card type could not be read, or a capture without the sysfs probe",
+        "implication": "Removability unproven; do not treat the device name as evidence."
+      },
+      {
+        "id": "incomplete",
+        "class": "insufficient",
+        "condition": "no block listing, a probe that skipped entries, or a /proc/partitions disk missing from the listing",
+        "implication": "Enumeration is incomplete: an unlisted device could be non-removable. Not a negative result."
+      }
+    ]
+  },
+  {
+    "id": "P-KERNEL",
+    "question": "Is the running kernel the catalogued /uImage build?",
+    "test": "V3",
+    "basis": "firmware-derived",
+    "findings": [
+      "FW-003",
+      "FW-007",
+      "FW-011"
+    ],
+    "contradictions": [],
+    "capture_items": [
+      "version"
+    ],
+    "resolvable_by_v3": "yes",
+    "confidence": "verified",
+    "limitations": "A version-string match is not a hash of the running image.",
+    "outcomes": [
+      {
+        "id": "uimage-build",
+        "class": "expected",
+        "condition": "/proc/version equals the kernel-payload.json string",
+        "implication": "Observation can be read against catalogued /uImage bytes."
+      },
+      {
+        "id": "adb-uimage-build",
+        "class": "alternative",
+        "condition": "/proc/version equals the adb-kernel-payload.json string",
+        "implication": "ADB kernel in use; record as a modification."
+      },
+      {
+        "id": "koriki-1031-build",
+        "class": "unexpected",
+        "condition": "/proc/version equals the koriki-1031-kernel-payload.json string (build #40)",
+        "implication": "Card runs the Koriki 1.0.3.1 stock-like kernel, not the selected v1.0 baseline; record it as the firmware under test."
+      },
+      {
+        "id": "other",
+        "class": "unexpected",
+        "condition": "no catalogued match",
+        "implication": "Card differs from the pinned image; observation is not linked to catalogued bytes."
+      },
+      {
+        "id": "not-evaluable",
+        "class": "insufficient",
+        "condition": "version missing",
+        "implication": "Not evaluable."
+      }
+    ]
+  },
+  {
+    "id": "P-KCONFIG",
+    "question": "Does the release kernel export its configuration through /proc/config.gz?",
+    "test": "V3",
+    "basis": "firmware-derived",
+    "findings": [
+      "CPU-001",
+      "FW-018"
+    ],
+    "contradictions": [
+      "C-CPU"
+    ],
+    "capture_items": [
+      "kconfig"
+    ],
+    "resolvable_by_v3": "yes",
+    "confidence": "verified",
+    "limitations": "FW-018 found no embedded configuration in the release image, so absence is the expected result and confirms nothing new by itself.",
+    "outcomes": [
+      {
+        "id": "absent",
+        "class": "expected",
+        "condition": "no /proc/config.gz",
+        "implication": "Matches FW-018 (no IKCONFIG). CPU and command-line options stay inferred from symbols."
+      },
+      {
+        "id": "nr-cpus-4",
+        "class": "unexpected",
+        "condition": "/proc/config.gz present with CONFIG_NR_CPUS=4",
+        "implication": "Contradicts FW-018: the running kernel is not the catalogued build or the analysis missed the config."
+      },
+      {
+        "id": "nr-cpus-other",
+        "class": "unexpected",
+        "condition": "/proc/config.gz present with another CONFIG_NR_CPUS",
+        "implication": "Contradicts FW-018 and the defconfig; revisit CPU-001."
+      },
+      {
+        "id": "unreadable",
+        "class": "insufficient",
+        "condition": "/proc/config.gz exists but could not be read or decompressed",
+        "implication": "A config exists (contradicting FW-018) but its content is unknown; review the item status."
+      }
+    ]
+  },
+  {
+    "id": "P-GPU",
+    "question": "Is the catalogued PowerVR kernel module loaded under normal operation?",
+    "test": "V3",
+    "basis": "firmware-derived",
+    "findings": [
+      "GPU-008"
+    ],
+    "contradictions": [],
+    "capture_items": [
+      "modules",
+      "pvr-version"
+    ],
+    "resolvable_by_v3": "yes",
+    "confidence": "strongly-supported",
+    "limitations": "Module presence only; no GPU command is issued.",
+    "outcomes": [
+      {
+        "id": "pvr-loaded",
+        "class": "expected",
+        "condition": "pvrsrvkm in /proc/modules",
+        "implication": "Bundled module set is in use; compare /proc/pvr/version with GPU-008."
+      },
+      {
+        "id": "pvr-not-loaded",
+        "class": "alternative",
+        "condition": "modules readable, pvrsrvkm absent",
+        "implication": "Graphics stack not loaded at capture time (or built in)."
+      },
+      {
+        "id": "not-evaluable",
+        "class": "insufficient",
+        "condition": "modules missing",
+        "implication": "Not evaluable."
+      }
+    ]
+  },
+  {
+    "id": "P-CARDCONFIG",
+    "question": "Were the baseline's boot configuration files on the card unchanged, with overclocking unset, at capture time?",
+    "test": "V3",
+    "basis": "documentation-and-source",
+    "findings": [
+      "FW-005",
+      "FW-006",
+      "FW-020"
+    ],
+    "contradictions": [],
+    "capture_items": [
+      "boot-uenv",
+      "boot-conf"
+    ],
+    "resolvable_by_v3": "yes",
+    "confidence": "verified",
+    "limitations": "Covers the two small text files read on the device. Kernel, DTB and RAM disk identity come from P-KERNEL and the device-tree comparison, and are verified on a computer by tools/v3_preflight.py --boot-dir.",
+    "outcomes": [
+      {
+        "id": "baseline-files",
+        "class": "expected",
+        "condition": "uEnv.txt and batocera-boot.conf match their catalogued hashes and no overclocking value other than none is set",
+        "implication": "The boot configuration is the pinned baseline."
+      },
+      {
+        "id": "overclock-set",
+        "class": "unexpected",
+        "condition": "an active overclocking= line other than none",
+        "implication": "Procedure deviation: the capture ran with a non-default CPU frequency cap."
+      },
+      {
+        "id": "files-modified",
+        "class": "unexpected",
+        "condition": "either file differs from the catalogue",
+        "implication": "Card configuration differs from the pinned image; record the change as a modification."
+      },
+      {
+        "id": "partly-evaluable",
+        "class": "insufficient",
+        "condition": "one of the two files missing",
+        "implication": "Review why the file is absent."
+      },
+      {
+        "id": "not-evaluable",
+        "class": "insufficient",
+        "condition": "neither file captured",
+        "implication": "Not evaluable."
+      }
+    ]
+  },
+  {
+    "id": "P-DRAM-LOG",
+    "question": "Can the loader's DRAM training, rank retry, capacity probe and memory test (PR #6) be observed from Linux?",
+    "test": "V3",
+    "basis": "firmware-derived",
+    "findings": [
+      "MEM-006",
+      "MEM-007",
+      "MEM-009",
+      "DDR-004"
+    ],
+    "contradictions": [
+      "C-RESUME-DRAMRST"
+    ],
+    "capture_items": [
+      "dmesg"
+    ],
+    "resolvable_by_v3": "no",
+    "confidence": "strongly-supported",
+    "limitations": "The loader prints these lines on its own UART before Linux exists; nothing stores them for the kernel. Their absence from dmesg is the expected result and says nothing about the DRAM reconstruction. Only a separately approved early serial capture can test them.",
+    "outcomes": [
+      {
+        "id": "requires-early-serial",
+        "class": "expected",
+        "condition": "no loader DRAM line in the kernel log",
+        "implication": "As expected: DRAM training predictions remain open and need an early serial capture."
+      },
+      {
+        "id": "loader-lines-present",
+        "class": "unexpected",
+        "condition": "a loader DRAM line appears in the kernel log",
+        "implication": "Unexpected: find out how the text reached the kernel log before using it as evidence."
+      },
+      {
+        "id": "not-evaluable",
+        "class": "insufficient",
+        "condition": "dmesg missing",
         "implication": "Not evaluable."
       }
     ]

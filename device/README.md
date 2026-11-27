@@ -1,52 +1,120 @@
-# Read-only runtime capture (test V3)
+# Hardware test V3: read-only runtime capture
 
-`capture.sh` records what a running original RG35XX reports about itself: kernel identity, boot command line, CPU masks, memory map, loaded modules, storage ancestry, framebuffer settings, the kernel's exported device tree and the boot log. It answers the CPU-count and final-memory questions in [cpu-topology.md](../reports/cpu-topology.md) and [afi-handoff.md](../docs/afi-handoff.md) without touching registers, clocks or power.
+`capture.sh` (script version 3) records what a running original RG35XX reports about itself: kernel identity, boot command line, CPU masks, memory map, final device tree, storage ancestry, framebuffer settings, loaded modules and the boot log. On a computer, `tools/runtime_capture.py` checks that nothing was altered and compares the result with what the firmware reconstruction predicts (PRs #3–#6).
 
-**Running it on a device is test V3 in the [validation plan](../reports/hardware-validation-plan.md) and needs the device owner's explicit approval for that session.** The repository does not grant it.
+**Running it on a device is test V3 in the [validation plan](../reports/hardware-validation-plan.md). It needs the device owner's explicit approval for that session.** Nothing in this repository grants that approval. The [readiness report](../reports/v3-hardware-validation-readiness.md) explains what was checked and what is still uncertain.
 
-## What the script does and does not do
+For a fully detailed walkthrough, see **[V3-STEP-BY-STEP.md](V3-STEP-BY-STEP.md)**.
 
-- It reads only the fixed allowlist at the top of `capture.sh` (`sh capture.sh --list` prints it without reading anything). Each entry is an ordinary `/proc` or `/sys` file, or one of four fixed commands: `uname -a`, `ls -l /sys/block`, `ls -l /sys/bus/mmc/devices` and `dmesg`. `dmesg` is run without `-c`, so the log is not cleared.
-- It writes only inside a new `atm-capture-<UTC time>-<pid>/` folder, then calls `sync`.
-- It never writes to `/sys` or `/proc`, opens `/dev/mem` or I2C devices, mounts anything, loads modules, reads `/proc/kmsg`, or changes CPU, clock, regulator or backlight state.
-- It deliberately skips `/sys/class/power_supply` and `cpuinfo_cur_freq`, because reading them can start PMIC or clock-hardware transactions. Both are excluded by the validation plan.
-- Missing files are recorded as `missing`. The script does not try alternatives.
+The whole session is seven steps: verify and prepare a spare card, copy the script, boot normally, run one capture, shut down, copy the results, and analyse them on the computer.
 
-The parser rejects a capture if the script's hash is not listed in `capture-versions.json`, or if the recorded allowlist differs from that version. To change the script, add a new version entry. `research.py validate` enforces this.
+## Before you start
 
-## Preparing the spare card
+| Requirement | Why |
+|---|---|
+| An **original 2022–2023 RG35XX** (Actions ATM7039S). Not the RG35XX Plus/H/SP/2024 or any H700 model. | Everything here was reconstructed for the ATM7039S. |
+| A **separate spare microSD card**, 8 GB or larger, that you are happy to erase. The image is 4.30 GB, which does not fit on a "4 GB" card. | It will be overwritten. **Never use the owner's GarlicOS card or the failing original card.** Keep both away from the computer while you image. |
+| **Koriki v1.0** (`koriki-rg35xx-v1.0_20231112.img.gz`), fetched and checked by the tools below. | It is the only firmware whose every boot component is catalogued here ([why](../reports/test-firmware-selection.md)). |
+| Python 3.11 (CI-tested minor version) with `pip install -r requirements-dev.txt -r requirements-firmware.txt`. | For the checks and the analysis. |
+| The handheld's battery charged beforehand, and **no charging cable during the test**. | Charging selects a different boot path (240 MHz cap, backlight off). |
+| **TF2 (the second card slot) empty.** | Koriki mounts and writes to any card in TF2, and would then look for the script there. |
+| **`overclocking` left unset** (never change the CPU setting). | The baseline is the default 1008 MHz cap; anything else is an experiment. |
 
-Use a new or spare microSD card. Never use the owner's GarlicOS card or the failing factory card. Firmware choice: [test-firmware-selection.md](../reports/test-firmware-selection.md).
+### What the capture reads, and what it never does
 
-1. Acquire and verify the image on a computer. This checks the size and SHA-256 of both the download and the expanded image:
+It reads only the fixed list at the top of `capture.sh` (`sh capture.sh --list` prints it without reading anything):
+
+| Group | Items | Purpose |
+|---|---|---|
+| Identity | `/proc/version`, `uname -a`, `/etc/os-release`, Batocera and Koriki version files | Ties the capture to catalogued kernel and firmware bytes (P-KERNEL). |
+| Boot handoff | `/proc/cmdline`, `/proc/device-tree` (archived and listed), `/sys/firmware/fdt` if present, `/boot/uEnv.txt`, `/boot/batocera-boot.conf` | Compares the boot arguments, memory node and RAM-disk location with the reconstruction (P-BOOTARGS, P-CMDLINE-SRC, P-UENV, P-RAM, P-INITRD, P-STRAP, P-AFI-BOOTDEV, P-CARDCONFIG). |
+| CPU | `/proc/cpuinfo`, `possible/present/online/offline` masks, `kernel_max`, cpufreq policy values | The two-versus-four-core question (P-CPU). |
+| Memory | `/proc/meminfo`, `/proc/iomem` | What Linux accepted and what is left after reservations (P-RAM). |
+| Storage | `/proc/partitions`, `/proc/mounts`, link targets and card **type** under `/sys/block`, `/sys/bus/mmc/devices`, `/sys/class/mmc_host` | Which controller holds the card, and whether any non-removable storage is visible (P-BOOTDEV, P-NAND). |
+| Display, GPU, modules | `/proc/fb`, `fb0` attributes, `/proc/pvr/version`, `/proc/modules`, `/proc/interrupts` | Baseline for later driver work (P-GPU). |
+| Boot log | `dmesg` (read without clearing it) | SCU core count, memory and boot-card messages. |
+
+It writes only inside one new `atm-capture-<time>-<number>-<n>/` folder next to the script, then flushes the card. It never writes to `/sys` or `/proc`, opens nothing under `/dev`, never reads a raw block device, never mounts, loads modules, changes CPU, clock, regulator or backlight state, and deliberately skips battery/PMIC attributes, `cpuinfo_cur_freq`, `/proc/kmsg` and debugfs. It does not read card serial numbers or CIDs. It shows nothing on screen.
+
+### What it cannot tell you
+
+A capture taken after Linux has booted shows what the boot chain **handed over**. It cannot show the Boot ROM, the loader's or U-Boot's own console output, DRAM training, the memory test, or the physical DRAM size. Those need a separately approved early serial capture (prediction P-DRAM-LOG). It also cannot prove that storage Linux does not see is absent.
+
+## 1. Prepare and verify the spare card
+
+1. Fetch and check the image (size and SHA-256 of both the download and the expanded image):
    ```sh
-   python tools/acquire_firmware.py koriki-v1.0-release /path/to/inputs --expand
+   python tools/acquire_firmware.py koriki-v1.0-release INPUTS --expand
+   python tools/v3_preflight.py --image INPUTS/koriki-v1.0.img --archive INPUTS/koriki-v1.0.img.gz --json /private/results/preflight-image.json
    ```
-2. Write `/path/to/inputs/koriki-v1.0.img` to the spare card with a raw imaging tool such as balenaEtcher (which verifies the write) or `dd`. Double-check the target disk first.
-3. Read [spare-card-risk.md](../reports/spare-card-risk.md). Leave the **TF2 slot empty**: Koriki mounts and writes to any card there, and would then look for the script on that card. Boot on battery with no charging cable, and leave the `overclocking` setting unset.
-4. Boot once with the card and power off from the menu. On first boot Koriki grows partition 3 to fill the card and formats it as a FAT32 partition labelled `SHARE`, which becomes `/userdata` (FW-005). The card's first partition (boot files) and the new `SHARE` partition are then both readable from a computer.
-5. On the computer, open the `SHARE` partition and create the folder `roms/ports/` if it does not exist. Copy `device/capture.sh` into it, for example as `ATM7039S-capture.sh`. Koriki v1.0's SimpleMenu lists `.sh` files from `/userdata/roms/ports/` under **GAMES** in its "apps and games" section group (UI-001).
-6. Record the SHA-256 of the `capture.sh` you copied. It must match an entry in `capture-versions.json`.
+   The preflight must end with **0 FAIL, 0 WARN**. It confirms the loader, U-Boot, kernel, DTBs, RAM disk and boot configuration are the catalogued ones, that the `SFVD` marker is present (without it the loader rewrites part of the card on every boot), and that the image's BusyBox has every command the script needs. It only reads; it never repairs anything.
+2. **Identify the right card before writing.** Remove every other memory card and USB drive from the computer. Insert only the spare card. In balenaEtcher, the target list must show one drive of the spare card's size. On Linux, compare `lsblk -o NAME,SIZE,MODEL,TRAN,RM` before and after inserting it; the new removable entry is the card. If in doubt, stop.
+3. Write `INPUTS/koriki-v1.0.img` to the card with balenaEtcher (it verifies the write) or `dd`. Do not open or "repair" the card afterwards in any disk utility.
+4. Before any boot, follow the mandatory raw-card verification in [Part 3.4](V3-STEP-BY-STEP.md#34-mandatory-raw-boot-region-verification-before-the-first-boot). All three raw checks must PASS. Put the card in **TF1**, leave TF2 empty, no cable. Switch on and wait. The first boot shows a "Resizing Partition — Do not switch off your device!" screen, then the menu. Power off with Volume Up + Power, the documented [Koriki v1.0 shutdown shortcut](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0). A short Power press suspends. This first boot turns partition 3 into a FAT32 partition labelled `SHARE`.
+5. Put the card back in the computer. Two partitions appear: the boot partition (with `uImage`, `KERNEL.DTB`, `uEnv.txt`) and `SHARE`. **Change nothing on the boot partition.**
+6. On `SHARE`, create the folder `roms/ports/` if it does not exist, and copy `device/capture.sh` into it as **`ATM7039S-capture.sh`**. Copy the file; do not open it in an editor (that can change its line endings and therefore its hash). Use a name with only letters, digits, `.`, `-` and `_`: the launcher evaluates the path as a shell command, so spaces would break it.
+7. Check the prepared card:
+   ```sh
+   python tools/v3_preflight.py --boot-dir /path/to/BOOT --share-dir /path/to/SHARE --json /private/results/preflight-prepared.json
+   ```
+   Again **0 FAIL, 0 WARN**. It confirms the boot files are unchanged, `overclocking` is unset, exactly one registered script is in `roms/ports`, and no earlier capture folder is left there.
+8. Repeat the mandatory raw check after first boot (save `preflight-raw-prepared.json`), then eject safely.
 
-## Running it
+Use the guided Windows `--windows-boot-letter` or POSIX `--card-device` helper. No `dd` or raw dump is required. Save the JSON to a private local folder outside the SD card and project. Stop on any FAIL or unresolved WARN.
 
-1. Insert the card, boot, switch SimpleMenu to the "apps and games" section group, open **GAMES**, and launch the capture script. It takes a few seconds and returns to the menu. Launching from this list has not yet been observed on hardware. If the entry does not appear or does not start, stop; do not try other launch methods without updating the observation record.
-2. Power off normally from the menu.
-3. On the computer, copy the whole `SHARE/roms/ports/atm-capture-*` folder off the card. Do not edit its contents.
+## 2. Run the capture
 
-**ADB route (fallback only).** Koriki v1.0 ships `/adb_uImage`, a separate kernel build (FW-007). Copying it over `/uImage` changes the booted kernel, so record `boot_kernel: adb_uImage` and the swap under `modifications`. Then run `adb push capture.sh /tmp/`, `adb shell sh /tmp/capture.sh /tmp`, and `adb pull /tmp/atm-capture-<...>`. Restore the original `/uImage` afterwards.
+1. Card in TF1, TF2 empty, no cable. Switch on and wait for SimpleMenu.
+2. Switch SimpleMenu to the **"apps and games"** section group, open **GAMES**, select **ATM7039S-capture** and launch it **once**.
+3. There is no progress screen. The reconstructed launcher is expected to return to the menu when the capture finishes; under a minute is an unmeasured estimate. **Wait at least three minutes** before deciding something is wrong. Do not press buttons in the meantime.
 
-## Turning a capture into evidence
+If something goes wrong:
 
-```sh
-python tools/runtime_capture.py /path/to/atm-capture-<...> /tmp/OBS-001.json
-```
+| What you see | What to do |
+|---|---|
+| No "ATM7039S-capture" entry | Stop. Do not try other ways of starting it. Check on the computer that the file is in `SHARE/roms/ports/` and ends in `.sh`. Launching from this list has not yet been observed on hardware. |
+| The menu returns at once | Power off with Volume Up + Power, the documented [Koriki v1.0 shutdown shortcut](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0). A short Power press suspends. On the computer, look for a new `atm-capture-*` folder. If there is none, stop and report. Do not run it again without analysis. |
+| Nothing returns after 5 minutes, or the device reboots | Note the time and what was on screen. Use the normal shutdown shortcut if responsive; a forced Power hold is an emergency fallback only and can corrupt pending writes. Copy the card on a computer **before** booting it again (see below). Do not retry. |
 
-The parser verifies every item's size and hash. It links `/proc/version` to catalogued kernel builds and the exported FDT to catalogued DTBs. An exported FDT normally includes bootloader fixups, so expect a hash mismatch and compare it property by property. The parser summarises CPU, memory, storage, display, module and kernel-config data, and evaluates every prediction in [evidence/predictions.json](../evidence/predictions.json): CPU topology, console UART, boot controller, non-removable storage, RAM size, kernel build, kernel config and GPU module. Each result is one of that prediction's pre-registered outcomes, and is a **hint**, not a finding. Summary text is redacted: `androidboot.serialno=` values and MAC addresses are replaced.
+Not part of this test: opening other apps or settings, Wi-Fi, ADB, USB cables, charging, sleep/suspend, inserting a TF2 card, changing CPU or display settings, and running the capture "once more to be sure".
 
-Then:
+## 3. After the capture
 
-1. Review the raw capture for anything private. On this firmware `/proc/cmdline`, `dmesg` and the exported device tree contain the board serial number (`androidboot.serialno=`, BOOT-006), and network drivers may log MAC addresses. By default the raw folder stays outside the repository (record where it is kept in `raw_location`). Commit it only after the owner has reviewed it.
-2. Copy the parser output to `evidence/observations/OBS-NNN.json` and add a record to `evidence/observations.json`, following `evidence/schemas/observations.schema.json`. The record names the approval, board revision (silkscreen text, or `unknown`), firmware image hash, booted kernel component, every modification to the card, the capture tool hash and the manifest hash.
-3. Only then may a finding use `"validation": "hardware-observation"`, listing the observation in `observations` and citing capture items as evidence: `{"source": "koriki-v1.0-release", "observation": "OBS-001", "item": "cpu-possible"}`.
-4. Run `python tools/research.py validate`. It checks schemas, the observation-to-firmware link, the tool version, the manifest hash, that the summary did not come from a test fixture, and that cited capture items exist.
+1. Power off normally with **Volume Up + Power** (not sleep), confirm the power indicator is off, and wait 10 seconds. A forced hold is not guaranteed safe.
+2. Take the card straight to the computer. **Do not boot the handheld with this card again first:** on every boot Koriki runs an automatic `fsck.vfat -a` repair on `SHARE`, which could alter an interrupted capture (FW-020).
+3. Copy the whole `SHARE/roms/ports/atm-capture-*` folder to a private folder on the computer. Do not edit, rename or open-and-save anything inside it.
+4. Analyse it:
+   ```sh
+   python tools/runtime_capture.py PATH/atm-capture-... summary.json --report summary.md \
+       --reference-dtb PATH/TO/BOOT/KERNEL.DTB
+   ```
+   Look for **State: authenticated-complete** near the top of `summary.md`. `authenticated-partial` means some essential item is missing (listed); `quarantined` means the capture failed an integrity check and must not be used as evidence (the reason is listed). `--reference-dtb` compares the running device tree with the card's `KERNEL.DTB`, which shows exactly what U-Boot changed.
+5. Re-check the card with `--boot-dir`, `--share-dir`, and `--json` (save `preflight-after.json`), then repeat the raw check (`preflight-raw-after.json`). A warning about the new capture folder is expected; report every FAIL or unexpected WARN.
+
+### Privacy
+
+The **raw folder is private**. It contains the board serial number (in the command line, boot log and device tree) and may contain other identifiers. `summary.json` and `summary.md` are redacted (serial numbers, card IDs, UUIDs, MAC addresses) and are what you share. Read them once before sharing anyway. Never commit the raw folder.
+
+### Handing over the evidence
+
+Send `summary.json`, `summary.md`, the six saved preflight JSON files, the board revision if it is already known (otherwise `unknown`; do not open the device to find it), the date, and a note of anything that deviated from this procedure. The repository then records an observation in `evidence/observations.json` (below).
+
+## For maintainers: turning a capture into evidence
+
+1. Copy the parser output to `evidence/observations/OBS-NNN.json` and add a record to `evidence/observations.json` following `evidence/schemas/observations.schema.json`: approval, board revision, firmware image hash, booted kernel component, every card modification (at least "capture.sh copied to roms/ports"), the capture tool hash and the manifest hash.
+2. Only then may a finding use `"validation": "hardware-observation"`, listing the observation and citing capture items: `{"source": "koriki-v1.0-release", "observation": "OBS-001", "item": "cmdline"}`.
+3. `python tools/research.py validate` checks schemas, the image and tool hashes, the manifest hash, that the summary is authenticated, not from a test fixture or PATH override, and that cited items exist.
+
+Prediction outcomes are hints with a class (`expected`, `alternative`, `unexpected`, `insufficient`, `review`). An `insufficient` outcome is missing information, never a negative result.
+
+### Authentication
+
+The parser rejects (quarantines) a capture if: the script hash is not in `capture-versions.json`; the recorded version or format disagrees with that hash; the allowlist, manifest or any item hash differs; the `DONE` marker is missing; the script reported failed writes; or the device had no SHA-256 tool. Captures from script versions 1–2 remain parseable. Any change to `capture.sh` needs a new version entry with its SHA-256; `research.py validate` enforces this.
+
+### ADB route (fallback only, separate approval)
+
+Koriki v1.0 ships `/adb_uImage`, a different kernel build (FW-007). Using it changes the booted kernel: record `boot_kernel: adb_uImage` and the swap under `modifications`, run `adb push capture.sh /tmp/`, `adb shell sh /tmp/capture.sh /tmp`, `adb pull /tmp/atm-capture-<...>`, and restore `/uImage` afterwards.
+
+### Testing the script without hardware
+
+`ATM_CAPTURE_ROOT=/fixture` reads a synthetic tree (`tests/capture_fixture.py`) instead of `/`, and `ATM_CAPTURE_PATH` replaces `PATH`. Both are recorded in the capture and make it inadmissible as evidence. `tests/test_capture_shells.py` runs the script under dash, bash `--posix`, BusyBox, and Koriki's own BusyBox 1.36.1 under qemu-user when `ATM_FIRMWARE_DIR` holds the pinned image.

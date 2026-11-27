@@ -41,4 +41,4 @@ The early loader's own configuration settles the AFI `uart_index` statically. Ev
 
 ## Update from the boot-chain reconstruction (PR #5)
 
-Emulating the whole pre-kernel chain on all four stock images and Koriki v1.0 gives AFI `uart_index` 3 and the final command line `console=ttyS3 …` (UART3, enabled in the DTB: prediction P-CONSOLE's `enabled-uart` outcome). U-Boot's autoboot uses `bootdelay=0` with the default abort key `s500`: typing it on U-Boot's serial console during the single poll before `run bootcmd` would stop autoboot. That note is for planning only and authorises nothing ([report](../reports/stock-boot-chain-reconstruction.md)).
+Emulating the whole pre-kernel chain on all four stock images and Koriki v1.0 gives AFI `uart_index` 3 and the final command line `console=ttyS3 …` (UART3, enabled in the DTB: prediction P-CONSOLE's `ttys3` outcome). U-Boot's autoboot uses `bootdelay=0` with the default abort key `s500`: typing it on U-Boot's serial console during the single poll before `run bootcmd` would stop autoboot. That note is for planning only and authorises nothing ([report](../reports/stock-boot-chain-reconstruction.md)).

@@ -11,6 +11,9 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install -r requirements-dev.txt -r requirements-firmware.txt
+      # Shell portability checks for device/capture.sh (tests/test_capture_shells.py).
+      - run: sudo apt-get install -y --no-install-recommends busybox dash
+      - run: python -m pip install shellcheck-py==0.10.0.1
       - run: python -m unittest discover -s tests -v
       - run: python tools/research.py validate
       - run: python tools/research.py generate --check
@@ -21,3 +24,13 @@ jobs:
         with:
           name: technical-reference-html
           path: site/
+
+  windows-operator-validation:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements-dev.txt -r requirements-firmware.txt
+      - run: python -m unittest discover -s tests -p test_v3_preflight.py -v
