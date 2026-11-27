@@ -98,7 +98,11 @@ The [DRAM reconstruction](../reports/dram-complete-reconstruction.md) completes 
 | Resume | s2 flag, not from S4, non-zero vector (PMIC regs 8/0x5d) | mode 1 on the ini **primary** record: no probe, no test, no retry, PIR 0x3f, PREA/REF bursts | **not written** | jump to the kernel resume vector |
 | Resume failure | mode 1 returns ≠ 0 | — | not written | RTC alarm +3 s, s2 flag set again, PMIC power-off |
 | Resume check | vector bit 31 and alarm wake | mode 1, then back to self-refresh | not written | PMIC power-off |
-| ADFU request | PMIC reg 0x35 bit 1, or GPIO 0x55aa55aa on non-SD0 boot codes | none | not written | ROM ADFU |
+| ADFU request | PMIC reg 0x35 bit 1, or (boot code ≠ 0) GPIO C11→C10 loopback echoing 0x55aa55aa (BOOT-025) | none | not written | ROM ADFU |
+
+## Pre-DRAM path for boot codes 0 and 2 (PR #9)
+
+The code from block 0 to the DRAM init call is reconstructed in [docs/predram-initialization.md](predram-initialization.md) ([report](../reports/sd2-predram-reconstruction.md); BOOT-024/025, CLK-007, UART-004, PMIC-002, GPIO-002). For the observed code-2 path it is the same instruction path as code 0, except that `adfu_check` adds a 32 × 1 ms GPIO loopback test. Executed in emulation, the two codes differ only by that block, up to and through DRAM init (reference scenario). Boot ROM state is not covered, so C-PREDRAM-PATH stays open.
 
 ## Physical observation OBS-001 (2026-11-27) and the PR #8 reconciliation
 

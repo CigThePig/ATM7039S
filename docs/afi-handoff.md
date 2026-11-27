@@ -82,6 +82,10 @@ U-Boot consumers:
 
 When the magic is absent, U-Boot assumes PRODUCE and runs `ramboot`. The resume path (`0xb40664e4`) does not rewrite the AFI (PR #6).
 
+## Pre-DRAM inputs (PR #9)
+
+Nothing before DRAM init writes the AFI. The values it later carries are fixed before DRAM init: `uart_index`/`uart_pad`/`baud` from ini+0x0e/+0x0f/+0x10, held in `0xb407082c..0xb4070834`, and `boot_dev` from the boot-code word `0xb4064c00` (0 → `0x20`, 2 → `0x22`). The ini byte printed as `bootdev=` (+0x0c, `0x22` in every release) is not used for the AFI. See [predram-initialization.md](predram-initialization.md).
+
 ## Every DRAM outcome (PR #6)
 
 [MEM-010](../evidence/findings.json): the AFI is written by `0xb4066588` → `0xb4066500` only on the cold path, after the write-back, **whether or not DRAM init succeeded**.

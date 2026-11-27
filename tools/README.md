@@ -167,6 +167,15 @@ Tests: `tests/test_boot_chain.py` covers hand-encoded A32 fixtures (call trackin
 
 Tests: `tests/test_dram_complete.py` (models, boundary values, committed evidence, harness RAM/fault mechanics on hand-encoded A32). `ATM7039S_STOCK_LOADERS=DIR` re-runs the firmware-backed comparisons.
 
+### Pre-DRAM reconstruction (PR #9)
+
+| Command | What it does | Limits |
+|---|---|---|
+| `predram_analysis.py evidence OUT --image NAME=IMG … [--reference NAME]` | Verifies each whole image against the acquisition manifest and builds a recursive-descent call graph from `0xb4065400` to the DRAM boundary `0xb40690b8`, with constant tracking, boot-code references, annotated bit-indexed helpers and instruction-anchored structure facts. It runs bounded Unicorn traces of main for boot codes 0/2 and a few scenarios (seed, loopback, handshake off, PMIC status), re-runs `dram_complete.run_caller` for codes 0/2 and compares releases. Writes `evidence/firmware/sd2-predram.json` (deterministic) | Static reachability is not execution. Every peripheral read follows a named synthetic rule. Stubs only printf, the Boot ROM read service and the I2C transaction layer. About 10 s per release |
+| `predram_analysis.py trace IMG --boot-code N [--scenario loopback]` / `graph IMG` | Readable event list / call graph for one image | Same models |
+
+Tests: `tests/test_predram.py` covers synthetic A32 fixtures (calls, tail calls, indirect calls, branches, constant tracking, data words, hangs, unsupported jumps, helper formulas, MMIO rules) and the committed evidence. `ATM_FIRMWARE_DIR=DIR` regenerates the evidence and checks helper formulas against execution.
+
 ### V3 operator recovery
 
 **The lab (Windows/Linux; macOS uses the manual procedure)** (`ATM7039S-Lab.cmd`, `start-lab.sh` → `lab_launch.py` → `python -m v3lab`) runs the whole computer side of a V3 session; see [v3lab/README.md](v3lab/README.md). `boot_chain.py boot-path IMAGE OUT --release R --observation evidence/observations/OBS-001.json` executes every boot-device hypothesis end to end and compares the resulting command line with an observation ([report](../reports/sd2-boot-path-reconciliation.md)). `v3_preflight.py --phase auto|fresh|prepared|post-capture [--image] [--baseline]` checks the card's root filesystem by byte hash before the first boot and semantically afterwards. `v3_rootfs_review.py --phase prepared|post-capture` (3.0) is the stand-alone form of that check with a private report in `lab-data/rootfs-review/`; the 2.x diagnostic used during OBS-001 is superseded (its report stays as evidence). `v3_operator.ps1` is a legacy fallback.
