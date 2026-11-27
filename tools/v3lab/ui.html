@@ -90,10 +90,10 @@ function render() {
     if (cur.id === 'flash' && S.extra.flash) {
       const f = S.extra.flash;
       h += `<p>1. Open <b>balenaEtcher</b>. 2. <b>Flash from file</b> and choose this file:</p><p class="path">${esc(f.image)}</p>
-            <button onclick="navigator.clipboard.writeText(${JSON.stringify(f.image)})">Copy the file path</button>
+            <button id="copy-image-path">Copy the file path</button>
             <p>3. <b>Select target</b>: choose the spare card. Removable disks connected now:</p>
             <ul>${f.removable.map(d => `<li>${esc(d.model)} — ${d.size_gb} GB (${esc(d.bus)})</li>`).join('') || '<li>none found: is the card inserted?</li>'}</ul>
-            <p>If Etcher shows more than one disk, stop and remove the others. 4. Press <b>Flash</b> and wait for “Flash Complete!”.
+            <p>${f.target_unique ? 'Check that the single disk is your marked spare card before pressing Flash.' : '<b>STOP:</b> no unique removable target or firmware image is available. Do not flash.'} 4. Press <b>Flash</b> only after confirming the target and wait for “Flash Complete!”.
             If Windows then asks to format a disk, press <b>Cancel</b>.</p>`;
     }
     h += `<form id="cl">${cur.checklist.map((c,i) => `<label class="check"><input type="checkbox" data-i="${i}"><span>${esc(c)}</span></label>`).join('')}</form>
@@ -120,11 +120,16 @@ function render() {
         <p class="muted">Done so far: ${steps.filter(s=>s.status==='complete').map(s=>esc(s.title)).join(' · ') || 'nothing yet'}</p>
         ${ss.deviations.length ? `<p class="muted">Recorded deviations: ${ss.deviations.length}</p>` : ''}</details>`;
   app.innerHTML = h;
+  const copyPath = document.getElementById('copy-image-path');
+  if (copyPath) copyPath.onclick = async () => {
+    try { await navigator.clipboard.writeText(S.extra.flash.image); copyPath.textContent = 'Copied'; }
+    catch { alert('Clipboard unavailable. Select and copy the displayed path manually.'); }
+  };
   const form = document.getElementById('cl');
   if (form) {
     const boxes = [...form.querySelectorAll('input')], done = document.getElementById('done');
     const prev = ticks[cur.id] || []; boxes.forEach((b,i) => b.checked = !!prev[i]);
-    const upd = () => { ticks[cur.id] = boxes.map(b => b.checked); done.disabled = !boxes.every(b => b.checked); };
+    const upd = () => { ticks[cur.id] = boxes.map(b => b.checked); done.disabled = !boxes.every(b => b.checked) || (cur.id === 'flash' && !S.extra.flash?.target_unique); };
     boxes.forEach(b => b.onchange = upd); upd();
     done.onclick = () => { post('confirm', {step: cur.id, answers: boxes.map(b => b.checked)}); delete ticks[cur.id]; };
   }

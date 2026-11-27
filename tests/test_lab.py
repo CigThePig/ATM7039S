@@ -572,6 +572,30 @@ class SessionTests(Tmp):
         self.assertEqual(s.current()['id'], 'computer')
         self.assertEqual(s.data['deviations'][0]['kind'], 'went-back')
 
+    def test_rewind_invalidates_downstream_and_archives_history(self):
+        s = session.Session.create(self.tmp)
+        s.record_run('computer', True, 'ok')
+        s.record_run('firmware', True, 'ok')
+        s.data['baselines'] = {'fresh': {'a':1}, 'prepared': {'b':2}}
+        s.data['outputs'] = {'firmware_image':'x', 'summary':'old'}
+        s.data['card'] = {'physical':'old'}
+        s.go_back('firmware', 'repeat setup')
+        self.assertEqual(s.data['baselines'], {})
+        self.assertEqual(s.data['outputs'], {})
+        self.assertIsNone(s.data['card'])
+        self.assertEqual(s.step('firmware')['runs'], [])
+        self.assertEqual(s.data['history'][0]['outputs']['summary'], 'old')
+
+    def test_rewind_after_possible_capture_refused(self):
+        s = session.Session.create(self.tmp)
+        for st in s.data['steps']:
+            if st['id'] == 'capture':
+                st['status'] = 'ready'
+                break
+            st['status'] = 'complete'
+        with self.assertRaisesRegex(session.SessionError, 'do not repeat'):
+            s.go_back('install-script', 'try again')
+
     def test_damaged_or_foreign_session_files(self):
         s = session.Session.create(self.tmp)
         s.path.write_text('{"format": 99}')
@@ -604,6 +628,7 @@ class SimulatedSession(Tmp):
         self.data = self.tmp / 'lab-data'
         fw = self.data / 'cache' / 'firmware'
         fw.mkdir(parents=True)
+        (fw / 'koriki-v1.0.img').write_bytes(b'simulated image')
         pristine = lf.container('pristine')
         (fw / 'koriki-v1.0-rootfs.ext4').write_bytes(pristine)
 
@@ -687,6 +712,63 @@ class SimulatedSession(Tmp):
         r = steps.step_postflight(self.env, s, jobs.Job('p', 'fast'))
         self.assertFalse(r.ok)
         self.assertIn('UNEXPLAINED', ' '.join(r.lines))
+
+    def test_raw_postflight_tamper_blocks(self):
+        self.advance_to_prepared()
+        self.assertEqual(self.run_step('check-prepared')['status'], 'complete', self.lab.problem)
+        self.assertEqual(self.run_step('install-script')['status'], 'complete', self.lab.problem)
+        self.world.card.capture_boot()
+        self.world.card.head = lf.raw_head(tamper=True)
+        r = steps.step_postflight(self.env, self.lab.session, jobs.Job('p', 'fast'))
+        self.assertFalse(r.ok)
+        self.assertIn('early-region', r.blocking_reason)
+
+    def test_prepared_changed_before_install_blocks_without_write(self):
+        self.advance_to_prepared()
+        self.assertEqual(self.run_step('check-prepared')['status'], 'complete', self.lab.problem)
+        self.world.card.first_boot('tampered')
+        st = self.run_step('install-script')
+        self.assertEqual(st['status'], 'blocked')
+        self.assertFalse((self.world.card.share / 'roms/ports/ATM7039S-capture.sh').exists())
+
+    def test_extra_boot_files_and_scripts_block(self):
+        self.advance_to_prepared()
+        extra = self.world.card.boot / 'unexpected.sh'
+        extra.write_text('unexpected')
+        self.assertEqual(self.run_step('check-prepared')['status'], 'blocked')
+        extra.unlink()
+        self.assertEqual(self.run_step('check-prepared')['status'], 'complete', self.lab.problem)
+        ports = self.world.card.share / 'roms/ports'
+        ports.mkdir(parents=True)
+        (ports / 'other.sh').write_text('unexpected')
+        self.assertEqual(self.run_step('install-script')['status'], 'blocked')
+        self.assertFalse((ports / 'ATM7039S-capture.sh').exists())
+
+    def test_snapshot_corruption_replaced(self):
+        self.advance_to_prepared()
+        s = self.lab.session
+        found = disks.identify(self.world.inventory())
+        job = jobs.Job('snapshot', 'fast')
+        path, digest = steps.snapshot_card_container(self.env, s, found['boot_mount'], job, 'prepared')
+        data = path.read_bytes()
+        path.write_bytes(b'X' + data[1:])
+        path2, digest2 = steps.snapshot_card_container(self.env, s, found['boot_mount'], job, 'prepared')
+        self.assertEqual(digest, digest2)
+        self.assertEqual(path2.read_bytes(), data)
+
+    def test_native_media_id_mismatch_blocks(self):
+        self.advance_to_prepared()
+        s = self.lab.session
+        import hashlib
+        s.data['card']['media_hash'] = hashlib.sha256((s.data['salt'] + 'a'*32).encode()).hexdigest()
+        def inventory():
+            ds = self.world.inventory()
+            for d in ds:
+                if not d['is_system']:
+                    d['media_id'] = 'b'*32
+            return ds
+        self.env.inventory = inventory
+        self.assertEqual(self.run_step('check-prepared')['status'], 'blocked')
 
     def test_unexpected_first_boot_change_blocks(self):
         self.advance_to_prepared()
@@ -811,6 +893,16 @@ class DiagnosticsTests(Tmp):
         out = diagnostics.scrub(text)
         self.assertNotIn(str(Path.home()), out)
         self.assertIn('<mac>', out)
+        out = diagnostics.scrub('192.168.1.2 2001:db8::1 12345678-abcd-1234-abcd-123456789abc')
+        self.assertIn('<ipv4>', out)
+        self.assertIn('<ipv6>', out)
+        self.assertIn('<uuid>', out)
+
+    def test_copy_path_uses_dom_handler(self):
+        page = (ROOT / 'tools/v3lab/ui.html').read_text(encoding='utf-8')
+        self.assertIn('id="copy-image-path"', page)
+        self.assertIn('navigator.clipboard.writeText(S.extra.flash.image)', page)
+        self.assertNotIn('onclick="navigator.clipboard.writeText', page)
 
 
 class LauncherTests(unittest.TestCase):

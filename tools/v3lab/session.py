@@ -19,7 +19,7 @@ from pathlib import Path
 from . import VERSION
 from .store import atomic_write_json, read_json, StoreError
 
-FORMAT = 1
+FORMAT = 2
 
 
 def now_utc():
@@ -34,7 +34,7 @@ V3_STEPS = [
          short='Downloads Koriki v1.0 (about 890 MB) once, checks it and unpacks it. Resumes if interrupted.'),
     dict(id='insert-blank', kind='physical', title='Insert the spare card',
          checklist=['The working GarlicOS card and the failing factory card are put away, out of reach.',
-                    'The spare microSD card is in this computer\'s card reader.',
+                    'I marked the spare microSD card (for example, keep it in a labelled case) and it is in this computer\'s card reader.',
                     'No other memory card or USB stick is plugged in.']),
     dict(id='flash', kind='physical', title='Write Koriki to the spare card',
          checklist=['balenaEtcher showed "Flash Complete!" for the disk the lab named.',
@@ -46,19 +46,20 @@ V3_STEPS = [
                     'The card is in slot TF1 of the RG35XX. Slot TF2 is empty.',
                     'The charging cable is NOT connected.',
                     'I switched the handheld on and waited until the game menu appeared (first boot takes a few minutes).',
-                    'I switched it off with the menu: START > QUIT > SHUTDOWN, and the screen went dark.']),
+                    'I shut it down with Volume Up + Power together, waited until the screen AND power indicator went off, then waited another 10 seconds.',
+                    'I put that same marked spare card back in the computer. I did not use a long power hold or swap cards.']),
     dict(id='check-prepared', kind='computer', title='Check the card after its first boot',
          short='Copies the card\'s system files to this computer and checks that only the expected first-boot changes happened.'),
     dict(id='install-script', kind='computer', title='Put the capture script on the card',
          short='Copies device/capture.sh to SHARE/roms/ports/ATM7039S-capture.sh and checks the copy. This is the only file the lab writes to the card.',
-         confirm='Copy the capture script onto the card'),
+         confirm='I confirm the marked spare card is inserted and will not remove it during the copy'),
     dict(id='capture', kind='physical', title='Run the capture on the handheld',
          checklist=['I ejected the card from this computer.',
                     'The card is in TF1, TF2 is empty, the charging cable is NOT connected.',
-                    'I switched the handheld on and opened the PORTS (or GAMES) list.',
+                    'I switched the handheld on, went to the SimpleMenu section group "apps and games", and opened GAMES.',
                     'I started ATM7039S-capture once, and the screen said the capture finished.',
-                    'I switched it off with START > QUIT > SHUTDOWN.',
-                    'I put the card back into this computer.']),
+                    'I shut it down with Volume Up + Power together, waited until the screen AND power indicator went off, then waited another 10 seconds.',
+                    'I put the same marked spare card back into this computer. No forced shutdown or second capture occurred.']),
     dict(id='collect', kind='computer', title='Collect and check the results',
          short='Copies the capture folder to a private folder on this computer, verifies every file and analyses it.'),
     dict(id='postflight', kind='computer', title='Check the card after the capture',
@@ -172,7 +173,7 @@ class Session:
             raise SessionError('only physical steps are confirmed by the operator')
         lines = spec['checklist']
         if not isinstance(answers, list) or len(answers) != len(lines) or not all(a is True for a in answers):
-            missing = [lines[i] for i, a in enumerate(answers or []) if a is not True] if isinstance(answers, list) else lines
+            missing = [line for i, line in enumerate(lines) if i >= len(answers) or answers[i] is not True] if isinstance(answers, list) else lines
             raise SessionError('every line has to be true before this step is done. Not confirmed: ' +
                                ' | '.join(missing or lines))
         st = self.step(sid)
@@ -207,9 +208,25 @@ class Session:
         i = ids.index(sid)
         if i > ids.index(self.current()['id']):
             raise SessionError('you can only go back, not skip ahead')
-        for s in self.data['steps'][i:]:
-            if s['status'] != 'pending':
-                s['status'] = 'pending'
+        # Once capture is confirmed (or the capture step is current), going back
+        # could lead to a second launch. Preserve the session; do not replay it.
+        capture_i = ids.index('capture')
+        if i <= capture_i and ids.index(self.current()['id']) >= capture_i:
+            raise SessionError('capture may already have been launched; do not repeat it in this session. Preserve the card and seek review.')
+        old = dict(at_utc=now_utc(), step=sid, steps=[dict(s) for s in self.data['steps'][i:]],
+                   baselines=dict(self.data['baselines']), outputs=dict(self.data['outputs']), card=self.data['card'])
+        self.data.setdefault('history', []).append(old)
+        for st in self.data['steps'][i:]:
+            st.update(status='pending', runs=[], confirmations=[])
+        for key, owner in {'fresh':'check-fresh', 'prepared':'check-prepared', 'post-capture':'postflight'}.items():
+            if i <= ids.index(owner):
+                self.data['baselines'].pop(key, None)
+        for key, owner in {'firmware_image':'firmware', 'captures_before':'install-script', 'capture_private':'collect',
+                           'summary':'collect', 'capture_state':'collect'}.items():
+            if i <= ids.index(owner):
+                self.data['outputs'].pop(key, None)
+        if i <= ids.index('check-fresh'):
+            self.data['card'] = None
         self.data['steps'][i]['status'] = 'ready'
         self.data['deviations'].append(dict(at_utc=now_utc(), kind='went-back', step=sid, reason=reason.strip()))
         self.save()

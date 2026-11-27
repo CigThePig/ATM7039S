@@ -23,7 +23,7 @@ Candidate explanations at the start of this PR:
 
 ## 2. Result in one paragraph
 
-**H2 is what happened, H1 is refuted, H3 is true for Linux but does not explain the command line, and H4 is not needed.** Executing the firmware's own code for every boot code that loader block 0 can write, exactly one path reproduces OBS-001's command line byte for byte: block 0 sees `CMU_DEVCLKEN0` bit 7 and writes **boot code 2**; bootloader.bin makes the AFI **`boot_dev = 0x22`** (otherwise identical, same raw reads); U-Boot's `check_boot_flag` selects **`run emmcboot`**; `emmcargs` sets `devpart = ${emmcdev}:${bootpart}` = **`1:1`**; U-Boot device 1 is **SD2 (`0xB0238000`)**; `owl_boot_fdt_setup` then writes `boot_dev=sd2` and, with the GPIOC6 strap high, `allenS500=1`. The TF1 slot is wired to SD2. The original reconstruction was right about every function it traced, but it assumed TF1 was SD0 and therefore followed the code-0 branch.
+**H2 best explains the observation under the pinned-image model; H1 is refuted within the tested U-Boot model, H3 explains Linux numbering, and H4 is not needed.** Executing the firmware's own code for every boot code that loader block 0 can write, exactly one path reproduces OBS-001's command line byte for byte: block 0 sees `CMU_DEVCLKEN0` bit 7 and writes **boot code 2**; bootloader.bin makes the AFI **`boot_dev = 0x22`** (otherwise identical, same raw reads); U-Boot's `check_boot_flag` selects **`run emmcboot`**; `emmcargs` sets `devpart = ${emmcdev}:${bootpart}` = **`1:1`**; U-Boot device 1 is **SD2 (`0xB0238000`)**; `owl_boot_fdt_setup` then writes `boot_dev=sd2` and, with the GPIOC6 strap high, `allenS500=1`. The TF1 slot is wired to SD2. The original reconstruction was right about every function it traced, but it assumed TF1 was SD0 and therefore followed the code-0 branch.
 
 ## 3. Stage by stage
 
@@ -41,7 +41,7 @@ Candidate explanations at the start of this PR:
 ### Why each hypothesis stands or falls
 
 * **H1 refuted (for U-Boot).** `mmc_create` assigns `block_dev.dev = cur_dev_num++` and links the device *before* `mmc_init` runs, and the failure path never unregisters it (`0x05023a2c`, `0x05024f04`). Executed for AFI `0x20`/`0x22` × SD0 ok/fail × SD2 ok/fail: with `0x22`, SD0 is always `mmc 0` and SD2 always `mmc 1`. With `0x20`, SD2 is never registered at all.
-* **H2 established (by reproduction).** Six hypotheses were executed (block-0 codes 0, 2, 4 × strap low/high). Only code 2 + strap high equals the observation. Code 0 gives `boot_dev=sd0` and loads from SD0.
+* **H2 strongly supported (by reproduction within the tested hypotheses).** Six hypotheses were executed (block-0 codes 0, 2, 4 × strap low/high). Only code 2 + strap high equals the observation. Code 0 gives `boot_dev=sd0` and loads from SD0.
 * **H3 true but secondary.** Linux numbering is independent of U-Boot's (it is chosen from `boot_dev=`), which explains `mmcblk0` on SD2 — but the `boot_dev=sd2` term itself can only come from U-Boot's AFI-driven fixup.
 * **H4 not needed.** OBS-001's boot files match the catalogue (postflight PASS), the kernel version string matches the catalogued build, and the reproduction uses the pinned image. The raw loader region on the card was *not* checked in OBS-001, so equality of the card's loader with the image is an assumption (it is checked by the new lab before any future boot).
 
@@ -69,7 +69,7 @@ Earlier records used "sd0", "mmc 0", "mmcblk0" and "TF1" as if they were one thi
 
 ## 6. What is still not observed
 
-The ROM's media search, the CMU bit value, the AFI bytes, U-Boot's console (`emmc boot`, mmc messages) and the GPIOC6 level were not observed; they are reproduced or inferred. None of them is needed to use the result. Cheapest confirmations, all optional:
+The ROM's media search, the CMU bit value, the AFI bytes, U-Boot's console (`emmc boot`, mmc messages) and the GPIOC6 level were not observed; they are reproduced or inferred. These limitations matter when generalizing the result or replacing the bootloader. Cheapest confirmations, all optional:
 
 1. A future read-only capture could add `/proc/bootdev` (the kernel's `g_boot_dev`; read-only file, but its write handler exists, so the capture must only read it).
 2. An early serial log (separately approved) would show `bootdev= 0x22`, `bootmode = 0`, `emmc boot` and the mmc slot messages.

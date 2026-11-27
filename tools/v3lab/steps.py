@@ -76,14 +76,18 @@ def _card(env, session, expect_stage):
     if found['status'] == 'ambiguous':
         raise StoreError('more than one Koriki card is connected. Leave only the spare test card in.')
     card = found['card']
-    # Exact capacity only: the reader's model changes if the card moves to another reader. Two cards of the
-    # same model and capacity cannot be told apart here; the system-file comparison against the session's
-    # own baseline then catches a swapped card.
+    # USB readers often expose no media-specific ID. Capacity is only a compatibility
+    # check, not proof of identity. Require the operator to keep the marked spare card
+    # under their control; the write step also rechecks the prepared content baseline.
     phys = disks.fingerprint(dict(size=card['size'], model='', partitions=[]), session.data['salt'])
+    media = card.get('media_id')
+    media_hash = hashlib.sha256((session.data['salt'] + media).encode()).hexdigest() if media else None
     known = session.data.get('card')
     if known and known.get('physical') != phys:
         raise StoreError('this is not the card this session started with (different capacity). '
                          'Put the session\'s spare card back in, or start a new session.')
+    if known and known.get('media_hash') and media_hash and known['media_hash'] != media_hash:
+        raise StoreError('this is not the card this session started with (media identifier differs).')
     stage = found.get('stage') or ''
     if expect_stage == 'not-yet-booted' and stage != 'not-yet-booted':
         raise StoreError('the card has already been booted (or is not a fresh Koriki card). '
@@ -95,7 +99,7 @@ def _card(env, session, expect_stage):
                          '. Unplug the card, wait five seconds, plug it in again and retry. '
                          'Do not let Windows format or repair it.')
     if not known:
-        session.data['card'] = dict(physical=phys, first_seen_stage=stage)
+        session.data['card'] = dict(physical=phys, media_hash=media_hash, first_seen_stage=stage)
         session.save()
     return found, view
 
@@ -128,7 +132,10 @@ def _boot_checks(env, boot_dir, phase):
 
 
 def _fails(results):
-    return [r for r in results if r['status'] == 'FAIL']
+    # Prior capture folders are informational: the collector excludes them.
+    # Unknown warnings, extra boot files and launcher scripts require resolution.
+    return [r for r in results if r['status'] == 'FAIL' or
+            (r['status'] == 'WARN' and r['id'] != 'card-earlier-captures')]
 
 
 def _container_on_card(env, boot_dir):
@@ -161,9 +168,12 @@ def snapshot_card_container(env, session, boot_mount, job, label):
     digest = verified_copy(lambda: open(src, 'rb'), tmp, size, job=job, label=f'copying the card\'s system files ({label})',
                            stamp=_stamp(src))
     final = snaps / f'{digest}.ext4'
-    if final.exists():
+    if final.exists() and final.stat().st_size == size and sha256_file(final, job) == digest:
         tmp.unlink()
     else:
+        # Never accept an existing file merely because its name is a hash.
+        if final.exists():
+            invalidate_checkpoints(env, digest)
         os.replace(tmp, final)
     return final, digest
 
@@ -200,8 +210,16 @@ def pristine_manifest(env, job, image=None):
     return m
 
 
+def invalidate_checkpoints(env, sha):
+    for db in (env.cache / 'checkpoints').glob(f'*-{sha}.sqlite*'):
+        db.unlink()
+
+
 def scan_file(env, path, sha, job, label):
     from dissect.extfs import ExtFS
+    if sha256_file(path, job) != sha:
+        invalidate_checkpoints(env, sha)
+        raise StoreError('local snapshot changed or is damaged; repeat the copy before scanning')
     (env.cache / 'checkpoints').mkdir(parents=True, exist_ok=True)
     db = env.cache / 'checkpoints' / f'{label}-{sha}.sqlite'
     with open(path, 'rb') as f:
@@ -298,9 +316,11 @@ def step_check_fresh(env, session, job):
     results.append(dict(id='card-rootfs', status='PASS' if digest == rootcat['container_sha256'] else 'FAIL',
                         detail='boot/BATOCERA equals the firmware byte for byte' if digest == rootcat['container_sha256'] else
                         'boot/BATOCERA differs from the firmware although the card has not been booted'))
-    results += raw_checks(env, found)
+    raw = raw_checks(env, found)
+    results += raw
     fails = _fails(results)
-    session.data['baselines']['fresh'] = dict(container_sha256=digest)
+    if not fails:
+        session.data['baselines']['fresh'] = dict(container_sha256=digest, raw=raw_identity(raw))
     return StepResult(not fails, 'The card was written correctly.' if not fails else 'The card does not match the firmware.',
                       dict(checks=results, card=view), '; '.join(f"{r['id']}: {r['detail']}" for r in fails) or None,
                       [f"{r['status']}  {r['detail']}" for r in results])
@@ -315,7 +335,24 @@ def raw_checks(env, found):
         data = reader(found['card'])
     except (OSError, ValueError, StoreError) as e:
         return [vp.result('card-raw:read', 'FAIL', f'the boot loader area could not be read: {e}')]
-    return vp.check_boot_bytes(data, env.root)
+    results = vp.check_boot_bytes(data, env.root)
+    required = {'card-raw:early-region.bin', 'card-raw:u-boot.uimage', 'card-raw:sfvd'}
+    if {r['id'] for r in results} != required:
+        results.append(vp.result('card-raw:incomplete', 'FAIL', 'the raw boot checks were incomplete'))
+    return results
+
+
+def raw_identity(results):
+    return {r['id']: r['sha256'] for r in results if r['status'] == 'PASS' and 'sha256' in r}
+
+
+def compare_raw(previous, results):
+    current = raw_identity(results)
+    if not previous or current != previous or len(current) != 3:
+        return [dict(id='card-raw:baseline', status='FAIL',
+                     detail='raw loader, U-Boot or SFVD evidence differs from the checked baseline or is missing')]
+    return [dict(id='card-raw:baseline', status='PASS',
+                 detail='raw loader, U-Boot and SFVD match the checked baseline')]
 
 
 def default_raw_reader(card):
@@ -339,14 +376,16 @@ def step_check_prepared(env, session, job):
     atomic_write_json(rep_path, report)
     results.append(dict(id='card-rootfs', status={'PASS': 'PASS', 'REVIEW': 'WARN', 'FAIL': 'FAIL'}[report['verdict']],
                         detail='; '.join(rootfs.summarize(report)[:2])))
-    results += raw_checks(env, found)
+    raw = raw_checks(env, found)
+    results += raw
+    results += compare_raw(session.data['baselines'].get('fresh', {}).get('raw'), raw)
     fails = _fails(results)
     ok = not fails and report['verdict'] == 'PASS'
     if ok:
         atomic_write_json(session.dir / 'baseline-prepared.json', cur.to_json())
         session.data['baselines']['prepared'] = dict(container_sha256=digest, manifest_digest=cur.digest(),
                                                      manifest=str(session.dir / 'baseline-prepared.json'),
-                                                     report=str(rep_path))
+                                                     report=str(rep_path), raw=raw_identity(raw))
     reason = None
     if not ok:
         reason = ('; '.join(f"{r['id']}: {r['detail']}" for r in fails) or
@@ -366,11 +405,35 @@ def step_install_script(env, session, job):
     if _fails(pre):
         return StepResult(False, 'The capture script in this checkout is not the registered one.', dict(checks=pre),
                           '; '.join(r['detail'] for r in _fails(pre)))
+    pb = session.data['baselines'].get('prepared')
+    if not pb:
+        raise StoreError('no checked prepared-card baseline; do not write to the card')
+    if not session.step('first-boot')['confirmations']:
+        raise StoreError('confirm the marked spare card was returned from TF1 before writing')
+    checks = _boot_checks(env, Path(found['boot_mount']), 'prepared')
+    if _fails(checks):
+        raise StoreError('boot partition changed since preparation; no card write attempted')
+    if sha256_file(_container_on_card(env, Path(found['boot_mount'])), job) != pb['container_sha256']:
+        raise StoreError('system files changed since preparation; no card write attempted. Go back to the prepared check.')
+    # Resolve the current disk and mount again immediately before touching SHARE.
+    again, _ = _card(env, session, 'booted')
+    if (again['card']['id'], again['boot_mount'], again['share_mount']) != (found['card']['id'], found['boot_mount'], found['share_mount']):
+        raise StoreError('card or drive letter changed during verification; retry without removing the card')
     ports = share / 'roms' / 'ports'
-    ports.mkdir(parents=True, exist_ok=True)
-    others = sorted(p.name for p in ports.iterdir() if p.suffix.lower() == '.sh' and p.name != 'ATM7039S-capture.sh')
+    if ports.exists():
+        unexpected = [x.name for x in ports.iterdir() if x.name.startswith('._') or
+                      (x.suffix.lower() == '.sh' and x.name != 'ATM7039S-capture.sh')]
+        if unexpected:
+            raise StoreError('unexpected launcher entries; no card write attempted. Review: ' + ', '.join(sorted(unexpected)))
     dest = ports / 'ATM7039S-capture.sh'
     want = sha256_file(src)
+    if dest.exists() and (not dest.is_file() or sha256_file(dest) != want):
+        raise StoreError('existing capture script differs; preserve it and review before writing')
+    if shutil.disk_usage(share).free < 64 * 1024 * 1024:
+        raise StoreError('not enough SHARE space; no card write attempted')
+    job.checkpoint()
+    ports.mkdir(parents=True, exist_ok=True)
+    others = []
     if not dest.exists() or sha256_file(dest) != want:
         tmp = ports / 'ATM7039S-capture.sh.partial'
         shutil.copyfile(src, tmp)
@@ -454,10 +517,16 @@ def step_postflight(env, session, job):
     share = Path(found['share_mount'])
     script = share / 'roms' / 'ports' / 'ATM7039S-capture.sh'
     results += vp.check_script(script, env.root) if script.exists() else [vp.result('card-script', 'FAIL', 'the capture script is no longer on the card')]
+    results += vp.check_share_dir(share, env.root)
     pb = session.data['baselines'].get('prepared')
     if not pb:
         raise StoreError('no checked prepared-card baseline exists in this session')
     base = rootfs.Manifest.from_json(read_json(pb['manifest']))
+    if base.digest() != pb['manifest_digest'] or base.source_sha256 != pb['container_sha256']:
+        raise StoreError('prepared manifest does not match the session baseline; preserve the card')
+    raw = raw_checks(env, found)
+    results += raw
+    results += compare_raw(pb.get('raw'), raw)
     local, digest = snapshot_card_container(env, session, found['boot_mount'], job, 'post-capture')
     cur = scan_file(env, local, digest, job, 'card')
     report = rootfs.compare(base, cur, rootfs.load_policy(env.root), 'post-capture')
@@ -473,7 +542,7 @@ def step_postflight(env, session, job):
                       if not fails and report['verdict'] == 'PASS' else 'The card changed in an unexpected way during the capture.',
                       dict(checks=results), '; '.join(f"{r['id']}: {r['detail']}" for r in fails) or
                       ('; '.join(report['notes']) if report['verdict'] != 'PASS' else None),
-                      rootfs.summarize(report))
+                      rootfs.summarize(report) + [f"{r['status']}  {r['detail']}" for r in results if r['id'] != 'card-rootfs'])
 
 
 RUNNERS = {'computer': step_computer, 'firmware': step_firmware, 'check-fresh': step_check_fresh,

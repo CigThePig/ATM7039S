@@ -83,7 +83,8 @@ class Lab:
                     removable.append(dict(model=d.get('model'), size_gb=round((d.get('size') or 0) / 1e9, 1), bus=d['bus']))
         except Exception as e:  # listing is advisory here; Etcher shows the authoritative list
             self.log.warning('flash listing failed: %s', e)
-        return dict(image=str(img), image_ready=img.exists(), removable=removable)
+        return dict(image=str(img), image_ready=img.exists(), removable=removable,
+                    target_unique=len(removable) == 1 and img.exists())
 
     # ---- actions
     def new_session(self):
@@ -161,11 +162,18 @@ class Lab:
             except Exception:
                 self.log.error('bundle failed:\n%s', traceback.format_exc())
         self.problem = dict(title='Could not finish this step.', what=text,
-                            lost='Nothing on the card was changed. Finished work on this computer is kept.',
-                            safe='It is safe to press Try again after fixing the problem.',
+                            lost=('The capture-script copy may have created a partial file or directory. Preserve the card and inspect the result.'
+                                  if step_id == 'install-script' else 'This step did not request a card write. Finished local work is kept.'),
+                            safe=('Do not boot the card until the script copy is verified.' if step_id == 'install-script'
+                                  else 'Preserve the card; retry this computer-side check after fixing the problem.'),
                             next='If the message does not say what to do, send the diagnostic bundle.', bundle=bundle)
 
     def confirm(self, step_id, answers):
+        if step_id == 'flash':
+            # The manual flash step asks the operator to unplug/reinsert the card.
+            # Do not advance if more than one candidate remains or the image vanished.
+            if not self.flash_info()['target_unique']:
+                raise SessionError('exactly one removable disk and the verified image are required; do not flash')
         self.session.confirm(step_id, answers)
         self.problem, self.last_lines = None, []
         self.log.info('step %s confirmed by operator', step_id)

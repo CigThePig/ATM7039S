@@ -16,13 +16,10 @@ import tempfile
 
 
 def _check_disk(number):
-    cmd = (f"$d = Get-Disk -Number {int(number)}; "
-           "[pscustomobject]@{Bus=[string]$d.BusType; IsBoot=$d.IsBoot; IsSystem=$d.IsSystem; Size=$d.Size} | ConvertTo-Json -Compress")
-    r = subprocess.run(['powershell.exe', '-NoProfile', '-NonInteractive', '-Command', cmd],
-                       capture_output=True, text=True, timeout=30)
-    info = json.loads(r.stdout)
-    if info.get('IsBoot') or info.get('IsSystem') or info.get('Bus') not in ('USB', 'SD', 'MMC'):
-        raise SystemExit('refusing: not a removable, non-system disk')
+    from . import disks
+    found = disks.identify(disks.collect())
+    if found.get('status') != 'found' or found['card']['number'] != number:
+        raise SystemExit('refusing: the uniquely identified Koriki card is no longer at this disk number')
 
 
 def helper_main(argv=None):

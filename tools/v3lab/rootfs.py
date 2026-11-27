@@ -183,7 +183,7 @@ def scan(ext, source_sha256, checkpoint_db, job=None, estimate=None, interrupt_a
         con.execute('CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)')
         con.execute('CREATE TABLE IF NOT EXISTS entries (path TEXT PRIMARY KEY, inode INTEGER NOT NULL, rec TEXT NOT NULL)')
         meta = dict(con.execute('SELECT key, value FROM meta'))
-        ident = {'schema': str(SCHEMA), 'source_sha256': source_sha256}
+        ident = {'schema': str(SCHEMA), 'source_sha256': source_sha256, 'checkpoint_format': '2'}
         if meta and any(meta.get(k) != v for k, v in ident.items()):
             raise RootfsError('checkpoint belongs to a different filesystem or tool version; it is ignored')
         if not meta:
@@ -195,7 +195,10 @@ def scan(ext, source_sha256, checkpoint_db, job=None, estimate=None, interrupt_a
         hashes = {i: r['sha256'] for i, r in saved.values() if r.get('type') == 'file'}
         if meta.get('complete') == 'yes' and meta.get('count') == str(len(saved)):
             entries = {p: r for p, (i, r) in saved.items()}
-            return Manifest(entries, {p: i for p, (i, r) in saved.items()}, rep, source_sha256)
+            cached = Manifest(entries, {p: i for p, (i, r) in saved.items()}, rep, source_sha256)
+            if cached.digest() != meta.get('digest'):
+                raise RootfsError('checkpoint belongs to a different filesystem or tool version (damaged digest)')
+            return cached
         if job:
             job.start_phase('reading the file list', estimate, 'paths')
             job.message = f'{len(saved):,} paths recovered from an earlier run' if saved else ''
@@ -247,6 +250,8 @@ def scan(ext, source_sha256, checkpoint_db, job=None, estimate=None, interrupt_a
                 con.executemany('DELETE FROM entries WHERE path = ?', [(p,) for p in stale])
             con.execute("INSERT OR REPLACE INTO meta VALUES ('complete', 'yes')")
             con.execute("INSERT OR REPLACE INTO meta VALUES ('count', ?)", (str(len(entries)),))
+            con.execute("INSERT OR REPLACE INTO meta VALUES ('digest', ?)",
+                        (Manifest(entries, inodes, rep, source_sha256).digest(),))
             con.commit()
         except BaseException:
             con.commit()
@@ -383,8 +388,7 @@ def compare(baseline, current, policy, phase):
     ga = {tuple(g) for g in baseline.hardlink_groups()}
     gb = {tuple(g) for g in current.hardlink_groups()}
     for g in sorted(ga ^ gb):
-        if any(p in explained for p in g):
-            continue
+        # No policy rule authorizes hard-link group changes, even at runtime paths.
         items.append(dict(path=g[0], change='hardlinks', rule=None, status='fail', sensitive=True,
                           detail=('hard-link group appeared: ' if g in gb else 'hard-link group disappeared: ') + ', '.join(g)))
     # Rules whose change did not happen are not failures (a step may not have run), but are reported.

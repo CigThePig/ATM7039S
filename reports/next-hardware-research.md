@@ -52,3 +52,7 @@ Not proposed: any register write, clock/voltage/DRAM-timing change, overclock, d
 1. C-PREDRAM-PATH: re-run the DRAM-stage emulation with boot code 2 and compare with code 0.
 2. Optional capture-script v4 (read-only additions above), registered and linted like v3.
 3. A photo-review checklist for rank 2.
+
+## Review follow-up
+
+The owner has deferred C-PREDRAM-PATH to a separate research PR. No new physical test is authorized by PR #8. Prefer exhausting that offline research and completing lab review before choosing the next hardware session; a repeat of V3 solely to test the lab is not required immediately.

@@ -107,7 +107,17 @@ def normalize_lsblk(raw, probe=_probe_mount):
             parts.append(dict(number=int(c['partn']) if c.get('partn') else None, offset=int(c['start']) * 512 if c.get('start') is not None else None,
                               size=int(c['size']), type=c.get('parttype'), label=c.get('label'), fs=c.get('fstype'),
                               mount=mount, readable=readable, error=err))
-        disks.append(dict(id=d.get('path') or '/dev/' + d['name'], number=None, path=d.get('path') or '/dev/' + d['name'],
+        # Native SD hosts may expose the card CID. USB readers commonly do not.
+        # Never treat the reader serial, MBR signature or capacity as a media ID.
+        media_id = None
+        if d.get('name', '').startswith('mmcblk'):
+            try:
+                cid = (Path('/sys/class/block') / d['name'] / 'device' / 'cid').read_text(encoding='ascii').strip()
+                if len(cid) == 32 and all(c in '0123456789abcdefABCDEF' for c in cid):
+                    media_id = cid.lower()
+            except OSError:
+                pass
+        disks.append(dict(media_id=media_id, id=d.get('path') or '/dev/' + d['name'], number=None, path=d.get('path') or '/dev/' + d['name'],
                           model=(d.get('model') or '').strip(), bus=(d.get('tran') or '').upper(), size=int(d['size']),
                           removable=bool(d.get('rm')) or bool(d.get('hotplug')), is_boot=False,
                           is_system=any(p['mount'] in ('/', '/boot', '/boot/efi', '/usr', '/home') for p in parts),
@@ -155,7 +165,7 @@ def classify(disk):
         if p1['label'] is None:
             facts['boot_label_unknown'] = True
         else:
-            reasons.append(f"partition 1 is labelled {p1['label']!r}, not BATOCERA")
+            reasons.append('partition 1 has an unexpected label, not BATOCERA')
     if not p2 or p2['offset'] != SWAP_OFFSET or p2['size'] != SWAP_SIZE:
         reasons.append('partition 2 is not the 512 MiB swap partition')
     if not p3 or p3['offset'] != SHARE_OFFSET:
@@ -193,8 +203,11 @@ def identify(disks):
             problems.append('the BATOCERA partition has no drive letter')
         elif boot['readable'] is False:
             problems.append(f"the BATOCERA partition cannot be read ({boot['error']})")
-        if c['facts'].get('stage', '').startswith('booted') and not share['mount']:
-            problems.append('the SHARE partition has no drive letter')
+        if c['facts'].get('stage', '').startswith('booted'):
+            if not share['mount']:
+                problems.append('the SHARE partition has no drive letter')
+            elif share['readable'] is False:
+                problems.append('the SHARE partition cannot be read')
         return dict(status='found' if not problems else 'found-needs-attention', card=c['disk'], stage=c['facts'].get('stage'),
                     boot_mount=boot['mount'], share_mount=share['mount'], problems=problems, others=others, volumes=volumes)
     if not cards:

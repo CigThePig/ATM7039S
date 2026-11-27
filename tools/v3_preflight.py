@@ -327,7 +327,7 @@ def check_card_rootfs_semantic(folder, root, phase, image=None, baseline=None, c
         rep = rf.compare(base, cur, rf.load_policy(root), phase)
     except (StoreError, rf.RootfsError, OSError) as e:
         return [result('card-rootfs', 'FAIL', f'semantic root filesystem check could not run: {e}')]
-    status = {'PASS': 'PASS', 'REVIEW': 'WARN', 'FAIL': 'FAIL'}[rep['verdict']]
+    status = {'PASS': 'PASS', 'REVIEW': 'FAIL', 'FAIL': 'FAIL'}[rep['verdict']]
     return [result('card-rootfs', status, ' '.join(rf.summarize(rep)), report=rep)]
 
 
@@ -404,11 +404,15 @@ def check_boot_bytes(data, root=ROOT):
             continue
         ok = hashlib.sha256(window).hexdigest() == comps[cid]['sha256']
         out.append(result('card-raw:' + cid, 'PASS' if ok else 'FAIL',
-                          f"{cid} on the card {'equals' if ok else 'DIFFERS from'} the catalogue"))
+                          f"{cid} on the card {'equals' if ok else 'DIFFERS from'} the catalogue",
+                          sha256=hashlib.sha256(window).hexdigest()))
     if len(data) >= 0x204e00:
         present = data[0x202a00:0x202a04] == b'SFVD'
         out.append(result('card-raw:sfvd', 'PASS' if present else 'FAIL',
-                          f"SFVD marker on the card: {'present' if present else 'MISSING (bootloader.ini will be rewritten)'}"))
+                          f"SFVD marker on the card: {'present' if present else 'MISSING (bootloader.ini will be rewritten)'}",
+                          sha256=hashlib.sha256(data[0x202a00:0x202a04]).hexdigest()))
+    else:
+        out.append(result('card-raw:sfvd', 'FAIL', 'raw read too short to check SFVD'))
     return out
 
 
