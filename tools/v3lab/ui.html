@@ -112,7 +112,7 @@ function render() {
   if (S.problem) h += `<div class="card problem"><h2>${esc(S.problem.title)}</h2><p>${esc(S.problem.what)}</p>
         <p><b>Was anything lost?</b> ${esc(S.problem.lost)}</p><p><b>Is it safe?</b> ${esc(S.problem.safe)}</p>
         <p><b>What next?</b> ${esc(S.problem.next)}</p>${S.problem.bundle ? `<p class="muted">Diagnostic bundle: <span class="path">${esc(S.problem.bundle)}</span></p>` : ''}</div>`;
-  else if (!S.busy && S.lines.length) h += `<div class="card ok"><ul class="lines">${S.lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul></div>`;
+  else if (!S.busy && S.lines.length) h += `<div class="card ok"><div class="muted">Result of the last check</div><ul class="lines">${S.lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul></div>`;
   h += `<details><summary>More options</summary><div class="row">
         <button onclick="bundle()">Make a diagnostic bundle</button>
         <button onclick="back()">Go back to an earlier step…</button>

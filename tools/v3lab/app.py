@@ -167,7 +167,7 @@ class Lab:
 
     def confirm(self, step_id, answers):
         self.session.confirm(step_id, answers)
-        self.problem = None
+        self.problem, self.last_lines = None, []
         self.log.info('step %s confirmed by operator', step_id)
 
     def finish(self):
