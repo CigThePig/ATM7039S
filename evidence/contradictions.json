@@ -256,11 +256,15 @@
       "BOOT-022",
       "BOOT-024",
       "BOOT-025",
+      "BOOT-026",
+      "BOOT-027",
+      "GPIO-003",
+      "GPIO-004",
       "MEM-010",
       "PMIC-002"
     ],
-    "status": "Open (narrowed by PR #9). At instruction level the only pre-DRAM difference between boot codes 0 and 2 is the adfu_check GPIO C10/C11 loopback test (32 x 1 ms, leaves 0xb01b0064 bit 17 and 0xb01b0020 bit 11 changed); load_ini, storage dispatch, timer, UART, board, PMIC and the DRAM argument are identical (BOOT-025). Executing main for both codes, and the PR #6 DRAM caller in its reference scenario, gives sequences that differ only by that GPIO block, in all five pinned releases. Not resolved: the Boot ROM state an SD2 boot leaves (clocks, pin mux) is unknown, the board wiring of C10/C11 is unknown, PR #6 failure/training scenarios were not re-run for code 2, and all peripheral responses are synthetic.",
-    "next_validation": "Offline: identify what drives GPIO C10/C11 on the RG35XX (pinned DTs, vendor pinctrl source, board documentation) and whether any pre-DRAM register the ROM leaves differs by boot medium (Boot ROM code is not available). Physical (not authorised here): an early serial log of a stock boot would show the pre-DRAM console lines and whether \"Prepare to entry ADFU mode\" ever appears.",
+    "status": "Open (narrowed further by the PR #9 ADFU work). Established offline: the only code-dependent pre-DRAM operation is the adfu_check loopback (BOOT-025); its algorithm and precedence are reconstructed and agree with an independent model in 41 synthetic scenarios (BOOT-026); its pins are SD0 DAT0/DAT1 by the vendor pinctrl data (GPIO-003); it leaves PULLCTL1 bit 17 cleared and CDAT bit 11 = 0, with other CDAT bits dependent on unknown read semantics, and nothing later in the loader or the reference-scenario DRAM caller touches those registers (GPIO-004). GPIO assumptions tested: two read semantics, undriven/idle levels, eight initial states, ideal, absent, inverted, delayed, partial, pseudorandom and interrupted inputs. Not resolved: Boot ROM state per boot medium, the TF2 DAT0/DAT1 wiring and pad behaviour (mux priority, floating DAT0), the real GPIO read semantics, and the non-reference DRAM scenarios for code 2.",
+    "next_validation": "Offline: a public ATM7039S/S500 datasheet section on GPIO data-read and GPIO-vs-MFP priority; mainline pinctrl-s500.c/pinctrl-owl.c as a second source for the SD0_D0 pull field; a board schematic or photograph of the TF2 slot. Physical (not authorised): an early read-only serial log of a stock SD2 boot would show \"pmu_status = 0x...\" and whether the loader continues past adfu_check.",
     "observations": [
       "OBS-001"
     ]

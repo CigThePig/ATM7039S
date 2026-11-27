@@ -41072,6 +41072,15 @@
               "offset_end": 37728,
               "section": "Code-2-only adfu_check drives bit 11 with 0x55aa55aa and samples bit 10 (BOOT-025)",
               "curated": "firmware-observations"
+            },
+            {
+              "source": "vendor-kernel",
+              "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+              "line_start": 169,
+              "line_end": 170,
+              "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+              "section": "Bits 10/11 of bank C are the P_SD0_D0/P_SD0_D1 pads (GPIO-003). Whether a read returns the latch or the pad level is not established (GPIO-004)",
+              "curated": "firmware-observations"
             }
           ]
         },
@@ -41261,6 +41270,15 @@
               "offset_end": 42560,
               "section": "board_mfp_init (ini+0x0d = 1): clear 0x000e39e0, set 0x000619c0 (GPIO-002)",
               "curated": "firmware-observations"
+            },
+            {
+              "source": "vendor-kernel",
+              "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+              "line_start": 1087,
+              "line_end": 1110,
+              "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+              "section": "[19:17] P_SD0_D0, [16:14] P_SD0_D1 function select (vendor lists: 0 SD0 ... 3 JTAG on D0); board_mfp_init sets D0/D2/D3/CMD/CLK fields to the JTAG values (GPIO-003)",
+              "curated": "firmware-observations"
             }
           ]
         },
@@ -41449,6 +41467,15 @@
               "offset_start": 37572,
               "offset_end": 37576,
               "section": "Code-2-only adfu_check clears bit 17 and does not restore it (BOOT-025)",
+              "curated": "firmware-observations"
+            },
+            {
+              "source": "vendor-kernel",
+              "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+              "line_start": 2642,
+              "line_end": 2643,
+              "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+              "section": "Vendor ATM7059 pinctrl data: bit 17 = P_SD0_D0 pull (pull-up value 1, no pull-down), bit 16 = P_SD0_D1 (GPIO-003); electrical effect not verified",
               "curated": "firmware-observations"
             }
           ]
