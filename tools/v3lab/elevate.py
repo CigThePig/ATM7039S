@@ -15,10 +15,11 @@ import sys
 import tempfile
 
 
-def _check_disk(number):
+def _check_disk(number, expected_size=None):
     from . import disks
     found = disks.identify(disks.collect())
-    if found.get('status') != 'found' or found['card']['number'] != number:
+    if (found.get('status') != 'found' or found['card']['number'] != number or
+            (expected_size is not None and found['card']['size'] != expected_size)):
         raise SystemExit('refusing: the uniquely identified Koriki card is no longer at this disk number')
 
 
@@ -26,12 +27,13 @@ def helper_main(argv=None):
     p = argparse.ArgumentParser()
     p.add_argument('--disk', type=int, required=True)
     p.add_argument('--out', type=Path, required=True)
+    p.add_argument('--size', type=int)
     a = p.parse_args(argv)
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     import card_boot_read
     status = a.out.with_suffix('.status.json')
     try:
-        _check_disk(a.disk)
+        _check_disk(a.disk, a.size)
         data = card_boot_read.read_windows_disk(a.disk)
         tmp = a.out.with_name(a.out.name + '.partial')
         tmp.write_bytes(data)
@@ -42,11 +44,13 @@ def helper_main(argv=None):
         raise
 
 
-def raw_head(number, timeout=300):
+def raw_head(number, timeout=300, expected_size=None):
     """Run the elevated helper and return the 4 MiB it read."""
     work = Path(tempfile.mkdtemp(prefix='atm-raw-'))
     out = work / 'head.bin'
     args = ['-X', 'utf8', '-m', 'v3lab.elevate', '--disk', str(int(number)), '--out', str(out)]
+    if expected_size is not None:
+        args += ['--size', str(expected_size)]
     tools = str(Path(__file__).resolve().parents[1])
     q = lambda s: "'" + str(s).replace("'", "''") + "'"   # PowerShell single-quoted literal
     # Start-Process joins -ArgumentList with spaces and does not quote, so quote each argument for the

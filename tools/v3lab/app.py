@@ -77,14 +77,18 @@ class Lab:
     def flash_info(self):
         a, gz, img = steps._image_paths(self.env)
         removable = []
+        target_matches = False
         try:
-            for d in self.env.inventory():
-                if not (d['is_boot'] or d['is_system']) and (d['bus'] in disks.REMOVABLE_BUSES or d.get('removable')):
-                    removable.append(dict(model=d.get('model'), size_gb=round((d.get('size') or 0) / 1e9, 1), bus=d['bus']))
+            candidates = disks.flash_candidates(self.env.inventory())
+            for d in candidates:
+                removable.append(dict(model=d.get('model'), size_gb=round((d.get('size') or 0) / 1e9, 1), bus=d['bus']))
+            if self.session and len(candidates) == 1 and self.session.data.get('card'):
+                target_matches = disks.compatible_binding(self.session.data['card'],
+                    disks.media_binding(candidates[0], self.session.data['salt']))
         except Exception as e:  # listing is advisory here; Etcher shows the authoritative list
             self.log.warning('flash listing failed: %s', e)
         return dict(image=str(img), image_ready=img.exists(), removable=removable,
-                    target_unique=len(removable) == 1 and img.exists())
+                    target_unique=len(removable) == 1 and img.exists() and target_matches)
 
     # ---- actions
     def new_session(self):
@@ -169,12 +173,20 @@ class Lab:
                             next='If the message does not say what to do, send the diagnostic bundle.', bundle=bundle)
 
     def confirm(self, step_id, answers):
-        if step_id == 'flash':
-            # The manual flash step asks the operator to unplug/reinsert the card.
-            # Do not advance if more than one candidate remains or the image vanished.
-            if not self.flash_info()['target_unique']:
-                raise SessionError('exactly one removable disk and the verified image are required; do not flash')
-        self.session.confirm(step_id, answers)
+        if step_id == 'insert-blank':
+            self.session._require_current(step_id)
+            candidates = disks.flash_candidates(self.env.inventory())
+            if len(candidates) != 1:
+                raise SessionError('connect exactly one marked spare card before continuing; do not flash')
+            # Save the compatibility binding only after all physical confirmations.
+            self.session.confirm(step_id, answers)
+            self.session.data['card'] = dict(disks.media_binding(candidates[0], self.session.data['salt']),
+                                             first_seen_stage='before-flash')
+            self.session.save()
+        else:
+            if step_id == 'flash' and not self.flash_info()['target_unique']:
+                raise SessionError('exactly one matching removable disk and the verified image are required; do not flash')
+            self.session.confirm(step_id, answers)
         self.problem, self.last_lines = None, []
         self.log.info('step %s confirmed by operator', step_id)
 

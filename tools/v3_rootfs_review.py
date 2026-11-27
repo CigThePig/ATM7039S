@@ -76,7 +76,11 @@ def review(env, phase, card=None, image=None, baseline=None, job=None):
     report['tool'] = f'v3_rootfs_review.py {VERSION}'
     out = env.data / 'rootfs-review'
     atomic_write_json(out / f'report-{phase}.json', report)
-    atomic_write_json(out / f'card-{phase}.json', cur.to_json())
+    # Failed or review-only manifests must never be offered as approved baselines.
+    if report['verdict'] == 'PASS':
+        atomic_write_json(out / f'card-{phase}.json', cur.to_json())
+    else:
+        (out / f'card-{phase}.json').unlink(missing_ok=True)
     return report, out
 
 

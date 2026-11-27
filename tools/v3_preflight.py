@@ -288,6 +288,8 @@ def check_boot_dir(folder, root=ROOT, phase='auto', image=None, baseline=None, c
     booted = not marker.exists()
     if phase == 'auto':
         phase = 'prepared' if booted else 'fresh'
+    elif (phase == 'fresh') == booted:
+        out.append(result('card-phase', 'FAIL', 'card boot marker contradicts requested phase'))
     if phase == 'fresh':
         out += check_card_rootfs(folder, root)
     else:
@@ -320,6 +322,9 @@ def check_card_rootfs_semantic(folder, root, phase, image=None, baseline=None, c
         c = find_ci(b, 'BATOCERA') if b else None
         if not c:
             return [result('card-rootfs', 'FAIL', 'boot/BATOCERA (the root filesystem) is missing from the boot partition')]
+        expected_size = json.loads((Path(root) / 'evidence/firmware/koriki-v1.0-rootfs.json').read_text(encoding='utf-8'))['container_size']
+        if c.stat().st_size != expected_size:
+            return [result('card-rootfs', 'FAIL', 'root filesystem container size differs from catalogue')]
         snap = env.cache / 'card-snapshots' / 'preflight.ext4'
         snap.parent.mkdir(parents=True, exist_ok=True)
         digest = verified_copy(lambda: open(c, 'rb'), snap, c.stat().st_size, label='card root filesystem')
@@ -478,7 +483,11 @@ def main():
           'No FAIL. Resolve any WARN, then follow device/README.md.'))
     if a.json:
         a.json.write_text(json.dumps(results, indent=2) + '\n', encoding='utf-8')
-    raise SystemExit(1 if fails else 0)
+    # Nonzero for unresolved warnings as well, except an earlier capture folder or
+    # the expected first-boot marker on an explicitly fresh card.
+    blocking_warns = [r for r in warns if r['id'] != 'card-earlier-captures' and
+                      not (a.phase == 'fresh' and r['id'] == 'card-first-boot')]
+    raise SystemExit(1 if fails or blocking_warns else 0)
 
 
 if __name__ == '__main__':

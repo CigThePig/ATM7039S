@@ -217,6 +217,24 @@ def identify(disks):
                 problems=[f'{len(cards)} disks look like Koriki cards; remove every card except the spare test card'])
 
 
+def media_binding(disk, salt):
+    """Capacity is a compatibility check; a native SD CID is optional identity evidence."""
+    cid = disk.get('media_id')
+    return dict(physical=fingerprint(dict(size=disk['size'], model='', partitions=[]), salt),
+                media_hash=hashlib.sha256((salt + cid).encode()).hexdigest() if cid else None)
+
+
+def compatible_binding(old, new):
+    return (old['physical'] == new['physical'] and
+            (not old.get('media_hash') or not new.get('media_hash') or old['media_hash'] == new['media_hash']))
+
+
+def flash_candidates(inventory):
+    """Candidates displayed for the external flasher; never choose a system disk."""
+    return [d for d in inventory if not (d['is_boot'] or d['is_system'] or d.get('offline'))
+            and (d['bus'] in REMOVABLE_BUSES or d.get('removable')) and (d.get('size') or 0) >= IMAGE_SIZE]
+
+
 def fingerprint(disk, salt):
     """A stable, non-reversible identity for 'is this still the same card?' checks.
 

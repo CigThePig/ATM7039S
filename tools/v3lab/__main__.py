@@ -42,6 +42,9 @@ def main(argv=None):
             print('  -', line)
         return 0
     if a.command == 'run':
+        if spec.get('confirm') and input(spec['confirm'] + '? (yes/no) ').strip().lower() not in ('y', 'yes'):
+            print('No card write requested.')
+            return 1
         lab.run(cur['id'])
         lab.thread.join()
         print(json.dumps(dict(problem=lab.problem, lines=lab.last_lines), indent=2))

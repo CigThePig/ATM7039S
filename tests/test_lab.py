@@ -477,6 +477,17 @@ class RootfsTests(Tmp):
         self.assertEqual(resumed.digest(), fresh.digest())
         self.assertEqual(rootfs.scan(ExtFS(io.BytesIO(data)), sha, db).digest(), fresh.digest())  # completed reuse
 
+    def test_completed_checkpoint_digest_detects_altered_record(self):
+        from dissect.extfs import ExtFS
+        import sqlite3
+        data = lf.container('pristine')
+        db = self.tmp / 'ck.sqlite'
+        rootfs.scan(ExtFS(io.BytesIO(data)), lf.sha(data), db)
+        with sqlite3.connect(db) as conn:
+            conn.execute("UPDATE entries SET rec = ? WHERE path = '/etc/inittab'", (json.dumps({'type':'file','sha256':'0'*64}),))
+        with self.assertRaisesRegex(rootfs.RootfsError, 'damaged digest'):
+            rootfs.scan(ExtFS(io.BytesIO(data)), lf.sha(data), db)
+
     def test_checkpoint_of_other_input_is_refused(self):
         from dissect.extfs import ExtFS
         data = lf.container('pristine')
@@ -712,6 +723,16 @@ class SimulatedSession(Tmp):
         r = steps.step_postflight(self.env, s, jobs.Job('p', 'fast'))
         self.assertFalse(r.ok)
         self.assertIn('UNEXPLAINED', ' '.join(r.lines))
+
+    def test_flash_ambiguous_targets_block_before_confirmation(self):
+        self.run_step('computer')
+        self.run_step('firmware')
+        extra = self.world.card.disk()
+        extra['Number'] = 4
+        self.world.extra.append(extra)
+        with self.assertRaises(session.SessionError):
+            self.confirm('insert-blank')
+        self.assertEqual(self.lab.session.current()['id'], 'insert-blank')
 
     def test_raw_postflight_tamper_blocks(self):
         self.advance_to_prepared()

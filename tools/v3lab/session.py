@@ -225,7 +225,7 @@ class Session:
                            'summary':'collect', 'capture_state':'collect'}.items():
             if i <= ids.index(owner):
                 self.data['outputs'].pop(key, None)
-        if i <= ids.index('check-fresh'):
+        if i <= ids.index('insert-blank'):
             self.data['card'] = None
         self.data['steps'][i]['status'] = 'ready'
         self.data['deviations'].append(dict(at_utc=now_utc(), kind='went-back', step=sid, reason=reason.strip()))

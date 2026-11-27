@@ -4,6 +4,8 @@
 param(
     [Parameter(Mandatory=$true)][ValidateSet('Setup','Prepared','Analyse','Postflight','RootfsReview')][string]$Action,
     [string]$CaptureFolder,
+    [string]$Image = 'inputs/koriki-v1.0.img',
+    [string]$Baseline = 'lab-data/rootfs-review/card-prepared.json',
     [string]$Results = (Join-Path $HOME 'Downloads\ATM7039S-V3-results')
 )
 $ErrorActionPreference = 'Stop'
@@ -33,7 +35,7 @@ try {
     if ($boot.Disk -ne $share.Disk) { throw 'BATOCERA and SHARE are not on the same disk.' }
     if (-not (Test-Path (Join-Path $boot.Path 'KERNEL.DTB') -PathType Leaf)) { throw 'Missing KERNEL.DTB.' }
     if ($Action -eq 'RootfsReview') {
-        Invoke-Python -Arguments @('tools/v3_rootfs_review.py','--phase','prepared','--card',(Join-Path $boot.Path 'boot\BATOCERA'))
+        Invoke-Python -Arguments @('tools/v3_rootfs_review.py','--phase','prepared','--image',$Image,'--card',(Join-Path $boot.Path 'boot\BATOCERA'))
         return
     }
     $Results = [IO.Path]::GetFullPath($Results)
@@ -47,7 +49,8 @@ try {
         Invoke-Python -Arguments @('tools/runtime_capture.py',$CaptureFolder,(Join-Path $Results 'summary.json'),'--report',(Join-Path $Results 'summary.md'),'--reference-dtb',(Join-Path $boot.Path 'KERNEL.DTB'))
     } else {
         $prefix = if ($Action -eq 'Prepared') {'preflight-prepared'} else {'preflight-after'}
-        & python tools/v3_preflight.py --boot-dir ($boot.Path + '.') --share-dir ($share.Path + '.') --json (Join-Path $Results "$prefix.json") | Tee-Object -FilePath (Join-Path $Results "$prefix.txt")
+        $phaseArgs = if ($Action -eq 'Prepared') { @('--phase','prepared','--image',$Image) } else { @('--phase','post-capture','--baseline',$Baseline) }
+        & python tools/v3_preflight.py --boot-dir ($boot.Path + '.') --share-dir ($share.Path + '.') @phaseArgs --json (Join-Path $Results "$prefix.json") | Tee-Object -FilePath (Join-Path $Results "$prefix.txt")
         if ($LASTEXITCODE -ne 0) { throw "Preflight failed; preserved results in $Results. Do not boot or reflash automatically." }
     }
     Write-Host "Results saved in $Results. Review for identifiers before sharing."

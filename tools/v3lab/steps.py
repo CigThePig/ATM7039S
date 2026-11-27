@@ -79,9 +79,8 @@ def _card(env, session, expect_stage):
     # USB readers often expose no media-specific ID. Capacity is only a compatibility
     # check, not proof of identity. Require the operator to keep the marked spare card
     # under their control; the write step also rechecks the prepared content baseline.
-    phys = disks.fingerprint(dict(size=card['size'], model='', partitions=[]), session.data['salt'])
-    media = card.get('media_id')
-    media_hash = hashlib.sha256((session.data['salt'] + media).encode()).hexdigest() if media else None
+    binding = disks.media_binding(card, session.data['salt'])
+    phys, media_hash = binding['physical'], binding['media_hash']
     known = session.data.get('card')
     if known and known.get('physical') != phys:
         raise StoreError('this is not the card this session started with (different capacity). '
@@ -99,7 +98,10 @@ def _card(env, session, expect_stage):
                          '. Unplug the card, wait five seconds, plug it in again and retry. '
                          'Do not let Windows format or repair it.')
     if not known:
-        session.data['card'] = dict(physical=phys, media_hash=media_hash, first_seen_stage=stage)
+        session.data['card'] = dict(binding, first_seen_stage=stage)
+        session.save()
+    elif not known.get('media_hash') and media_hash:
+        known['media_hash'] = media_hash
         session.save()
     return found, view
 
@@ -339,6 +341,14 @@ def raw_checks(env, found):
     required = {'card-raw:early-region.bin', 'card-raw:u-boot.uimage', 'card-raw:sfvd'}
     if {r['id'] for r in results} != required:
         results.append(vp.result('card-raw:incomplete', 'FAIL', 'the raw boot checks were incomplete'))
+    # Disk numbers and mount letters are not stable across removal. Verify that
+    # the same mapping is still present before accepting results from the read.
+    after = disks.identify(env.inventory())
+    if (after.get('status') != 'found' or
+        (after['card']['id'], after['boot_mount'], after['share_mount']) !=
+        (found['card']['id'], found['boot_mount'], found['share_mount']) or
+        not disks.compatible_binding(disks.media_binding(found['card'], ''), disks.media_binding(after['card'], ''))):
+        results.append(vp.result('card-raw:identity', 'FAIL', 'card mapping changed during raw read'))
     return results
 
 
@@ -360,7 +370,7 @@ def default_raw_reader(card):
     import card_boot_read as cbr
     if os.name == 'nt':
         from . import elevate
-        return elevate.raw_head(card['number'])
+        return elevate.raw_head(card['number'], expected_size=card['size'])
     return cbr.read_posix_card(card['path'])
 
 

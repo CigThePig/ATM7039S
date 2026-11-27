@@ -1,6 +1,6 @@
 # Running hardware test V3: the complete step-by-step procedure
 
-> **Fallback procedure.** Use [the lab](V3-LAB-QUICKSTART.md) (`ATM7039S-Lab.cmd`) instead whenever possible: it automates every computer step here, finds the card by disk identity, keeps progress across restarts and replaces the byte-level `card-rootfs` check, which always fails after the first boot, with the phase-aware check. If you do follow this guide, run step 5.4 with `--image` so the prepared card is compared semantically: `python tools/v3_preflight.py --boot-dir … --share-dir … --image inputs/koriki-v1.0.img`.
+> **Fallback procedure.** Use [the lab](V3-LAB-QUICKSTART.md) (`ATM7039S-Lab.cmd`) instead whenever possible: it automates every computer step here, finds candidate cards by geometry and available media identity (mark the spare card to distinguish identical cards), keeps progress across restarts and replaces the byte-level `card-rootfs` check, which always fails after the first boot, with the phase-aware check. If you do follow this guide, run step 5.4 with `--image` so the prepared card is compared semantically: `python tools/v3_preflight.py --boot-dir … --share-dir … --image inputs/koriki-v1.0.img`.
 
 This guide takes you from nothing to a finished, checked V3 capture. Follow it **in order** and do **every** step, including the ones that look unnecessary. Every step says what to do, what you should see, and what to do if you see something else.
 
@@ -265,13 +265,13 @@ Rules for this file:
 ### 5.4 Check the prepared card
 
 ```
-python tools/v3_preflight.py --boot-dir BOOTDRIVE --share-dir SHAREDRIVE --json "RESULTS/preflight-prepared.json"
+python tools/v3_preflight.py --boot-dir BOOTDRIVE --share-dir SHAREDRIVE --phase prepared --image inputs/koriki-v1.0.img --json "RESULTS/preflight-prepared.json"
 ```
 
 Examples:
 
-* Windows: `python tools/v3_preflight.py --boot-dir E:\ --share-dir F:\ --json "RESULTS/preflight-prepared.json"`
-* macOS: `python3 tools/v3_preflight.py --boot-dir "/Volumes/NO NAME" --share-dir /Volumes/SHARE --json "RESULTS/preflight-prepared.json"`. Put quotes around a name that contains spaces.
+* Windows: `python tools/v3_preflight.py --boot-dir E:\ --share-dir F:\ --phase prepared --image inputs/koriki-v1.0.img --json "RESULTS/preflight-prepared.json"`
+* macOS: `python3 tools/v3_preflight.py --boot-dir "/Volumes/NO NAME" --share-dir /Volumes/SHARE --phase prepared --image inputs/koriki-v1.0.img --json "RESULTS/preflight-prepared.json"`. Put quotes around a name that contains spaces.
 
 The last line must say **`0 FAIL, 0 WARN`**. You should see `PASS` for:
 
@@ -296,6 +296,8 @@ What to do if it reports a problem:
 | `card-script-name FAIL` | Wrong file name. Delete the file and repeat 5.3. |
 | `card-macos-files WARN` | In Terminal: `dot_clean -m /Volumes/SHARE/roms/ports`, then run 5.4 again. |
 | `card-boot-extra WARN` | Files were added to the boot partition. Write down their names and ask. |
+
+Before proceeding, save the checked prepared filesystem manifest: `python tools/v3_rootfs_review.py --phase prepared --image inputs/koriki-v1.0.img --card BOOTDRIVE/boot/BATOCERA` (replace BOOTDRIVE with the mounted boot partition). Only a PASS publishes `lab-data/rootfs-review/card-prepared.json`; preserve that file for Part 11. Do not repeat this prepared review on the card after capture.
 
 ### 5.5 Mandatory repeat of the raw-card check
 
@@ -410,7 +412,7 @@ You may also see `"admissible_as_evidence": true`, which is what you want, and a
 With the card still in the computer:
 
 ```
-python tools/v3_preflight.py --boot-dir BOOTDRIVE --share-dir SHAREDRIVE --json "RESULTS/preflight-after.json"
+python tools/v3_preflight.py --boot-dir BOOTDRIVE --share-dir SHAREDRIVE --phase post-capture --baseline lab-data/rootfs-review/card-prepared.json --json "RESULTS/preflight-after.json"
 ```
 
 * **Expected now:** one `WARN` on `card-earlier-captures`, because the new capture folder is on the card. That is fine.
@@ -510,4 +512,4 @@ Those need a different, separately approved test. A missing item in the results 
 
 ## Windows operator helper
 
-From the project folder, use `powershell -NoProfile -File tools/v3_operator.ps1 -Action Setup`, `-Action Prepared`, or `-Action Analyse -CaptureFolder 'C:\path\to\private\atm-capture-...'`, or `-Action Postflight`. This helper detects labelled mounted partitions on the same disk, saves local outputs, and never formats, flashes, boots or copies the capture script to a card. It does not replace mandatory raw checks or the owner's checklist. The rootfs diagnostic stages verified local snapshots, requires about 5 GB extra space, saves progress in a gitignored cache, and can be restarted with the same command. Its private report is `.v3-rootfs-review/report.json`; it is not an automatic preflight override. See [OBS-001 report](../reports/v3-first-hardware-capture.md).
+From the project folder, use `powershell -NoProfile -File tools/v3_operator.ps1 -Action Setup`, `-Action Prepared`, or `-Action Analyse -CaptureFolder 'C:\path\to\private\atm-capture-...'`, or `-Action Postflight`. This helper detects labelled mounted partitions on the same disk, saves local outputs, and never formats, flashes, boots or copies the capture script to a card. It does not replace mandatory raw checks or the owner's checklist. The rootfs diagnostic stages verified local snapshots, requires about 5 GB extra space, saves progress in a gitignored cache, and can be restarted with the same command. Its private reports are in `lab-data/rootfs-review/`; it is not an automatic preflight override. See [OBS-001 report](../reports/v3-first-hardware-capture.md).

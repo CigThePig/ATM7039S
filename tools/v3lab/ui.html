@@ -134,7 +134,7 @@ function render() {
     done.onclick = () => { post('confirm', {step: cur.id, answers: boxes.map(b => b.checked)}); delete ticks[cur.id]; };
   }
 }
-async function bundle() { const j = await post('bundle'); if (j && j.path) alert('Saved: ' + j.path); }
+async function bundle() { const j = await post('bundle'); if (j && j.path) alert('Saved: ' + j.path + '\nReview every file in the ZIP for private information before sharing.'); }
 function back() {
   const ids = S.session.steps.filter(s => s.status==='complete').map(s => s.id);
   const id = prompt('Which step? (' + ids.join(', ') + ')'); if (!id) return;

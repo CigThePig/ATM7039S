@@ -37,3 +37,5 @@ Afterwards the page tells you which file is safe to send (`summary.md`). Keep th
 Press **More options → Make a diagnostic bundle** and send that zip file. Raw captures and firmware are excluded, but error messages can contain private information. Open the ZIP and review every file before sharing.
 
 The detailed manual procedure (only if the lab cannot be used) is [V3-STEP-BY-STEP.md](V3-STEP-BY-STEP.md).
+
+On USB readers the software may not be able to distinguish two physically identical cards. Your label and confirmation are essential; the lab checks the prepared card's contents again before writing. A third read-only administrator prompt is expected after capture on Windows.
