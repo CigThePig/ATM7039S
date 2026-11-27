@@ -27,6 +27,7 @@ Exit status 0 means no FAIL. WARN items need a human decision before the session
 """
 import argparse
 import hashlib
+import os
 import json
 from pathlib import Path
 import re
@@ -245,7 +246,8 @@ def find_ci(folder, name):
     return None
 
 
-def check_boot_dir(folder, root=ROOT):
+def check_boot_dir_files(folder, root=ROOT):
+    """Byte checks of the boot partition's top-level files; they never change on boot."""
     out = []
     folder = Path(folder)
     comps = {c['id']: c for c in json.loads((root / 'evidence/firmware/koriki-v1.0.json').read_text(encoding='utf-8'))['components']}
@@ -268,12 +270,65 @@ def check_boot_dir(folder, root=ROOT):
                    | {'boot', 'tools', 'boot_logo.bmp.gz'} and not os_metadata(p.name))
     out.append(result('card-boot-extra', 'WARN' if extra else 'PASS',
                       ('files not in the pinned image: ' + ', '.join(extra)) if extra else 'no extra top-level files'))
-    out += check_card_rootfs(folder, root)
+    return out
+
+
+def check_boot_dir(folder, root=ROOT, phase='auto', image=None, baseline=None, cache=None):
+    """Boot partition checks. The root filesystem check depends on the card's phase.
+
+    fresh (boot/autoresize still present): boot/BATOCERA must equal the catalogue byte for byte.
+    prepared/post-capture: Koriki has booted and written to boot/BATOCERA, so it is compared
+    semantically (tools/v3lab/rootfs.py) with the pristine tree rebuilt from --image, or with a
+    --baseline manifest saved when the prepared card was checked. Without either, the check
+    FAILs with an explanation instead of pretending to verify.
+    """
+    folder = Path(folder)
+    out = check_boot_dir_files(folder, root)
     marker = folder / 'boot' / 'autoresize'
-    out.append(result('card-first-boot', 'PASS' if not marker.exists() else 'WARN',
-                      'first boot completed (boot/autoresize removed by S02resize)' if not marker.exists() else
+    booted = not marker.exists()
+    if phase == 'auto':
+        phase = 'prepared' if booted else 'fresh'
+    if phase == 'fresh':
+        out += check_card_rootfs(folder, root)
+    else:
+        out += check_card_rootfs_semantic(folder, root, phase, image, baseline, cache)
+    out.append(result('card-first-boot', 'PASS' if booted else 'WARN',
+                      'first boot completed (boot/autoresize removed by S02resize)' if booted else
                       'boot/autoresize still present: boot the card once and power off before copying the script'))
     return out
+
+
+def check_card_rootfs_semantic(folder, root, phase, image=None, baseline=None, cache=None):
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from v3lab import rootfs as rf
+    from v3lab.steps import Env, scan_file, pristine_manifest
+    from v3lab.store import StoreError, read_json, verified_copy
+    from v3lab.jobs import Job
+    try:
+        env = Env(root=Path(root), data=Path(cache) if cache else Path(root) / 'lab-data')
+        if phase == 'prepared':
+            if not image:
+                return [result('card-rootfs', 'FAIL', 'the card has booted, so boot/BATOCERA must be compared with the original '
+                               'tree: pass --image koriki-v1.0.img (or use the lab, which does this automatically)')]
+            base = pristine_manifest(env, Job('preflight', 'fast'), image=Path(image))
+        else:
+            if not baseline:
+                return [result('card-rootfs', 'FAIL', 'post-capture checks need --baseline, the manifest saved when the '
+                               'prepared card was checked')]
+            base = rf.Manifest.from_json(read_json(baseline))
+        b = find_ci(folder, 'boot')
+        c = find_ci(b, 'BATOCERA') if b else None
+        if not c:
+            return [result('card-rootfs', 'FAIL', 'boot/BATOCERA (the root filesystem) is missing from the boot partition')]
+        snap = env.cache / 'card-snapshots' / 'preflight.ext4'
+        snap.parent.mkdir(parents=True, exist_ok=True)
+        digest = verified_copy(lambda: open(c, 'rb'), snap, c.stat().st_size, label='card root filesystem')
+        cur = scan_file(env, snap, digest, Job('preflight', 'fast'), 'card')
+        rep = rf.compare(base, cur, rf.load_policy(root), phase)
+    except (StoreError, rf.RootfsError, OSError) as e:
+        return [result('card-rootfs', 'FAIL', f'semantic root filesystem check could not run: {e}')]
+    status = {'PASS': 'PASS', 'REVIEW': 'WARN', 'FAIL': 'FAIL'}[rep['verdict']]
+    return [result('card-rootfs', status, ' '.join(rf.summarize(rep)), report=rep)]
 
 
 def check_card_rootfs(folder, root=ROOT):
@@ -294,7 +349,7 @@ def check_card_rootfs(folder, root=ROOT):
     ok = digest == cat['container_sha256']
     return [result('card-rootfs', 'PASS' if ok else 'FAIL',
                    'boot/BATOCERA ' + ('equals' if ok else 'DIFFERS from') + ' the catalogued root filesystem' +
-                   ('' if ok else '; first boot can change ext4 metadata and runtime paths. Preserve card and run python tools/v3_rootfs_review.py; do not reflash or bypass automatically.'),
+                   ('' if ok else '; the card has not been booted (boot/autoresize present), so no change is expected: do not boot it, write it again'),
                    sha256=digest, expected_sha256=cat['container_sha256'])]
 
 
@@ -369,7 +424,8 @@ def run(args, root=ROOT):
         results.append(result('image', 'SKIP', 'no --image given: firmware components not verified'))
     if args.boot_dir:
         try:
-            results += check_boot_dir(args.boot_dir, root)
+            results += check_boot_dir(args.boot_dir, root, getattr(args, 'phase', 'auto'), args.image,
+                                      getattr(args, 'baseline', None))
         except (OSError, ValueError) as e:
             results.append(result('card-boot:access', 'FAIL', f'Cannot read boot partition: {e}. Check the BATOCERA drive letter; do not format.'))
     if args.share_dir:
@@ -401,6 +457,9 @@ def main():
     raw.add_argument('--boot-region', type=Path, help='existing raw read of the card from byte 0, at least 4 MiB')
     raw.add_argument('--windows-boot-letter', help='Windows: spare card boot partition drive letter (e.g. E); administrator required')
     raw.add_argument('--card-device', help='Linux/macOS: confirmed whole spare card device; read-only')
+    p.add_argument('--phase', choices=['auto', 'fresh', 'prepared', 'post-capture'], default='auto',
+                   help='card phase for the root filesystem check (auto: fresh if boot/autoresize exists, else prepared)')
+    p.add_argument('--baseline', type=Path, help='post-capture: manifest saved when the prepared card was checked')
     p.add_argument('--json', type=Path, help='also write the results as JSON')
     a = p.parse_args()
     if hasattr(sys.stdout, 'reconfigure'):

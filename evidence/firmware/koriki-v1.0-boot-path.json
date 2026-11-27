@@ -1,0 +1,456 @@
+{
+ "format_version": 1,
+ "tool": "boot_chain.py boot-path",
+ "tool_version": 1,
+ "release": "koriki-v1.0",
+ "image_sha256": "d5bd300740884d80faee2fd3ae70d91f86e6a316610c56efc0e1f7545539d6ae",
+ "observed_cmdline": "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x allenS500=1 androidboot.bootdev=sd boot_dev=sd2",
+ "block0_models": [
+  "MMIO 0xb01600a0 := hypothesis value (no other MMIO read occurs)",
+  "SRAM word 0xb4060408 := disk value or the literal block 0 compares it with",
+  "calls to 0xb4060400 and to SRAM code absent from the image return 0 and are logged"
+ ],
+ "mmc_registration_models": [
+  "malloc/calloc := bump allocator over zeroed RAM",
+  "printf recorded",
+  "mmc_init := supplied outcome per slot (card present and answering, or not)",
+  "MMIO read 0xb01b0048 := 0 (pin-mux word saved before SD0 init, restored on failure)",
+  "gd->fdt_blob := the U-Boot embedded device tree; AFI := hypothesis"
+ ],
+ "functions": {
+  "mmc_initialize": "0x5023ff4",
+  "board_mmc_init": "0x5004108",
+  "owl_sd_init": "0x5024f04",
+  "mmc_create": "0x5023a2c",
+  "mmc_init": "0x5023de4",
+  "check_boot_flag": "0x50076c0",
+  "owl_boot_fdt_setup": "0x500456c"
+ },
+ "hypotheses": [
+  {
+   "block0_code": 0,
+   "cmu_devclken0": "0x10",
+   "afi": {
+    "magic": "AFI",
+    "boot_mode": 0,
+    "boot_dev": "0x20",
+    "uart_index": 3,
+    "uart_pad": 0,
+    "uart_baudrate": 115200,
+    "ddr_size": "0x10000000"
+   },
+   "loader_storage_reads": [
+    {
+     "disk_offset": "0x202600",
+     "dest": "0xb4062400"
+    },
+    {
+     "disk_offset": "0x219200",
+     "dest": "0x1000"
+    },
+    {
+     "disk_offset": "0x300000",
+     "dest": "0x300000"
+    },
+    {
+     "disk_offset": "0x300000",
+     "dest": "0x5000000"
+    },
+    {
+     "disk_offset": "0x320000",
+     "dest": "0x5020000"
+    },
+    {
+     "disk_offset": "0x340000",
+     "dest": "0x5040000"
+    },
+    {
+     "disk_offset": "0x360000",
+     "dest": "0x5060000"
+    },
+    {
+     "disk_offset": "0x380000",
+     "dest": "0x5080000"
+    },
+    {
+     "disk_offset": "0x3a0000",
+     "dest": "0x50a0000"
+    }
+   ],
+   "loader_console": [
+    "row_col 72 \n",
+    "ddr_cap 256 \n",
+    "bootdev= 0x22 \n",
+    "scan 1 \n",
+    "load app :",
+    "OK\n",
+    "load uboot: load address is 0x5000000, entry point is 0x5000040\n"
+   ],
+   "check_boot_flag": {
+    "bootcmd": "run mmcboot",
+    "devif": "mmc"
+   },
+   "script": "mmcboot",
+   "devpart": "0:1",
+   "kernel_files_from_controller": [
+    "0xb0230000"
+   ],
+   "env_storage": "mmc 1 (same numbering)",
+   "mmc_registration": [
+    {
+     "boot_mode": 0,
+     "boot_dev": "0x20",
+     "sd0_mmc_init": "ok",
+     "sd2_mmc_init": "ok",
+     "registered": [
+      {
+       "slot": 0,
+       "controller": "0xb0230000",
+       "device_number": 0,
+       "mmc_init": "ok"
+      }
+     ],
+     "return_value": 0,
+     "printed": [],
+     "pinmux_writes": [],
+     "error": null
+    },
+    {
+     "boot_mode": 0,
+     "boot_dev": "0x20",
+     "sd0_mmc_init": "ok",
+     "sd2_mmc_init": "fail",
+     "registered": [
+      {
+       "slot": 0,
+       "controller": "0xb0230000",
+       "device_number": 0,
+       "mmc_init": "ok"
+      }
+     ],
+     "return_value": 0,
+     "printed": [],
+     "pinmux_writes": [],
+     "error": null
+    },
+    {
+     "boot_mode": 0,
+     "boot_dev": "0x20",
+     "sd0_mmc_init": "fail",
+     "sd2_mmc_init": "ok",
+     "registered": [
+      {
+       "slot": 0,
+       "controller": "0xb0230000",
+       "device_number": 0,
+       "mmc_init": "fail"
+      }
+     ],
+     "return_value": 0,
+     "printed": [
+      "slot:0, error mmc_init\n",
+      "error:-1,owl_sd_init fail\n"
+     ],
+     "pinmux_writes": [
+      {
+       "op": "write",
+       "address": "0xb01b0048",
+       "value": "0x0"
+      }
+     ],
+     "error": null
+    },
+    {
+     "boot_mode": 0,
+     "boot_dev": "0x20",
+     "sd0_mmc_init": "fail",
+     "sd2_mmc_init": "fail",
+     "registered": [
+      {
+       "slot": 0,
+       "controller": "0xb0230000",
+       "device_number": 0,
+       "mmc_init": "fail"
+      }
+     ],
+     "return_value": 0,
+     "printed": [
+      "slot:0, error mmc_init\n",
+      "error:-1,owl_sd_init fail\n"
+     ],
+     "pinmux_writes": [
+      {
+       "op": "write",
+       "address": "0xb01b0048",
+       "value": "0x0"
+      }
+     ],
+     "error": null
+    }
+   ],
+   "bootargs": [
+    {
+     "gpioc6": "low",
+     "bootargs": "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x androidboot.bootdev=sd boot_dev=sd0",
+     "error": null,
+     "equals_observed": false
+    },
+    {
+     "gpioc6": "high",
+     "bootargs": "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x allenS500=1 androidboot.bootdev=sd boot_dev=sd0",
+     "error": null,
+     "equals_observed": false
+    }
+   ]
+  },
+  {
+   "block0_code": 2,
+   "cmu_devclken0": "0x80",
+   "afi": {
+    "magic": "AFI",
+    "boot_mode": 0,
+    "boot_dev": "0x22",
+    "uart_index": 3,
+    "uart_pad": 0,
+    "uart_baudrate": 115200,
+    "ddr_size": "0x10000000"
+   },
+   "loader_storage_reads": [
+    {
+     "disk_offset": "0x202600",
+     "dest": "0xb4062400"
+    },
+    {
+     "disk_offset": "0x219200",
+     "dest": "0x1000"
+    },
+    {
+     "disk_offset": "0x300000",
+     "dest": "0x300000"
+    },
+    {
+     "disk_offset": "0x300000",
+     "dest": "0x5000000"
+    },
+    {
+     "disk_offset": "0x320000",
+     "dest": "0x5020000"
+    },
+    {
+     "disk_offset": "0x340000",
+     "dest": "0x5040000"
+    },
+    {
+     "disk_offset": "0x360000",
+     "dest": "0x5060000"
+    },
+    {
+     "disk_offset": "0x380000",
+     "dest": "0x5080000"
+    },
+    {
+     "disk_offset": "0x3a0000",
+     "dest": "0x50a0000"
+    }
+   ],
+   "loader_console": [
+    "row_col 72 \n",
+    "ddr_cap 256 \n",
+    "bootdev= 0x22 \n",
+    "scan 1 \n",
+    "load app :",
+    "OK\n",
+    "load uboot: load address is 0x5000000, entry point is 0x5000040\n"
+   ],
+   "check_boot_flag": {
+    "bootcmd": "run emmcboot",
+    "devif": "mmc"
+   },
+   "script": "emmcboot",
+   "devpart": "1:1",
+   "kernel_files_from_controller": [
+    "0xb0238000"
+   ],
+   "env_storage": "mmc 1 (same numbering)",
+   "mmc_registration": [
+    {
+     "boot_mode": 0,
+     "boot_dev": "0x22",
+     "sd0_mmc_init": "ok",
+     "sd2_mmc_init": "ok",
+     "registered": [
+      {
+       "slot": 0,
+       "controller": "0xb0230000",
+       "device_number": 0,
+       "mmc_init": "ok"
+      },
+      {
+       "slot": 2,
+       "controller": "0xb0238000",
+       "device_number": 1,
+       "mmc_init": "ok"
+      }
+     ],
+     "return_value": 0,
+     "printed": [],
+     "pinmux_writes": [],
+     "error": null
+    },
+    {
+     "boot_mode": 0,
+     "boot_dev": "0x22",
+     "sd0_mmc_init": "ok",
+     "sd2_mmc_init": "fail",
+     "registered": [
+      {
+       "slot": 0,
+       "controller": "0xb0230000",
+       "device_number": 0,
+       "mmc_init": "ok"
+      },
+      {
+       "slot": 2,
+       "controller": "0xb0238000",
+       "device_number": 1,
+       "mmc_init": "fail"
+      }
+     ],
+     "return_value": 0,
+     "printed": [
+      "slot:2, error mmc_init\n",
+      "error:-1,owl_sd_init fail\n"
+     ],
+     "pinmux_writes": [],
+     "error": null
+    },
+    {
+     "boot_mode": 0,
+     "boot_dev": "0x22",
+     "sd0_mmc_init": "fail",
+     "sd2_mmc_init": "ok",
+     "registered": [
+      {
+       "slot": 0,
+       "controller": "0xb0230000",
+       "device_number": 0,
+       "mmc_init": "fail"
+      },
+      {
+       "slot": 2,
+       "controller": "0xb0238000",
+       "device_number": 1,
+       "mmc_init": "ok"
+      }
+     ],
+     "return_value": 0,
+     "printed": [
+      "slot:0, error mmc_init\n",
+      "error:-1,owl_sd_init fail\n"
+     ],
+     "pinmux_writes": [
+      {
+       "op": "write",
+       "address": "0xb01b0048",
+       "value": "0x0"
+      }
+     ],
+     "error": null
+    },
+    {
+     "boot_mode": 0,
+     "boot_dev": "0x22",
+     "sd0_mmc_init": "fail",
+     "sd2_mmc_init": "fail",
+     "registered": [
+      {
+       "slot": 0,
+       "controller": "0xb0230000",
+       "device_number": 0,
+       "mmc_init": "fail"
+      },
+      {
+       "slot": 2,
+       "controller": "0xb0238000",
+       "device_number": 1,
+       "mmc_init": "fail"
+      }
+     ],
+     "return_value": 0,
+     "printed": [
+      "slot:0, error mmc_init\n",
+      "error:-1,owl_sd_init fail\n",
+      "slot:2, error mmc_init\n",
+      "error:-1,owl_sd_init fail\n"
+     ],
+     "pinmux_writes": [
+      {
+       "op": "write",
+       "address": "0xb01b0048",
+       "value": "0x0"
+      }
+     ],
+     "error": null
+    }
+   ],
+   "bootargs": [
+    {
+     "gpioc6": "low",
+     "bootargs": "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x androidboot.bootdev=sd boot_dev=sd2",
+     "error": null,
+     "equals_observed": false
+    },
+    {
+     "gpioc6": "high",
+     "bootargs": "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x allenS500=1 androidboot.bootdev=sd boot_dev=sd2",
+     "error": null,
+     "equals_observed": true
+    }
+   ]
+  },
+  {
+   "block0_code": 4,
+   "cmu_devclken0": "0x0",
+   "afi": {
+    "magic": "\u00a6`\u00a0\u00e1",
+    "boot_mode": 1,
+    "boot_dev": "0x00",
+    "uart_index": 19,
+    "uart_pad": 227,
+    "uart_baudrate": 184549371,
+    "ddr_size": "0xe59fa0d4"
+   },
+   "loader_storage_reads": [],
+   "loader_console": [],
+   "check_boot_flag": {
+    "bootcmd": "run ramboot",
+    "bootdelay": "0"
+   },
+   "script": "ramboot",
+   "devpart": null,
+   "kernel_files_from_controller": [],
+   "env_storage": "mmc 1 (same numbering)",
+   "mmc_registration": [],
+   "bootargs": [
+    {
+     "gpioc6": "low",
+     "bootargs": "console=ttyS19 earlyprintk clk_ignore_unused selinux=0 init=/init   earlyprintk clk_ignore_unused selinux=0 powersave androidboot.mode=upgrade boot_dev=nand",
+     "error": null,
+     "equals_observed": false
+    },
+    {
+     "gpioc6": "high",
+     "bootargs": "console=ttyS19 earlyprintk clk_ignore_unused selinux=0 init=/init   earlyprintk clk_ignore_unused selinux=0 powersave androidboot.mode=upgrade boot_dev=nand",
+     "error": null,
+     "equals_observed": false
+    }
+   ]
+  }
+ ],
+ "matching": [
+  {
+   "block0_code": 2,
+   "gpioc6": "high"
+  }
+ ]
+}

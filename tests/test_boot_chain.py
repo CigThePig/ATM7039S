@@ -460,6 +460,35 @@ class FirmwareBacked(unittest.TestCase):
         if not ran:
             self.skipTest('no pinned image found in ATM_FIRMWARE_DIR')
 
+    def test_boot_path_matches_committed_evidence(self):
+        path = Path(FW) / 'koriki-v1.0.img'
+        if not path.exists():
+            self.skipTest('needs ATM_FIRMWARE_DIR with koriki-v1.0.img')
+        committed = json.loads((ROOT / 'evidence/firmware/koriki-v1.0-boot-path.json').read_text())
+        new = bc.boot_path(path, 'koriki-v1.0', committed['image_sha256'], committed['observed_cmdline'])
+        self.assertEqual(json.loads(json.dumps(new)), committed)
+        self.assertEqual(new['matching'], [{'block0_code': 2, 'gpioc6': 'high'}])
+
+
+class BootPathEvidence(unittest.TestCase):
+    """Structure of the committed C-BOOTSLOT evidence (no firmware needed)."""
+
+    def test_only_the_sd2_path_matches_obs001(self):
+        d = json.loads((ROOT / 'evidence/firmware/koriki-v1.0-boot-path.json').read_text())
+        obs = json.loads((ROOT / 'evidence/observations/OBS-001.json').read_text())
+        self.assertEqual(d['observed_cmdline'], obs['summary']['cmdline']['raw'])
+        self.assertEqual(d['matching'], [{'block0_code': 2, 'gpioc6': 'high'}])
+        by = {h['block0_code']: h for h in d['hypotheses']}
+        self.assertEqual(by[2]['afi']['boot_dev'], '0x22')
+        self.assertEqual(by[2]['script'], 'emmcboot')
+        self.assertEqual(by[2]['devpart'], '1:1')
+        self.assertEqual(by[2]['kernel_files_from_controller'], ['0xb0238000'])
+        self.assertEqual(by[0]['kernel_files_from_controller'], ['0xb0230000'])
+        # SD2 is device 1 whatever happens to SD0's card: an empty TF2 does not renumber it.
+        for row in by[2]['mmc_registration']:
+            self.assertEqual({g['controller']: g['device_number'] for g in row['registered']},
+                             {'0xb0230000': 0, '0xb0238000': 1})
+
 
 if __name__ == '__main__':
     unittest.main()

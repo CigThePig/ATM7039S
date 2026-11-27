@@ -385,5 +385,14 @@
     "examined": "2026-11-24",
     "license_status": "Read; not imported",
     "scope": "Prior community ADB enablement route via /sys/monitor/usb_port and android_usb gadget on stock firmware"
+  },
+  {
+    "id": "owner-device",
+    "url": "https://github.com/CigThePig/ATM7039S/tree/main/evidence/observations",
+    "revision": "OBS-001 (2026-11-27); redacted summary evidence/observations/OBS-001.json, manifest 99989da7414ee54489d74aa3523044fde9efe81489a8a626b41a8dc4b3c2e27a",
+    "type": "hardware-observation",
+    "examined": "2026-11-27",
+    "license_status": "Owner-held raw capture, not redistributed; redacted parser summary committed with owner permission",
+    "scope": "One original RG35XX (board revision unknown) running Koriki v1.0; parser-authenticated runtime capture, not independent attestation"
   }
 ]

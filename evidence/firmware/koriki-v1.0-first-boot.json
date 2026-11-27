@@ -1,0 +1,96 @@
+{
+  "format_version": 1,
+  "id": "koriki-v1.0-first-boot/1",
+  "source": "koriki-v1.0-release",
+  "image_sha256": "d5bd300740884d80faee2fd3ae70d91f86e6a316610c56efc0e1f7545539d6ae",
+  "container_path": "/BOOT/BATOCERA",
+  "container_sha256": "0283397edbbc639e92b6107a3771cdd4a1d1f7a0076e1d9461c7062b7f06cfe9",
+  "pristine_manifest": {
+    "tool": "tools/v3lab/rootfs.py",
+    "schema": 2,
+    "paths": 27112,
+    "hardlink_groups": 0,
+    "digest": "ccdb8b0800e5f0ea4842aa77ac7bf550806b4ed56f32b40ac5174c4d3d7df268",
+    "note": "Semantic manifest of the pinned container (no inode numbers or timestamps). The lab recomputes it from the verified image and refuses to continue if it differs. The full manifest is not committed: it is rebuilt locally from the operator's own verified download."
+  },
+  "why_the_container_changes": {
+    "summary": "Koriki's ramdisk /init mounts boot/BATOCERA read-write as the root filesystem. It first mounts it at /overlay_root/base, then tries overlayfs (unavailable on this 3.10 kernel) and falls back to mounting the same file again as /new_root. OBS-001's mount table shows both /dev/loop0 (/overlay/base) and /dev/loop1 (/) as rw ext4. Writes made by init before the tmpfs mounts in /etc/fstab therefore land in the container.",
+    "evidence": [
+      {"component": "ramdisk.img (uImage payload, cpio /init)", "component_sha256": "a64bfd03833d7b748dc4ef8121c3c8245c244993c3fccb97880cfa889ff788a9", "init_sha256": "85c611d30b0ae9b2b00d1355878635f977d9e8fcce77c7955e55350df6805317", "lines": "51-59 (base mount, overlayfs attempt, rw fallback), 124 (echo 1 > /boot_root/boot/reboot)"},
+      {"observation": "OBS-001", "item": "summary.storage.mounts", "value": "/dev/loop0 /overlay/base ext4 rw; /dev/loop1 / ext4 rw; tmpfs on /run, /var, /tmp"}
+    ],
+    "hazard": "The same ext4 image is mounted read-write through two loop devices at once. Linux does not coordinate the two mounts, so concurrent writes through both could corrupt the filesystem. This is a property of the pinned firmware, recorded here because it is why every verification after a boot must include the filesystem health gate."
+  },
+  "rules": [
+    {
+      "id": "dropbear-symlink-to-directory",
+      "phases": ["prepared"],
+      "required_in_phase": "prepared",
+      "change": "changed",
+      "path": "/etc/dropbear",
+      "before": {"type": "symlink", "target": "/var/run/dropbear"},
+      "after": {"type": "dir", "perm": "0755", "uid": 0, "gid": 0, "xattrs": [], "flags": "0x0", "links": 2, "no_children": true},
+      "explanation": "S50dropbear replaces the /etc/dropbear -> /var/run/dropbear symlink with an empty directory when the root filesystem is writable (mkdir -p under the init umask 022).",
+      "derived_from": [{"path": "/etc/init.d/S50dropbear", "sha256": "c4371bcff952841891f8f3d30c985fb2764042dcb7c88f18159788553a9e02b1", "lines": "24-33"}],
+      "observed_in": ["OBS-001"],
+      "observation_detail": "OBS-001 rootfs comparison: mode 0120777 -> 040755, links 1 -> 2, target removed. The directory was empty-implied (no child paths were added)."
+    },
+    {
+      "id": "run-initctl-fifo",
+      "phases": ["prepared"],
+      "required_in_phase": "prepared",
+      "change": "added",
+      "path": "/run/initctl",
+      "after": {"type": "fifo", "perm": "0600", "uid": 0, "gid": 0, "xattrs": []},
+      "explanation": "sysvinit (PID 1) creates its control FIFO /run/initctl (mkfifo mode 0600) on the root filesystem before inittab's si3 'mount -a' mounts tmpfs on /run.",
+      "derived_from": [{"path": "/sbin/init", "sha256": "eac50cbb99c945c2715f5781fe5ba835f52bb71043c4eca8aee04e14a722a0f4", "evidence": "sysvinit binary; string /run/initctl"}, {"path": "/etc/inittab", "sha256": "ed33c487cfd72568444d3abbb6e881b130a82eb4552c9ec228c57d6406675f26", "lines": "10"}, {"path": "/etc/fstab", "sha256": "e575738d841e622510cb377e0d083518c03f3b937e51b6e8ac92a273b6bbc718", "lines": "9"}],
+      "observed_in": ["OBS-001 (path only)"],
+      "observation_detail": "OBS-001 recorded that the path was added but not its type, mode or owner. The type and mode in this rule are predicted from sysvinit's documented behaviour; the next prepared-card check will confirm or refute them."
+    },
+    {
+      "id": "run-utmp-boot-record",
+      "phases": ["prepared"],
+      "required_in_phase": "prepared",
+      "change": "added",
+      "path": "/run/utmp",
+      "after": {"type": "file", "perm": "0644", "uid": 0, "gid": 0, "xattrs": [], "size_multiple_of": 384, "max_size": 3840},
+      "explanation": "sysvinit creates and truncates the utmp file (/var/run/utmp; /var/run is a symlink to ../run in the container) with mode 0644 at boot and writes its boot record before /run becomes tmpfs. glibc's struct utmp is 384 bytes.",
+      "derived_from": [{"path": "/sbin/init", "sha256": "eac50cbb99c945c2715f5781fe5ba835f52bb71043c4eca8aee04e14a722a0f4", "evidence": "string /var/run/utmp"}, {"path": "/var/run", "evidence": "symlink to ../run in the pinned container"}],
+      "observed_in": ["OBS-001 (path only)"],
+      "observation_detail": "Type, mode and size were not recorded in OBS-001. Content is boot bookkeeping (record type and the handheld's clock time) and is not compared."
+    },
+    {
+      "id": "run-utmp-rewritten-each-boot",
+      "phases": ["post-capture"],
+      "change": "added",
+      "may_already_exist": true,
+      "path": "/run/utmp",
+      "after": {"type": "file", "perm": "0644", "uid": 0, "gid": 0, "xattrs": [], "size_multiple_of": 384, "max_size": 3840},
+      "explanation": "Every boot truncates and rewrites /run/utmp (see run-utmp-boot-record), so its contents differ after the capture boot.",
+      "derived_from": [{"path": "/sbin/init", "sha256": "eac50cbb99c945c2715f5781fe5ba835f52bb71043c4eca8aee04e14a722a0f4"}],
+      "observed_in": []
+    },
+    {
+      "id": "run-initctl-persists",
+      "phases": ["post-capture"],
+      "change": "added",
+      "may_already_exist": true,
+      "path": "/run/initctl",
+      "after": {"type": "fifo", "perm": "0600", "uid": 0, "gid": 0, "xattrs": []},
+      "explanation": "sysvinit reuses an existing FIFO; a re-created one has the same type and mode.",
+      "derived_from": [{"path": "/sbin/init", "sha256": "eac50cbb99c945c2715f5781fe5ba835f52bb71043c4eca8aee04e14a722a0f4"}],
+      "observed_in": []
+    }
+  ],
+  "boot_partition": {
+    "note": "Files on the FAT boot partition that legitimately change on boot. Everything else must stay byte-identical (tools/v3_preflight.py BOOT_FILES).",
+    "BOOT/autoresize": {"pristine": "empty file", "after_first_boot": "removed by S02resize", "derived_from": {"path": "/etc/init.d/S02resize", "sha256": "42c1d78008f70371f8375eb7bcd40429a5d87e4a92c33a1c2e4086ca6b01d8f1"}},
+    "BOOT/REBOOT": {"pristine": "empty file", "after_boot": "1\\n written by the ramdisk /init on every boot", "allowed_contents_sha256": ["e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"], "derived_from": {"path": "ramdisk.img:/init", "sha256": "85c611d30b0ae9b2b00d1355878635f977d9e8fcce77c7955e55350df6805317", "lines": "124"}},
+    "BOOT/BATOCERA": "the root filesystem container: verified by this policy, not by byte hash, after a boot"
+  },
+  "not_expected": [
+    {"path": "/etc/dropbear/*", "why": "dropbear -R creates host keys only when an SSH client connects; V3 involves no network connection, so keys appearing means an unplanned connection or tampering."},
+    {"path": "/run/runlevel", "why": "string present in /sbin/init but not created on OBS-001's first boot."}
+  ],
+  "limitations": "Rules are derived from the pinned scripts and the single OBS-001 first boot. They do not cover other firmware, a boot with a charger connected (the ramdisk then runs its charging loop), an interrupted first boot, or a card whose SHARE partition failed to resize. Any change not listed fails closed."
+}

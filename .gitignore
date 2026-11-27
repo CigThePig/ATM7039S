@@ -15,3 +15,7 @@ inputs/
 v3-rootfs-recovery-v2/
 v3-rootfs-diagnostic-report.json
 atm-capture-*/
+
+# Lab (private local data, environment)
+lab-data/
+.venv-lab/

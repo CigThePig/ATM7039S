@@ -35,7 +35,8 @@
         "Windows user-scope pip install and UTF-8 mode; drive letters changed; BATOCERA drive assigned manually.",
         "Prepared card rootfs hash failed. Read-only tree comparison and actual S50dropbear script inspection supported a session-specific exception before capture.",
         "Postflight retains rootfs FAIL and expected earlier-capture WARN; post-capture rootfs digest not recorded.",
-        "Full dated operator checklist, preflight logs for image/prepared card, shutdown method and board silkscreen not supplied."
+        "Full dated operator checklist, preflight logs for image/prepared card, shutdown method and board silkscreen not supplied.",
+        "Rootfs comparison and S50dropbear review were done with an ad-hoc diagnostic during the session (later committed as tools/v3_rootfs_review.py 2.x); the phase-aware verifier added in PR #8 was not available."
       ]
     },
     "capture": {
@@ -44,6 +45,53 @@
       "raw_location": "Private owner-held copy; not included in repository."
     },
     "result": "Parser-authenticated complete V3: 42/45 items OK, 12/12 essential, no capture errors. Linux reports four online Cortex-A9 cores, 256 MiB System RAM, SD boot via controller 0xb0238000, boot_dev=sd2, ttyS3 and matching PowerVR DDK. See session report for qualifications.",
-    "limitations": "Single device/session, board silkscreen unknown. Authentication is parser integrity, not independently verified provenance or full procedural compliance. Raw boot-region checks and post-capture rootfs equivalence are missing. No Boot ROM, AFI bytes, early serial, DRAM training, safe frequency limit or unenumerated storage established."
+    "limitations": "Single device/session, board silkscreen unknown. Authentication is parser integrity, not independently verified provenance or full procedural compliance. Raw boot-region checks and post-capture rootfs equivalence are missing. No Boot ROM, AFI bytes, early serial, DRAM training, safe frequency limit or unenumerated storage established.",
+    "attestations": {
+      "owner-cards-excluded": {
+        "status": "operator-reported",
+        "basis": "Operator stated a spare card was used; no photograph or card identifier was recorded."
+      },
+      "tf2-empty": {
+        "status": "inferred",
+        "basis": "Linux enumerated only one MMC card (mmcblk0 on b0238000) and the SD0 host b0230000 reported no card; consistent with an empty TF2, not proof of the slot's physical state."
+      },
+      "charger-disconnected": {
+        "status": "not-recorded",
+        "basis": "No contemporaneous checklist was supplied, and the capture deliberately does not read power_supply state."
+      },
+      "overclocking-unset": {
+        "status": "verified-by-tool",
+        "basis": "Postflight card-overclocking PASS and summary card_files.boot_conf.overclocking null; runtime scaling_max 1008000 matches S02overclock's default."
+      },
+      "raw-boot-region-check": {
+        "status": "not-recorded",
+        "basis": "Guide revision c62d504 was used; the later mandatory raw loader/U-Boot comparison was not run or not supplied."
+      },
+      "prepared-card-check": {
+        "status": "operator-reported",
+        "basis": "Prepared-card preflight log not supplied. The rootfs tree diagnostic (OBS-001-rootfs.json) and S50dropbear inspection were reported before the capture."
+      },
+      "post-capture-card-check": {
+        "status": "verified-by-tool",
+        "basis": "OBS-001-postflight.txt: boot files, overclocking and script PASS; rootfs FAIL (byte hash) with no post-capture semantic digest, so post-capture rootfs equivalence is not established."
+      },
+      "shutdown": {
+        "status": "operator-reported",
+        "basis": "Operator reported switching off after the capture; the exact method and timing were not recorded."
+      },
+      "board-revision": {
+        "status": "not-recorded",
+        "basis": "PCB silkscreen not inspected. The firmware model string 'V6C' is a software label, not a board observation."
+      },
+      "approval-record": {
+        "status": "operator-reported",
+        "basis": "Owner-directed session; a separate dated approval note was not supplied."
+      }
+    },
+    "dates": {
+      "session_date": "2026-11-27",
+      "session_date_source": "operator's statement of the session date (host side); no host-clock timestamp is embedded in the redacted summary",
+      "device_clock": "2022-01-05T13:37:48Z at capture start (handheld RTC, not set; not authoritative)"
+    }
   }
 ]

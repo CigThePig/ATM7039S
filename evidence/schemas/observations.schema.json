@@ -6,80 +6,273 @@
   "items": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "date", "plan_test", "approval", "device", "firmware", "media", "procedure", "capture", "result", "limitations"],
+    "required": [
+      "id",
+      "date",
+      "plan_test",
+      "approval",
+      "device",
+      "firmware",
+      "media",
+      "procedure",
+      "capture",
+      "result",
+      "limitations",
+      "attestations",
+      "dates"
+    ],
     "properties": {
-      "id": {"type": "string", "pattern": "^OBS-\\d{3}$"},
-      "date": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
-      "plan_test": {"type": "string", "pattern": "^V\\d+$", "description": "Test id from reports/hardware-validation-plan.md"},
+      "id": {
+        "type": "string",
+        "pattern": "^OBS-\\d{3}$"
+      },
+      "date": {
+        "type": "string",
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+      },
+      "plan_test": {
+        "type": "string",
+        "pattern": "^V\\d+$",
+        "description": "Test id from reports/hardware-validation-plan.md"
+      },
       "approval": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["approved_by", "date", "scope"],
+        "required": [
+          "approved_by",
+          "date",
+          "scope"
+        ],
         "properties": {
-          "approved_by": {"type": "string", "minLength": 1, "description": "Role, e.g. 'device owner'; no personal contact details."},
-          "date": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
-          "scope": {"type": "string", "minLength": 1},
-          "reference": {"type": "string"}
+          "approved_by": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Role, e.g. 'device owner'; no personal contact details."
+          },
+          "date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reference": {
+            "type": "string"
+          }
         }
       },
       "device": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["model", "board_revision"],
+        "required": [
+          "model",
+          "board_revision"
+        ],
         "properties": {
-          "model": {"const": "Anbernic RG35XX (original, ATM7039S)"},
-          "board_revision": {"type": "string", "minLength": 1, "description": "Silkscreen text, or 'unknown'."},
-          "label": {"type": "string", "description": "Owner's local label for this unit; not a serial number."},
-          "photo_sha256": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
-          "battery": {"type": "string"}
+          "model": {
+            "const": "Anbernic RG35XX (original, ATM7039S)"
+          },
+          "board_revision": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Silkscreen text, or 'unknown'."
+          },
+          "label": {
+            "type": "string",
+            "description": "Owner's local label for this unit; not a serial number."
+          },
+          "photo_sha256": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "battery": {
+            "type": "string"
+          }
         }
       },
       "firmware": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["source", "image_sha256", "boot_kernel", "modifications"],
+        "required": [
+          "source",
+          "image_sha256",
+          "boot_kernel",
+          "modifications"
+        ],
         "properties": {
-          "source": {"type": "string"},
-          "image_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-          "boot_kernel": {"type": "string", "description": "Component id in the firmware catalogue, e.g. uImage or adb_uImage."},
-          "dtb": {"type": "string"},
-          "modifications": {"type": "array", "items": {"type": "string"}, "description": "Every change from the pinned image, including files copied onto the card."}
+          "source": {
+            "type": "string"
+          },
+          "image_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "boot_kernel": {
+            "type": "string",
+            "description": "Component id in the firmware catalogue, e.g. uImage or adb_uImage."
+          },
+          "dtb": {
+            "type": "string"
+          },
+          "modifications": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Every change from the pinned image, including files copied onto the card."
+          }
         }
       },
       "media": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["description", "excluded_owner_card"],
+        "required": [
+          "description",
+          "excluded_owner_card"
+        ],
         "properties": {
-          "description": {"type": "string"},
-          "excluded_owner_card": {"const": false, "description": "Must be false: the owner's GarlicOS and failing factory cards are never used."},
-          "write_verified": {"type": "boolean"}
+          "description": {
+            "type": "string"
+          },
+          "excluded_owner_card": {
+            "const": false,
+            "description": "Is this one of the owner's excluded cards (working GarlicOS card, failing factory card)? Must be false. This records the procedure's rule, not proof: how the rule was checked is in attestations.owner-cards-excluded."
+          },
+          "write_verified": {
+            "type": "boolean"
+          }
         }
       },
       "procedure": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["tool", "tool_sha256", "launch"],
+        "required": [
+          "tool",
+          "tool_sha256",
+          "launch"
+        ],
         "properties": {
-          "tool": {"type": "string"},
-          "tool_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-          "launch": {"type": "string", "description": "How the tool was started, e.g. 'SimpleMenu GAMES list (roms/ports)' or 'adb shell'."},
-          "deviations": {"type": "array", "items": {"type": "string"}}
+          "tool": {
+            "type": "string"
+          },
+          "tool_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "launch": {
+            "type": "string",
+            "description": "How the tool was started, e.g. 'SimpleMenu GAMES list (roms/ports)' or 'adb shell'."
+          },
+          "deviations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
         }
       },
       "capture": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["manifest_sha256", "summary", "raw_location"],
+        "required": [
+          "manifest_sha256",
+          "summary",
+          "raw_location"
+        ],
         "properties": {
-          "manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-          "archive_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-          "summary": {"type": "string", "pattern": "^evidence/observations/OBS-\\d{3}\\.json$"},
-          "raw_location": {"type": "string", "description": "Where the raw capture is kept; committed only after owner review."}
+          "manifest_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "archive_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "summary": {
+            "type": "string",
+            "pattern": "^evidence/observations/OBS-\\d{3}\\.json$"
+          },
+          "raw_location": {
+            "type": "string",
+            "description": "Where the raw capture is kept; committed only after owner review."
+          }
         }
       },
-      "result": {"type": "string", "minLength": 1},
-      "limitations": {"type": "string", "minLength": 1}
+      "result": {
+        "type": "string",
+        "minLength": 1
+      },
+      "limitations": {
+        "type": "string",
+        "minLength": 1
+      },
+      "attestations": {
+        "type": "object",
+        "description": "How each procedural condition is known. A parser PASS establishes capture integrity only; physical conditions are at best operator-reported.",
+        "additionalProperties": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "basis"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "verified-by-tool",
+                "operator-reported",
+                "inferred",
+                "not-recorded",
+                "not-applicable"
+              ]
+            },
+            "basis": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "owner-cards-excluded",
+          "tf2-empty",
+          "charger-disconnected",
+          "overclocking-unset",
+          "raw-boot-region-check",
+          "prepared-card-check",
+          "post-capture-card-check",
+          "shutdown",
+          "board-revision",
+          "approval-record"
+        ]
+      },
+      "dates": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "session_date",
+          "session_date_source",
+          "device_clock"
+        ],
+        "properties": {
+          "session_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "session_date_source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "device_clock": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What the handheld's own clock said; not authoritative."
+          }
+        }
+      }
     }
   }
 }

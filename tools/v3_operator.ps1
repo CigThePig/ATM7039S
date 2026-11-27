@@ -1,4 +1,6 @@
-# Read-only Windows operator helper. No raw disk access or device writes.
+# Legacy fallback helper. The normal way to run a V3 session is ATM7039S-Lab.cmd (the lab),
+# which finds the card by disk identity, keeps progress across restarts and needs no PowerShell.
+# Read-only: no raw disk access or device writes.
 param(
     [Parameter(Mandatory=$true)][ValidateSet('Setup','Prepared','Analyse','Postflight','RootfsReview')][string]$Action,
     [string]$CaptureFolder,
@@ -22,7 +24,8 @@ function Invoke-Python([string[]]$Arguments) {
 Push-Location $root
 try {
     if ($Action -eq 'Setup') {
-        Invoke-Python -Arguments @('-m','pip','install','--user','-r','requirements-dev.txt','-r','requirements-firmware.txt')
+        Write-Host 'Setup is now automatic: double-click ATM7039S-Lab.cmd (it creates .venv-lab without administrator rights).'
+        & cmd /c (Join-Path $root 'ATM7039S-Lab.cmd') selftest
         return
     }
     $boot = Get-TestVolume 'BATOCERA'
@@ -30,7 +33,7 @@ try {
     if ($boot.Disk -ne $share.Disk) { throw 'BATOCERA and SHARE are not on the same disk.' }
     if (-not (Test-Path (Join-Path $boot.Path 'KERNEL.DTB') -PathType Leaf)) { throw 'Missing KERNEL.DTB.' }
     if ($Action -eq 'RootfsReview') {
-        Invoke-Python -Arguments @('tools/v3_rootfs_review.py','--card',(Join-Path $boot.Path 'boot\BATOCERA'))
+        Invoke-Python -Arguments @('tools/v3_rootfs_review.py','--phase','prepared','--card',(Join-Path $boot.Path 'boot\BATOCERA'))
         return
     }
     $Results = [IO.Path]::GetFullPath($Results)
