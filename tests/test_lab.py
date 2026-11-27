@@ -483,10 +483,19 @@ class RootfsTests(Tmp):
         data = lf.container('pristine')
         db = self.tmp / 'ck.sqlite'
         rootfs.scan(ExtFS(io.BytesIO(data)), lf.sha(data), db)
-        with sqlite3.connect(db) as conn:
-            conn.execute("UPDATE entries SET rec = ? WHERE path = '/etc/inittab'", (json.dumps({'type':'file','sha256':'0'*64}),))
+        # sqlite3.Connection's context manager commits/rolls back but does not
+        # close the file handle. Windows cannot unlink an open database.
+        from contextlib import closing
+        with closing(sqlite3.connect(db)) as conn, conn:
+            cursor = conn.execute("UPDATE entries SET rec = ? WHERE path = '/etc/inittab'", (json.dumps({'type':'file','sha256':'0'*64}),))
+            self.assertEqual(cursor.rowcount, 1)
+            cursor.close()
         with self.assertRaisesRegex(rootfs.RootfsError, 'damaged digest'):
             rootfs.scan(ExtFS(io.BytesIO(data)), lf.sha(data), db)
+        # Assert both the test and production code released the database, even
+        # on the corruption error path (especially important on Windows).
+        db.unlink()
+        self.assertFalse(db.exists())
 
     def test_checkpoint_of_other_input_is_refused(self):
         from dissect.extfs import ExtFS
