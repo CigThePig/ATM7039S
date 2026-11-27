@@ -2400,6 +2400,15 @@
               "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
               "line_start": 67,
               "line_end": 67
+            },
+            {
+              "source": "koriki-v1.0-release",
+              "artifact": "evidence/firmware/stock-loaders.json#stock-230309:bootloader.bin",
+              "sha256": "52dcfad962ddf7c8ca35900e6f4b057fb8a2fa9842f2c23258837a7a0f6441ba",
+              "offset_start": 38036,
+              "offset_end": 38040,
+              "section": "Pre-DRAM sets bits 27 (timer), 19 (UART3) and 15 (I2C1) through clk_gate_on (CLK-007, UART-004, PMIC-002)",
+              "curated": "firmware-observations"
             }
           ]
         },
@@ -2564,6 +2573,15 @@
               "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
               "line_start": 69,
               "line_end": 69
+            },
+            {
+              "source": "koriki-v1.0-release",
+              "artifact": "evidence/firmware/stock-loaders.json#stock-230309:bootloader.bin",
+              "sha256": "52dcfad962ddf7c8ca35900e6f4b057fb8a2fa9842f2c23258837a7a0f6441ba",
+              "offset_start": 27240,
+              "offset_end": 27244,
+              "section": "Pre-DRAM UART3 reset pulse on bit 15: clear, delay_us(1), set (UART-004)",
+              "curated": "firmware-observations"
             }
           ]
         },
@@ -2584,6 +2602,15 @@
               "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
               "line_start": 70,
               "line_end": 70
+            },
+            {
+              "source": "koriki-v1.0-release",
+              "artifact": "evidence/firmware/stock-loaders.json#stock-230309:bootloader.bin",
+              "sha256": "52dcfad962ddf7c8ca35900e6f4b057fb8a2fa9842f2c23258837a7a0f6441ba",
+              "offset_start": 27132,
+              "offset_end": 27136,
+              "section": "Pre-DRAM writes 24000000/(8*baud)-1 = 25 for 115200 (UART-004)",
+              "curated": "firmware-observations"
             }
           ]
         },
@@ -2944,6 +2971,15 @@
               "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
               "line_start": 93,
               "line_end": 93
+            },
+            {
+              "source": "koriki-v1.0-release",
+              "artifact": "evidence/firmware/stock-loaders.json#stock-230309:bootloader.bin",
+              "sha256": "52dcfad962ddf7c8ca35900e6f4b057fb8a2fa9842f2c23258837a7a0f6441ba",
+              "offset_start": 37976,
+              "offset_end": 37980,
+              "section": "Pre-DRAM timer_init writes 0 twice then 4 (BOOT-024, CLK-007); meaning of bit 2 not established",
+              "curated": "firmware-observations"
             }
           ]
         },
@@ -2964,6 +3000,15 @@
               "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
               "line_start": 94,
               "line_end": 94
+            },
+            {
+              "source": "koriki-v1.0-release",
+              "artifact": "evidence/firmware/stock-loaders.json#stock-230309:bootloader.bin",
+              "sha256": "52dcfad962ddf7c8ca35900e6f4b057fb8a2fa9842f2c23258837a7a0f6441ba",
+              "offset_start": 38072,
+              "offset_end": 38076,
+              "section": "Pre-DRAM timer_init writes 0 (CLK-007)",
+              "curated": "firmware-observations"
             }
           ]
         },
@@ -2984,6 +3029,15 @@
               "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
               "line_start": 95,
               "line_end": 95
+            },
+            {
+              "source": "koriki-v1.0-release",
+              "artifact": "evidence/firmware/stock-loaders.json#stock-230309:bootloader.bin",
+              "sha256": "52dcfad962ddf7c8ca35900e6f4b057fb8a2fa9842f2c23258837a7a0f6441ba",
+              "offset_start": 38156,
+              "offset_end": 38160,
+              "section": "Pre-DRAM delay_us reads this word as an up-counter at 24 ticks/us (firmware constant; CLK-007)",
+              "curated": "firmware-observations"
             }
           ]
         },
@@ -33473,6 +33527,15 @@
               "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
               "line_start": 1695,
               "line_end": 1695
+            },
+            {
+              "source": "koriki-v1.0-release",
+              "artifact": "evidence/firmware/stock-loaders.json#stock-230309:bootloader.bin",
+              "sha256": "52dcfad962ddf7c8ca35900e6f4b057fb8a2fa9842f2c23258837a7a0f6441ba",
+              "offset_start": 27324,
+              "offset_end": 27328,
+              "section": "Pre-DRAM writes 0x8003 (UART-004)",
+              "curated": "firmware-observations"
             }
           ]
         },
@@ -33714,6 +33777,15 @@
               "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
               "line_start": 1698,
               "line_end": 1698
+            },
+            {
+              "source": "koriki-v1.0-release",
+              "artifact": "evidence/firmware/stock-loaders.json#stock-230309:bootloader.bin",
+              "sha256": "52dcfad962ddf7c8ca35900e6f4b057fb8a2fa9842f2c23258837a7a0f6441ba",
+              "offset_start": 27380,
+              "offset_end": 27384,
+              "section": "TX loop waits while bit 6 is set, then until bit 10 is set; both polls unbounded (UART-004)",
+              "curated": "firmware-observations"
             }
           ]
         }
@@ -35495,6 +35567,15 @@
               "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
               "line_start": 1759,
               "line_end": 1759
+            },
+            {
+              "source": "koriki-v1.0-release",
+              "artifact": "evidence/firmware/stock-loaders.json#stock-230309:bootloader.bin",
+              "sha256": "52dcfad962ddf7c8ca35900e6f4b057fb8a2fa9842f2c23258837a7a0f6441ba",
+              "offset_start": 43356,
+              "offset_end": 43360,
+              "section": "PMIC bus select writes 0x10 (PMIC-002)",
+              "curated": "firmware-observations"
             }
           ]
         },
@@ -40982,6 +41063,15 @@
               "sha256": "5b8d5b2c99bac43139e920bf3b202bed1d22814ae3ca1b4638856d14ca58003d",
               "section": "Stock U-Boot (230309, 20231014) samples bit 6 (GPIO 70) once at boot as a board-variant strap: set -> \"-----s500\" and bootarg allenS500=1; clear -> \"-----a7039\". Payload VA 0x05025e5c / 0x05021898.",
               "curated": "firmware-observations"
+            },
+            {
+              "source": "koriki-v1.0-release",
+              "artifact": "evidence/firmware/stock-loaders.json#stock-230309:bootloader.bin",
+              "sha256": "52dcfad962ddf7c8ca35900e6f4b057fb8a2fa9842f2c23258837a7a0f6441ba",
+              "offset_start": 37724,
+              "offset_end": 37728,
+              "section": "Code-2-only adfu_check drives bit 11 with 0x55aa55aa and samples bit 10 (BOOT-025)",
+              "curated": "firmware-observations"
             }
           ]
         },
@@ -41162,6 +41252,15 @@
               "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
               "line_start": 2098,
               "line_end": 2098
+            },
+            {
+              "source": "koriki-v1.0-release",
+              "artifact": "evidence/firmware/stock-loaders.json#stock-230309:bootloader.bin",
+              "sha256": "52dcfad962ddf7c8ca35900e6f4b057fb8a2fa9842f2c23258837a7a0f6441ba",
+              "offset_start": 42556,
+              "offset_end": 42560,
+              "section": "board_mfp_init (ini+0x0d = 1): clear 0x000e39e0, set 0x000619c0 (GPIO-002)",
+              "curated": "firmware-observations"
             }
           ]
         },
@@ -41342,6 +41441,15 @@
               "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
               "line_start": 2107,
               "line_end": 2107
+            },
+            {
+              "source": "koriki-v1.0-release",
+              "artifact": "evidence/firmware/stock-loaders.json#stock-230309:bootloader.bin",
+              "sha256": "52dcfad962ddf7c8ca35900e6f4b057fb8a2fa9842f2c23258837a7a0f6441ba",
+              "offset_start": 37572,
+              "offset_end": 37576,
+              "section": "Code-2-only adfu_check clears bit 17 and does not restore it (BOOT-025)",
+              "curated": "firmware-observations"
             }
           ]
         },
