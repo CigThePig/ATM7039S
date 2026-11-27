@@ -254,12 +254,27 @@
     "findings": [
       "BOOT-021",
       "BOOT-022",
-      "MEM-010"
+      "BOOT-024",
+      "BOOT-025",
+      "MEM-010",
+      "PMIC-002"
     ],
-    "status": "Open. The storage reads and AFI are identical for codes 0 and 2 (boot_chain.py boot-path), but the DRAM-stage emulation (dram_complete.py) has not been re-run with boot code 2, so code-dependent DRAM-stage behaviour is not yet reconstructed for the path the device actually takes.",
-    "next_validation": "Offline: re-run the DRAM-stage scenarios with boot code 2 and diff the MMIO sequences against code 0.",
+    "status": "Open (narrowed by PR #9). At instruction level the only pre-DRAM difference between boot codes 0 and 2 is the adfu_check GPIO C10/C11 loopback test (32 x 1 ms, leaves 0xb01b0064 bit 17 and 0xb01b0020 bit 11 changed); load_ini, storage dispatch, timer, UART, board, PMIC and the DRAM argument are identical (BOOT-025). Executing main for both codes, and the PR #6 DRAM caller in its reference scenario, gives sequences that differ only by that GPIO block, in all five pinned releases. Not resolved: the Boot ROM state an SD2 boot leaves (clocks, pin mux) is unknown, the board wiring of C10/C11 is unknown, PR #6 failure/training scenarios were not re-run for code 2, and all peripheral responses are synthetic.",
+    "next_validation": "Offline: identify what drives GPIO C10/C11 on the RG35XX (pinned DTs, vendor pinctrl source, board documentation) and whether any pre-DRAM register the ROM leaves differs by boot medium (Boot ROM code is not available). Physical (not authorised here): an early serial log of a stock boot would show the pre-DRAM console lines and whether \"Prepare to entry ADFU mode\" ever appears.",
     "observations": [
       "OBS-001"
     ]
+  },
+  {
+    "id": "C-PREDRAM-LABELS",
+    "issue": "boot_chain.LOADER_STUBS labels 0xb4069440 \"early PMIC/clock setup (MMIO)\", 0xb4069254 \"PMIC status read (I2C)\" and 0xb406a608 \"board init helper\"; PR #6 and the instructions show 0xb4069440 is timer 0 init (CLK-007), 0xb4069254 the ADFU check with the code-dependent GPIO loopback (BOOT-025) and 0xb406a608 a single MFP read-modify-write (GPIO-002).",
+    "findings": [
+      "CLK-007",
+      "BOOT-025",
+      "GPIO-002",
+      "BOOT-021"
+    ],
+    "status": "Resolved by instruction reading and execution (PR #9). The labels are stub descriptions recorded in committed stock-boot-chain.json evidence and are left unchanged as history; the stubs mean those routines never execute in boot_chain.loader_main, which is why its boot-path runs cannot show code-dependent pre-DRAM behaviour.",
+    "next_validation": "None needed offline."
   }
 ]

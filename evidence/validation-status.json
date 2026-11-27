@@ -13,7 +13,7 @@
   ],
   "independent_check": "Built vendor DTC locally; FDT-to-DTS round trip comparison has zero property differences.",
   "pending": [
-    "C-PREDRAM-PATH: DRAM-stage emulation for boot code 2 (offline)",
+    "C-PREDRAM-PATH: narrowed offline (PR #9); open on Boot ROM state, C10/C11 wiring and non-reference DRAM scenarios for code 2",
     "Lab on real Windows hardware (only simulated storage and CI runners so far)",
     "Next physical test: proposal only, reports/next-hardware-research.md (no approval)",
     "Actual ATM7039S register semantics and reset values",
@@ -30,5 +30,11 @@
     "boot_chain.py boot-path on koriki-v1.0.img: 6 hypotheses, one matches OBS-001 byte for byte",
     "v3lab pristine manifest rebuilt from the verified image equals the committed digest (27,112 paths)",
     "v3_preflight --phase prepared on the real image with a simulated first-boot container: PASS"
+  ],
+  "pr9_offline_checks": [
+    "predram_analysis.py evidence on all five pinned images (whole-image SHA-256 verified): pre-DRAM code, tables and executed event sequences identical",
+    "code 0 vs code 2 from 0xb4065400 to 0xb40690b8: only the adfu_check GPIO loopback block differs",
+    "dram_complete.run_caller reference scenario, codes 0 and 2: MMIO sequences differ only by the same GPIO block",
+    "evidence regeneration is byte-identical (deterministic)"
   ]
 }
