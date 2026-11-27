@@ -2039,3 +2039,15 @@ Evidence:
 - [koriki-v1.0-release / evidence/firmware/sd2-dram-comparison.json, distinct_pairs: terminal, memory_test, record_final and afi](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
 
 Limits: AFI and diagnostic data are from synthetic RAM. OBS-001 constrains the kernel address range and DT memory property only.
+
+## BOOT-029
+
+A modeled SD Boot ROM boundary leads to actual block-0 selection, live loader initialization through DRAM and app.bin, and the loaded U-Boot entry on all five pinned releases. Executed U-Boot consumers read the loader-produced AFI and set global RAM size and boot role. The modeled script loads the selected partition, and executed FDT fixups and the ARM jump use the resulting memory and image state.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / evidence/firmware/unified-boot-chain.json, scenarios, stage_graph and obs_001](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Uses synthetic ROM, PMIC, GPIO, DRAM and CHIPID responses. U-Boot startup, its real relocation and board state, and Hush are modeled boundaries. OBS-001 constrains the kernel-side handoff fields. The kernel was not executed.

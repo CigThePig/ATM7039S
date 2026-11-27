@@ -204,6 +204,8 @@ def first_difference(a, b):
 
 
 class ComparisonHarness(dram.Harness):
+    boot_word_rule = 'seeded boot word, loaded by firmware'
+
     def __init__(self, loader, case, boot_code, initial_mmio=None, budget=DEFAULT_LIMIT):
         from unicorn import UC_HOOK_MEM_READ, UC_HOOK_MEM_WRITE
 
@@ -284,7 +286,7 @@ class ComparisonHarness(dram.Harness):
 
     def _boot_word(self, uc, access, address, size, value, user):
         value = int.from_bytes(uc.mem_read(address, size), 'little')
-        self._event('sram', 'r', address, size, value, 'seeded boot word, loaded by firmware',
+        self._event('sram', 'r', address, size, value, self.boot_word_rule,
                     self.reg('lr') - 4 if self.reg('pc') == BOOT_CODE_LOAD else None)
 
     def _sram_write(self, uc, access, address, size, value, user):
@@ -890,12 +892,17 @@ UNRESOLVED = [
 ]
 
 
-def load_release(directory, release):
+def load_release(directory, release, *, stream=None):
     if release not in RELEASES:
         raise ValueError(f'unknown release {release}')
     path = Path(directory) / f'{release}.img'
-    loader, identity = pre.load_image(path)
-    if path.stat().st_size != identity['expected_size'] or len(loader) != pre.LOADER_SIZE:
+    loader, identity = pre.load_image(path, stream=stream)
+    if stream is None:
+        image_size = path.stat().st_size
+    else:
+        stream.seek(0, 2)
+        image_size = stream.tell()
+    if image_size != identity['expected_size'] or len(loader) != pre.LOADER_SIZE:
         raise ValueError(f'{release}: verified image or extracted loader length is unexpected')
     code = pre.Code(loader)
     for pc, expected in INSTRUCTION_ANCHORS.items():
@@ -907,7 +914,7 @@ def load_release(directory, release):
     for pc, (op, _) in GPIO_LOOP_IO.items():
         if pre.imm_target(code.insn(pc)) != (0xB406919C if op == 'r' else 0xB4069194):
             raise ValueError(f'{release}: GPIO accessor anchor differs at {pc:#x}')
-    identity.update(release=release, verified_size=path.stat().st_size,
+    identity.update(release=release, verified_size=image_size,
                     regions={k: dict(start=hex(a), end_exclusive=hex(b), sha256=pre.sha(code.bytes(a, b)))
                              for k, (a, b) in HASH_REGIONS.items()},
                     function_hashes=dram.code_hashes(loader), config=pre.ini_inputs(code))

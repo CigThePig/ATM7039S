@@ -5143,5 +5143,36 @@
       "MEM-009",
       "MEM-010"
     ]
+  },
+  {
+    "id": "BOOT-029",
+    "subsystem": "boot",
+    "confidence": "strongly-supported",
+    "classification": "reverse-engineering-result",
+    "scope": "release-binary",
+    "claim": "A modeled SD Boot ROM boundary leads to actual block-0 selection, live loader initialization through DRAM and app.bin, and the loaded U-Boot entry on all five pinned releases. Executed U-Boot consumers read the loader-produced AFI and set global RAM size and boot role. The modeled script loads the selected partition, and executed FDT fixups and the ARM jump use the resulting memory and image state.",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "section": "evidence/firmware/unified-boot-chain.json, scenarios, stage_graph and obs_001"
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "anbernic-stock-archive"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "Uses synthetic ROM, PMIC, GPIO, DRAM and CHIPID responses. U-Boot startup, its real relocation and board state, and Hush are modeled boundaries. OBS-001 constrains the kernel-side handoff fields. The kernel was not executed.",
+    "related_findings": [
+      "BOOT-013",
+      "BOOT-014",
+      "BOOT-017",
+      "BOOT-022",
+      "BOOT-023",
+      "BOOT-028",
+      "MEM-012"
+    ]
   }
 ]

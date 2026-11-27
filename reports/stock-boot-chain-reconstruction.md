@@ -272,3 +272,7 @@ ATM_FIRMWARE_DIR=INPUTS python -m unittest tests.test_boot_chain -v   # re-deriv
 ```
 
 Requires `requirements-firmware.txt` (Capstone 5.0.6, Unicorn 2.1.4, pyfatfs). Ghidra was used only as a reading aid; its output stays out of the repository.
+
+## Unified follow-up
+
+The later framework uses the executed result at `0xb4065440` and carries the live machine through the loader reads and the normal app.bin branch. Its U-Boot routines consume raw AFI, the boot-device decision selects the FAT inputs, and the final jump uses the executed FDT fixups. [Unified research](unified-boot-chain-reconstruction.md)

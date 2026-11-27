@@ -144,3 +144,7 @@ ATM_FIRMWARE_DIR=FW python -m unittest tests.test_sd2_dram_analysis -v
 ```
 
 `FW` holds the five expanded images named in the acquisition manifest. `ATM7039S_STOCK_LOADERS` is the historical directory of `loader-<release>.bin` extracts, each 448 sectors at disk offset `0x200200`. `ATM_SOURCES_DIR` holds the pinned source trees for the historical ADFU audit. See [the persistent research handoff](pr9-research-progress.md) for validation and follow-up context.
+
+## Unified follow-up
+
+The later unified tool reuses this comparison harness and adds live block-0, pre-DRAM and cold post-DRAM state. The original stage results and evidence remain reproducible independently. [Unified research](unified-boot-chain-reconstruction.md)

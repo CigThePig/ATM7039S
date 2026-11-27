@@ -727,7 +727,13 @@ def afi_bytes(mode=0, dev=0x20, uart=3, pad=0, baud=115200, size=256 << 20, magi
     return struct.pack('<4sBBBBII', magic, mode, dev, uart, pad, baud, size)
 
 
-def check_boot_flag_table(ub, cbf):
+def checked_afi(raw):
+    if not isinstance(raw, bytes) or len(raw) != 16:
+        raise ValueError('AFI must be exactly 16 raw bytes')
+    return raw
+
+
+def check_boot_flag_table(ub, cbf, *, raw_afi=None):
     """Emulate check_boot_flag with the real AFI getters for each (boot_mode, boot_dev)."""
     calls = call_log(ub, cbf, function_end(ub, cbf))
     setenv = {c['target'] for c in calls if describe(ub, c['args'][0]) == 'bootcmd'}
@@ -738,21 +744,29 @@ def check_boot_flag_table(ub, cbf):
     getters = sorted({c['target'] for c in calls} - {setenv, printf})
     rows = []
     cases = [(None, None)] + [(m, d) for m in (0, 1) for d in (0x00, 0x01, 0x20, 0x21, 0x22, 0x30, 0x31, 0x40)]
+    if raw_afi is not None:
+        mode, dev = struct.unpack_from('<BB', checked_afi(raw_afi), 4)
+        cases = [(mode, dev)]
     for mode, dev in cases:
         sets, out = [], []
         emu = Emulator(_uboot_emu(ub), stubs={
             setenv: ('setenv', lambda e: sets.append((e.cstr(e.reg(0)), e.cstr(e.reg(1)))) or 0),
             printf: ('printf', lambda e: out.append(_cfmt(e.cstr(e.reg(0)), [e.reg(1), e.reg(2), e.reg(3)], e)) or 0)})
         if mode is not None:
-            emu.uc.mem_write(AFI_VA, afi_bytes(mode, dev))
-        emu.call(cbf, sp=0x03F00000)
-        rows.append(dict(afi='absent' if mode is None else 'present', boot_mode=mode,
-                         boot_dev=None if dev is None else f'0x{dev:02x}',
-                         setenv=dict(sets), printed=out, error=emu.error))
+            emu.uc.mem_write(AFI_VA, afi_bytes(mode, dev) if raw_afi is None else raw_afi)
+        stop = emu.call(cbf, sp=0x03F00000)
+        row = dict(afi='absent' if mode is None else 'present', boot_mode=mode,
+                   boot_dev=None if dev is None else f'0x{dev:02x}',
+                   setenv=dict(sets), printed=out, error=emu.error)
+        if raw_afi is not None:
+            row.update(mutations=sets, afi_in_memory=emu.read(AFI_VA, 16).hex(),
+                       returned=bool(stop), return_value=emu.reg(0))
+        rows.append(row)
     return dict(method='emulated', function=f'0x{cbf:x}', setenv=f'0x{setenv:x}', printf=f'0x{printf:x}',
                 afi_getters=[f'0x{g:x}' for g in getters], rows=rows,
                 models=['setenv/printf replaced by recorders; AFI getters and memcmp execute from the image',
-                        'AFI at 0xb4060300 := hypothesis (or zero for "absent")'])
+                        ('AFI at 0xb4060300 := hypothesis (or zero for "absent")' if raw_afi is None else
+                         'AFI at 0xb4060300 := exact transferred bytes')])
 
 
 def afi_getter_defaults(ub, getters):
@@ -769,7 +783,7 @@ def afi_getter_defaults(ub, getters):
     return dict(method='emulated', rows=out)
 
 
-def env_storage(ub, disk):
+def env_storage(ub, disk=None):
     fns = functions_using(ub, '*** Error - No Valid Environment Area found\n')
     rel = fns[0] if fns else None
     offsets, dev = None, None
@@ -797,7 +811,7 @@ def env_storage(ub, disk):
                     size = w + 5
                     break
     copies = []
-    if offsets and size:
+    if disk is not None and offsets and size:
         for off in offsets[:2]:
             raw = disk.sectors(off // SECTOR, size // SECTOR)
             crc = struct.unpack('<I', raw[:4])[0]
@@ -989,7 +1003,8 @@ def direct_callers(blob, target):
 
 
 def handoff_emulation(ub, setup, helper, fdt, afi, env, rd, ram_size, gd_flags=0, sn=None,
-                      fdt_addr=0x03800000):
+                      fdt_addr=0x03800000, *, raw_afi=None, reservations=(), loaded_images=(),
+                      capture_machine=None):
     """Execute image_setup_linux (ramdisk/FDT placement, image_setup_libfdt, owl_boot_fdt_setup).
 
     The bootm_headers_t fields image_setup_linux reads are filled as boot_get_ramdisk
@@ -1049,17 +1064,31 @@ def handoff_emulation(ub, setup, helper, fdt, afi, env, rd, ram_size, gd_flags=0
     gd, bd, images = 0x03E80000, 0x03E81000, 0x03E82000
     emu.uc.mem_write(gd, struct.pack('<II', bd, gd_flags))
     emu.uc.mem_write(bd + 0x48, struct.pack('<II', 0, ram_size))
+    for address, data in loaded_images:
+        emu.uc.mem_write(address, data)
     emu.uc.mem_write(fdt_addr, bytes(fdt))
     hdr = bytearray(0x200)
     struct.pack_into('<IIII', hdr, 0x98, rd[0], rd[1], fdt_addr, len(fdt))
     lmb = struct.pack('<II', 1, ram_size) + struct.pack('<II', 0, ram_size) + bytes(64) + struct.pack('<II', 1, 0) + bytes(72)
+    if raw_afi is not None:
+        if len(reservations) > 8:
+            raise ValueError('LMB has room for eight modeled reservations')
+        reserve_map = b''.join(struct.pack('<II', a, n) for a, n in reservations)
+        lmb = lmb[:80] + struct.pack('<II', len(reservations), sum(n for _, n in reservations))
+        lmb += reserve_map.ljust(72, b'\0')
     hdr[0xC4:0xC4 + len(lmb)] = lmb
     emu.uc.mem_write(images, bytes(hdr))
-    emu.uc.mem_write(AFI_VA, afi_bytes(afi['boot_mode'], int(afi['boot_dev'], 16), afi['uart_index'],
-                                       afi['uart_pad'], afi['uart_baudrate'], int(afi['ddr_size'], 16)))
-    emu.call(isl, (images,), sp=0x03F00000, extra_regs={9: gd})
+    if raw_afi is None:
+        raw = afi_bytes(afi['boot_mode'], int(afi['boot_dev'], 16), afi['uart_index'],
+                        afi['uart_pad'], afi['uart_baudrate'], int(afi['ddr_size'], 16))
+    else:
+        raw = checked_afi(raw_afi)
+    emu.uc.mem_write(AFI_VA, raw)
+    returned = emu.call(isl, (images,), sp=0x03F00000, extra_regs={9: gd})
     ret = emu.reg(0)
     vals = struct.unpack('<IIIIII', emu.read(images + 0x98, 24))
+    if raw_afi is not None and (emu.error or not returned or ret):
+        return dict(error=emu.error or 'image_setup_linux failed', return_value=ret)
     ft = vals[2]
     total = struct.unpack('>I', emu.read(ft + 4, 4))[0]
     blob = emu.read(ft, min(total, 0x40000))
@@ -1073,7 +1102,7 @@ def handoff_emulation(ub, setup, helper, fdt, afi, env, rd, ram_size, gd_flags=0
             break
         rsv.append([f'0x{a:x}', f'0x{n:x}'])
         off_rsv += 16
-    return dict(method='emulated', image_setup_linux=f'0x{isl:x}', return_value=ret, error=emu.error,
+    result = dict(method='emulated', image_setup_linux=f'0x{isl:x}', return_value=ret, error=emu.error,
                 instructions=emu.count, gd_flags=f'0x{gd_flags:x}',
                 initrd_start=f'0x{vals[4]:x}', initrd_end=f'0x{vals[5]:x}', ft_addr=f'0x{ft:x}',
                 fdt_totalsize_after=total, fdt_sha256_after=sha(blob),
@@ -1082,6 +1111,43 @@ def handoff_emulation(ub, setup, helper, fdt, afi, env, rd, ram_size, gd_flags=0
                         f'LMB: one bank [0, 0x{ram_size:x}), no reservations', 'gd->bd->bi_dram[0] = {0, ram_size}',
                         'getenv/setenv := dict (default env + uEnv.txt import)', 'printf/puts recorded',
                         'read_mi_item("SN") := ' + ('-1 (not modelled)' if sn is None else 'supplied SN')])
+
+    if raw_afi is not None:
+        result['models'][1] = f'LMB: bank [0, {ram_size:#x}), input memreserve and modeled scratch reservations'
+        result.update(afi_in_memory=emu.read(AFI_VA, 16).hex(), environment_after=store,
+                      lmb_reservations=reservations, board_memory=struct.unpack('<II', emu.read(bd + 0x48, 8)))
+    if capture_machine is not None:
+        capture_machine(emu, images, gd)
+    return result
+
+
+def execute_linux_jump(ub, emu, images, gd, entry):
+    """Follow boot_jump_linux to its actual BLX using the live image_setup_linux state."""
+    facts = boot_jump(ub)
+    # The string anchor finds the push, immediately after the r9->bd load.
+    fn = int(facts['function'], 16) - 4
+    prologue = disasm(ub, fn, 2)
+    if not direct_callers(ub, fn) or (prologue[0].mnemonic, prologue[0].op_str) != ('ldr', 'r3, [sb]'):
+        raise ValueError('boot_jump_linux entry anchor differs')
+    calls = call_log(ub, fn, fn + 0xa0)
+    mark = {c['target'] for c in calls if c['args'][0] in (0xf, 0xa1)}
+    if len(mark) != 1:
+        raise ValueError('bootstage mark anchor differs')
+    emu.stubs[mark.pop()] = ('bootstage mark', lambda e: 0)
+    emu.uc.mem_write(images + 0x94, struct.pack('<I', entry))
+    emu.stops[entry] = 'before first Linux instruction'
+    before = emu.uc.cpr_read(15, 0, 1, 0, 0, 0, 0)
+    stop = emu.call(fn, (images, 0), sp=0x03F00000, extra_regs={9: gd})
+    after = emu.uc.cpr_read(15, 0, 1, 0, 0, 0, 0)
+    cpsr = emu.reg(16)
+    return dict(function=hex(fn), stopped=stop['name'] if stop else None, pc=hex(emu.reg(15)),
+                r0=emu.reg(0), r1=emu.reg(1), r2=hex(emu.reg(2)), cpsr=hex(cpsr),
+                irq_fiq_masked=(cpsr & 0xc0) == 0xc0, thumb=bool(cpsr & 0x20), mode=hex(cpsr & 0x1f),
+                sctlr_before=hex(before), sctlr_after=hex(after),
+                mmu=bool(after & 1), dcache=bool(after & 4), icache=bool(after & 0x1000), error=emu.error,
+                cleanup=cleanup_state(ub, int(facts['cleanup_before_linux'], 16)),
+                assumptions=['bootstage marks stubbed', 'machid defaults to zero in modeled board data',
+                             'CPSR/SCTLR describe this Unicorn invocation'])
 
 
 def autoboot(ub, env):
@@ -1173,7 +1239,7 @@ def embedded_fdt(ub):
                 registration_order=[m['path'] for m in mmc if m['status'] in (None, 'okay')])
 
 
-def mmc_registration(ub):
+def mmc_registration(ub, *, raw_afi=None, card_status=None, pinmux=0):
     """Execute mmc_initialize -> board_mmc_init -> owl_sd_init -> mmc_create from the image.
 
     Answers which U-Boot device number ("mmc N") each controller receives. Replaced
@@ -1208,51 +1274,59 @@ def mmc_registration(ub):
     fdt_off = int(embedded_fdt(ub)['payload_offset'], 16)
     fdt = d[fdt_off:fdt_off + struct.unpack_from('>I', d, fdt_off + 4)[0]]
     rows = []
-    for mode, dev in ((0, 0x20), (0, 0x22), (1, 0x22)):
-        for sd0_ok in (True, False):
-            for sd2_ok in (True, False):
-                heap, created, printed = [0x03000000], [], []
+    cases = [(mode, dev, sd0_ok, sd2_ok) for mode, dev in ((0, 0x20), (0, 0x22), (1, 0x22))
+             for sd0_ok in (True, False) for sd2_ok in (True, False)]
+    if raw_afi is not None:
+        mode, dev = struct.unpack_from('<BB', checked_afi(raw_afi), 4)
+        cases = [(mode, dev, card_status[0], card_status[2])]
+    for mode, dev, sd0_ok, sd2_ok in cases:
+        heap, created, printed = [0x03000000], [], []
 
-                def alloc(e, zero=False):
-                    n = e.reg(0) * e.reg(1) if zero else e.reg(0)
-                    a = heap[0]
-                    heap[0] += (n + 15) & ~7
-                    e.uc.mem_write(a, bytes(n))
-                    return a
+        def alloc(e, zero=False):
+            n = e.reg(0) * e.reg(1) if zero else e.reg(0)
+            a = heap[0]
+            heap[0] += (n + 15) & ~7
+            e.uc.mem_write(a, bytes(n))
+            return a
 
-                def init(e, sd0_ok=sd0_ok, sd2_ok=sd2_ok):
-                    mmc = e.reg(0)
-                    slot = e.u32(e.u32(mmc + 0x10) + 8)
-                    ok = {0: sd0_ok, 2: sd2_ok}.get(slot, False)
-                    created.append(dict(slot=slot, mmc_init='ok' if ok else 'fail', mmc=mmc))
-                    return 0 if ok else 0xFFFFFFEF
-                stubs = {malloc: ('malloc', alloc), calloc: ('calloc', lambda e: alloc(e, True)),
-                         mmc_init: ('mmc_init (outcome supplied)', init),
-                         print_devs: ('print_mmc_devices', lambda e: 0),
-                         printf: ('printf', lambda e: printed.append(
-                             _cfmt(e.cstr(e.reg(0)), [e.reg(1), e.reg(2), e.reg(3)], e)) or 0)}
-                emu = Emulator(_uboot_emu(ub), stubs=stubs,
-                               mmio=lambda a, s: 0 if a == 0xB01B0048 else None)
-                gd, blob_va = 0x03E80000, 0x03800000
-                emu.uc.mem_write(blob_va, fdt)
-                emu.uc.mem_write(gd + 0x4C, struct.pack('<I', blob_va))
-                emu.uc.mem_write(AFI_VA, afi_bytes(mode, dev))
-                for t in later:
-                    stubs[t] = ('mmc_start_init (pre-init)', lambda e: printed.append('<pre-init>') or 0)
-                emu.call(mi, sp=0x03F00000, extra_regs={9: gd})
-                ret = emu.reg(0)
-                regs = [dict(slot=c['slot'], controller=f"0x{0xB0230000 + 0x4000 * c['slot']:08x}",
-                             device_number=emu.u32(c['mmc'] + 0xCC), mmc_init=c['mmc_init']) for c in created]
-                rows.append(dict(boot_mode=mode, boot_dev=f'0x{dev:02x}', sd0_mmc_init='ok' if sd0_ok else 'fail',
-                                 sd2_mmc_init='ok' if sd2_ok else 'fail', registered=regs,
-                                 return_value=ret - (1 << 32) if ret >> 31 else ret, printed=printed,
-                                 pinmux_writes=[m for m in emu.mmio_log if m['op'] == 'write'], error=emu.error))
+        def init(e, sd0_ok=sd0_ok, sd2_ok=sd2_ok):
+            mmc = e.reg(0)
+            slot = e.u32(e.u32(mmc + 0x10) + 8)
+            ok = {0: sd0_ok, 2: sd2_ok}.get(slot, False)
+            created.append(dict(slot=slot, mmc_init='ok' if ok else 'fail', mmc=mmc))
+            return 0 if ok else 0xFFFFFFEF
+        stubs = {malloc: ('malloc', alloc), calloc: ('calloc', lambda e: alloc(e, True)),
+                 mmc_init: ('mmc_init (outcome supplied)', init),
+                 print_devs: ('print_mmc_devices', lambda e: 0),
+                 printf: ('printf', lambda e: printed.append(
+                     _cfmt(e.cstr(e.reg(0)), [e.reg(1), e.reg(2), e.reg(3)], e)) or 0)}
+        emu = Emulator(_uboot_emu(ub), stubs=stubs,
+                       mmio=lambda a, s: pinmux if a == 0xB01B0048 else None)
+        gd, blob_va = 0x03E80000, 0x03800000
+        emu.uc.mem_write(blob_va, fdt)
+        emu.uc.mem_write(gd + 0x4C, struct.pack('<I', blob_va))
+        emu.uc.mem_write(AFI_VA, afi_bytes(mode, dev) if raw_afi is None else raw_afi)
+        for t in later:
+            stubs[t] = ('mmc_start_init (pre-init)', lambda e: printed.append('<pre-init>') or 0)
+        stop = emu.call(mi, sp=0x03F00000, extra_regs={9: gd})
+        ret = emu.reg(0)
+        regs = [dict(slot=c['slot'], controller=f"0x{0xB0230000 + 0x4000 * c['slot']:08x}",
+                     device_number=emu.u32(c['mmc'] + 0xCC), mmc_init=c['mmc_init']) for c in created]
+        rows.append(dict(boot_mode=mode, boot_dev=f'0x{dev:02x}', sd0_mmc_init='ok' if sd0_ok else 'fail',
+                         sd2_mmc_init='ok' if sd2_ok else 'fail', registered=regs,
+                         return_value=ret - (1 << 32) if ret >> 31 else ret, printed=printed,
+                         pinmux_writes=[m for m in emu.mmio_log if m['op'] == 'write'], error=emu.error))
+        if raw_afi is not None:
+            rows[-1].update(afi_in_memory=emu.read(AFI_VA, 16).hex(), returned=bool(stop),
+                            pinmux_initial=hex(pinmux))
     return dict(method='emulated', mmc_initialize=f'0x{mi:x}', board_mmc_init=f'0x{bmi:x}', owl_sd_init=f'0x{sd_init:x}',
                 mmc_create=f'0x{mmc_create:x}', mmc_init=f'0x{mmc_init:x}', rows=rows,
                 models=['malloc/calloc := bump allocator over zeroed RAM', 'printf recorded',
                         'mmc_init := supplied outcome per slot (card present and answering, or not)',
+                        f'MMIO read 0xb01b0048 := {pinmux:#x} (transferred pin-mux word)' if raw_afi is not None else
                         'MMIO read 0xb01b0048 := 0 (pin-mux word saved before SD0 init, restored on failure)',
-                        'gd->fdt_blob := the U-Boot embedded device tree; AFI := hypothesis'])
+                        'gd->fdt_blob := the U-Boot embedded device tree; AFI := ' +
+                        ('exact transferred bytes' if raw_afi is not None else 'hypothesis')])
 
 
 def _fdt_nodes(b):

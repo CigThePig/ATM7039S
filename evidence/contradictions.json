@@ -240,9 +240,10 @@
       "MMC-001",
       "STOR-001",
       "STOR-002",
-      "STOR-003"
+      "STOR-003",
+      "BOOT-029"
     ],
-    "status": "Resolved offline for Koriki v1.0 (PR #8), building on OBS-001: the TF1 boot card is on SD2. The executed chain block-0 code 2 -> AFI 0x22 -> emmcboot (devpart 1:1) -> U-Boot mmc 1 = SD2 0xb0238000 -> boot_dev=sd2 is the only one of six emulated hypotheses that reproduces the observed command line (BOOT-022). U-Boot numbering is registration order and does not shift when SD0 is empty (BOOT-023); Linux numbering is chosen independently from boot_dev (STOR-003). BOOT-016 described the AFI 0x20 path, which this unit did not take. ROM behaviour, the CMU bit and the AFI bytes remain inferred, not observed.",
+    "status": "Resolved offline for Koriki v1.0 (PR #8), building on OBS-001: the TF1 boot card is on SD2. The executed chain block-0 code 2 -> AFI 0x22 -> emmcboot (devpart 1:1) -> U-Boot mmc 1 = SD2 0xb0238000 -> boot_dev=sd2 is the only one of six emulated hypotheses that reproduces the observed command line (BOOT-022). U-Boot numbering is registration order and does not shift when SD0 is empty (BOOT-023); Linux numbering is chosen independently from boot_dev (STOR-003). BOOT-016 described the AFI 0x20 path, which this unit did not take. ROM behaviour, the CMU bit and the AFI bytes remain inferred, not observed. The unified reference additionally uses the active emmcboot script and registered SD2 backing image for its FAT reads (BOOT-029).",
     "next_validation": "Optional confirmation, not needed to use the result: an early serial log would show \"bootdev= 0x22\", \"emmc boot\" and U-Boot's mmc messages; /proc/bootdev (read-only) would show the kernel's g_boot_dev. A capture with a second card in TF2 would show sd_card on b0230000.",
     "observations": [
       "OBS-001"
@@ -263,9 +264,10 @@
       "MEM-010",
       "PMIC-002",
       "BOOT-028",
-      "MEM-012"
+      "MEM-012",
+      "BOOT-029"
     ],
-    "status": "Open, with the caller-level comparison completed. The five pinned releases independently reproduce the same DRAM caller behavior for both boot codes under the tested synthetic states, after the verified ADFU GPIO accesses, boot-word reads and AFI device byte are accounted for (BOOT-028). No DRAM scenario consumed the persistent GPIO values in the executed firmware. An exact synthetic echo sends code 2 to ADFU before DRAM. Boot ROM state per medium, TF2 pad wiring and semantics, physical training and electrical coupling remain open.",
+    "status": "Open, with the caller-level comparison completed. The five pinned releases independently reproduce the same DRAM caller behavior for both boot codes under the tested synthetic states, after the verified ADFU GPIO accesses, boot-word reads and AFI device byte are accounted for (BOOT-028). No DRAM scenario consumed the persistent GPIO values in the executed firmware. An exact synthetic echo sends code 2 to ADFU before DRAM. Boot ROM state per medium, TF2 pad wiring and semantics, physical training and electrical coupling remain open. The unified framework carries live pre-DRAM state through the loader and app.bin, adding coverage under the modeled assumptions (BOOT-029).",
     "next_validation": "The remaining questions require applicable SoC, board or Boot ROM evidence and observations of the physical early boot state. No additional hardware observation is authorized by the SD2 DRAM study.",
     "observations": [
       "OBS-001"

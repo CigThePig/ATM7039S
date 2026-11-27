@@ -169,7 +169,7 @@ def file_sha256(path):
         return hashlib.file_digest(f, 'sha256').hexdigest()
 
 
-def load_image(path, verify=True):
+def load_image(path, verify=True, *, stream=None):
     """Return (loader_bytes, identity). With verify, the whole image must match the manifest."""
     ident = dict(file=Path(path).name)
     e = expected_for(path)
@@ -179,14 +179,20 @@ def load_image(path, verify=True):
     if verify:
         if not e:
             raise ValueError(f'{path}: not a manifest-listed expanded image')
-        actual = file_sha256(path)
+        if stream is not None:
+            stream.seek(0)
+        actual = file_sha256(path) if stream is None else hashlib.file_digest(stream, 'sha256').hexdigest()
         if actual != e['expanded_sha256']:
             raise ValueError(f'{path}: SHA-256 {actual} differs from manifest')
         ident['actual_sha256'] = actual
         ident['verified'] = True
-    with open(path, 'rb') as f:
-        f.seek(LOADER_DISK)
-        loader = f.read(LOADER_SIZE)
+    if stream is None:
+        with open(path, 'rb') as f:
+            f.seek(LOADER_DISK)
+            loader = f.read(LOADER_SIZE)
+    else:
+        stream.seek(LOADER_DISK)
+        loader = stream.read(LOADER_SIZE)
     ident.update(loader_disk_offset=f'0x{LOADER_DISK:x}', loader_size=LOADER_SIZE, loader_sha256=sha(loader),
                  block0_sha256=sha(loader[:0x200]), bootloader_code_sha256=sha(loader[0x5400:0x33C00]))
     return loader, ident

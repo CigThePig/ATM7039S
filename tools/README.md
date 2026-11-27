@@ -203,3 +203,7 @@ python tools/sd2_dram_analysis.py evidence --firmware-dir FW OUT.json
 ```
 
 `run` without `--boot-code` compares both paths. The `run` and `suite` commands support repeatable `--mmio ADDRESS=WORD` and a stage `--limit`. `suite --group` accepts `cold`, `resume`, `memory`, `gpio`, `geometry`, `control` or `all`. The [report](../reports/sd2-dram-reconstruction.md) explains each terminal outcome, raw trace and result field. Set `ATM_FIRMWARE_DIR=FW` to enable the optional five-release evidence regeneration tests in `tests/test_sd2_dram_analysis.py`.
+
+## Unified boot chain
+
+`unified_boot_chain.py` verifies a locally available pinned image and follows the supported SD path through the pre-kernel boundary. Run `python tools/unified_boot_chain.py list` for releases and scenarios. Use `run --firmware-dir FW --coverage --compare-obs` for the reference, `run --detail --output trace.json` with a firmware directory for local events and snapshots, and `evidence --firmware-dir FW OUT.json` to regenerate the combined results. [Architecture and command details](../docs/boot-chain-emulation.md)

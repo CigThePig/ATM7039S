@@ -107,3 +107,7 @@ python tools/predram_analysis.py evidence OUT.json --reference koriki-v1.0 \
 python tools/predram_analysis.py trace FW/koriki-v1.0.img --boot-code 2       # readable event list
 ATM_FIRMWARE_DIR=FW python -m unittest tests.test_predram -v
 ```
+
+## Live continuation
+
+The unified run places only block 0 initially and serves its loader read and main's INI read from the verified backing image. It retains the timer, GPIO and PMIC model state and the live CPU through the actual recovery and DRAM branches. [State boundaries](boot-chain-emulation.md)

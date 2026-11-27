@@ -106,3 +106,7 @@ The [SD2 DRAM comparison](../reports/sd2-dram-reconstruction.md) observes actual
 ## What a running Linux can confirm (PR #7)
 
 The V3 capture sees the end of this chain only: the `/memory` node U-Boot wrote (P-RAM), the `/chosen` initrd location (P-INITRD) and the AFI-derived `console=ttyS3` and `boot_dev=sd0` terms (P-CONSOLE, P-AFI-BOOTDEV). A `/memory` of `0x1f000000` would mean U-Boot's fallback, i.e. no valid AFI size. The physical DRAM size and the loader's own decisions are not observable after boot. The 3.10 procfs tree does not export `/memreserve/` (FW-019).
+
+## Exact bytes in the unified reconstruction
+
+The unified loader carries all 16 bytes in SRAM from the producer through app.bin. Actual U-Boot getters and `dram_init` receive those bytes. The resulting global-data size flows into the FDT memory bank. The transfer rejects contradictory cold outcomes and preserves the fourth byte, including the distinctive value used in the isolated consumer control. [Unified results](../reports/unified-boot-chain-reconstruction.md#9-afi-transfer)

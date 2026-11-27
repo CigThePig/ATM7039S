@@ -266,3 +266,32 @@ The result schema, state boundaries, full assumptions, observations and source r
 | Integrity, generation and render commands | Validation reports zero errors. Generated register products match and both Markdown catalogues and the reference site render. |
 | Browser lab smoke and Linux launcher self-test | Passed with simulated browser API. The Linux self-test reported disk discovery unavailable in this environment. |
 | Windows-specific checks | Preserved in GitHub Actions. Linux local execution does not cover these jobs. |
+
+---
+
+# Unified boot-chain reconstruction
+
+The integrated tool starts with only block 0 and modeled Boot ROM state. Block 0's sector read installs the early loader. Main's own INI read installs the records. One live ARM machine retains the boot word, caller frames and CPU state, SRAM, pad/clock writes and synthetic PMIC registers through pre-DRAM, ADFU/resume selection, DRAM programming, capacity detection, diagnostic, primary write-back, AFI and main's branch. The real cold continuation at `0xb4065440` executes loader I-cache/clock setup, app.bin and U-Boot reads, then the SFVD-present app.bin path to `0x05000040`. Early recovery copies are recorded at the absent ROM boundary. SFVD write-back is bounded at its dispatch and records intent.
+
+The version 1 stage envelope binds each state to the image, scenario, predecessor digest and execution method. Loader state remains live. Later bounded U-Boot routines consume the loaded U-Boot bytes, raw SRAM AFI and pin-mux word. The actual AFI size goes into `gd+0x34` and becomes input to the modeled board bank and executed FDT fixups. MMC registration, boot-flag changes and the bounded environment interpreter determine the backing disk, partition and files. Linux cleanup and the jump execute to the first-instruction boundary.
+
+The reference controls cover stock 221203, 221223, 230309, 20231014 and Koriki v1.0. GPIOC6 high yields the exact OBS-001 Koriki SD2 command line, controller, memory and initrd ranges. Alternative same-handoff cases are recorded separately from physical observations. The 20231014 variant retains its own INI/DDR evidence. The app.bin caller at `0x9e8c` can call `0x9430`, whose SD0 branch can set PULLCTL1 bit 17. Both sites remain outside the exercised normal SFVD-present path. `C-PREDRAM-PATH` keeps its hardware and Boot ROM questions. Device-clock and resume electrical uncertainties remain open.
+
+## Inputs to a future independent loader specification
+
+- Establish ROM entry mode, CPU/stack, medium selection, clock gate, initial pad state and loader read contract. Preserve control-flow and sector identities for early config and stage loading.
+- Audit timer frequency and delay loops, UART clock/reset/divider, I2C clock/pads, PMIC identity and pending/wake bits, register write sequence, and the exact recovery priority and pad operations.
+- Document record selection, cold vs resume entry, clock/PLL, DDR reset, PHY/ZQ/training, controller transitions, DMM geometry, diagnostic coverage, return paths, SRAM write-back and the AFI sequence with their known or unknown initial conditions.
+- Account for post-DRAM clock/cache setup, app.bin CHIPID and SFVD gates, U-Boot startup and relocation reservations, AFI consumers, pin mux, MMC and environment checks, image placement, FDT reservations/fixups and final ARM register/cleanup requirements.
+
+Continue with the [architecture reference](../docs/boot-chain-emulation.md) and [detailed report](unified-boot-chain-reconstruction.md). Reproduce via `python tools/unified_boot_chain.py evidence --firmware-dir FW OUT.json` and `ATM_FIRMWARE_DIR=FW python -m unittest tests.test_unified_boot_chain -v`. Historical tools and evidence retain their original contracts.
+
+## Unified validation
+
+| Check | Result |
+| --- | --- |
+| Ordinary Linux unit suite | 512 tests, 483 passed and 29 optional skips |
+| Unified firmware-backed checks | 35 integrated scenarios across five releases, 17 Linux entry boundaries and 18 earlier terminals. Live state and byte reproduction checks passed. |
+| Historical firmware-backed regression | 152 caller/DDR/ADFU/pre-DRAM/boot-chain checks and 9 V3 firmware/preflight checks passed |
+| Validation and rendering | Research validation reported zero errors. Generated reference, catalogue and HTML checks passed. |
+| Lab checks | Chromium smoke passed. Linux module self-test passed with simulated disk inventory. Native Windows execution is covered by the existing workflow. |

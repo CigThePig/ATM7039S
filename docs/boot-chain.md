@@ -122,3 +122,7 @@ The tables above follow the **code-0 / AFI `0x20` branch** (SD0). OBS-001's runn
 | — | Linux | `boot_dev=sd2` → SD2 host gets index 0 (`mmcblk0`, named `emmc_boot_card` by slot); rootfs `boot/BATOCERA` loop-mounted rw | binary + source, **observed** |
 
 Physical medium (SD), controller (SD2), U-Boot device (`mmc 1`), Linux index (`mmcblk0`) and role label ("emmc") are five different things. The ROM, the CMU bit and the AFI bytes are still inferred, not observed.
+
+## Unified causal reconstruction
+
+The offline framework follows executed block-0 selection through the live early loader, DRAM outcome, app.bin and U-Boot entry. Bounded U-Boot consumers receive exact AFI and loaded inputs, followed by modeled environment commands, executed FDT fixups and the Linux jump boundary. [Execution boundaries and state contract](boot-chain-emulation.md)

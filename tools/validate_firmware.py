@@ -219,6 +219,69 @@ def sd2_dram_checks(folder):
     return errors
 
 
+def unified_checks(folder):
+    """Check integrity of the compact boot-chain evidence with no firmware payloads."""
+    errors = []
+    try:
+        doc = json.loads((folder / 'unified-boot-chain.json').read_bytes())
+        acquisitions = json.loads((folder / 'acquisitions.json').read_bytes())
+        pinned = {m['expanded_filename']: m for m in acquisitions if 'expanded_filename' in m}
+        graph = doc['stage_graph']
+        releases = {'koriki-v1.0', 'stock-221203', 'stock-221223', 'stock-230309', 'stock-20231014'}
+        if set(doc['firmware']) != releases or set(doc['scenarios']) != releases:
+            errors.append('Unified boot: missing pinned firmware coverage')
+        if list(graph.values()) != [None, *list(graph)[:-1]] or set(graph) != set(doc['stage_coverage']):
+            errors.append('Unified boot: invalid stage dependency graph')
+        for release, scenarios in doc['scenarios'].items():
+            firmware = doc['firmware'][release]
+            pin = pinned[firmware['file']]
+            if (firmware['actual_sha256'] != pin['expanded_sha256'] or
+                    firmware['expected_sha256'] != pin['expanded_sha256'] or
+                    firmware['verified_size'] != pin['expanded_size'] or not firmware['verified']):
+                errors.append('Unified boot: firmware provenance mismatch ' + release)
+            for name, run in scenarios.items():
+                label = f'{release} {name}'
+                rows = run['stages']
+                if set(rows) != set(graph):
+                    errors.append('Unified boot: incomplete graph ' + label)
+                    continue
+                terminal = run['terminal']
+                outcome = terminal['outcome']
+                parent = blocker = None
+                for stage in graph:
+                    row = rows[stage]
+                    if blocker:
+                        if row['status'] != 'blocked' or row['blocked_by'] != blocker:
+                            errors.append(f'Unified boot: stage after terminal executed {label} {stage}')
+                    elif row['status'] == 'terminal' and terminal['stage'] == stage and row['input_sha256'] == parent:
+                        blocker = stage
+                    elif (row['status'] == 'completed' and row['input_sha256'] == parent and
+                          HEX64.fullmatch(row['state_sha256'])):
+                        parent = row['state_sha256']
+                    else:
+                        errors.append(f'Unified boot: invalid state chain {label} {stage}')
+                if (blocker is None) != (outcome == 'linux-entry-boundary'):
+                    errors.append('Unified boot: outcome/graph mismatch ' + label)
+                if blocker is None:
+                    raw = rows['uboot-entry']['state']['afi_exact_hex']
+                    consume = rows['uboot-afi-and-ram']['state']['afi']
+                    handoff = rows['device-tree']['state']
+                    jump = rows['linux-entry']['state']
+                    if (len(bytes.fromhex(raw)) != 16 or raw != consume['exact_hex'] or raw != handoff['afi_in_memory'] or
+                            raw != run['dram_result']['afi']['bytes'] or
+                            handoff['dt_memory_reg'] != ['0x0', hex(consume['gd_ram_size'])] or
+                            jump['r2'] != handoff['ft_addr']):
+                        errors.append('Unified boot: AFI, memory or Linux transfer mismatch ' + label)
+            for medium in ('sd0', 'sd2'):
+                if scenarios[f'{medium}-reference']['terminal']['outcome'] != 'linux-entry-boundary':
+                    errors.append(f'Unified boot: failed {medium} reference {release}')
+        if not doc['obs_001']['sd2-reference']['all_match'] or doc['obs_001']['sd2-strap-low']['all_match']:
+            errors.append('Unified boot: inconsistent observation reconciliation')
+    except (KeyError, ValueError, OSError, TypeError) as error:
+        errors.append('Invalid unified boot-chain evidence: ' + str(error))
+    return errors
+
+
 def validate(root):
     errors=[];index={}
     folder=root/'evidence/firmware'
@@ -250,6 +313,7 @@ def validate(root):
     errors.extend(predram_checks(folder))
     errors.extend(adfu_checks(folder))
     errors.extend(sd2_dram_checks(folder))
+    errors.extend(unified_checks(folder))
     cited=[(f['id'],e) for f in json.loads((root/'evidence/findings.json').read_text()) for e in f['evidence']]
     hw=root/'registers/canonical/hardware.json'
     if hw.exists():
