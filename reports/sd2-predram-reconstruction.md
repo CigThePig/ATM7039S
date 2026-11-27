@@ -230,6 +230,16 @@ The routine spans `0xb4069254..0xb40693c0`. Its literal pool starts at `0xb40693
 
 None of this is available offline. Physical triggering is not authorized.
 
+### Follow-up
+
+The [ADFU loopback reconstruction](adfu-loopback-reconstruction.md) checked this routine in full:
+* PMIC read failure → ADFU;
+* any non-zero boot code runs the test;
+* only an exact echo enters ADFU;
+* the pins are SD0 DAT0/DAT1;
+* the persistent CDAT effect depends on the unknown read semantics;
+* there is no downstream use in the loader.
+
 ## 13. Cross-release comparison
 
 * **Code:** all 91 functions have identical raw instruction hashes and identical entry-to-pool extents in all five images. No normalization was applied. The UART, board and PMIC-register tables are identical.

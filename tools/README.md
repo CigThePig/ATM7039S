@@ -176,6 +176,16 @@ Tests: `tests/test_dram_complete.py` (models, boundary values, committed evidenc
 
 Tests: `tests/test_predram.py` covers synthetic A32 fixtures (calls, tail calls, indirect calls, branches, constant tracking, data words, hangs, unsupported jumps, helper formulas, MMIO rules) and the committed evidence. `ATM_FIRMWARE_DIR=DIR` regenerates the evidence and checks helper formulas against execution.
 
+### ADFU loopback (PR #9, part 2)
+
+| Command / API | What it does | Limits |
+|---|---|---|
+| `adfu_analysis.py evidence OUT --sources SRC --image NAME=IMG …` | Hash-verifies images and the routine's regions. Checks 46 instruction anchors. Runs 41 routine-level scenarios of `0xb4069254` against an independent `reference_model`, plus a stalled-timer run, whole-path runs of main, `dram_complete.run_caller(boot_code=2, gpio=…)` and the bounded `0xb40691a4` re-entry. Surveys the pinned vendor pinctrl/DTS/header lines and the shipped DTBs. Writes `evidence/firmware/adfu-loopback.json` (deterministic) | Synthetic GPIO/PMIC/timer responses. Model and reference share the GPIO assumptions. ROM code is never invented. About 2 minutes |
+| `adfu_analysis.py run IMG --boot-code N --arg A --pmic S --input const0\|const1\|follow\|invert\|delay\|prbs:SEED` | One scenario with its firmware/reference comparison | Same |
+| `gpio_model.GpioModel(initial=…, inputs={pin: rule}, read_semantics='mixed'\|'latch', strict=True)` | Synthetic GPIO/pad window for `predram_analysis.Trace(gpio=…)` and `dram_complete.Harness/run_caller(gpio=…)` | Every assumption in `GpioModel.assumptions()` |
+
+Tests: `tests/test_adfu_analysis.py`. `ATM_FIRMWARE_DIR` re-runs scenarios. With `ATM_SOURCES_DIR` as well, it regenerates the whole evidence file.
+
 ### V3 operator recovery
 
 **The lab (Windows/Linux; macOS uses the manual procedure)** (`ATM7039S-Lab.cmd`, `start-lab.sh` → `lab_launch.py` → `python -m v3lab`) runs the whole computer side of a V3 session; see [v3lab/README.md](v3lab/README.md). `boot_chain.py boot-path IMAGE OUT --release R --observation evidence/observations/OBS-001.json` executes every boot-device hypothesis end to end and compares the resulting command line with an observation ([report](../reports/sd2-boot-path-reconciliation.md)). `v3_preflight.py --phase auto|fresh|prepared|post-capture [--image] [--baseline]` checks the card's root filesystem by byte hash before the first boot and semantically afterwards. `v3_rootfs_review.py --phase prepared|post-capture` (3.0) is the stand-alone form of that check with a private report in `lab-data/rootfs-review/`; the 2.x diagnostic used during OBS-001 is superseded (its report stays as evidence). `v3_operator.ps1` is a legacy fallback.

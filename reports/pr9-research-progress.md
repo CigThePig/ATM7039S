@@ -92,3 +92,115 @@ GitHub Actions results were not observed by this session.
 4. **PMIC register semantics.** Map the type-2 register numbers to a public ATC2603C driver (vendor kernel `atc260x`) before interpreting any regulator value.
 5. **DRAM scenarios for code 2.** Optionally re-run the remaining PR #6 DRAM failure scenarios with `run_caller(..., boot_code=2)`. A cheap offline check, deliberately not done here.
 6. **Physical (needs separate approval; not authorized by this work).** An early read-only serial log of a stock boot would directly show the pre-DRAM console lines listed in `runs.code2.printed`.
+
+---
+
+# Part 2: ADFU GPIO loopback reconstruction (from `ca0cdab`)
+
+## Completed
+
+* Re-verified `adfu_check 0xb4069254`, `rom_reentry_adfu 0xb40691a4`, the delay/timer/PMIC accessors, `get_boot_code`, the dram_caller call site, `memcpy`, the PMIC table and strings. That is twelve regions plus literal pools, byte-identical in all five releases, and 46 instruction anchors, all matching.
+* New **`tools/gpio_model.py`** (`GpioModel`) and **`tools/adfu_analysis.py`**: an independent `reference_model`, a 41-scenario matrix, a stalled-timer run, whole-path and DRAM-harness runs, a bounded re-entry run, a board-source/DTB survey and downstream analysis. Evidence: **`evidence/firmware/adfu-loopback.json`** (byte-deterministic; checked by regenerating twice).
+* **Opt-in harness extensions**, defaults unchanged. `sd2-predram.json` regenerates byte-identically.
+  * `predram_analysis.Trace(gpio=, timer_step=, i2c_fail_regs=, rom_copy_stub=)` and `Trace.run_function(entry, args)`; `Machine.call(..., args)`.
+  * `dram_complete.Harness(..., gpio=)` and `run_caller(..., gpio=)`. The GPIO window is answered by the model, and stubbed delays advance the model clock.
+* **Findings:** BOOT-026, BOOT-027, GPIO-003, GPIO-004. BOOT-025 refined. C-PREDRAM-PATH updated (still open).
+* **Curated register evidence:** pinned vendor-source lines for PAD_PULLCTL1, GPIO_CDAT and MFP_CTL2.
+* **Validators and tests:** `validate_firmware.adfu_checks`; `tests/test_adfu_analysis.py`.
+* **Docs:** `reports/adfu-loopback-reconstruction.md`, plus updates to `docs/predram-initialization.md`, `docs/boot-chain.md`, `docs/serial-console.md`, `reports/sd2-predram-reconstruction.md`, `tools/README.md` and `README.md`.
+
+## Important discoveries and corrections
+
+1. **A PMIC read failure enters ADFU.** `pmic_read` returns −1 with no retry, `& 0xffff` gives `0xffff`, bit 1 is set, and it writes back `0xfffc`. Only bit 1 is examined; write-back is `status & ~3`; the PMIC path never touches GPIO.
+2. **The boot-code guard is `!= 0`.** Codes 1, 4, 5 and `0x80000000` all run the test. The argument guard is a 32-bit `!= 0`.
+3. **Loop details.** Always 32 iterations, with no early exit. Two CDAT writes per iteration (clear bit 11, then OR the pattern bit). The delay comes before the sample. `rx |= s << i` is LSB first. The final comparison is an exact `cmp` against a freshly loaded literal.
+4. **Pins (vendor pinctrl data, pinned).**
+   * GPIOC10 = `P_SD0_D0` (line 169) and GPIOC11 = `P_SD0_D1` (line 170).
+   * PULLCTL1 bit 17 is `P_SD0_D0`'s pull-up field (line 2642).
+   * The test therefore runs on the **TF2 slot's DAT1→DAT0**, with DAT0's pull-up removed.
+   * `board_mfp_init` muxes SD0 D0/D2/D3/CMD/CLK to the vendor JTAG values *before* the test. D1 is left as the Boot ROM or reset state left it.
+   * No shipped DTB uses pins 74/75 as GPIOs.
+   * A fixture purpose is a hypothesis; a UART adapter on the same pair is the alternative.
+5. **Persistent state.**
+   * COUTEN/CINEN restored exactly.
+   * PULLCTL1 bit 17 stays cleared.
+   * CDAT bit 11 = 0.
+   * **Other CDAT bits depend on the unknown read semantics:** unchanged if reads return the latch; rewritten with read levels for non-output pins if reads return pads.
+   * Under latch semantics the loopback can never pass.
+6. **Downstream.**
+   * No later loader access to these registers, in either the executed paths or the constant-address scan.
+   * DRAM-stage non-GPIO writes are identical for codes 0 and 2 with the GPIO model attached (reference scenario).
+   * The DRAM routine writes `0xb01b00b4 = 0x3ff` for both codes.
+   * app.bin `0x9430` (no direct caller found), U-Boot's SD0 init and Linux `mmc0_default` may reconfigure the pads. Not traced.
+7. **ADFU exit.** `0xb40691a4` never reaches DRAM init. It copies ROM `0xffff5200` (`0x2e00` bytes) over SRAM `0xb4060000`, writes the CMU, sets VBAR and SP, and jumps. The emulator records the copy without performing it and stops at the jump.
+
+## GPIO model and APIs
+
+```python
+from gpio_model import GpioModel, C10, C11, C
+g = GpioModel(initial={C['outen']: 0, C['dat']: 0}, inputs={C10: ('follow', C11)},   # or const/invert/delay/script/
+              read_semantics='mixed', strict=True)                                     # follow_except/prbs
+# pre-DRAM harness
+import predram_analysis as P
+t = P.Trace(loader, P.Disk(img), code, P.call_graph(code), 2, gpio=g); t.run()
+# DRAM harness (reference scenario), C10 low:
+import dram_complete as D
+out, h = D.run_caller(loader, D.Pmic(), D.TRAINING_SCENARIOS[0], boot_code=2,
+                      gpio=GpioModel(inputs={C10: ('const', 0)}, strict=False))
+# h.writes / h.reads include the GPIO block; g.log, g.samples, g.state(), g.passthrough describe the model side
+```
+
+* Use `strict=False` for whole-path runs: other routines legitimately access MFP_CTL2/3, PAD_DRV1, DEBUG_* and `0xb01b00b4`.
+* Routine level: `adfu_analysis.routine_trace(doc, boot_code, arg, pmic_status, gpio, pmic_fail=False, timer_step=24)`.
+* Scenario plus comparison: `adfu_analysis.run_scenario(doc, decoded_constants(code), name, code, arg, pmic, rule, initial, extras)`.
+* Algorithm alone: `adfu_analysis.reference_model(K, ...)`.
+
+## Scenario definitions
+
+`adfu_analysis.SCENARIOS` lists the cases: PMIC values, guards, 12 input responses, 2 read-semantics cases and 11 initial states. All 41 agree with the reference model. The four other releases agree on the loopback and low spot checks.
+
+## Reproduce
+
+```sh
+python tools/fetch_sources.py SRC        # rate limits may need retries; only pinctrl_data-atm7059.c, regs_map-atm7039.h
+                                         # and rg35xx_atm7039.dts (vendor-kernel) are needed
+python tools/adfu_analysis.py evidence evidence/firmware/adfu-loopback.json --sources SRC \
+  --image koriki-v1.0=FW/koriki-v1.0.img --image stock-221203=FW/stock-221203.img \
+  --image stock-221223=FW/stock-221223.img --image stock-230309=FW/stock-230309.img --image stock-20231014=FW/stock-20231014.img
+ATM_FIRMWARE_DIR=FW ATM_SOURCES_DIR=SRC python -m unittest tests.test_adfu_analysis -v
+```
+
+## Validation (part 2)
+
+| Run | Result |
+|---|---|
+| `python -m unittest discover -s tests` (no firmware) | 483 tests OK, 24 skipped (firmware-, qemu- or tool-dependent) |
+| `ATM_FIRMWARE_DIR=FW ATM_SOURCES_DIR=SRC python -m unittest tests.test_adfu_analysis tests.test_predram tests.test_boot_chain -v` | 79 tests OK, 0 skipped. Full regeneration of both evidence files equals the committed ones |
+| `ATM7039S_STOCK_LOADERS=DIR python -m unittest tests.test_dram_complete -v` (four stock loader regions) | 37 tests OK, 0 skipped. The opt-in GPIO hook leaves PR #6 behaviour unchanged |
+| `adfu_analysis.py evidence`, run twice | byte-identical output |
+| `predram_analysis.py evidence`, after the Trace extensions | byte-identical to the committed `sd2-predram.json` |
+| `research.py validate`, `generate --check`, `render_catalogue.py`, `render_html.py` | clean (48 documents) |
+| Not run here | browser and Windows CI jobs |
+
+GitHub Actions was not observed by this session.
+
+## Remaining uncertainties
+
+* GPIO data-read semantics.
+* GPIO-vs-MFP priority while D0 is muxed to JTAG.
+* Electrical effect of the cleared pull-up.
+* TF2 wiring and the fixture's existence.
+* PMIC reg 0x35 meaning.
+* Real timing.
+* ROM code behaviour.
+* Boot ROM state per medium.
+* The non-reference DRAM scenarios for code 2.
+* Mainline `pinctrl-s500.c` was not fetched (HTTP 429), so there is no second source for the pull field.
+
+## Recommended next objectives
+
+1. Fetch mainline `pinctrl-s500.c`/`pinctrl-owl.c` (pinned commit) and compare the SD0_D0 pull and mux definitions and the GPIO data-read code path.
+2. Find a public S500/ATM7059 datasheet section on GPIO data reads and GPIO-vs-MFP priority. The catalogued S500 PDF (`s500-pdf`) is the first place to look. This would settle the CDAT persistence question.
+3. Trace app.bin `0x9430`'s indirect callers and U-Boot's SD0 pad set-up, to state whether bit 17 is restored before Linux.
+4. Optionally run the remaining PR #6 DRAM scenarios with `boot_code=2, gpio=GpioModel(...)`. This is cheap but deliberately not done.
+5. Physical (not authorized): an early read-only serial log of a stock SD2 boot would show `pmu_status = 0x…` and that the loader continues past the test.

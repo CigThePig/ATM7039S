@@ -102,7 +102,7 @@ The [DRAM reconstruction](../reports/dram-complete-reconstruction.md) completes 
 
 ## Pre-DRAM path for boot codes 0 and 2 (PR #9)
 
-The code from block 0 to the DRAM init call is reconstructed in [docs/predram-initialization.md](predram-initialization.md) ([report](../reports/sd2-predram-reconstruction.md); BOOT-024/025, CLK-007, UART-004, PMIC-002, GPIO-002). For the observed code-2 path it is the same instruction path as code 0, except that `adfu_check` adds a 32 × 1 ms GPIO loopback test. Executed in emulation, the two codes differ only by that block, up to and through DRAM init (reference scenario). Boot ROM state is not covered, so C-PREDRAM-PATH stays open.
+The code from block 0 to the DRAM init call is reconstructed in [docs/predram-initialization.md](predram-initialization.md) ([report](../reports/sd2-predram-reconstruction.md); BOOT-024/025, CLK-007, UART-004, PMIC-002, GPIO-002). For the observed code-2 path it is the same instruction path as code 0, except that `adfu_check` adds a 32 × 1 ms GPIO loopback test. Executed in emulation, the two codes differ only by that block, up to and through DRAM init (reference scenario). Boot ROM state is not covered, so C-PREDRAM-PATH stays open. The [ADFU loopback reconstruction](../reports/adfu-loopback-reconstruction.md) shows the test uses the TF2 slot's DAT0/DAT1 pads, enters ADFU only on an exact echo, and never reaches DRAM init on that exit (BOOT-026/027, GPIO-003/004).
 
 ## Physical observation OBS-001 (2026-11-27) and the PR #8 reconciliation
 

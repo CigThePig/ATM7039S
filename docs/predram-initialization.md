@@ -51,7 +51,16 @@ The boot-code word is read pre-DRAM by load_ini/storage dispatch (same branch fo
 4. restore OUTEN/INEN; data bit 11 stays at the last pattern bit (0)
 5. sampled word == `0x55aa55aa` → "Prepare to entry ADFU mode" → `0xb40691a4`
 
-So code 2 adds about 32 ms of requested delay and leaves two bits changed. Under emulation, codes 0 and 2 give identical sequences otherwise, both up to `0xb40690b8` and (with the PR #6 harness, reference scenario) through DRAM init. The AFI `boot_dev` written after DRAM init is `0x20` vs `0x22`.
+So code 2 adds about 32 ms of requested delay and leaves two bits changed.
+
+**Refined in the ADFU reconstruction** ([report](../reports/adfu-loopback-reconstruction.md), BOOT-026/027, GPIO-003/004):
+* The guard is strictly `code != 0`; a failed PMIC read (`0xffff`) also enters ADFU.
+* The loop always completes all 32 iterations and needs an exact echo.
+* C10/C11 are the **SD0 DAT0/DAT1** pads (vendor pinctrl data), so the test runs on the TF2 slot. PULLCTL1 bit 17 is SD0_D0's pull-up field.
+* Whether the other bits of `0xb01b0020` survive depends on the unknown GPIO read semantics.
+* No later loader code uses the changed bits.
+
+A reusable synthetic GPIO model is in `tools/gpio_model.py`. Under emulation, codes 0 and 2 give identical sequences otherwise, both up to `0xb40690b8` and (with the PR #6 harness, reference scenario) through DRAM init. The AFI `boot_dev` written after DRAM init is `0x20` vs `0x22`.
 
 ## Timer and delays (CLK-007)
 
