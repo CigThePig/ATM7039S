@@ -145,8 +145,13 @@ class CardChecks(unittest.TestCase):
         dump = self.tmp / 'head.bin'
         dump.write_bytes(bytes(4096))
         r = by_id(pf.check_boot_region(dump))
-        self.assertIn('too short', r['card-raw:u-boot.uimage']['detail'])
-        self.assertNotIn('card-raw:sfvd', r)
+        # Every mandatory raw check must be present and explicitly fail when
+        # the input is truncated; omitting SFVD would hide a missing safety check.
+        self.assertEqual(set(r), {'card-raw:early-region.bin',
+                                  'card-raw:u-boot.uimage', 'card-raw:sfvd'})
+        for check in r.values():
+            self.assertEqual(check['status'], 'FAIL')
+            self.assertIn('too short', check['detail'])
 
     def test_applet_table(self):
         names = b'\x01[\x00[[\x00' + b'\x00'.join(n.encode() for n in sorted(pf.REQUIRED_APPLETS + ['awk', 'ls'] * 3)) + b'\x00\x00\x01'

@@ -15,6 +15,8 @@ jobs:
       - run: sudo apt-get install -y --no-install-recommends busybox dash
       - run: python -m pip install shellcheck-py==0.10.0.1
       - run: python -m unittest discover -s tests -v
+      - name: Lab launcher self-test (fresh venv, as the operator runs it)
+        run: ./start-lab.sh selftest | tee selftest.txt && grep -q 'selftest OK' selftest.txt
       - run: python tools/research.py validate
       - run: python tools/research.py generate --check
       - run: python tools/render_catalogue.py
@@ -25,6 +27,21 @@ jobs:
           name: technical-reference-html
           path: site/
 
+  # Keep browser coverage independent of the research job. Playwright 1.51
+  # supports Ubuntu 24.04, not the Ubuntu 26.04 ubuntu-latest image.
+  browser-validation:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Browser interaction regression (Chromium, simulated API)
+        run: |
+          python -m pip install playwright==1.51.0
+          python -m playwright install --with-deps chromium
+          python tests/browser_lab_smoke.py
+
   windows-operator-validation:
     runs-on: windows-latest
     steps:
@@ -34,3 +51,30 @@ jobs:
           python-version: '3.11'
       - run: python -m pip install -r requirements-dev.txt -r requirements-firmware.txt
       - run: python -m unittest discover -s tests -p test_v3_preflight.py -v
+      - run: python -m unittest discover -s tests -p test_v3_rootfs_review.py -v
+      # Lab: state machine, downloads, simulated Windows storage and a simulated V3 session (not hardware tests).
+      - run: python -m unittest discover -s tests -p test_lab.py -v
+      # Packaging and start-up exactly as the operator runs it: project-local venv, no administrator rights.
+      - name: Launcher creates its environment and passes the self-test (non-admin, path with spaces)
+        shell: pwsh
+        run: |
+          $dest = Join-Path $env:RUNNER_TEMP 'ATM7039S Lab ü'
+          Copy-Item -Recurse -Path $PWD -Destination $dest
+          Set-Location $dest
+          $out = cmd /c "ATM7039S-Lab.cmd selftest < NUL" 2>&1 | Out-String
+          Write-Host $out
+          if ($LASTEXITCODE -ne 0 -or $out -notmatch 'selftest OK') { throw "launcher self-test failed ($LASTEXITCODE)" }
+      - name: PowerShell scripts parse
+        shell: pwsh
+        run: |
+          foreach ($f in @('tools/v3_operator.ps1')) {
+            $errs = $null; [void][System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $f), [ref]$null, [ref]$errs)
+            if ($errs) { $errs | Format-List; throw "parse errors in $f" }
+          }
+      - name: Windows fallback uses its configured environment (simulated volumes)
+        shell: pwsh
+        run: ./tests/windows_fallback_smoke.ps1
+      - name: Windows disk inventory command runs without administrator rights
+        shell: pwsh
+        run: python -c "import sys; sys.path.insert(0,'tools'); from v3lab import disks; d=disks.collect(); print(len(d),'disks'); print(disks.public_view(disks.identify(d))['status'])"
+

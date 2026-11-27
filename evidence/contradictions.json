@@ -161,10 +161,14 @@
     "issue": "Loader block 0 maps CMU_DEVCLKEN0 (0xb01600a0) bit 4 to boot code 0, which the loader turns into AFI boot_dev 0x20 (sd0) and the SD read paths; the mainline S500 clock driver names bit 4 the NAND gate and bit 5 the SD0 gate.",
     "findings": [
       "BOOT-012",
-      "BOOT-013"
+      "BOOT-013",
+      "BOOT-022"
     ],
-    "status": "Unresolved. Either the ATM7039S Boot ROM leaves bit 4 set after an SD0 boot (different gate assignment or a ROM side effect), or the stock card boots through a path not taken in this reconstruction. A working stock card requires code 0 (BOOT-012).",
-    "next_validation": "Read-only: /proc/cmdline containing boot_dev=sd0 confirms code 0. The bit itself needs a register read, which is not authorized; prefer a serial log or vendor documentation."
+    "status": "Resolved by inference (PR #8). The observed boot took block-0 code 2, which block 0 selects when CMU_DEVCLKEN0 bit 7 is set; under the mainline S500 names bit 7 is the SD2 gate, consistent with a ROM that booted from SD2 and left SD2's clock on. The bit-4 -> code 0 branch (mainline: NAND gate) is the one this unit did not take, so the earlier conflict came from assuming TF1 = SD0. Not read from hardware.",
+    "next_validation": "None required. A register read is not authorized; an early serial log or vendor documentation would confirm.",
+    "observations": [
+      "OBS-001"
+    ]
   },
   {
     "id": "C-OPAQUE",
@@ -231,11 +235,31 @@
     "issue": "Which MMC controller holds the TF1 boot card. U-Boot loads uImage, ramdisk.img and kernel.dtb with fatload mmc 0:1, and BOOT-016 reads mmc 0 as SD0 at 0xb0230000 (registration order SD0, SD2). Koriki's Linux scripts place the boot card (mmcblk0, emmc_boot_card) on b0238000 (SD2) and TF2 (sd_card) on b0230000, which also carries card-detect GPIO and the share_uart pin state.",
     "findings": [
       "BOOT-016",
+      "BOOT-022",
+      "BOOT-023",
+      "MMC-001",
       "STOR-001",
       "STOR-002",
-      "MMC-001"
+      "STOR-003"
     ],
-    "status": "Open. Candidate explanations: the reconstruction of U-Boot's mmc numbering is wrong; SD0 fails to initialise with TF2 empty so SD2 becomes mmc 0 (BOOT-016 limitation); the vendor kernel enumerates the controllers differently from U-Boot; or Koriki's script paths are stale. Matters for any replacement bootloader, which must read the card from the right controller.",
-    "next_validation": "V3 (read-only): with TF2 empty, the sysfs ancestry of the disk mounted at /boot (block-sysfs, mounts) shows which controller holds the only card, which is also the controller U-Boot read from. Prediction P-BOOTDEV."
+    "status": "Resolved offline for Koriki v1.0 (PR #8), building on OBS-001: the TF1 boot card is on SD2. The executed chain block-0 code 2 -> AFI 0x22 -> emmcboot (devpart 1:1) -> U-Boot mmc 1 = SD2 0xb0238000 -> boot_dev=sd2 is the only one of six emulated hypotheses that reproduces the observed command line (BOOT-022). U-Boot numbering is registration order and does not shift when SD0 is empty (BOOT-023); Linux numbering is chosen independently from boot_dev (STOR-003). BOOT-016 described the AFI 0x20 path, which this unit did not take. ROM behaviour, the CMU bit and the AFI bytes remain inferred, not observed.",
+    "next_validation": "Optional confirmation, not needed to use the result: an early serial log would show \"bootdev= 0x22\", \"emmc boot\" and U-Boot's mmc messages; /proc/bootdev (read-only) would show the kernel's g_boot_dev. A capture with a second card in TF2 would show sd_card on b0230000.",
+    "observations": [
+      "OBS-001"
+    ]
+  },
+  {
+    "id": "C-PREDRAM-PATH",
+    "issue": "The DRAM and loader reconstruction (PR #4-#6) modelled the code-0 (SD0) path. On the observed code-2 path the pre-DRAM routine 0xb4069254 also performs the GPIO 0x55aa55aa ADFU handshake that is skipped for code 0 (BOOT-021), and app.bin/bootloader.bin branches keyed on the boot code were exercised only for code 0 in the committed DRAM evidence.",
+    "findings": [
+      "BOOT-021",
+      "BOOT-022",
+      "MEM-010"
+    ],
+    "status": "Open. The storage reads and AFI are identical for codes 0 and 2 (boot_chain.py boot-path), but the DRAM-stage emulation (dram_complete.py) has not been re-run with boot code 2, so code-dependent DRAM-stage behaviour is not yet reconstructed for the path the device actually takes.",
+    "next_validation": "Offline: re-run the DRAM-stage scenarios with boot code 2 and diff the MMIO sequences against code 0.",
+    "observations": [
+      "OBS-001"
+    ]
   }
 ]

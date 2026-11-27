@@ -20,7 +20,7 @@ SCHEMAS = {
 
 
 def load(root, rel):
-    return json.loads((root / rel).read_text())
+    return json.loads((root / rel).read_text(encoding='utf-8'))
 
 
 def schema_errors(root):
@@ -38,12 +38,12 @@ def firmware_index(root):
     images = {}
     folder = root / 'evidence/firmware'
     for p in sorted(folder.glob('*.json')):
-        m = json.loads(p.read_text())
+        m = json.loads(p.read_text(encoding='utf-8'))
         if isinstance(m, dict) and 'components' in m and 'sha256' in m:
             images.setdefault(m['sha256'], set()).update(c['id'] for c in m['components'])
     acq = folder / 'acquisitions.json'
     if acq.exists():
-        for a in json.loads(acq.read_text()):
+        for a in json.loads(acq.read_text(encoding='utf-8')):
             for key in ('sha256', 'expanded_sha256'):
                 if key in a:
                     images.setdefault(a[key], set())
@@ -56,19 +56,19 @@ def capture_version_errors(root):
     versions_path = root / 'device/capture-versions.json'
     if not script.exists() or not versions_path.exists():
         return ['device/capture.sh or device/capture-versions.json missing']
-    versions = json.loads(versions_path.read_text())
+    versions = json.loads(versions_path.read_text(encoding='utf-8'))
     digest = hashlib.sha256(script.read_bytes()).hexdigest()
     current = [v for v in versions if v['sha256'] == digest]
     if not current:
         errors.append('device/capture.sh changed without a new entry in device/capture-versions.json')
     else:
-        if current[0]['allowlist'] != script_allowlist(script.read_text()):
+        if current[0]['allowlist'] != script_allowlist(script.read_text(encoding='utf-8')):
             errors.append('device/capture-versions.json allowlist differs from device/capture.sh')
-        if current[0].get('essential', []) != script_essential(script.read_text()):
+        if current[0].get('essential', []) != script_essential(script.read_text(encoding='utf-8')):
             errors.append('device/capture-versions.json essential list differs from device/capture.sh')
         if current[0].get('status') != 'current':
             errors.append('device/capture.sh matches a version not marked current')
-        m = re.search(r'^CAPTURE_VERSION=(\d+)$', script.read_text(), re.M)
+        m = re.search(r'^CAPTURE_VERSION=(\d+)$', script.read_text(encoding='utf-8'), re.M)
         if not m or int(m.group(1)) != current[0]['version']:
             errors.append('CAPTURE_VERSION in device/capture.sh differs from its registered version')
     if len({v['version'] for v in versions}) != len(versions):
@@ -93,7 +93,7 @@ def cross_reference_errors(root):
     fids = {f['id'] for f in findings}
     obs = {}
     versions_path = root / 'device/capture-versions.json'
-    tools = {v['sha256'] for v in json.loads(versions_path.read_text())} if versions_path.exists() else set()
+    tools = {v['sha256'] for v in json.loads(versions_path.read_text(encoding='utf-8'))} if versions_path.exists() else set()
     images = firmware_index(root)
     for o in observations:
         if o['id'] in obs:
@@ -110,7 +110,7 @@ def cross_reference_errors(root):
         if not summary_path.exists():
             errors.append(f"{o['id']}: summary {o['capture']['summary']} missing")
         else:
-            summary = json.loads(summary_path.read_text())
+            summary = json.loads(summary_path.read_text(encoding='utf-8'))
             cap = summary.get('capture', {})
             if cap.get('manifest_sha256') != o['capture']['manifest_sha256']:
                 errors.append(f"{o['id']}: summary manifest hash differs from observation record")
@@ -142,7 +142,7 @@ def cross_reference_errors(root):
                 if e['item'] not in ok:
                     errors.append(f"{f['id']}: capture item {e['item']} absent from {e['observation']}")
     cids = {c['id'] for c in contradictions}
-    allowlist = {line.split('|', 1)[0] for line in script_allowlist((root / 'device/capture.sh').read_text())}
+    allowlist = {line.split('|', 1)[0] for line in script_allowlist((root / 'device/capture.sh').read_text(encoding='utf-8'))}
     seen = set()
     for p in load(root, 'evidence/predictions.json'):
         if p['id'] in seen:

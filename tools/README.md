@@ -166,3 +166,7 @@ Tests: `tests/test_boot_chain.py` covers hand-encoded A32 fixtures (call trackin
 | `dram_complete.py resume LOADER --case NAME` / `memtest LOADER --capacity N --ram wrap:MiB` | One resume case or memory-test run, as JSON | Same models |
 
 Tests: `tests/test_dram_complete.py` (models, boundary values, committed evidence, harness RAM/fault mechanics on hand-encoded A32). `ATM7039S_STOCK_LOADERS=DIR` re-runs the firmware-backed comparisons.
+
+### V3 operator recovery
+
+**The lab (Windows/Linux; macOS uses the manual procedure)** (`ATM7039S-Lab.cmd`, `start-lab.sh` → `lab_launch.py` → `python -m v3lab`) runs the whole computer side of a V3 session; see [v3lab/README.md](v3lab/README.md). `boot_chain.py boot-path IMAGE OUT --release R --observation evidence/observations/OBS-001.json` executes every boot-device hypothesis end to end and compares the resulting command line with an observation ([report](../reports/sd2-boot-path-reconciliation.md)). `v3_preflight.py --phase auto|fresh|prepared|post-capture [--image] [--baseline]` checks the card's root filesystem by byte hash before the first boot and semantically afterwards. `v3_rootfs_review.py --phase prepared|post-capture` (3.0) is the stand-alone form of that check with a private report in `lab-data/rootfs-review/`; the 2.x diagnostic used during OBS-001 is superseded (its report stays as evidence). `v3_operator.ps1` is a legacy fallback.

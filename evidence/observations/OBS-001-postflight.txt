@@ -1,0 +1,23 @@
+PASS  script-registered             capture script version 3 (current), sha256 6726691066255582dea32bf8d34d7654dd7f67be14fd75064831484f7633e217
+PASS  script-allowlist              45 allowlist entries match the registry
+PASS  script-lint                   no prohibited operation found
+PASS  script-format                 #!/bin/sh shebang, Unix line endings
+PASS  procedure                     TF2 empty, no charging cable, overclocking unset and a spare card are procedural conditions: confirm them in person (device/README.md)
+SKIP  image                         no --image given: firmware components not verified
+PASS  card-boot:uImage              uImage equals the catalogued file
+PASS  card-boot:adb_uImage          adb_uImage equals the catalogued file
+PASS  card-boot:KERNEL.DTB          KERNEL.DTB equals the catalogued file
+PASS  card-boot:RAMDISK.IMG         RAMDISK.IMG equals the catalogued file
+PASS  card-boot:uEnv.txt            uEnv.txt equals the catalogued file
+PASS  card-boot:batocera-boot.conf  batocera-boot.conf equals the catalogued file
+PASS  card-boot:2100mAh-gpu.dtb     2100mAh-gpu.dtb equals the catalogued file
+PASS  card-boot:2600mAh-gpu.dtb     2600mAh-gpu.dtb equals the catalogued file
+PASS  card-overclocking             overclocking unset
+PASS  card-boot-extra               no extra top-level files
+FAIL  card-rootfs                   boot/BATOCERA DIFFERS from the catalogued root filesystem
+PASS  card-first-boot               first boot completed (boot/autoresize removed by S02resize)
+PASS  card-script                   ATM7039S-capture.sh is capture script version 3
+WARN  card-earlier-captures         earlier capture folders present (copy them off first; they are kept, never reused): atm-capture-20220105T133748Z-660-0
+PASS  card-free-space               55817 MiB free on SHARE (a capture needs about 2 MiB; 64 MiB required)
+
+1 FAIL, 1 WARN. Not ready: fix every FAIL.

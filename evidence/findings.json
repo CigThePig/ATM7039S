@@ -151,7 +151,7 @@
   {
     "id": "CPU-002",
     "subsystem": "cpu",
-    "claim": "Vendor owl_smp_init_cpus reads the SCU core count, clips it to nr_cpu_ids, and forces ncores=2 when the powersave early parameter is set; powersave defaults false.",
+    "claim": "Vendor owl_smp_init_cpus reads the SCU core count, clips it to nr_cpu_ids, and forces ncores=2 when the powersave early parameter is set; powersave defaults false. [PR #8] OBS-001 shows ncores 4 and no powersave argument on Koriki v1.0 (CPU-003).",
     "confidence": "verified",
     "scope": "software-observation",
     "evidence": [
@@ -332,7 +332,7 @@
   {
     "id": "MMC-001",
     "subsystem": "storage",
-    "claim": "The gist declares MMC0 at 0xb0230000, MMC1 at 0xb0234000 and MMC2 at 0xb0238000; 0 and 2 are okay, 1 disabled.",
+    "claim": "The gist declares MMC0 at 0xb0230000, MMC1 at 0xb0234000 and MMC2 at 0xb0238000; 0 and 2 are okay, 1 disabled. [PR #8] Slot-to-controller correspondence for the observed unit: the TF1 boot card is on SD2 (0xb0238000) (BOOT-022, STOR-003); TF2 on SD0 (0xb0230000) is inferred.",
     "confidence": "verified",
     "scope": "software-observation",
     "evidence": [
@@ -2908,7 +2908,7 @@
     "confidence": "strongly-supported",
     "classification": "reverse-engineering-result",
     "scope": "release-binary",
-    "claim": "Loader block 0 (loader 0x0-0x200, linked at SRAM 0xb4060000, identical in all four stock releases) chooses a boot code from MMIO 0xb01600a0 (CMU_DEVCLKEN0 in the related S500 clock tree): bit 7 set gives code 2, bit 4 set gives code 0, neither gives a test of SRAM word 0xb4060408 against the A32 word 0xeb0001d0 (equal: code 4, otherwise code 5). It stores the code at 0xb4064c00. For codes 0 and 2 it calls SRAM 0xb4060400 with r9=4, r0=0x102b (disk sector 4139 = loader offset 0x5400), r1=0x50 sectors and r2=0xb4065400, then branches to 0xb4065400, the bootloader.bin code entry. Codes 4 and 5 call routines in loader 0x400-0x1e00 and the 0x200-0x400 reader (linked for 0xb4061200; there its call to 0xb4060140 reaches the block-0 word-sum routine and compares sum+0x1234 with the ActBrm trailer). Loader 0x400-0x1e00, including 0xb4060400, is all zero in every image, so on the SD paths the read service at 0xb4060400 is provided outside the image, by the Boot ROM; r9 selects the service. Unrecoverable failures end in blx 0xffff0140 after the console line \"load fail to adfu\".",
+    "claim": "Loader block 0 (loader 0x0-0x200, linked at SRAM 0xb4060000, identical in all four stock releases) chooses a boot code from MMIO 0xb01600a0 (CMU_DEVCLKEN0 in the related S500 clock tree): bit 7 set gives code 2, bit 4 set gives code 0, neither gives a test of SRAM word 0xb4060408 against the A32 word 0xeb0001d0 (equal: code 4, otherwise code 5). It stores the code at 0xb4064c00. For codes 0 and 2 it calls SRAM 0xb4060400 with r9=4, r0=0x102b (disk sector 4139 = loader offset 0x5400), r1=0x50 sectors and r2=0xb4065400, then branches to 0xb4065400, the bootloader.bin code entry. Codes 4 and 5 call routines in loader 0x400-0x1e00 and the 0x200-0x400 reader (linked for 0xb4061200; there its call to 0xb4060140 reaches the block-0 word-sum routine and compares sum+0x1234 with the ActBrm trailer). Loader 0x400-0x1e00, including 0xb4060400, is all zero in every image, so on the SD paths the read service at 0xb4060400 is provided outside the image, by the Boot ROM; r9 selects the service. Unrecoverable failures end in blx 0xffff0140 after the console line \"load fail to adfu\". [PR #8] On the observed device the path taken was code 2 (bit 7), not code 0: only code 2 reproduces OBS-001's command line (BOOT-022). The earlier statement that a working SD boot requires code 0 assumed TF1 is SD0; TF1 is on SD2.",
     "evidence": [
       {
         "source": "anbernic-stock-archive",
@@ -2953,7 +2953,7 @@
     "contradictory_evidence": [],
     "validation": "reproducible-static-analysis",
     "hardware_validated": false,
-    "limitations": "The MMIO value and the SRAM word are parameters of the emulation, not observations. Which bit the Boot ROM leaves set after an SD0 boot is not observed; only code 0 leads to a working SD boot (code 2 selects run emmcboot on mmc 1, codes 4/5 select NOR/NAND readers), so a booting stock card implies the bit-4 path, while the mainline S500 clock driver names bit 4 the NAND gate and bit 5 SD0 (C-DEVCLK). ROM code, its media search, retry order and checks are not in any image and are not reconstructed.",
+    "limitations": "The MMIO value and the SRAM word are parameters of the emulation, not observations. Which bit the Boot ROM leaves set after an SD0 boot is not observed; only code 0 leads to a working SD boot (code 2 selects run emmcboot on mmc 1, codes 4/5 select NOR/NAND readers), so a booting stock card implies the bit-4 path, while the mainline S500 clock driver names bit 4 the NAND gate and bit 5 SD0 (C-DEVCLK). ROM code, its media search, retry order and checks are not in any image and are not reconstructed. The CMU bit is inferred from the reproduced chain, not read.",
     "related_findings": [
       "BOOT-009",
       "BOOT-013",
@@ -3155,7 +3155,7 @@
     "confidence": "strongly-supported",
     "classification": "reverse-engineering-result",
     "scope": "release-binary",
-    "claim": "The stock kernel, RAM disk and device tree are loaded by U-Boot's mmcboot script from the microSD card. mmcargs sets devpart ${mmcdev}:${bootpart} = 0:1. mmc 0 is SD0 (0xb0230000): board_mmc_init (20231014: 0x05004108) registers enabled actions,owl-mmc nodes of U-Boot's embedded DTB in order (SD0, then SD2 at 0xb0238000) with dev_index = (reg - 0xb0230000) >> 14. Partition 1 is GPT entry 1 (MISC, LBA 16384, FAT16) on stock and MBR entry 1 (FAT32) on Koriki. setbootenv fatloads uEnv.txt to scriptaddr 0x04400000 (the stock file is named uenv.txt; U-Boot's FAT lookup is case-insensitive) and imports it with env import -t, runs uenvcmd (stock: \"setenv os_type linux;\", which nothing reads: the string os_type is absent from the binary), tries boot.scr (absent), then mboot fatloads uImage to kernel_addr_r 0x7fc0, ramdisk.img to ramdisk_addr_r 0x1ffffc0 and kernel.dtb to fdt_addr_r 0x03800000 and runs bootm on the three addresses.",
+    "claim": "The stock kernel, RAM disk and device tree are loaded by U-Boot's mmcboot script from the microSD card. mmcargs sets devpart ${mmcdev}:${bootpart} = 0:1. mmc 0 is SD0 (0xb0230000): board_mmc_init (20231014: 0x05004108) registers enabled actions,owl-mmc nodes of U-Boot's embedded DTB in order (SD0, then SD2 at 0xb0238000) with dev_index = (reg - 0xb0230000) >> 14. Partition 1 is GPT entry 1 (MISC, LBA 16384, FAT16) on stock and MBR entry 1 (FAT32) on Koriki. setbootenv fatloads uEnv.txt to scriptaddr 0x04400000 (the stock file is named uenv.txt; U-Boot's FAT lookup is case-insensitive) and imports it with env import -t, runs uenvcmd (stock: \"setenv os_type linux;\", which nothing reads: the string os_type is absent from the binary), tries boot.scr (absent), then mboot fatloads uImage to kernel_addr_r 0x7fc0, ramdisk.img to ramdisk_addr_r 0x1ffffc0 and kernel.dtb to fdt_addr_r 0x03800000 and runs bootm on the three addresses. [PR #8] This describes the AFI boot_dev 0x20 path. Its registration statement is incomplete: board_mmc_init registers SD2 only when boot_dev is 0x22 (BOOT-023). OBS-001's boot took the 0x22 path: emmcboot with devpart 1:1, U-Boot mmc 1 = SD2 (0xb0238000), the same FAT file sequence (BOOT-022).",
     "evidence": [
       {
         "source": "anbernic-stock-archive",
@@ -3204,7 +3204,8 @@
       "koriki-v1.0-release"
     ],
     "contradictory_evidence": [
-      "miaui-gpu-rg35xx"
+      "miaui-gpu-rg35xx",
+      "BOOT-022"
     ],
     "validation": "reproducible-static-analysis",
     "hardware_validated": false,
@@ -3222,7 +3223,7 @@
     "confidence": "strongly-supported",
     "classification": "reverse-engineering-result",
     "scope": "release-binary",
-    "claim": "Linux handoff of the stock firmware, reproduced by executing U-Boot's image_setup_linux (20231014: 0x05014c50) on the shipped files: the legacy kernel uImage (load = entry = 0x8000, uncompressed type, CRC-checked because verify=yes) is used in place because 0x7fc0+0x40 = 0x8000 (XIP); the RAM disk payload stays at 0x2000000 and the DTB at 0x03800000 because initrd_high and fdt_high are 0xffffffff. image_setup_libfdt sets /chosen bootargs, writes /memory reg = <0 ram_size>, shrinks the blob and adds /memreserve/ entries for the DTB itself and for the RAM disk, and writes linux,initrd-start/end (stock 20231014: 0x2000000/0x20a3600). owl_boot_fdt_setup (0x0500456c) then rewrites bootargs as console=ttyS<AFI uart> <uEnv.txt bootargs> androidboot.dvfslevel=0x705x [allenS500=1 when gd->flags bit 20] androidboot.bootdev=sd boot_dev=sd0 [androidboot.serialno=<SN>], i.e. for stock \"console=ttyS3 earlyprintk clk_ignore_unused selinux=0 loglevel=4 androidboot.dvfslevel=0x705x androidboot.bootdev=sd boot_dev=sd0\". boot_jump_linux (0x050037fc) calls cleanup_before_linux (IRQ/FIQ masked, I-cache off, D-cache and MMU off after a flush; outer-cache hooks empty) and jumps to 0x8000 with r0=0, r1=0 (bi_arch_number is never written; env machid unset) and r2=0x03800000. ram_size is the AFI ddr_size when at least 8 MiB, else 0x1f000000.",
+    "claim": "Linux handoff of the stock firmware, reproduced by executing U-Boot's image_setup_linux (20231014: 0x05014c50) on the shipped files: the legacy kernel uImage (load = entry = 0x8000, uncompressed type, CRC-checked because verify=yes) is used in place because 0x7fc0+0x40 = 0x8000 (XIP); the RAM disk payload stays at 0x2000000 and the DTB at 0x03800000 because initrd_high and fdt_high are 0xffffffff. image_setup_libfdt sets /chosen bootargs, writes /memory reg = <0 ram_size>, shrinks the blob and adds /memreserve/ entries for the DTB itself and for the RAM disk, and writes linux,initrd-start/end (stock 20231014: 0x2000000/0x20a3600). owl_boot_fdt_setup (0x0500456c) then rewrites bootargs as console=ttyS<AFI uart> <uEnv.txt bootargs> androidboot.dvfslevel=0x705x [allenS500=1 when gd->flags bit 20] androidboot.bootdev=sd boot_dev=sd0 [androidboot.serialno=<SN>], i.e. for stock \"console=ttyS3 earlyprintk clk_ignore_unused selinux=0 loglevel=4 androidboot.dvfslevel=0x705x androidboot.bootdev=sd boot_dev=sd0\". boot_jump_linux (0x050037fc) calls cleanup_before_linux (IRQ/FIQ masked, I-cache off, D-cache and MMU off after a flush; outer-cache hooks empty) and jumps to 0x8000 with r0=0, r1=0 (bi_arch_number is never written; env machid unset) and r2=0x03800000. ram_size is the AFI ddr_size when at least 8 MiB, else 0x1f000000. [PR #8] The boot_dev term follows the AFI boot_dev (0x20 -> sd0, 0x22 -> sd2); OBS-001 ran the sd2 variant with allenS500=1, reproduced byte for byte by emulation (BOOT-022). The emulated initrd placement 0x2000000-0x23a43b1 equals OBS-001's /chosen.",
     "evidence": [
       {
         "source": "anbernic-stock-archive",
@@ -4116,7 +4117,7 @@
     "confidence": "verified",
     "classification": "verified-binary-observation",
     "scope": "release-binary",
-    "claim": "The Koriki v1.0 kernel names MMC cards by role rather than by host index: it contains the strings \"%s,sd0 as boot card,sd0 name tsd_card\", \"%s,sd2 as boot card,sd2 name tsd_card\", \"%s,sd0 as boot card,sd2 name card_to_card\" and \"force sd2(emmc) host emmc_boot_card\", plus the device names emmc_boot_card and sd_card. Koriki's S03performance hard-codes /sys/devices/b0238000.mmc/mmc_host/mmc0/emmc_boot_card/block/mmcblk0 and /sys/devices/b0230000.mmc/mmc_host/mmc1/sd_card/block/mmcblk1. The pinned kernel source never sets GENHD_FL_REMOVABLE for MMC disks, so /sys/block/mmcblk*/removable reads 0 for SD cards and eMMC alike; the card type attribute (SD or MMC) distinguishes them.",
+    "claim": "The Koriki v1.0 kernel names MMC cards by role rather than by host index: it contains the strings \"%s,sd0 as boot card,sd0 name tsd_card\", \"%s,sd2 as boot card,sd2 name tsd_card\", \"%s,sd0 as boot card,sd2 name card_to_card\" and \"force sd2(emmc) host emmc_boot_card\", plus the device names emmc_boot_card and sd_card. Koriki's S03performance hard-codes /sys/devices/b0238000.mmc/mmc_host/mmc0/emmc_boot_card/block/mmcblk0 and /sys/devices/b0230000.mmc/mmc_host/mmc1/sd_card/block/mmcblk1. The pinned kernel source never sets GENHD_FL_REMOVABLE for MMC disks, so /sys/block/mmcblk*/removable reads 0 for SD cards and eMMC alike; the card type attribute (SD or MMC) distinguishes them. [PR #8] The conditions for each naming string are now traced (STOR-003): names follow the controller slot and boot_dev, not the medium.",
     "evidence": [
       {
         "source": "koriki-v1.0-release",
@@ -4149,7 +4150,7 @@
     ],
     "validation": "reproducible-static-analysis",
     "hardware_validated": false,
-    "limitations": "The conditions under which each naming string is printed were not traced. Script paths express the release author's expectation, not a probe. A device name such as mmcblk0 or emmc_boot_card does not by itself say whether the medium is removable.",
+    "limitations": "The conditions under which each naming string is printed were not traced. Script paths express the release author's expectation, not a probe. A device name such as mmcblk0 or emmc_boot_card does not by itself say whether the medium is removable. Superseded in part by STOR-003.",
     "related_findings": [
       "STOR-001",
       "MMC-001",
@@ -4205,6 +4206,389 @@
       "UI-001",
       "FW-005",
       "FW-020"
+    ]
+  },
+  {
+    "id": "BOOT-022",
+    "subsystem": "boot",
+    "confidence": "strongly-supported",
+    "classification": "reverse-engineering-result",
+    "scope": "release-binary",
+    "claim": "OBS-001's kernel command line is reproduced byte for byte by exactly one executed boot path of the Koriki v1.0 image (stock 230309 loader and U-Boot): loader block 0 writes boot code 2 (CMU_DEVCLKEN0 bit 7 set; BOOT-012), bootloader.bin turns it into AFI boot_mode 0, boot_dev 0x22, uart 3 with the same raw reads as the code-0 path, check_boot_flag sets bootcmd \"run emmcboot\", emmcargs sets devpart ${emmcdev}:${bootpart} = 1:1, U-Boot device 1 is the SD2 controller 0xb0238000 (BOOT-023), and owl_boot_fdt_setup with gd flag 0x100000 (GPIOC6 strap high) produces \"console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x allenS500=1 androidboot.bootdev=sd boot_dev=sd2\". Of the six (boot code x strap) hypotheses run by boot_chain.py boot-path, only this one matches; code 0 (AFI 0x20, mmcboot, mmc 0:1 = SD0) gives boot_dev=sd0. The same path reads the U-Boot environment from mmc 1 = the boot card itself at byte offsets 0x5000/0x25000 (all zero in the image, so the default environment applies).",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "section": "evidence/firmware/koriki-v1.0-boot-path.json hypotheses, matching"
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#u-boot.uimage",
+        "sha256": "814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd",
+        "offset_start": 0,
+        "offset_end": 726396,
+        "section": "check_boot_flag, default environment, mmc_initialize, owl_boot_fdt_setup"
+      },
+      {
+        "source": "owner-device",
+        "observation": "OBS-001",
+        "item": "cmdline"
+      },
+      {
+        "source": "owner-device",
+        "observation": "OBS-001",
+        "item": "dmesg"
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "owner-device"
+    ],
+    "contradictory_evidence": [],
+    "validation": "hardware-observation",
+    "hardware_validated": false,
+    "observations": [
+      "OBS-001"
+    ],
+    "limitations": "A match between an executed path and the observed result is strong but indirect: the Boot ROM, the CMU bit it left, the AFI bytes and U-Boot's console were not observed. The match assumes the card's raw loader and U-Boot equal the image (the raw boot-region check was not supplied for OBS-001). Emulation supplies the ROM read service, DRAM outcome (256 MiB) and getenv/setenv/printf; the strap is an input, not a measurement.",
+    "related_findings": [
+      "BOOT-012",
+      "BOOT-013",
+      "BOOT-015",
+      "BOOT-016",
+      "BOOT-017",
+      "BOOT-023",
+      "STOR-003"
+    ]
+  },
+  {
+    "id": "BOOT-023",
+    "subsystem": "boot",
+    "confidence": "strongly-supported",
+    "classification": "reverse-engineering-result",
+    "scope": "release-binary",
+    "claim": "U-Boot numbers MMC devices in registration order, independent of card presence: mmc_initialize (0x05023ff4) resets cur_dev_num to 0 and calls board_mmc_init (0x05004108), which returns without registering anything when the AFI boot_mode is 1, walks the enabled actions,owl-mmc nodes of its embedded DTB, maps reg to slot (reg - 0xb0230000) >> 14, saves pin-mux word 0xb01b0048 before slot 0, registers slot 2 (SD2) only when the AFI boot_dev is 0x22, and calls owl_sd_init (0x05024f04). owl_sd_init calls mmc_create (0x05023a2c), which assigns block_dev.dev = cur_dev_num++ and links the device, before mmc_init (0x05023de4); a failed mmc_init prints \"slot:%d, error mmc_init\" and returns -1 without unregistering (board_mmc_init then restores the SD0 pin-mux word). Executed from the image for AFI 0x20/0x22 and every SD0/SD2 mmc_init outcome: AFI 0x20 registers only SD0 as mmc 0; AFI 0x22 registers SD0 as mmc 0 and SD2 as mmc 1 whether or not SD0 has a card. An empty or failing SD0 therefore does not move SD2 to device 0.",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "section": "evidence/firmware/koriki-v1.0-boot-path.json hypotheses[].mmc_registration"
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#u-boot.uimage",
+        "sha256": "814ce6dbe7ab66a0d6678999ecbdf1ea8ba82f9d32a80ba95f3f13ebdbeff5dd",
+        "offset_start": 0,
+        "offset_end": 726396,
+        "section": "mmc_initialize, board_mmc_init, owl_sd_init, mmc_create"
+      },
+      {
+        "source": "uboot",
+        "path": "drivers/mmc/mmc.c"
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "uboot"
+    ],
+    "contradictory_evidence": [],
+    "validation": "reproducible-static-analysis",
+    "hardware_validated": false,
+    "limitations": "mmc_init, malloc and printf are modelled; the card-side protocol is not emulated. Corrects the registration statement in BOOT-016, which omitted the AFI 0x22 condition for SD2.",
+    "related_findings": [
+      "BOOT-016",
+      "BOOT-022",
+      "MMC-001"
+    ]
+  },
+  {
+    "id": "STOR-003",
+    "subsystem": "storage",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "claim": "Linux MMC numbering on Koriki v1.0 is chosen by the vendor kernel from the boot_dev= argument, not inherited from U-Boot. boot_dev_process (__setup \"boot_dev=\") maps nand/sd0/sd1/sd2/... to OWL_BOOTDEV codes (sd2 = 0x22) in g_boot_dev; proc_bootdev_init (module_init) prints \"## boot_dev: 0x%x\" and creates /proc/bootdev. mmc_alloc_host computes host_id = (reg - 0xB0230000) >> 14 and, when boot_dev - 0x20 == host_id, allocates host index 0 for that host (idr_alloc start 0); every other host is allocated from index 1. The host driver sets its slot id from the controller address (bit 0x4000 -> SD1, 0x8000 -> SD2, else SD0), and mmc_add_card names cards by slot: SD0 \"sd_card\", SD1 \"<host>:<rca>\", SD2 \"emmc\" when boot_dev is sd0 and \"emmc_boot_card\" otherwise. The \"emmc\" names are role labels from the vendor reference design (SD2 normally carries eMMC); the card's own type attribute (SD) gives the medium. OBS-001's lines \"host_id: 0 ... index: 1\", \"host_id: 2 ... index: 0\", \"force sd2(emmc) host emmc_boot_card\" and mmcblk0 on b0238000 are exactly this logic with boot_dev 0x22.",
+    "evidence": [
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/mmc/core/host.c",
+        "line_start": 433,
+        "line_end": 468
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/mmc/core/bus.c",
+        "line_start": 348,
+        "line_end": 390
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/mmc/host/gl520x_mmc.c",
+        "line_start": 1405,
+        "line_end": 1435
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/mach-owl/bootdev-owl.c",
+        "line_start": 148,
+        "line_end": 180
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/kernel-payload.json#gzip_streams/0",
+        "sha256": "5883f67328823b10e2e82576d5e043a3ff4c78b2095644250008bf640622fc5e",
+        "section": "kallsyms: mmc_alloc_host 0xc049fb28, mmc_add_card 0xc049f45c, acts_mmc_probe 0xc0a43724, boot_dev_process 0xc0a1bb9c, owl_get_boot_dev 0xc0022e8c"
+      },
+      {
+        "source": "owner-device",
+        "observation": "OBS-001",
+        "item": "dmesg"
+      },
+      {
+        "source": "owner-device",
+        "observation": "OBS-001",
+        "item": "block-sysfs"
+      }
+    ],
+    "supporting_evidence": [
+      "vendor-kernel",
+      "koriki-v1.0-release",
+      "owner-device"
+    ],
+    "contradictory_evidence": [],
+    "validation": "hardware-observation",
+    "hardware_validated": false,
+    "observations": [
+      "OBS-001"
+    ],
+    "limitations": "Binary and pinned source agree for these functions; the Koriki kernel is not a build of exactly this source revision (its cpufreq table differs, CLK-006). Linux numbering does not reveal U-Boot's numbering or which controller the Boot ROM used. TF2 being SD0 is inferred from the same logic (Koriki S03performance names b0230000 mmc1 sd_card) and was not exercised with a card in TF2.",
+    "related_findings": [
+      "STOR-001",
+      "STOR-002",
+      "BOOT-022",
+      "MMC-001"
+    ]
+  },
+  {
+    "id": "CPU-003",
+    "subsystem": "cpu",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "claim": "The number of CPUs Linux brings up on Koriki v1.0 comes from the Cortex-A9 SCU, not from the device tree. owl_smp_init_cpus prints \"ncores %d\" from scu_get_core_count, clips to nr_cpu_ids and forces 2 only when the powersave parameter is set, then marks CPUs 0..ncores-1 possible; secondaries are started through the vendor smp_ops. The release DTB lists only cpu@0 (with cpuvdd-supply and transition-latency, used by cpufreq) and cpu@1. OBS-001 shows \"ncores 4\", four CPUs brought up with MPIDR 0x80000000-0x80000003, possible/present/online 0-3, kernel_max 3 and no powersave argument; the two DT cpu nodes are therefore not a limit on this kernel.",
+    "evidence": [
+      {
+        "source": "vendor-kernel",
+        "path": "arch/arm/mach-owl/platsmp-owl.c",
+        "line_start": 205,
+        "line_end": 232
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#kernel.dtb",
+        "sha256": "ad4b8b4dd98fbb95bde8854ff0bd9c2e870c3c0c21f27be0122c741f36686f0f",
+        "offset_start": 0,
+        "offset_end": 28111,
+        "section": "/cpus"
+      },
+      {
+        "source": "owner-device",
+        "observation": "OBS-001",
+        "item": "dmesg"
+      },
+      {
+        "source": "owner-device",
+        "observation": "OBS-001",
+        "item": "cpu-online"
+      },
+      {
+        "source": "owner-device",
+        "observation": "OBS-001",
+        "item": "cpuinfo"
+      }
+    ],
+    "supporting_evidence": [
+      "vendor-kernel",
+      "koriki-v1.0-release",
+      "owner-device"
+    ],
+    "contradictory_evidence": [],
+    "validation": "hardware-observation",
+    "hardware_validated": false,
+    "observations": [
+      "OBS-001"
+    ],
+    "limitations": "Four cores online under one firmware on one unit. Not established: per-core maximum stable frequency, thermal behaviour under load, behaviour of other firmware (PRODUCE/charger paths add powersave and so two cores), or that a mainline kernel needs more DT cpu nodes (it does: mainline enumerates CPUs from the DT).",
+    "related_findings": [
+      "CPU-001",
+      "CPU-002",
+      "C-CPU"
+    ]
+  },
+  {
+    "id": "CLK-006",
+    "subsystem": "clock",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "claim": "The ten CPU frequencies OBS-001 exposes come from a single table, cpu0_table (0xc0ad5b70), in the Koriki v1.0 kernel's data: (kHz, uV) 1488000/1375000, 1392000/1325000, 1296000/1275000, 1200000/1200000, 1104000/1175000, 1008000/1100000, 840000/1075000, 720000/1025000, 504000/1000000, 240000/975000. The pinned vendor source differs (its per-dvfslevel tables stop at 1104000 kHz), so this release is a modified build. The 1008 MHz scaling_max is set by Koriki userspace: /etc/init.d/S02overclock writes scaling_max_freq for cpu0-3 from batocera-boot.conf \"overclocking\" (none or unset -> 1008000; low 720000, high 1200000, turbo 1392000, extreme 1488000, powersave 240000), and the ramdisk /init selects the performance governor. androidboot.dvfslevel=0x705x is a constant string appended by U-Boot's owl_boot_fdt_setup; nothing in this kernel's command-line handling was found to parse it (the kernel's dvfslevel comes from asoc_get_dvfslevel, not from that argument).",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/kernel-payload.json#gzip_streams/0",
+        "sha256": "5883f67328823b10e2e82576d5e043a3ff4c78b2095644250008bf640622fc5e",
+        "section": "cpu0_table 0xc0ad5b70 (kallsyms), 10 x (kHz, uV)"
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "section": "evidence/firmware/koriki-v1.0-first-boot.json rootfs /etc/init.d/S02overclock sha256 95b82c727d33e405fb7d931c0889195378a40c32f5843e14b353024b75419e8c"
+      },
+      {
+        "source": "vendor-kernel",
+        "path": "drivers/cpufreq/owl-cpufreq.c",
+        "line_start": 60,
+        "line_end": 160
+      },
+      {
+        "source": "owner-device",
+        "observation": "OBS-001",
+        "item": "cpufreq-available"
+      },
+      {
+        "source": "owner-device",
+        "observation": "OBS-001",
+        "item": "cpufreq-scaling_max"
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "vendor-kernel",
+      "owner-device"
+    ],
+    "contradictory_evidence": [],
+    "validation": "hardware-observation",
+    "hardware_validated": false,
+    "observations": [
+      "OBS-001"
+    ],
+    "limitations": "Table voltages are what the software requests from the PMIC, not measured rail voltages, and say nothing about stability, thermals or silicon margin. No frequency above the observed 1008 MHz was run or is authorized. Whether the kernel derives anything from dvfslevel on this build was not traced beyond the absence of a parser for the command-line string.",
+    "related_findings": [
+      "CLK-001",
+      "CPU-003"
+    ]
+  },
+  {
+    "id": "MEM-011",
+    "subsystem": "memory",
+    "confidence": "strongly-supported",
+    "classification": "reconciliation",
+    "scope": "release-binary",
+    "claim": "OBS-001's memory quantities measure different things and are consistent: 256 MiB is the AFI ddr_size U-Boot wrote to /memory (iomem System RAM 0-0x0fffffff); \"Memory: 150452k/150452k available, 111692k reserved\" is the early free-page count after the boot-time reservations (kernel image, initrd 3.6 MiB, vendor \"Reserved memory 32MB\", 48 MiB CMA at 0x0a400000, page tables, DTB); MemTotal 237548 kB is later, after the initrd (3728 kB) and init sections are freed and CMA pages are returned to the buddy allocator (CmaFree 37572 kB still counted in MemTotal). The difference 237548 - 150452 = 87096 kB equals CMA 49152 + initrd 3728 + about 34 MiB of the vendor/init reservations being released or counted differently; the 32 MB vendor block and the CMA pool are reservations inside the 256 MiB, not extra memory. SwapTotal 524284 kB is the 512 MiB card partition, not RAM.",
+    "evidence": [
+      {
+        "source": "owner-device",
+        "observation": "OBS-001",
+        "item": "meminfo"
+      },
+      {
+        "source": "owner-device",
+        "observation": "OBS-001",
+        "item": "iomem"
+      },
+      {
+        "source": "owner-device",
+        "observation": "OBS-001",
+        "item": "dmesg"
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "section": "evidence/firmware/koriki-v1.0-boot-path.json hypotheses[block0_code=2].afi.ddr_size"
+      }
+    ],
+    "supporting_evidence": [
+      "owner-device",
+      "koriki-v1.0-release"
+    ],
+    "contradictory_evidence": [],
+    "validation": "hardware-observation",
+    "hardware_validated": false,
+    "observations": [
+      "OBS-001"
+    ],
+    "limitations": "The split of the remaining ~34 MiB between the vendor reservation, init memory and other boot allocations was not traced in the binary; the capture has no /proc/zoneinfo or boot-time memblock dump. Physical DRAM size and training are not observable after boot (MEM-006). For a minimal OS the relevant figure is the 256 MiB handed over, minus whatever the new kernel itself reserves; the vendor 32 MB and CMA sizes are vendor-kernel choices.",
+    "related_findings": [
+      "MEM-006",
+      "MEM-010",
+      "BOOT-017"
+    ]
+  },
+  {
+    "id": "FW-021",
+    "subsystem": "firmware",
+    "confidence": "verified",
+    "classification": "verified-binary-observation",
+    "scope": "release-binary",
+    "claim": "Koriki v1.0 writes to its root filesystem container on every boot. The ramdisk /init mounts boot/BATOCERA at /overlay_root/base, attempts an overlayfs mount (unsupported by this 3.10 kernel) and falls back to mounting the same file again, read-write, as the new root; OBS-001's mount table shows /dev/loop0 on /overlay/base and /dev/loop1 on / both ext4 rw. The /init also writes 1 to boot/REBOOT. Before inittab's \"mount -a\" mounts tmpfs on /run, /var and /tmp, sysvinit creates /run/initctl and /run/utmp in the container, and S50dropbear replaces the /etc/dropbear symlink with a directory. These four tree changes are exactly OBS-001's first-boot differences and are encoded, with the scripts' hashes, in evidence/firmware/koriki-v1.0-first-boot.json.",
+    "evidence": [
+      {
+        "source": "koriki-v1.0-release",
+        "artifact": "evidence/firmware/koriki-v1.0.json#ramdisk.img",
+        "sha256": "a64bfd03833d7b748dc4ef8121c3c8245c244993c3fccb97880cfa889ff788a9",
+        "offset_start": 0,
+        "offset_end": 3818481,
+        "section": "cpio /init lines 51-59, 124"
+      },
+      {
+        "source": "koriki-v1.0-release",
+        "section": "evidence/firmware/koriki-v1.0-first-boot.json rules, why_the_container_changes"
+      },
+      {
+        "source": "owner-device",
+        "observation": "OBS-001",
+        "item": "mounts"
+      }
+    ],
+    "supporting_evidence": [
+      "koriki-v1.0-release",
+      "owner-device"
+    ],
+    "contradictory_evidence": [],
+    "validation": "hardware-observation",
+    "hardware_validated": false,
+    "observations": [
+      "OBS-001"
+    ],
+    "limitations": "Two simultaneous read-write mounts of one ext4 image through different loop devices are not coordinated by Linux and can corrupt it; whether Koriki ever writes through /overlay/base was not established. The types of /run/initctl and /run/utmp are predicted from sysvinit, not recorded by OBS-001.",
+    "related_findings": [
+      "STOR-001",
+      "UI-003"
+    ]
+  },
+  {
+    "id": "MAP-002",
+    "subsystem": "memory-map",
+    "confidence": "verified",
+    "classification": "software-description",
+    "scope": "release-binary",
+    "claim": "OBS-001 /proc/iomem lists the MMIO resources Koriki's drivers claimed: owl-audio-i2s 0xb0100000+0x34, pcm 0xb0110000+0x8010, owl-serial.0 0xb0120000+0x1000, i2c 0xb0174000 and 0xb0178000 (+0x4000 each), thermal 0xb01b00e8+0x8, mmc 0xb0230000 and 0xb0238000 (+0x38), dma 0xb0260000+0xd00, vde 0xb0280000+0x108, vce 0xb0288000+0x94, hdmi 0xb02c0000+0x160, de 0xb02e0000+0x100e, usb 0xb0400000+0xcd00 (dwc3.0 inside it) and b0400000.usb 0xb040cd00+0x59. No resource lies outside the canonical model's documented address blocks.",
+    "evidence": [
+      {
+        "source": "owner-device",
+        "observation": "OBS-001",
+        "item": "iomem"
+      }
+    ],
+    "supporting_evidence": [
+      "owner-device"
+    ],
+    "contradictory_evidence": [],
+    "validation": "hardware-observation",
+    "hardware_validated": false,
+    "observations": [
+      "OBS-001"
+    ],
+    "limitations": "A claimed resource range is what a driver asked the kernel for; it is not proof that every register in it exists or is safe to access, and absent entries (for example the GPU, which is mapped by pvrsrvkm without a named iomem entry) are not proof of absence. Only one serial port is listed, although ttyS3 is the console.",
+    "related_findings": [
+      "MAP-001",
+      "MMC-001"
     ]
   }
 ]

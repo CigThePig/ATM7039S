@@ -4,7 +4,7 @@
 
 **Running it on a device is test V3 in the [validation plan](../reports/hardware-validation-plan.md). It needs the device owner's explicit approval for that session.** Nothing in this repository grants that approval. The [readiness report](../reports/v3-hardware-validation-readiness.md) explains what was checked and what is still uncertain.
 
-For a fully detailed walkthrough, see **[V3-STEP-BY-STEP.md](V3-STEP-BY-STEP.md)**.
+**The normal way to run V3 is the lab: double-click `ATM7039S-Lab.cmd` and follow [V3-LAB-QUICKSTART.md](V3-LAB-QUICKSTART.md).** It does every computer-side step below automatically. The fully manual walkthrough, [V3-STEP-BY-STEP.md](V3-STEP-BY-STEP.md), is the fallback when the lab cannot be used.
 
 The whole session is seven steps: verify and prepare a spare card, copy the script, boot normally, run one capture, shut down, copy the results, and analyse them on the computer.
 
@@ -17,7 +17,7 @@ The whole session is seven steps: verify and prepare a spare card, copy the scri
 | **Koriki v1.0** (`koriki-rg35xx-v1.0_20231112.img.gz`), fetched and checked by the tools below. | It is the only firmware whose every boot component is catalogued here ([why](../reports/test-firmware-selection.md)). |
 | Python 3.11 (CI-tested minor version) with `pip install -r requirements-dev.txt -r requirements-firmware.txt`. | For the checks and the analysis. |
 | The handheld's battery charged beforehand, and **no charging cable during the test**. | Charging selects a different boot path (240 MHz cap, backlight off). |
-| **TF2 (the second card slot) empty.** | Koriki mounts and writes to any card in TF2, and would then look for the script there. |
+| **TF2 (the second card slot) empty.** | Koriki mounts and writes to any card in TF2, and would then look for the script there. TF2 is the SD0 controller; the boot card in TF1 is on SD2 (BOOT-022). |
 | **`overclocking` left unset** (never change the CPU setting). | The baseline is the default 1008 MHz cap; anything else is an experiment. |
 
 ### What the capture reads, and what it never does

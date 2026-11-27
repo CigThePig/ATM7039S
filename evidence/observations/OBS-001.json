@@ -1,0 +1,2747 @@
+{
+  "format_version": 2,
+  "capture": {
+    "capture_version": "3",
+    "capture_format": 2,
+    "script_sha256": "6726691066255582dea32bf8d34d7654dd7f67be14fd75064831484f7633e217",
+    "script_version_known": true,
+    "script_version_status": "current",
+    "fixture_root": "none",
+    "path_override": "none",
+    "uid": "0",
+    "started_utc": "20220105T133748Z",
+    "finished_utc": "20220105T133752Z",
+    "started_uptime": "79.60",
+    "finished_uptime": "83.27",
+    "environment": {
+      "busybox": "BusyBox v1.36.1 (2023-10-18 02:27:37 UTC) multi-call binary.",
+      "hash_tool": "sha256sum",
+      "head_c": "yes",
+      "tar_tool": "yes",
+      "find_tool": "yes",
+      "readlink_tool": "yes",
+      "item_limit": "4194304"
+    },
+    "manifest_sha256": "99989da7414ee54489d74aa3523044fde9efe81489a8a626b41a8dc4b3c2e27a",
+    "done_marker": true,
+    "status_counts": {
+      "ok": 42,
+      "missing": 3
+    },
+    "essential": [
+      "version",
+      "cmdline",
+      "cpu-possible",
+      "cpu-present",
+      "cpu-online",
+      "meminfo",
+      "iomem",
+      "partitions",
+      "mounts",
+      "block-sysfs",
+      "device-tree",
+      "dmesg"
+    ],
+    "essential_not_ok": [],
+    "files": [
+      {
+        "id": "version",
+        "kind": "file",
+        "target": "/proc/version",
+        "status": "ok",
+        "bytes": 131,
+        "sha256": "fba478162571e136fe01055a6abca47ae91834d10db1b2d9b9ac970850ba2041"
+      },
+      {
+        "id": "uname",
+        "kind": "cmd",
+        "target": "uname -a",
+        "status": "ok",
+        "bytes": 86,
+        "sha256": "4f27f892ee2b9d463f14aaaaa2ed4729df286c2583febbe772ada3578c416415"
+      },
+      {
+        "id": "cmdline",
+        "kind": "file",
+        "target": "/proc/cmdline",
+        "status": "ok",
+        "bytes": 144,
+        "sha256": "001c92107e60b3d3046bde761c589d0308c748d20fd7bb03eea9035c45c10a18"
+      },
+      {
+        "id": "uptime",
+        "kind": "file",
+        "target": "/proc/uptime",
+        "status": "ok",
+        "bytes": 13,
+        "sha256": "9a85bb01556480676315fdacc08528bb26c3ad5d7fefbdd33f1951051f36e58c"
+      },
+      {
+        "id": "cpuinfo",
+        "kind": "file",
+        "target": "/proc/cpuinfo",
+        "status": "ok",
+        "bytes": 1053,
+        "sha256": "cfc9e7fe0dd51666dc9c3102f4772842775bab5405f0d5b3a19db774b5f6b10e"
+      },
+      {
+        "id": "cpu-kernel_max",
+        "kind": "file",
+        "target": "/sys/devices/system/cpu/kernel_max",
+        "status": "ok",
+        "bytes": 2,
+        "sha256": "1121cfccd5913f0a63fec40a6ffd44ea64f9dc135c66634ba001d10bcf4302a2"
+      },
+      {
+        "id": "cpu-possible",
+        "kind": "file",
+        "target": "/sys/devices/system/cpu/possible",
+        "status": "ok",
+        "bytes": 4,
+        "sha256": "b2f03f42d35e331b1b8f8b03648dab495a27d703b10d8df4fe5c3346f34de4cc"
+      },
+      {
+        "id": "cpu-present",
+        "kind": "file",
+        "target": "/sys/devices/system/cpu/present",
+        "status": "ok",
+        "bytes": 4,
+        "sha256": "b2f03f42d35e331b1b8f8b03648dab495a27d703b10d8df4fe5c3346f34de4cc"
+      },
+      {
+        "id": "cpu-online",
+        "kind": "file",
+        "target": "/sys/devices/system/cpu/online",
+        "status": "ok",
+        "bytes": 4,
+        "sha256": "b2f03f42d35e331b1b8f8b03648dab495a27d703b10d8df4fe5c3346f34de4cc"
+      },
+      {
+        "id": "cpu-offline",
+        "kind": "file",
+        "target": "/sys/devices/system/cpu/offline",
+        "status": "ok",
+        "bytes": 1,
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+      },
+      {
+        "id": "cpufreq-available",
+        "kind": "file",
+        "target": "/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies",
+        "status": "ok",
+        "bytes": 77,
+        "sha256": "81e43eb54aa09b2b1aee761d98e82abf724d939ef7efed4e4fb56d9751243bde"
+      },
+      {
+        "id": "cpufreq-min",
+        "kind": "file",
+        "target": "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq",
+        "status": "ok",
+        "bytes": 7,
+        "sha256": "7844fbd8ea47c57d25d9ea6da692db584ed0a9dbf31cdce8d5cb82ef7d0a86d7"
+      },
+      {
+        "id": "cpufreq-max",
+        "kind": "file",
+        "target": "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq",
+        "status": "ok",
+        "bytes": 8,
+        "sha256": "3b6b9554aa2c45284291f84719598b1f1ef3455961e61e11757c7f4b15df59d4"
+      },
+      {
+        "id": "cpufreq-governor",
+        "kind": "file",
+        "target": "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor",
+        "status": "ok",
+        "bytes": 12,
+        "sha256": "4cab62e134aeb01974c0134f6d31d72fc01a21c863ab2e3022c64178df3b763a"
+      },
+      {
+        "id": "cpufreq-driver",
+        "kind": "file",
+        "target": "/sys/devices/system/cpu/cpu0/cpufreq/scaling_driver",
+        "status": "ok",
+        "bytes": 9,
+        "sha256": "f2939cb0dc7bbbee1936a13065e96b7f1f88b8bd1dfef6fe4c69c810f8537540"
+      },
+      {
+        "id": "cpufreq-scaling_min",
+        "kind": "file",
+        "target": "/sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq",
+        "status": "ok",
+        "bytes": 7,
+        "sha256": "7844fbd8ea47c57d25d9ea6da692db584ed0a9dbf31cdce8d5cb82ef7d0a86d7"
+      },
+      {
+        "id": "cpufreq-scaling_max",
+        "kind": "file",
+        "target": "/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq",
+        "status": "ok",
+        "bytes": 8,
+        "sha256": "44023aa3e096ccacad6a4b90e2f356beb2b37ecbe4274eb1873fc1eb9fc97303"
+      },
+      {
+        "id": "cpufreq-scaling_cur",
+        "kind": "file",
+        "target": "/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq",
+        "status": "ok",
+        "bytes": 8,
+        "sha256": "44023aa3e096ccacad6a4b90e2f356beb2b37ecbe4274eb1873fc1eb9fc97303"
+      },
+      {
+        "id": "meminfo",
+        "kind": "file",
+        "target": "/proc/meminfo",
+        "status": "ok",
+        "bytes": 1064,
+        "sha256": "5595515770e5fb1a060a9bd35b2d206d850bd74095b93cbb5c3ade3f16d0847b"
+      },
+      {
+        "id": "iomem",
+        "kind": "file",
+        "target": "/proc/iomem",
+        "status": "ok",
+        "bytes": 610,
+        "sha256": "185eea92ad93d4849403ed633a4f431b78fa27dde0599f3ffdddee80736230c0"
+      },
+      {
+        "id": "interrupts",
+        "kind": "file",
+        "target": "/proc/interrupts",
+        "status": "ok",
+        "bytes": 2122,
+        "sha256": "7083f262e66f425d29bb46541571db879ccec953c295a422c2444ca486bfaf81"
+      },
+      {
+        "id": "modules",
+        "kind": "file",
+        "target": "/proc/modules",
+        "status": "ok",
+        "bytes": 232,
+        "sha256": "0ffeb1c572caf4ba685e677f405be9974064febd4d7b8a3751cb3397c0babecb"
+      },
+      {
+        "id": "mounts",
+        "kind": "file",
+        "target": "/proc/mounts",
+        "status": "ok",
+        "bytes": 856,
+        "sha256": "712f27fbd3d2d3fd54a9f3492d7f41fca1f8f3d305496a857be4725e04feca36"
+      },
+      {
+        "id": "partitions",
+        "kind": "file",
+        "target": "/proc/partitions",
+        "status": "ok",
+        "bytes": 228,
+        "sha256": "981ab067cec1c041739564598891a6c709ddfb3450c42034e5624b08f5e91573"
+      },
+      {
+        "id": "block-sysfs",
+        "kind": "probe",
+        "target": "/sys/block",
+        "status": "ok",
+        "bytes": 7813,
+        "sha256": "0085bc32cd22110b86d7766cf1e6aa81a7cffba08bc2a8bf5e89976cb34f77f8"
+      },
+      {
+        "id": "mmc-sysfs",
+        "kind": "probe",
+        "target": "/sys/bus/mmc/devices",
+        "status": "ok",
+        "bytes": 237,
+        "sha256": "d337ba4abdc08ee096798708f21729885577bc25f24a2b8cacf999b015355c84"
+      },
+      {
+        "id": "mmc-host-sysfs",
+        "kind": "probe",
+        "target": "/sys/class/mmc_host",
+        "status": "ok",
+        "bytes": 124,
+        "sha256": "0eeb4b6a5514fb1c2e5d7f603e7f753d3c5a8bc7a48b0265da31371d2731974c"
+      },
+      {
+        "id": "fb",
+        "kind": "file",
+        "target": "/proc/fb",
+        "status": "ok",
+        "bytes": 16,
+        "sha256": "25046b0fdbc1dd432e250394847fa8343e08bb52782b474db7ef90bd616fab56"
+      },
+      {
+        "id": "fb0-name",
+        "kind": "file",
+        "target": "/sys/class/graphics/fb0/name",
+        "status": "ok",
+        "bytes": 6,
+        "sha256": "4e562cb81073e282da4c8790f3c4960c5d795cecdea3b802d77fc170aa7b05a9"
+      },
+      {
+        "id": "fb0-mode",
+        "kind": "file",
+        "target": "/sys/class/graphics/fb0/mode",
+        "status": "ok",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "fb0-modes",
+        "kind": "file",
+        "target": "/sys/class/graphics/fb0/modes",
+        "status": "ok",
+        "bytes": 14,
+        "sha256": "40ad1b57b8580015c1b8653ca6a26e24f6e1feb1458b9aef9b2e8504b860a4b3"
+      },
+      {
+        "id": "fb0-virtual_size",
+        "kind": "file",
+        "target": "/sys/class/graphics/fb0/virtual_size",
+        "status": "ok",
+        "bytes": 8,
+        "sha256": "8151fbc08b7bb4a9553ee3102e9652c012a9b19b998b0768c7089274da4e5339"
+      },
+      {
+        "id": "fb0-bits_per_pixel",
+        "kind": "file",
+        "target": "/sys/class/graphics/fb0/bits_per_pixel",
+        "status": "ok",
+        "bytes": 3,
+        "sha256": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4"
+      },
+      {
+        "id": "fb0-stride",
+        "kind": "file",
+        "target": "/sys/class/graphics/fb0/stride",
+        "status": "ok",
+        "bytes": 5,
+        "sha256": "535b74168959ee667177a15a134f7ac28e43b8314ca111f90566783dff8df387"
+      },
+      {
+        "id": "pvr-version",
+        "kind": "file",
+        "target": "/proc/pvr/version",
+        "status": "ok",
+        "bytes": 110,
+        "sha256": "0ac1cd1d88146eb34337f1d3d76d8d8382874df9237f89d7fdbac68e1cc4cd7c"
+      },
+      {
+        "id": "os-release",
+        "kind": "file",
+        "target": "/etc/os-release",
+        "status": "ok",
+        "bytes": 110,
+        "sha256": "e3bf8c4a14fcabfde0fff9166c2fc55095f0995380c829eba5d27bd83fa9b201"
+      },
+      {
+        "id": "batocera-version",
+        "kind": "file",
+        "target": "/usr/share/batocera/batocera.version",
+        "status": "missing"
+      },
+      {
+        "id": "koriki-version",
+        "kind": "file",
+        "target": "/usr/share/simplemenu/Koriki/version.txt",
+        "status": "ok",
+        "bytes": 4,
+        "sha256": "44804414f85bef9588f60086587fd6e8871b39123c831ec129624f4d81a95fea"
+      },
+      {
+        "id": "boot-uenv",
+        "kind": "file",
+        "target": "/boot/uEnv.txt",
+        "status": "ok",
+        "bytes": 121,
+        "sha256": "1dd2ae2422c8d611a5e3fe3960fc5a37f050152f49bf5ec5160dc989a1297d4a"
+      },
+      {
+        "id": "boot-conf",
+        "kind": "file",
+        "target": "/boot/batocera-boot.conf",
+        "status": "ok",
+        "bytes": 2603,
+        "sha256": "9d7555c7c3c467b0404c4234796aee507a6d8174fabe73e0d3c0c6e344efdbb4"
+      },
+      {
+        "id": "kconfig",
+        "kind": "file",
+        "target": "/proc/config.gz",
+        "status": "missing"
+      },
+      {
+        "id": "fdt",
+        "kind": "file",
+        "target": "/sys/firmware/fdt",
+        "status": "missing"
+      },
+      {
+        "id": "device-tree",
+        "kind": "tree",
+        "target": "/proc/device-tree",
+        "status": "ok",
+        "note": "resolved=/proc/device-tree",
+        "bytes": 1176576,
+        "sha256": "abcc1468e38cc0ac03e1a8ecd685012216e9f4d93d098f2ca8109a9bdad77fea"
+      },
+      {
+        "id": "device-tree-index",
+        "kind": "treeindex",
+        "target": "/proc/device-tree",
+        "status": "ok",
+        "note": "resolved=/proc/device-tree",
+        "bytes": 49889,
+        "sha256": "8a8b9a190a88fe7d16f831a28b7389967a33e4fe08722f90a4c61910f64d53c8"
+      },
+      {
+        "id": "dmesg",
+        "kind": "cmd",
+        "target": "dmesg",
+        "status": "ok",
+        "bytes": 34922,
+        "sha256": "711819f7fddee41dfac001c075fb68634aca41612a1deec607e948d8ab8e45ec"
+      }
+    ],
+    "errors": [],
+    "warnings": [],
+    "trust": "authenticated",
+    "completeness": "complete",
+    "admissible_as_evidence": true,
+    "state": "authenticated-complete"
+  },
+  "summary": {
+    "item_status": {
+      "version": "ok",
+      "uname": "ok",
+      "cmdline": "ok",
+      "uptime": "ok",
+      "cpuinfo": "ok",
+      "cpu-kernel_max": "ok",
+      "cpu-possible": "ok",
+      "cpu-present": "ok",
+      "cpu-online": "ok",
+      "cpu-offline": "ok",
+      "cpufreq-available": "ok",
+      "cpufreq-min": "ok",
+      "cpufreq-max": "ok",
+      "cpufreq-governor": "ok",
+      "cpufreq-driver": "ok",
+      "cpufreq-scaling_min": "ok",
+      "cpufreq-scaling_max": "ok",
+      "cpufreq-scaling_cur": "ok",
+      "meminfo": "ok",
+      "iomem": "ok",
+      "interrupts": "ok",
+      "modules": "ok",
+      "mounts": "ok",
+      "partitions": "ok",
+      "block-sysfs": "ok",
+      "mmc-sysfs": "ok",
+      "mmc-host-sysfs": "ok",
+      "fb": "ok",
+      "fb0-name": "ok",
+      "fb0-mode": "ok",
+      "fb0-modes": "ok",
+      "fb0-virtual_size": "ok",
+      "fb0-bits_per_pixel": "ok",
+      "fb0-stride": "ok",
+      "pvr-version": "ok",
+      "os-release": "ok",
+      "batocera-version": "missing",
+      "koriki-version": "ok",
+      "boot-uenv": "ok",
+      "boot-conf": "ok",
+      "kconfig": "missing",
+      "fdt": "missing",
+      "device-tree": "ok",
+      "device-tree-index": "ok",
+      "dmesg": "ok"
+    },
+    "kernel_version": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #75 SMP PREEMPT Mon Jul 17 20:23:47 UTC 2023",
+    "uname": "Linux buildroot 3.10.37 #75 SMP PREEMPT Mon Jul 17 20:23:47 UTC 2023 armv7l GNU/Linux",
+    "cmdline": {
+      "raw": "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x allenS500=1 androidboot.bootdev=sd boot_dev=sd2",
+      "tokens": [
+        "console=ttyS3",
+        "earlyprintk",
+        "clk_ignore_unused",
+        "selinux=0",
+        "init=/init",
+        "androidboot.dvfslevel=0x705x",
+        "allenS500=1",
+        "androidboot.bootdev=sd",
+        "boot_dev=sd2"
+      ],
+      "powersave": false,
+      "maxcpus": null,
+      "nr_cpus": null,
+      "mem": null,
+      "memmap": null,
+      "console": [
+        "ttyS3"
+      ],
+      "boot_dev": "sd2",
+      "bootdev": "sd",
+      "init": "/init",
+      "allen_s500": "1",
+      "dvfslevel": "0x705x",
+      "initrd": null,
+      "serialno_present": false
+    },
+    "dmesg": {
+      "lines": 663,
+      "begins_near_boot": true,
+      "first_timestamp": 0,
+      "matches": {
+        "linux_version": [
+          {
+            "time": 0,
+            "text": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #75 SMP PREEMPT Mon Jul 17 20:23:47 UTC 2023"
+          }
+        ],
+        "machine": [
+          {
+            "time": 0,
+            "text": "Machine: gs705a, model: RG35XX ATM7039 based handheld gaming console (V6C)"
+          }
+        ],
+        "kernel_command_line": [
+          {
+            "time": 0,
+            "text": "Kernel command line: console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x allenS500=1 androidboot.bootdev=sd boot_dev=sd2"
+          }
+        ],
+        "smp_ncores": [
+          {
+            "time": 0,
+            "text": "owl_smp_init_cpus(): ncores 4"
+          }
+        ],
+        "smp_total": [
+          {
+            "time": 0.367613,
+            "text": "SMP: Total of 4 processors activated (4787.40 BogoMIPS)."
+          }
+        ],
+        "brought_up": [
+          {
+            "time": 0.35902,
+            "text": "Brought up 4 CPUs"
+          }
+        ],
+        "cpu_boot": [
+          {
+            "time": 0.103245,
+            "text": "CPU0: thread -1, cpu 0, socket 0, mpidr 80000000"
+          },
+          {
+            "time": 0.184902,
+            "text": "CPU1: Booted secondary processor"
+          },
+          {
+            "time": 0.218861,
+            "text": "CPU1: thread -1, cpu 1, socket 0, mpidr 80000001"
+          },
+          {
+            "time": 0.251959,
+            "text": "CPU2: Booted secondary processor"
+          },
+          {
+            "time": 0.288859,
+            "text": "CPU2: thread -1, cpu 2, socket 0, mpidr 80000002"
+          },
+          {
+            "time": 0.32194,
+            "text": "CPU3: Booted secondary processor"
+          },
+          {
+            "time": 0.358859,
+            "text": "CPU3: thread -1, cpu 3, socket 0, mpidr 80000003"
+          }
+        ],
+        "powersave": [],
+        "memory": [
+          {
+            "time": 0,
+            "text": "Memory: 256MB = 256MB total"
+          },
+          {
+            "time": 0,
+            "text": "Memory: 150452k/150452k available, 111692k reserved, 0K highmem"
+          }
+        ],
+        "memory_bank": [
+          {
+            "time": 0,
+            "text": "Reserved memory 32MB"
+          },
+          {
+            "time": 0,
+            "text": "cma: CMA: reserved 48 MiB at 0a400000"
+          }
+        ],
+        "initrd": [
+          {
+            "time": 1.531389,
+            "text": "Freeing initrd memory: 3728K (c2000000 - c23a4000)"
+          }
+        ],
+        "mmc": [
+          {
+            "time": 2.768101,
+            "text": "mmc0: new high speed SDXC card at address 0001"
+          }
+        ],
+        "boot_card": [
+          {
+            "time": 1.591865,
+            "text": "## boot_dev: 0x22"
+          },
+          {
+            "time": 2.228819,
+            "text": "## host_id: 0 boot_dev 22 host->index: 1"
+          },
+          {
+            "time": 2.252849,
+            "text": "## host_id: 2 boot_dev 22 host->index: 0"
+          },
+          {
+            "time": 2.763581,
+            "text": "force sd2(emmc) host emmc_boot_card"
+          },
+          {
+            "time": 2.777119,
+            "text": "mmcblk0: emmc_boot_card SD 58.2 GiB "
+          }
+        ],
+        "pvr": [
+          {
+            "time": 11.83966,
+            "text": "[drm] Initialized pvrsrvkm 1.14.3625561 20110701 on minor 0"
+          },
+          {
+            "time": 12.35528,
+            "text": "PVR_K: UM DDK-(3625561) and KM DDK-(3625561) match. [ OK ]"
+          }
+        ],
+        "afi": [],
+        "loader_dram": []
+      },
+      "scu_ncores": 4,
+      "smp_activated": 4,
+      "memory_line": {
+        "banks_MB": [
+          256
+        ],
+        "banks_total_MB": 256,
+        "available_kB": 150452,
+        "total_kB": 150452,
+        "reserved_kB": 111692,
+        "highmem_kB": 0
+      },
+      "vendor_reserved_MB": 32,
+      "command_line": "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x allenS500=1 androidboot.bootdev=sd boot_dev=sd2",
+      "powersave_now": false
+    },
+    "cpu": {
+      "kernel_max": 3,
+      "possible": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "present": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "online": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "offline": [],
+      "cpuinfo": {
+        "processors": 4,
+        "cpu_parts": [
+          "0xc09"
+        ],
+        "common": {
+          "Processor": "ARMv7 Processor rev 1 (v7l)",
+          "Hardware": "gs705a",
+          "Revision": "0000",
+          "Serial": "<redacted>"
+        },
+        "per_cpu": [
+          {
+            "processor": 0,
+            "model name": "ARMv7 Processor rev 1 (v7l)",
+            "BogoMIPS": "1675.59",
+            "Features": "swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls",
+            "CPU implementer": "0x41",
+            "CPU architecture": "7",
+            "CPU variant": "0x4",
+            "CPU part": "0xc09",
+            "CPU revision": "1"
+          },
+          {
+            "processor": 1,
+            "model name": "ARMv7 Processor rev 1 (v7l)",
+            "BogoMIPS": "1675.59",
+            "Features": "swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls",
+            "CPU implementer": "0x41",
+            "CPU architecture": "7",
+            "CPU variant": "0x4",
+            "CPU part": "0xc09",
+            "CPU revision": "1"
+          },
+          {
+            "processor": 2,
+            "model name": "ARMv7 Processor rev 1 (v7l)",
+            "BogoMIPS": "1675.59",
+            "Features": "swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls",
+            "CPU implementer": "0x41",
+            "CPU architecture": "7",
+            "CPU variant": "0x4",
+            "CPU part": "0xc09",
+            "CPU revision": "1"
+          },
+          {
+            "processor": 3,
+            "model name": "ARMv7 Processor rev 1 (v7l)",
+            "BogoMIPS": "1675.59",
+            "Features": "swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls",
+            "CPU implementer": "0x41",
+            "CPU architecture": "7",
+            "CPU variant": "0x4",
+            "CPU part": "0xc09",
+            "CPU revision": "1"
+          }
+        ]
+      },
+      "cpufreq": {
+        "available": [
+          "240000",
+          "504000",
+          "720000",
+          "840000",
+          "1008000",
+          "1104000",
+          "1200000",
+          "1296000",
+          "1392000",
+          "1488000"
+        ],
+        "min": [
+          "240000"
+        ],
+        "max": [
+          "1488000"
+        ],
+        "governor": [
+          "performance"
+        ],
+        "driver": [
+          "owl_cpu0"
+        ],
+        "scaling_min": [
+          "240000"
+        ],
+        "scaling_max": [
+          "1008000"
+        ],
+        "scaling_cur": [
+          "1008000"
+        ]
+      },
+      "scu_ncores": 4,
+      "smp_activated": 4
+    },
+    "cpu_hint": {
+      "outcome": "four-online",
+      "text": "Four CPUs online at capture time.",
+      "label": "hint, not a finding"
+    },
+    "memory": {
+      "meminfo_kB": {
+        "MemTotal": 237548,
+        "MemFree": 125836,
+        "CmaFree": 37572,
+        "Buffers": 10900,
+        "Cached": 62548,
+        "SwapCached": 0,
+        "Active": 11348,
+        "Inactive": 65516,
+        "Active(anon)": 3432,
+        "Inactive(anon)": 96,
+        "Active(file)": 7916,
+        "Inactive(file)": 65420,
+        "Unevictable": 0,
+        "Mlocked": 0,
+        "HighTotal": 0,
+        "HighFree": 0,
+        "LowTotal": 237548,
+        "LowFree": 125836,
+        "SwapTotal": 524284,
+        "SwapFree": 524284,
+        "Dirty": 224,
+        "Writeback": 0,
+        "AnonPages": 3296,
+        "Mapped": 4180,
+        "Shmem": 120,
+        "Slab": 10768,
+        "SReclaimable": 4752,
+        "SUnreclaim": 6016,
+        "KernelStack": 1072,
+        "PageTables": 228,
+        "NFS_Unstable": 0,
+        "Bounce": 0,
+        "WritebackTmp": 0,
+        "CommitLimit": 643056,
+        "Committed_AS": 35032,
+        "VmallocTotal": 761856,
+        "VmallocUsed": 8840,
+        "VmallocChunk": 642024
+      },
+      "iomem": {
+        "entries": [
+          {
+            "depth": 0,
+            "start": 0,
+            "end": 268435455,
+            "size": 268435456,
+            "name": "System RAM"
+          },
+          {
+            "depth": 1,
+            "start": 32768,
+            "end": 10561531,
+            "size": 10528764,
+            "name": "Kernel code"
+          },
+          {
+            "depth": 1,
+            "start": 11001856,
+            "end": 12922659,
+            "size": 1920804,
+            "name": "Kernel data"
+          },
+          {
+            "depth": 0,
+            "start": 2953838592,
+            "end": 2953838643,
+            "size": 52,
+            "name": "owl-audio-i2s"
+          },
+          {
+            "depth": 0,
+            "start": 2953904128,
+            "end": 2953936911,
+            "size": 32784,
+            "name": "pcm"
+          },
+          {
+            "depth": 0,
+            "start": 2953969664,
+            "end": 2953973759,
+            "size": 4096,
+            "name": "owl-serial.0"
+          },
+          {
+            "depth": 0,
+            "start": 2954313728,
+            "end": 2954330111,
+            "size": 16384,
+            "name": "b0174000.i2c"
+          },
+          {
+            "depth": 0,
+            "start": 2954330112,
+            "end": 2954346495,
+            "size": 16384,
+            "name": "b0178000.i2c"
+          },
+          {
+            "depth": 0,
+            "start": 2954559720,
+            "end": 2954559727,
+            "size": 8,
+            "name": "/thermal"
+          },
+          {
+            "depth": 0,
+            "start": 2955083776,
+            "end": 2955083831,
+            "size": 56,
+            "name": "b0230000.mmc"
+          },
+          {
+            "depth": 0,
+            "start": 2955116544,
+            "end": 2955116599,
+            "size": 56,
+            "name": "b0238000.mmc"
+          },
+          {
+            "depth": 0,
+            "start": 2955280384,
+            "end": 2955283711,
+            "size": 3328,
+            "name": "/dma@b0260000"
+          },
+          {
+            "depth": 0,
+            "start": 2955411456,
+            "end": 2955411719,
+            "size": 264,
+            "name": "/vde@b0280000"
+          },
+          {
+            "depth": 0,
+            "start": 2955444224,
+            "end": 2955444371,
+            "size": 148,
+            "name": "vce"
+          },
+          {
+            "depth": 0,
+            "start": 2955673600,
+            "end": 2955673951,
+            "size": 352,
+            "name": "/hdmi@b02c0000"
+          },
+          {
+            "depth": 0,
+            "start": 2955804672,
+            "end": 2955808781,
+            "size": 4110,
+            "name": "/de@b02e0000"
+          },
+          {
+            "depth": 0,
+            "start": 2956984320,
+            "end": 2957036799,
+            "size": 52480,
+            "name": "/usb@b0400000"
+          },
+          {
+            "depth": 1,
+            "start": 2957033728,
+            "end": 2957036799,
+            "size": 3072,
+            "name": "dwc3.0"
+          },
+          {
+            "depth": 0,
+            "start": 2957036800,
+            "end": 2957036888,
+            "size": 89,
+            "name": "b0400000.usb"
+          }
+        ],
+        "addresses_zeroed": false,
+        "system_ram": [
+          {
+            "start": 0,
+            "end": 268435455,
+            "size": 268435456
+          }
+        ],
+        "system_ram_bytes": 268435456
+      }
+    },
+    "modules": [
+      {
+        "name": "pvrsrvkm",
+        "size": 340556,
+        "refs": 0,
+        "state": "Live"
+      },
+      {
+        "name": "joydev",
+        "size": 8555,
+        "refs": 1,
+        "state": "Live"
+      },
+      {
+        "name": "drm",
+        "size": 228583,
+        "refs": 1,
+        "state": "Live"
+      },
+      {
+        "name": "ethernet",
+        "size": 49943,
+        "refs": 0,
+        "state": "Live"
+      },
+      {
+        "name": "gpio_keys_polled",
+        "size": 6705,
+        "refs": 0,
+        "state": "Live"
+      },
+      {
+        "name": "atc260x_cap_gauge",
+        "size": 32767,
+        "refs": 0,
+        "state": "Live"
+      }
+    ],
+    "storage": {
+      "mounts": [
+        {
+          "device": "rootfs",
+          "mountpoint": "/",
+          "fstype": "rootfs",
+          "options": "rw"
+        },
+        {
+          "device": "proc",
+          "mountpoint": "/proc",
+          "fstype": "proc",
+          "options": "rw,nosuid,nodev,noexec,relatime"
+        },
+        {
+          "device": "sysfs",
+          "mountpoint": "/sys",
+          "fstype": "sysfs",
+          "options": "rw,nosuid,nodev,noexec,relatime"
+        },
+        {
+          "device": "none",
+          "mountpoint": "/dev",
+          "fstype": "devtmpfs",
+          "options": "rw,relatime,size=75224k,nr_inodes=18806,mode=755"
+        },
+        {
+          "device": "/dev/mmcblk0p1",
+          "mountpoint": "/boot",
+          "fstype": "vfat",
+          "options": "rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro"
+        },
+        {
+          "device": "tmpfs",
+          "mountpoint": "/overlay",
+          "fstype": "tmpfs",
+          "options": "rw,relatime,size=262144k"
+        },
+        {
+          "device": "/dev/loop0",
+          "mountpoint": "/overlay/base",
+          "fstype": "ext4",
+          "options": "rw,relatime,data=ordered"
+        },
+        {
+          "device": "/dev/loop1",
+          "mountpoint": "/",
+          "fstype": "ext4",
+          "options": "rw,relatime,data=ordered"
+        },
+        {
+          "device": "devpts",
+          "mountpoint": "/dev/pts",
+          "fstype": "devpts",
+          "options": "rw,relatime,gid=5,mode=620"
+        },
+        {
+          "device": "tmpfs",
+          "mountpoint": "/dev/shm",
+          "fstype": "tmpfs",
+          "options": "rw,relatime,mode=777"
+        },
+        {
+          "device": "tmpfs",
+          "mountpoint": "/tmp",
+          "fstype": "tmpfs",
+          "options": "rw,relatime"
+        },
+        {
+          "device": "tmpfs",
+          "mountpoint": "/var",
+          "fstype": "tmpfs",
+          "options": "rw,relatime"
+        },
+        {
+          "device": "tmpfs",
+          "mountpoint": "/run",
+          "fstype": "tmpfs",
+          "options": "rw,relatime"
+        },
+        {
+          "device": "tmpfs",
+          "mountpoint": "/media",
+          "fstype": "tmpfs",
+          "options": "rw,relatime"
+        },
+        {
+          "device": "/dev/mmcblk0p3",
+          "mountpoint": "/userdata",
+          "fstype": "vfat",
+          "options": "rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro"
+        }
+      ],
+      "partitions": "major minor  #blocks  name\n\n   7        0    2355200 loop0\n   7        1    2355200 loop1\n 179        0   61069312 mmcblk0\n 179        1    3145728 mmcblk0p1\n 179        2     524288 mmcblk0p2\n 179        3   57391104 mmcblk0p3\n",
+      "partitions_parsed": [
+        {
+          "major": 7,
+          "minor": 0,
+          "blocks": 2355200,
+          "name": "loop0"
+        },
+        {
+          "major": 7,
+          "minor": 1,
+          "blocks": 2355200,
+          "name": "loop1"
+        },
+        {
+          "major": 179,
+          "minor": 0,
+          "blocks": 61069312,
+          "name": "mmcblk0"
+        },
+        {
+          "major": 179,
+          "minor": 1,
+          "blocks": 3145728,
+          "name": "mmcblk0p1"
+        },
+        {
+          "major": 179,
+          "minor": 2,
+          "blocks": 524288,
+          "name": "mmcblk0p2"
+        },
+        {
+          "major": 179,
+          "minor": 3,
+          "blocks": 57391104,
+          "name": "mmcblk0p3"
+        }
+      ],
+      "block_sysfs": {
+        "entries": {
+          "loop0": {
+            "link": "../devices/virtual/block/loop0",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "4710400",
+              "dev": "7:0",
+              "ext_range": "16"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "loop1": {
+            "link": "../devices/virtual/block/loop1",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "4710400",
+              "dev": "7:1",
+              "ext_range": "16"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "loop2": {
+            "link": "../devices/virtual/block/loop2",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "0",
+              "dev": "7:2",
+              "ext_range": "16"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "loop3": {
+            "link": "../devices/virtual/block/loop3",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "0",
+              "dev": "7:3",
+              "ext_range": "16"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "loop4": {
+            "link": "../devices/virtual/block/loop4",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "0",
+              "dev": "7:4",
+              "ext_range": "16"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "loop5": {
+            "link": "../devices/virtual/block/loop5",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "0",
+              "dev": "7:5",
+              "ext_range": "16"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "loop6": {
+            "link": "../devices/virtual/block/loop6",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "0",
+              "dev": "7:6",
+              "ext_range": "16"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "loop7": {
+            "link": "../devices/virtual/block/loop7",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "0",
+              "dev": "7:7",
+              "ext_range": "16"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "mmcblk0": {
+            "link": "../devices/b0238000.mmc/mmc_host/mmc0/emmc_boot_card/block/mmcblk0",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "122138624",
+              "dev": "179:0",
+              "ext_range": "16",
+              "device/type": "SD",
+              "device/name": "SD",
+              "device/manfid": "0x0000c4",
+              "device/oemid": "0x4254"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "ok",
+              "device/name": "ok",
+              "device/manfid": "ok",
+              "device/oemid": "ok"
+            }
+          },
+          "ram0": {
+            "link": "../devices/virtual/block/ram0",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:0",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram1": {
+            "link": "../devices/virtual/block/ram1",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:1",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram10": {
+            "link": "../devices/virtual/block/ram10",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:10",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram11": {
+            "link": "../devices/virtual/block/ram11",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:11",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram12": {
+            "link": "../devices/virtual/block/ram12",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:12",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram13": {
+            "link": "../devices/virtual/block/ram13",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:13",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram14": {
+            "link": "../devices/virtual/block/ram14",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:14",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram15": {
+            "link": "../devices/virtual/block/ram15",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:15",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram2": {
+            "link": "../devices/virtual/block/ram2",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:2",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram3": {
+            "link": "../devices/virtual/block/ram3",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:3",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram4": {
+            "link": "../devices/virtual/block/ram4",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:4",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram5": {
+            "link": "../devices/virtual/block/ram5",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:5",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram6": {
+            "link": "../devices/virtual/block/ram6",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:6",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram7": {
+            "link": "../devices/virtual/block/ram7",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:7",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram8": {
+            "link": "../devices/virtual/block/ram8",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:8",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "ram9": {
+            "link": "../devices/virtual/block/ram9",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "16384",
+              "dev": "1:9",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          },
+          "zram0": {
+            "link": "../devices/virtual/block/zram0",
+            "attrs": {
+              "removable": "0",
+              "ro": "0",
+              "size": "0",
+              "dev": "253:0",
+              "ext_range": "1"
+            },
+            "attr_status": {
+              "removable": "ok",
+              "ro": "ok",
+              "size": "ok",
+              "dev": "ok",
+              "ext_range": "ok",
+              "device/type": "missing",
+              "device/name": "missing",
+              "device/manfid": "missing",
+              "device/oemid": "missing"
+            }
+          }
+        },
+        "skipped": []
+      },
+      "mmc_sysfs": {
+        "entries": {
+          "emmc_boot_card": {
+            "link": "../../../devices/b0238000.mmc/mmc_host/mmc0/emmc_boot_card",
+            "attrs": {
+              "type": "SD",
+              "name": "SD",
+              "manfid": "0x0000c4",
+              "oemid": "0x4254"
+            },
+            "attr_status": {
+              "type": "ok",
+              "name": "ok",
+              "manfid": "ok",
+              "oemid": "ok"
+            }
+          }
+        },
+        "skipped": []
+      },
+      "mmc_host_sysfs": {
+        "entries": {
+          "mmc0": {
+            "link": "../../devices/b0238000.mmc/mmc_host/mmc0",
+            "attrs": {},
+            "attr_status": {}
+          },
+          "mmc1": {
+            "link": "../../devices/b0230000.mmc/mmc_host/mmc1",
+            "attrs": {},
+            "attr_status": {}
+          }
+        },
+        "skipped": []
+      }
+    },
+    "display": {
+      "fb": "0 owlfb\n1 owlfb",
+      "fb0-name": "owlfb",
+      "fb0-mode": "",
+      "fb0-modes": "U:640x480p-56",
+      "fb0-virtual_size": "640,960",
+      "fb0-bits_per_pixel": "32",
+      "fb0-stride": "2560"
+    },
+    "pvr_version": "Version SGX_DDK_Linux_XOrg sgxddk MAIN@3625561 (release) omap_linux\nSystem Version String: SGX revision = 115",
+    "os_release": "NAME=Buildroot\nVERSION=-g4526c825dd-dirty\nID=buildroot\nVERSION_ID=2023.05.1\nPRETTY_NAME=\"Buildroot 2023.05.1\"",
+    "koriki_version": "1.2",
+    "koriki_version_sha256": "44804414f85bef9588f60086587fd6e8871b39123c831ec129624f4d81a95fea",
+    "card_files": {
+      "boot_uenv": {
+        "sha256": "1dd2ae2422c8d611a5e3fe3960fc5a37f050152f49bf5ec5160dc989a1297d4a",
+        "bytes": 121,
+        "text": "# Ramdisk boot (ramdisk.img)\nuenvcmd=setenv os_type linux;\nbootargs=earlyprintk clk_ignore_unused selinux=0 init=/init  \n"
+      },
+      "boot_conf": {
+        "sha256": "9d7555c7c3c467b0404c4234796aee507a6d8174fabe73e0d3c0c6e344efdbb4",
+        "bytes": 2603,
+        "overclocking": null,
+        "active_keys": [
+          "autoresize",
+          "sharedevice"
+        ]
+      }
+    },
+    "device_tree": {
+      "nodes": 203,
+      "properties": 854,
+      "root_cells": {
+        "address": 1,
+        "size": 1,
+        "address_defaulted": false,
+        "size_defaulted": false
+      },
+      "model": [
+        "RG35XX ATM7039 based handheld gaming console (V6C)"
+      ],
+      "compatible": [
+        "actions,gs705a",
+        "actions,atm7059a"
+      ],
+      "memory_nodes": [
+        {
+          "path": "/memory",
+          "device_type": [
+            "memory"
+          ],
+          "reg_state": "ok",
+          "banks": [
+            {
+              "base": 0,
+              "size": 268435456
+            }
+          ]
+        }
+      ],
+      "memory_banks": [
+        {
+          "base": 0,
+          "size": 268435456
+        }
+      ],
+      "memory_total": 268435456,
+      "reserved_memory": [],
+      "vendor_heaps_MB": {
+        "/reserved/normal": {
+          "dma_heap_size": 128,
+          "carveout_heap_size": 64,
+          "kinfo_heap_size": 1,
+          "fb_heap_size": 8
+        },
+        "/reserved/tiny": {
+          "dma_heap_size": 32,
+          "carveout_heap_size": 0,
+          "kinfo_heap_size": 1,
+          "fb_heap_size": 9
+        }
+      },
+      "chosen": {
+        "properties": [
+          "bootargs",
+          "linux,initrd-end",
+          "linux,initrd-start"
+        ],
+        "bootargs": "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x allenS500=1 androidboot.bootdev=sd boot_dev=sd2",
+        "initrd_start": 33554432,
+        "initrd_end": 37372849,
+        "stdout_path": null
+      },
+      "cpus": [
+        "cpu@0",
+        "cpu@1"
+      ],
+      "mmc_nodes": {
+        "mmc@b0230000": "okay",
+        "mmc@b0234000": "disabled",
+        "mmc@b0238000": "okay"
+      },
+      "aliases": {
+        "mmc0": "/mmc@b0230000",
+        "mmc1": "/mmc@b0234000",
+        "mmc2": "/mmc@b0238000",
+        "sdboot": "/mmc@b0230000",
+        "serial0": "/serial@b0120000",
+        "serial1": "/serial@b0122000",
+        "serial2": "/serial@b0124000",
+        "serial3": "/serial@b0126000",
+        "serial4": "/serial@b0128000",
+        "serial5": "/serial@b012a000",
+        "serial6": "/serial@b012c000"
+      },
+      "links": {},
+      "unsafe_members": [],
+      "other_members": [],
+      "truncated_properties": [],
+      "read_errors": [],
+      "memreserve": [],
+      "memreserve_visible": false,
+      "source": "device-tree-dir",
+      "capture_status": "ok",
+      "index_check": {
+        "consistent": true,
+        "index_files": 1057,
+        "index_dirs": 203,
+        "index_links": [],
+        "missing_from_tar": [],
+        "not_in_index": []
+      }
+    },
+    "device_tree_vs_reference": {
+      "reference_sha256": "ad4b8b4dd98fbb95bde8854ff0bd9c2e870c3c0c21f27be0122c741f36686f0f",
+      "reference_catalogued": [
+        {
+          "manifest": "evidence\\firmware\\koriki-1031-boot.json",
+          "id": "kernel.dtb"
+        },
+        {
+          "manifest": "evidence\\firmware\\koriki-v1.0.json",
+          "id": "kernel.dtb"
+        }
+      ],
+      "added": [
+        "/chosen/linux,initrd-end",
+        "/chosen/linux,initrd-start"
+      ],
+      "removed": [],
+      "changed": [
+        "/chosen/bootargs",
+        "/memory/reg"
+      ],
+      "nodes_added": [],
+      "nodes_removed": [],
+      "unchanged": 850
+    },
+    "release_link": {
+      "kernel_version_matches": [
+        {
+          "manifest": "evidence\\firmware\\kernel-payload.json",
+          "component_sha256": "1b792401ae06904c85441a07f7e3b7fe32e80aef2a85211ef529fefee461f174",
+          "text": "Linux version 3.10.37 (ctalon@endymion) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #75 SMP PREEMPT Mon Jul 17 20:23:47 UTC 2023"
+        }
+      ],
+      "boot_uenv_matches": [
+        {
+          "manifest": "evidence\\firmware\\koriki-1031-boot.json",
+          "id": "uEnv.txt"
+        },
+        {
+          "manifest": "evidence\\firmware\\koriki-v1.0.json",
+          "id": "uEnv.txt"
+        }
+      ],
+      "boot_conf_matches": [
+        {
+          "manifest": "evidence\\firmware\\koriki-v1.0.json",
+          "id": "batocera-boot.conf"
+        }
+      ],
+      "koriki_version_matches": [
+        {
+          "manifest": "evidence\\firmware\\koriki-v1.0-rootfs.json",
+          "id": "koriki-version.txt"
+        }
+      ],
+      "note": "A version-string match links the running kernel to a catalogued build; it is not a hash of the running image. The exported device tree includes bootloader fixups, so it is compared property by property, not by hash."
+    },
+    "storage_model": {
+      "source": "probe",
+      "block_devices": {
+        "loop0": {
+          "link": "../devices/virtual/block/loop0",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "4710400",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "loop1": {
+          "link": "../devices/virtual/block/loop1",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "4710400",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "loop2": {
+          "link": "../devices/virtual/block/loop2",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "0",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "loop3": {
+          "link": "../devices/virtual/block/loop3",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "0",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "loop4": {
+          "link": "../devices/virtual/block/loop4",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "0",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "loop5": {
+          "link": "../devices/virtual/block/loop5",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "0",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "loop6": {
+          "link": "../devices/virtual/block/loop6",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "0",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "loop7": {
+          "link": "../devices/virtual/block/loop7",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "0",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "mmcblk0": {
+          "link": "../devices/b0238000.mmc/mmc_host/mmc0/emmc_boot_card/block/mmcblk0",
+          "type": "SD",
+          "removable_attr": "0",
+          "size_sectors": "122138624",
+          "type_status": "ok",
+          "controller": "b0238000",
+          "kind": "mmc",
+          "media": "sd-card"
+        },
+        "ram0": {
+          "link": "../devices/virtual/block/ram0",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram1": {
+          "link": "../devices/virtual/block/ram1",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram10": {
+          "link": "../devices/virtual/block/ram10",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram11": {
+          "link": "../devices/virtual/block/ram11",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram12": {
+          "link": "../devices/virtual/block/ram12",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram13": {
+          "link": "../devices/virtual/block/ram13",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram14": {
+          "link": "../devices/virtual/block/ram14",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram15": {
+          "link": "../devices/virtual/block/ram15",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram2": {
+          "link": "../devices/virtual/block/ram2",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram3": {
+          "link": "../devices/virtual/block/ram3",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram4": {
+          "link": "../devices/virtual/block/ram4",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram5": {
+          "link": "../devices/virtual/block/ram5",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram6": {
+          "link": "../devices/virtual/block/ram6",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram7": {
+          "link": "../devices/virtual/block/ram7",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram8": {
+          "link": "../devices/virtual/block/ram8",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "ram9": {
+          "link": "../devices/virtual/block/ram9",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "16384",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        },
+        "zram0": {
+          "link": "../devices/virtual/block/zram0",
+          "type": null,
+          "removable_attr": "0",
+          "size_sectors": "0",
+          "type_status": "missing",
+          "controller": null,
+          "kind": "virtual"
+        }
+      },
+      "partition_names": [
+        "loop0",
+        "loop1",
+        "mmcblk0",
+        "mmcblk0p1",
+        "mmcblk0p2",
+        "mmcblk0p3"
+      ],
+      "boot_mount": {
+        "device": "/dev/mmcblk0p1",
+        "mountpoint": "/boot",
+        "fstype": "vfat",
+        "options": "rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro"
+      },
+      "boot_disk": "mmcblk0",
+      "boot_controller": "b0238000",
+      "mmc_cards": {
+        "emmc_boot_card": {
+          "type": "SD",
+          "controller": "b0238000"
+        }
+      },
+      "mmc_hosts": {
+        "mmc0": "b0238000",
+        "mmc1": "b0230000"
+      },
+      "inconsistent": [
+        "loop2",
+        "loop3",
+        "loop4",
+        "loop5",
+        "loop6",
+        "loop7",
+        "ram0",
+        "ram1",
+        "ram10",
+        "ram11",
+        "ram12",
+        "ram13",
+        "ram14",
+        "ram15",
+        "ram2",
+        "ram3",
+        "ram4",
+        "ram5",
+        "ram6",
+        "ram7",
+        "ram8",
+        "ram9",
+        "zram0"
+      ],
+      "probe_skipped": [],
+      "partitions_not_listed": [],
+      "enumeration_incomplete": false,
+      "note": "/sys/block/mmcblk*/removable is 0 for every MMC disk by design of the kernel MMC block driver, so removability is judged from the card type (SD versus MMC) and the controller, not from that attribute. Absence of an enumerated device does not prove no storage is fitted."
+    },
+    "memory_model": {
+      "quantities": {
+        "physical_dram": "not observable after boot (loader detection result; needs early UART, PR #6)",
+        "bootloader_reported_bytes": 268435456,
+        "bootloader_reported_source": "device-tree-dir",
+        "device_tree_banks": [
+          {
+            "base": 0,
+            "size": 268435456
+          }
+        ],
+        "kernel_system_ram_bytes": 268435456,
+        "kernel_system_ram_ranges": [
+          {
+            "start": 0,
+            "end": 268435455,
+            "size": 268435456
+          }
+        ],
+        "kernel_memory_line": {
+          "banks_MB": [
+            256
+          ],
+          "banks_total_MB": 256,
+          "available_kB": 150452,
+          "total_kB": 150452,
+          "reserved_kB": 111692,
+          "highmem_kB": 0
+        },
+        "memtotal_kB": 237548,
+        "vendor_reserved_MB": 32,
+        "reserved_memory_nodes": [],
+        "vendor_heap_nodes_MB": {
+          "/reserved/normal": {
+            "dma_heap_size": 128,
+            "carveout_heap_size": 64,
+            "kinfo_heap_size": 1,
+            "fb_heap_size": 8
+          },
+          "/reserved/tiny": {
+            "dma_heap_size": 32,
+            "carveout_heap_size": 0,
+            "kinfo_heap_size": 1,
+            "fb_heap_size": 9
+          }
+        },
+        "cmdline_mem": null,
+        "cmdline_memmap": null
+      },
+      "checks": [
+        {
+          "check": "System RAM 0x0-0xfffffff inside a DT /memory bank",
+          "ok": true
+        },
+        {
+          "check": "iomem System RAM total <= DT /memory total",
+          "ok": true
+        },
+        {
+          "check": "kernel \"Memory:\" total <= DT /memory total",
+          "ok": true
+        },
+        {
+          "check": "MemTotal <= DT /memory total",
+          "ok": true
+        },
+        {
+          "check": "MemTotal <= iomem System RAM total",
+          "ok": true
+        }
+      ]
+    },
+    "bootargs": {
+      "predicted_variants": [
+        "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x androidboot.bootdev=sd boot_dev=sd0",
+        "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x allenS500=1 androidboot.bootdev=sd boot_dev=sd0"
+      ],
+      "uenv_bootargs": "earlyprintk clk_ignore_unused selinux=0 init=/init  ",
+      "observed": "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x allenS500=1 androidboot.bootdev=sd boot_dev=sd2",
+      "observed_without_serial": "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x allenS500=1 androidboot.bootdev=sd boot_dev=sd2",
+      "exact_variant": null,
+      "token_variant": null,
+      "closest_variant": 1,
+      "missing_tokens": [
+        "boot_dev=sd0"
+      ],
+      "extra_tokens": [
+        "boot_dev=sd2"
+      ],
+      "order_matches": true,
+      "chosen_bootargs": "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x allenS500=1 androidboot.bootdev=sd boot_dev=sd2",
+      "cmdline_equals_chosen": true,
+      "cmdline_equals_boot_log": true
+    },
+    "handoff_reference": {
+      "bootargs": [
+        "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x androidboot.bootdev=sd boot_dev=sd0",
+        "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x allenS500=1 androidboot.bootdev=sd boot_dev=sd0"
+      ],
+      "initrd_start": 33554432,
+      "initrd_end": 37372849,
+      "memory_reg": [
+        0,
+        268435456
+      ],
+      "fdt_addr": 58720256,
+      "memreserve": [
+        [
+          58720256,
+          28672
+        ],
+        [
+          33554432,
+          3818417
+        ]
+      ],
+      "uenv_bootargs": "earlyprintk clk_ignore_unused selinux=0 init=/init  "
+    },
+    "privacy": {
+      "serialno_in_cmdline": false,
+      "note": "This output is redacted; the raw capture folder is not. Keep the raw folder private."
+    }
+  },
+  "predictions": [
+    {
+      "id": "P-CPU",
+      "outcome": "four-online",
+      "outcome_class": "alternative",
+      "values": {
+        "scu_ncores": 4,
+        "possible": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "present": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "online": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "smp_activated": 4,
+        "kernel_max": 3,
+        "cmdline_cpu_limits": [],
+        "dmesg_powersave_now": false,
+        "dt_cpu_nodes": [
+          "cpu@0",
+          "cpu@1"
+        ],
+        "CONFIG_NR_CPUS": null
+      },
+      "implication": "Four usable cores at capture time under this firmware.",
+      "resolvable_by_v3": "partial"
+    },
+    {
+      "id": "P-CONSOLE",
+      "outcome": "ttys3",
+      "outcome_class": "expected",
+      "values": {
+        "console": "ttyS3"
+      },
+      "implication": "Confirms AFI uart_index 3 reaching Linux (UART-003, BOOT-017).",
+      "resolvable_by_v3": "yes"
+    },
+    {
+      "id": "P-BOOTARGS",
+      "outcome": "tokens-differ",
+      "outcome_class": "unexpected",
+      "values": {
+        "observed": "console=ttyS3 earlyprintk clk_ignore_unused selinux=0 init=/init   androidboot.dvfslevel=0x705x allenS500=1 androidboot.bootdev=sd boot_dev=sd2",
+        "closest_variant": 1,
+        "missing_tokens": [
+          "boot_dev=sd0"
+        ],
+        "extra_tokens": [
+          "boot_dev=sd2"
+        ],
+        "order_matches": true
+      },
+      "implication": "The runtime boot path or uEnv.txt differs from the reconstruction; values list missing and extra tokens.",
+      "resolvable_by_v3": "yes"
+    },
+    {
+      "id": "P-CMDLINE-SRC",
+      "outcome": "chosen-used",
+      "outcome_class": "expected",
+      "values": {
+        "cmdline_equals_boot_log": true,
+        "CONFIG_CMDLINE policy": null
+      },
+      "implication": "The kernel used the bootloader arguments unchanged: CMDLINE_FROM_BOOTLOADER with an empty CONFIG_CMDLINE.",
+      "resolvable_by_v3": "yes"
+    },
+    {
+      "id": "P-UENV",
+      "outcome": "uenv-applied",
+      "outcome_class": "expected",
+      "values": {},
+      "implication": "Confirms BOOT-015/BOOT-016 (offline prediction): check_boot_flag selects mmcboot and uEnv.txt bootargs reach the kernel.",
+      "resolvable_by_v3": "yes"
+    },
+    {
+      "id": "P-AFI-BOOTDEV",
+      "outcome": "sd2",
+      "outcome_class": "unexpected",
+      "values": {
+        "boot_dev": "sd2",
+        "androidboot.bootdev": "sd"
+      },
+      "implication": "Block-0 code 2: U-Boot would have taken the emmcboot path; contradicts the reconstruction for an SD boot.",
+      "resolvable_by_v3": "yes"
+    },
+    {
+      "id": "P-STRAP",
+      "outcome": "strap-high",
+      "outcome_class": "alternative",
+      "values": {
+        "allenS500": "1"
+      },
+      "implication": "GPIOC6 read high (\"s500\" variant): record it with the board revision.",
+      "resolvable_by_v3": "yes"
+    },
+    {
+      "id": "P-RAM",
+      "outcome": "reference-256mib",
+      "outcome_class": "expected",
+      "values": {
+        "bootloader_reported_bytes": 268435456,
+        "device_tree_banks": [
+          {
+            "base": 0,
+            "size": 268435456
+          }
+        ],
+        "iomem_system_ram_bytes": 268435456,
+        "MemTotal_kB": 237548,
+        "kernel_memory_line": {
+          "banks_MB": [
+            256
+          ],
+          "banks_total_MB": 256,
+          "available_kB": 150452,
+          "total_kB": 150452,
+          "reserved_kB": 111692,
+          "highmem_kB": 0
+        },
+        "cmdline_mem": null,
+        "failed_checks": []
+      },
+      "implication": "Consistent with the reference single-rank 2 Gb x16 handoff (MEM-006, MEM-010). Not proof of DRAM training behaviour.",
+      "resolvable_by_v3": "partial"
+    },
+    {
+      "id": "P-INITRD",
+      "outcome": "as-reconstructed",
+      "outcome_class": "expected",
+      "values": {
+        "initrd_start": 33554432,
+        "initrd_end": 37372849,
+        "predicted": [
+          33554432,
+          37372849
+        ],
+        "boot_log": [
+          "Freeing initrd memory: 3728K (c2000000 - c23a4000)"
+        ]
+      },
+      "implication": "Confirms in-place RAM disk placement (initrd_high = 0xffffffff).",
+      "resolvable_by_v3": "partial"
+    },
+    {
+      "id": "P-BOOTDEV",
+      "outcome": "boot-card-on-b0238000",
+      "outcome_class": "alternative",
+      "values": {
+        "boot_disk": "mmcblk0",
+        "boot_controller": "b0238000",
+        "mmc_disks": [
+          "mmcblk0"
+        ],
+        "boot_dev": "sd2",
+        "kernel_boot_card_lines": [
+          "## boot_dev: 0x22",
+          "## host_id: 0 boot_dev 22 host->index: 1",
+          "## host_id: 2 boot_dev 22 host->index: 0",
+          "force sd2(emmc) host emmc_boot_card",
+          "mmcblk0: emmc_boot_card SD 58.2 GiB "
+        ]
+      },
+      "implication": "Matches Koriki's scripts (STOR-001); then U-Boot's mmc 0 is not SD0 at 0xb0230000 as BOOT-016 reads it, or SD0 failed to initialise.",
+      "resolvable_by_v3": "yes"
+    },
+    {
+      "id": "P-NAND",
+      "outcome": "boot-card-only",
+      "outcome_class": "expected",
+      "values": {
+        "devices": {
+          "loop0": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "loop1": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "loop2": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "loop3": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "loop4": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "loop5": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "loop6": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "loop7": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "mmcblk0": {
+            "kind": "mmc",
+            "media": "sd-card",
+            "controller": "b0238000",
+            "type": "SD"
+          },
+          "ram0": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram1": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram10": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram11": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram12": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram13": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram14": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram15": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram2": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram3": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram4": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram5": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram6": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram7": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram8": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "ram9": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          },
+          "zram0": {
+            "kind": "virtual",
+            "media": null,
+            "controller": null,
+            "type": null
+          }
+        },
+        "boot_disk": "mmcblk0",
+        "source": "probe",
+        "not_in_partitions": [
+          "loop2",
+          "loop3",
+          "loop4",
+          "loop5",
+          "loop6",
+          "loop7",
+          "ram0",
+          "ram1",
+          "ram10",
+          "ram11",
+          "ram12",
+          "ram13",
+          "ram14",
+          "ram15",
+          "ram2",
+          "ram3",
+          "ram4",
+          "ram5",
+          "ram6",
+          "ram7",
+          "ram8",
+          "ram9",
+          "zram0"
+        ],
+        "probe_skipped": [],
+        "partitions_not_listed": []
+      },
+      "implication": "Supports the spare-card rollback assumption (reports/spare-card-risk.md) for this firmware, within the limits above.",
+      "resolvable_by_v3": "partial"
+    },
+    {
+      "id": "P-KERNEL",
+      "outcome": "uimage-build",
+      "outcome_class": "expected",
+      "values": {},
+      "implication": "Observation can be read against catalogued /uImage bytes.",
+      "resolvable_by_v3": "yes"
+    },
+    {
+      "id": "P-KCONFIG",
+      "outcome": "absent",
+      "outcome_class": "expected",
+      "values": {},
+      "implication": "Matches FW-018 (no IKCONFIG). CPU and command-line options stay inferred from symbols.",
+      "resolvable_by_v3": "yes"
+    },
+    {
+      "id": "P-GPU",
+      "outcome": "pvr-loaded",
+      "outcome_class": "expected",
+      "values": {
+        "pvr_version": "Version SGX_DDK_Linux_XOrg sgxddk MAIN@3625561 (release) omap_linux\nSystem Version String: SGX revision = 115"
+      },
+      "implication": "Bundled module set is in use; compare /proc/pvr/version with GPU-008.",
+      "resolvable_by_v3": "yes"
+    },
+    {
+      "id": "P-CARDCONFIG",
+      "outcome": "baseline-files",
+      "outcome_class": "expected",
+      "values": {
+        "uenv_catalogued": true,
+        "conf_catalogued": true,
+        "overclocking": null,
+        "missing": []
+      },
+      "implication": "The boot configuration is the pinned baseline.",
+      "resolvable_by_v3": "yes"
+    },
+    {
+      "id": "P-DRAM-LOG",
+      "outcome": "requires-early-serial",
+      "outcome_class": "expected",
+      "values": {
+        "log_begins_near_boot": true
+      },
+      "implication": "As expected: DRAM training predictions remain open and need an early serial capture.",
+      "resolvable_by_v3": "no"
+    }
+  ],
+  "limitations": "Runtime exports describe one boot of one device under one firmware. A Linux capture cannot show Boot ROM, loader or U-Boot console output, DRAM training or the physical DRAM size; it shows what the boot chain handed over. Interpretations are hints until reviewed and recorded through evidence/observations.json."
+}

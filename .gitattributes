@@ -1,1 +1,4 @@
 device/capture.sh text eol=lf
+*.cmd text eol=crlf
+*.sh text eol=lf
+*.ext4.gz binary

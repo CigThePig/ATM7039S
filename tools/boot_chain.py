@@ -490,7 +490,7 @@ LOADER_STUBS = {
 }
 
 
-def loader_main(loader, disk, ram_mib=256):
+def loader_main(loader, disk, ram_mib=256, boot_code=0):
     """Emulate bootloader.bin from 0xb4065400 to the jump into app.bin.
 
     The SRAM holds what block 0 and the ROM placed there on the SD path (loader
@@ -537,10 +537,11 @@ def loader_main(loader, disk, ram_mib=256):
     regions = [(SRAM_BASE, SRAM_SIZE, sram), (0, 0x08000000, None)]
     emu = Emulator(regions, stubs=stubs, stops={APP_VA: 'app.bin entry 0x1000', ROM_ADFU: 'ROM 0xffff0140 (ADFU)'},
                    mmio=lambda a, s: None)
-    emu.uc.mem_write(BOOT_CODE_VA, struct.pack('<I', 0))  # SD0 code written by block 0 (see block0 runs)
+    # Boot code written by block 0 (see block0 runs): 0 when CMU_DEVCLKEN0 bit 4 is set, 2 for bit 7.
+    emu.uc.mem_write(BOOT_CODE_VA, struct.pack('<I', boot_code))
     stop = emu.call(0xB4065400, sp=SRAM_BASE + 0x3F000)
     afi = emu.read(AFI_VA, 16)
-    result = dict(method='emulated', entry='0xb4065400', boot_code=0, stopped=stop['name'] if stop else None,
+    result = dict(method='emulated', entry='0xb4065400', boot_code=boot_code, stopped=stop['name'] if stop else None,
                   error=emu.error, instructions=emu.count,
                   r0_at_app_entry=None if not stop else f"0x{stop['regs'][0]:x}",
                   console=printed, storage_reads=services, afi=decode_afi(afi), afi_raw=afi.hex(),
@@ -1172,6 +1173,88 @@ def embedded_fdt(ub):
                 registration_order=[m['path'] for m in mmc if m['status'] in (None, 'okay')])
 
 
+def mmc_registration(ub):
+    """Execute mmc_initialize -> board_mmc_init -> owl_sd_init -> mmc_create from the image.
+
+    Answers which U-Boot device number ("mmc N") each controller receives. Replaced
+    by models: malloc/calloc (bump allocator), printf (recorder), mmc_init (supplied
+    success or failure per slot; it is the only step that talks to the card), and
+    reads of the pin-mux word 0xb01b0048 (value 0, logged), print_mmc_devices and
+    mmc_start_init (recorded; not reached unless a device asks for pre-init). fdtdec lookups run on
+    the U-Boot's own embedded device tree; device numbers are read back from the
+    structures mmc_create built.
+    """
+    fns = functions_using(ub, 'owl_sd_init')
+    if len(fns) != 1:
+        raise ValueError(f'owl_sd_init anchor ambiguous: {fns}')
+    sd_init = next((a for a in (fns[0] - 4, fns[0]) if direct_callers(ub, a)), None)
+    callers = direct_callers(ub, sd_init) if sd_init else []
+    if len(callers) != 1:
+        raise ValueError('board_mmc_init anchor ambiguous')
+    bmi = function_start(ub, callers[0])
+    init_callers = direct_callers(ub, bmi)
+    if len(init_callers) != 1:
+        raise ValueError('mmc_initialize anchor ambiguous')
+    mi = function_start(ub, init_callers[0])
+    mi_calls = call_log(ub, mi, function_end(ub, mi))
+    print_devs = next(c['target'] for c in mi_calls if c['args'][0] == 0x2C)
+    later = [c['target'] for c in mi_calls if c['site'] > next(x['site'] for x in mi_calls if x['target'] == print_devs)]
+    calls = call_log(ub, sd_init, function_end(ub, sd_init))
+    idx = next(i for i, c in enumerate(calls) if describe(ub, c['args'][0]) == 'slot:%d, error mmc_init\n')
+    printf, mmc_init, mmc_create = calls[idx]['target'], calls[idx - 1]['target'], calls[idx - 2]['target']
+    malloc = next(c['target'] for c in calls if c['args'][0] == 0x20)
+    calloc = call_log(ub, mmc_create, function_end(ub, mmc_create))[0]['target']
+    d = ub.data
+    fdt_off = int(embedded_fdt(ub)['payload_offset'], 16)
+    fdt = d[fdt_off:fdt_off + struct.unpack_from('>I', d, fdt_off + 4)[0]]
+    rows = []
+    for mode, dev in ((0, 0x20), (0, 0x22), (1, 0x22)):
+        for sd0_ok in (True, False):
+            for sd2_ok in (True, False):
+                heap, created, printed = [0x03000000], [], []
+
+                def alloc(e, zero=False):
+                    n = e.reg(0) * e.reg(1) if zero else e.reg(0)
+                    a = heap[0]
+                    heap[0] += (n + 15) & ~7
+                    e.uc.mem_write(a, bytes(n))
+                    return a
+
+                def init(e, sd0_ok=sd0_ok, sd2_ok=sd2_ok):
+                    mmc = e.reg(0)
+                    slot = e.u32(e.u32(mmc + 0x10) + 8)
+                    ok = {0: sd0_ok, 2: sd2_ok}.get(slot, False)
+                    created.append(dict(slot=slot, mmc_init='ok' if ok else 'fail', mmc=mmc))
+                    return 0 if ok else 0xFFFFFFEF
+                stubs = {malloc: ('malloc', alloc), calloc: ('calloc', lambda e: alloc(e, True)),
+                         mmc_init: ('mmc_init (outcome supplied)', init),
+                         print_devs: ('print_mmc_devices', lambda e: 0),
+                         printf: ('printf', lambda e: printed.append(
+                             _cfmt(e.cstr(e.reg(0)), [e.reg(1), e.reg(2), e.reg(3)], e)) or 0)}
+                emu = Emulator(_uboot_emu(ub), stubs=stubs,
+                               mmio=lambda a, s: 0 if a == 0xB01B0048 else None)
+                gd, blob_va = 0x03E80000, 0x03800000
+                emu.uc.mem_write(blob_va, fdt)
+                emu.uc.mem_write(gd + 0x4C, struct.pack('<I', blob_va))
+                emu.uc.mem_write(AFI_VA, afi_bytes(mode, dev))
+                for t in later:
+                    stubs[t] = ('mmc_start_init (pre-init)', lambda e: printed.append('<pre-init>') or 0)
+                emu.call(mi, sp=0x03F00000, extra_regs={9: gd})
+                ret = emu.reg(0)
+                regs = [dict(slot=c['slot'], controller=f"0x{0xB0230000 + 0x4000 * c['slot']:08x}",
+                             device_number=emu.u32(c['mmc'] + 0xCC), mmc_init=c['mmc_init']) for c in created]
+                rows.append(dict(boot_mode=mode, boot_dev=f'0x{dev:02x}', sd0_mmc_init='ok' if sd0_ok else 'fail',
+                                 sd2_mmc_init='ok' if sd2_ok else 'fail', registered=regs,
+                                 return_value=ret - (1 << 32) if ret >> 31 else ret, printed=printed,
+                                 pinmux_writes=[m for m in emu.mmio_log if m['op'] == 'write'], error=emu.error))
+    return dict(method='emulated', mmc_initialize=f'0x{mi:x}', board_mmc_init=f'0x{bmi:x}', owl_sd_init=f'0x{sd_init:x}',
+                mmc_create=f'0x{mmc_create:x}', mmc_init=f'0x{mmc_init:x}', rows=rows,
+                models=['malloc/calloc := bump allocator over zeroed RAM', 'printf recorded',
+                        'mmc_init := supplied outcome per slot (card present and answering, or not)',
+                        'MMIO read 0xb01b0048 := 0 (pin-mux word saved before SD0 init, restored on failure)',
+                        'gd->fdt_blob := the U-Boot embedded device tree; AFI := hypothesis'])
+
+
 def _fdt_nodes(b):
     """Minimal FDT walker: [(path, {name: str|hex})] for string-ish/short props."""
     magic, total, off_struct, off_strings = struct.unpack_from('>4I', b, 0)
@@ -1794,6 +1877,82 @@ def sfvd_status(image_path):
                 'app.bin would rewrite the 20-sector bootloader.ini region on boot (BOOT-014)')
 
 
+def boot_path(image_path, release, expected_sha=None, observed_cmdline=None, ram_mib=256):
+    """Every boot-device hypothesis executed end to end from the image (PR #8, C-BOOTSLOT).
+
+    For each block-0 boot code the loader writes (0 and 2 on the SD paths), the firmware's own
+    code is run for: the bootloader.bin main path (AFI produced), check_boot_flag (bootcmd),
+    the default-environment script it selects (device and partition string), mmc_initialize
+    (which controller becomes which U-Boot device, for every SD0/SD2 card-init outcome) and
+    image_setup_linux + owl_boot_fdt_setup on the release DTB (final /chosen bootargs, with the
+    GPIOC6 strap low and high). If an observed kernel command line is given, each hypothesis is
+    compared with it byte for byte.
+    """
+    p = Path(image_path)
+    if expected_sha:
+        h = hashlib.sha256()
+        with p.open('rb') as fh:
+            for chunk in iter(lambda: fh.read(1 << 22), b''):
+                h.update(chunk)
+        if h.hexdigest() != expected_sha:
+            raise SystemExit('image SHA-256 mismatch')
+    f, loader, uhdr, payload, uboot = read_regions(p)
+    disk = Disk(f)
+    ub = Blob(payload, uboot['entry'], 'u-boot')
+    env = default_env(ub)
+    cbf = find_check_boot_flag(ub)
+    table = check_boot_flag_table(ub, cbf)
+    reg = mmc_registration(ub)
+    setup = owl_fdt_setup_strings(ub)
+    helper = bootargs_helper(ub, int(setup['function'], 16))
+    part = gpt_partition1(f)
+    raw = fat_files(f, part, ['uImage', 'ramdisk.img', 'kernel.dtb', 'uEnv.txt'])
+    vars_ = dict(env['variables'])
+    vars_.update(parse_uenv(raw['uEnv.txt'][1].decode('latin1')))
+    dtb = raw['kernel.dtb'][1]
+    rd_start = int(vars_['ramdisk_addr_r'], 16) + 64
+    rd = (rd_start, rd_start + uimage_info(raw['ramdisk.img'][1])['size'])
+    block0 = block0_dispatch(loader)
+    hyps = []
+    for code in sorted({r['boot_code_written'] for r in block0['runs'] if r['stopped'] and r['stopped'].startswith('bootloader.bin')}):
+        cmu = next(r['cmu_devclken0'] for r in block0['runs'] if r['boot_code_written'] == code)
+        main_run = loader_main(loader, disk, ram_mib, boot_code=code)
+        afi = main_run['afi']
+        row = next(r for r in table['rows'] if r['afi'] == 'present' and r['boot_mode'] == afi['boot_mode']
+                   and r['boot_dev'] == afi['boot_dev'])
+        script = row['setenv']['bootcmd'].removeprefix('run ').strip()
+        args_var = {'mmcboot': 'mmcargs', 'emmcboot': 'emmcargs', 'nandboot': 'nandargs'}.get(script)
+        devpart = None
+        if args_var:
+            m = re.search(r'setenv devpart \$\{(\w+)\}:\$\{bootpart\}', vars_[args_var])
+            devpart = f"{vars_[m.group(1)]}:{vars_['bootpart']}" if m else None
+        regs = [x for x in reg['rows'] if x['boot_mode'] == afi['boot_mode'] and x['boot_dev'] == afi['boot_dev']]
+        dev_no = int(devpart.split(':')[0]) if devpart else None
+        load_from = sorted({next((g['controller'] for g in x['registered'] if g['device_number'] == dev_no), 'not registered')
+                            for x in regs})
+        bootargs = []
+        for flags in (0, 0x100000):
+            h = handoff_emulation(ub, setup, helper, dtb, afi, vars_, rd, ram_mib << 20, gd_flags=flags)
+            text = h['dt_chosen'].get('bootargs')
+            bootargs.append(dict(gpioc6='high' if flags else 'low', bootargs=text, error=h['error'],
+                                 equals_observed=None if observed_cmdline is None else text == observed_cmdline))
+        hyps.append(dict(block0_code=code, cmu_devclken0=cmu, afi=afi, loader_storage_reads=[
+                             dict(disk_offset=r.get('disk_offset'), dest=r.get('dest')) for r in main_run['storage_reads']],
+                         loader_console=main_run['console'], check_boot_flag=row['setenv'], script=script,
+                         devpart=devpart, kernel_files_from_controller=load_from,
+                         env_storage=f"mmc {env_storage(ub, disk)['mmc_device']} (same numbering)",
+                         mmc_registration=regs, bootargs=bootargs))
+    return dict(format_version=1, tool='boot_chain.py boot-path', tool_version=TOOL_VERSION, release=release,
+                image_sha256=expected_sha, observed_cmdline=observed_cmdline,
+                block0_models=block0['models'], mmc_registration_models=reg['models'],
+                functions=dict(mmc_initialize=reg['mmc_initialize'], board_mmc_init=reg['board_mmc_init'],
+                               owl_sd_init=reg['owl_sd_init'], mmc_create=reg['mmc_create'], mmc_init=reg['mmc_init'],
+                               check_boot_flag=table['function'], owl_boot_fdt_setup=setup['function']),
+                hypotheses=hyps,
+                matching=[dict(block0_code=h['block0_code'], gpioc6=b['gpioc6']) for h in hyps for b in h['bootargs']
+                          if b['equals_observed']])
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest='cmd', required=True)
@@ -1814,7 +1973,21 @@ def main():
     c = sub.add_parser('compare')
     c.add_argument('inputs', nargs='+', type=Path)
     c.add_argument('output', type=Path)
+    b = sub.add_parser('boot-path', help='execute every boot-device hypothesis end to end (C-BOOTSLOT)')
+    b.add_argument('image', type=Path)
+    b.add_argument('output', type=Path)
+    b.add_argument('--release', required=True)
+    b.add_argument('--sha256')
+    b.add_argument('--observed-cmdline', help='kernel command line to compare with (for example from an OBS summary)')
+    b.add_argument('--observation', type=Path, help='read the observed command line from an evidence/observations summary')
     args = ap.parse_args()
+    if args.cmd == 'boot-path':
+        obs = args.observed_cmdline
+        if args.observation:
+            obs = json.loads(args.observation.read_text(encoding='utf-8'))['summary']['cmdline']['raw']
+        r = boot_path(args.image, args.release, args.sha256, obs)
+        args.output.write_text(json.dumps(r, indent=1) + '\n')
+        return
     if args.cmd == 'sfvd':
         r = sfvd_status(args.image)
         print(json.dumps(r, indent=1))

@@ -99,3 +99,20 @@ The [DRAM reconstruction](../reports/dram-complete-reconstruction.md) completes 
 | Resume failure | mode 1 returns ≠ 0 | — | not written | RTC alarm +3 s, s2 flag set again, PMIC power-off |
 | Resume check | vector bit 31 and alarm wake | mode 1, then back to self-refresh | not written | PMIC power-off |
 | ADFU request | PMIC reg 0x35 bit 1, or GPIO 0x55aa55aa on non-SD0 boot codes | none | not written | ROM ADFU |
+
+## Physical observation OBS-001 (2026-11-27) and the PR #8 reconciliation
+
+The tables above follow the **code-0 / AFI `0x20` branch** (SD0). OBS-001's running kernel reported `boot_dev=sd2` and its boot card on controller `0xb0238000`. PR #8 executed every branch end to end from the image ([report](../reports/sd2-boot-path-reconciliation.md), BOOT-022/023, STOR-003): the observed unit takes the **code-2 / AFI `0x22` branch**, and the stage map for it is
+
+| # | Stage | Observed unit | Basis |
+|---|---|---|---|
+| S0 | Boot ROM | boots from TF1 = SD2; leaves CMU_DEVCLKEN0 bit 7 set | inferred |
+| S1 | Block 0 | bit 7 → boot code 2 | emulated |
+| S2 | bootloader.bin | same raw reads; AFI `mode 0, dev 0x22, uart 3, 256 MiB` | emulated |
+| S4 | U-Boot init | `mmc 0` = SD0 (no card: init fails, stays registered), `mmc 1` = SD2 (registered only for AFI 0x22); environment from `mmc 1` (the boot card, `0x5000`) → default | emulated |
+| S4 | check_boot_flag | `bootcmd = run emmcboot` | emulated |
+| S5 | emmcboot | `fatload mmc 1:1` uEnv.txt, uImage, ramdisk.img, kernel.dtb (same files and addresses as S5 above) | emulated + default env |
+| S6–S7 | handoff | bootargs `… allenS500=1 androidboot.bootdev=sd boot_dev=sd2`, byte-identical to OBS-001 | emulated, **matches observation** |
+| — | Linux | `boot_dev=sd2` → SD2 host gets index 0 (`mmcblk0`, named `emmc_boot_card` by slot); rootfs `boot/BATOCERA` loop-mounted rw | binary + source, **observed** |
+
+Physical medium (SD), controller (SD2), U-Boot device (`mmc 1`), Linux index (`mmcblk0`) and role label ("emmc") are five different things. The ROM, the CMU bit and the AFI bytes are still inferred, not observed.

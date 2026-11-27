@@ -1,5 +1,7 @@
 # Running hardware test V3: the complete step-by-step procedure
 
+> **Fallback procedure.** Use [the lab](V3-LAB-QUICKSTART.md) (`ATM7039S-Lab.cmd`) instead whenever possible: it automates every computer step here, finds candidate cards by geometry and available media identity (mark the spare card to distinguish identical cards), keeps progress across restarts and replaces the byte-level `card-rootfs` check, which always fails after the first boot, with the phase-aware check. If you do follow this guide, run step 5.4 with `--image` so the prepared card is compared semantically: `python tools/v3_preflight.py --boot-dir … --share-dir … --image inputs/koriki-v1.0.img`.
+
 This guide takes you from nothing to a finished, checked V3 capture. Follow it **in order** and do **every** step, including the ones that look unnecessary. Every step says what to do, what you should see, and what to do if you see something else.
 
 * **What V3 is:** you boot a spare microSD card with an unmodified copy of the Koriki v1.0 firmware on the original RG35XX handheld. You then run one small script that **only reads** information the running system already reports, and saves it to the card. Afterwards you check and analyse that information on a computer.
@@ -35,7 +37,7 @@ Tick each item before you start.
 | ☐ | Its battery charged to at least half | Charge it **before** the session, then unplug the cable. |
 | ☐ | One spare microSD card, 8 GB or larger | Brand-name, known to work. Everything on it will be erased. |
 | ☐ | A microSD card reader for the computer | Built-in slot or USB reader. |
-| ☐ | A computer: Windows 10/11, macOS or Linux | About **7 GB of free disk space**, internet access, and permission to install programs. |
+| ☐ | A computer: Windows 10/11, macOS or Linux | Allow about **14 GB (13 GiB) of free local disk space** for firmware and verification snapshots, internet access, and permission to install programs. |
 | ☐ | About 1 GB of download allowance | The firmware download is 935 MB. |
 | ☐ | Pen and paper, or a text file, for notes | You will write down times and what you saw (template in Appendix B). |
 
@@ -113,6 +115,8 @@ Create a new private local results folder outside the project and cloud sync now
 ```
 python -m pip install -r requirements-dev.txt -r requirements-firmware.txt
 ```
+
+On Windows, if installation reports Access is denied, use `python -m pip install --user -r requirements-dev.txt -r requirements-firmware.txt` in the normal terminal. If Python reports a UnicodeDecodeError, run `$env:PYTHONUTF8 = '1'` and retry. Do not upgrade pip merely for this test.
 
 Wait until it finishes. The last line should say `Successfully installed …`, or that the requirements are already satisfied. Warnings about pip versions can be ignored. **A red line containing `ERROR` is not OK: stop and ask.**
 
@@ -261,13 +265,13 @@ Rules for this file:
 ### 5.4 Check the prepared card
 
 ```
-python tools/v3_preflight.py --boot-dir BOOTDRIVE --share-dir SHAREDRIVE --json "RESULTS/preflight-prepared.json"
+python tools/v3_preflight.py --boot-dir BOOTDRIVE --share-dir SHAREDRIVE --phase prepared --image inputs/koriki-v1.0.img --json "RESULTS/preflight-prepared.json"
 ```
 
 Examples:
 
-* Windows: `python tools/v3_preflight.py --boot-dir E:\ --share-dir F:\ --json "RESULTS/preflight-prepared.json"`
-* macOS: `python3 tools/v3_preflight.py --boot-dir "/Volumes/NO NAME" --share-dir /Volumes/SHARE --json "RESULTS/preflight-prepared.json"`. Put quotes around a name that contains spaces.
+* Windows: `python tools/v3_preflight.py --boot-dir E:\ --share-dir F:\ --phase prepared --image inputs/koriki-v1.0.img --json "RESULTS/preflight-prepared.json"`
+* macOS: `python3 tools/v3_preflight.py --boot-dir "/Volumes/NO NAME" --share-dir /Volumes/SHARE --phase prepared --image inputs/koriki-v1.0.img --json "RESULTS/preflight-prepared.json"`. Put quotes around a name that contains spaces.
 
 The last line must say **`0 FAIL, 0 WARN`**. You should see `PASS` for:
 
@@ -284,13 +288,16 @@ What to do if it reports a problem:
 
 | Message | What to do |
 |---|---|
-| `card-boot:… DIFFERS` or `missing`, or `card-rootfs FAIL` | Something changed the boot partition. Do not use this card. Start again from Part 3. |
+| `card-boot:… DIFFERS` or `missing` | Stop; preserve the card and report the mismatch. |
+| `card-rootfs FAIL` | Do not boot or reflash automatically. After the first boot the container legitimately changes (FW-021); `v3_preflight.py --image …` compares it semantically with the first-boot rules. A FAIL there means an **unexplained** change: keep the card as it is and send the report (`python tools/v3_rootfs_review.py --phase prepared --image …` writes it to `lab-data/rootfs-review/`). |
 | `card-overclocking FAIL` | Do not edit the file by hand. Start again from Part 3. |
 | `card-first-boot WARN` | The first boot did not finish. Repeat Part 4. |
 | `card-script FAIL` | The copied file is not the registered script. Delete it, then repeat 5.3 exactly. |
 | `card-script-name FAIL` | Wrong file name. Delete the file and repeat 5.3. |
 | `card-macos-files WARN` | In Terminal: `dot_clean -m /Volumes/SHARE/roms/ports`, then run 5.4 again. |
 | `card-boot-extra WARN` | Files were added to the boot partition. Write down their names and ask. |
+
+Before proceeding, save the checked prepared filesystem manifest: `python tools/v3_rootfs_review.py --phase prepared --image inputs/koriki-v1.0.img --card BOOTDRIVE/boot/BATOCERA` (replace BOOTDRIVE with the mounted boot partition). Only a PASS publishes `lab-data/rootfs-review/card-prepared.json`; preserve that file for Part 11. Do not repeat this prepared review on the card after capture.
 
 ### 5.5 Mandatory repeat of the raw-card check
 
@@ -405,7 +412,7 @@ You may also see `"admissible_as_evidence": true`, which is what you want, and a
 With the card still in the computer:
 
 ```
-python tools/v3_preflight.py --boot-dir BOOTDRIVE --share-dir SHAREDRIVE --json "RESULTS/preflight-after.json"
+python tools/v3_preflight.py --boot-dir BOOTDRIVE --share-dir SHAREDRIVE --phase post-capture --baseline lab-data/rootfs-review/card-prepared.json --json "RESULTS/preflight-after.json"
 ```
 
 * **Expected now:** one `WARN` on `card-earlier-captures`, because the new capture folder is on the card. That is fine.
@@ -502,3 +509,7 @@ The capture shows what the boot chain handed to Linux. It cannot show:
 * whether there is storage that Linux does not see.
 
 Those need a different, separately approved test. A missing item in the results means "not collected", never "broken".
+
+## Windows operator helper
+
+From the project folder, use `powershell -NoProfile -File tools/v3_operator.ps1 -Action Setup`, `-Action Prepared`, or `-Action Analyse -CaptureFolder 'C:\path\to\private\atm-capture-...'`, or `-Action Postflight`. This helper detects labelled mounted partitions on the same disk, saves local outputs, and never formats, flashes, boots or copies the capture script to a card. It does not replace mandatory raw checks or the owner's checklist. The rootfs diagnostic stages verified local snapshots, requires about 5 GB extra space, saves progress in a gitignored cache, and can be restarted with the same command. Its private reports are in `lab-data/rootfs-review/`; it is not an automatic preflight override. See [OBS-001 report](../reports/v3-first-hardware-capture.md).

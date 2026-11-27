@@ -926,6 +926,8 @@ OBS = {
     'procedure': {'tool': 'device/capture.sh', 'tool_sha256': hashlib.sha256(SCRIPT.read_bytes()).hexdigest(), 'launch': 'SimpleMenu GAMES list'},
     'capture': {'manifest_sha256': '', 'summary': 'evidence/observations/OBS-001.json', 'raw_location': 'owner archive'},
     'result': 'test record', 'limitations': 'test record',
+    'attestations': json.loads((ROOT / 'evidence/observations.json').read_text(encoding='utf-8'))[0]['attestations'],
+    'dates': {'session_date': '2026-12-01', 'session_date_source': 'test', 'device_clock': '2022-01-01 (test)'},
 }
 
 
@@ -968,6 +970,12 @@ class ObservationLedgerTests(unittest.TestCase):
     def test_owner_card_rejected(self):
         self.obs['media']['excluded_owner_card'] = True
         self.assertTrue(any('excluded_owner_card' in e for e in self.write()))
+
+    def test_attestation_status_is_constrained(self):
+        self.obs['attestations'] = dict(self.obs['attestations'], **{'tf2-empty': {'status': 'certain', 'basis': 'x'}})
+        self.assertTrue(any('tf2-empty' in e for e in self.write()))
+        del self.obs['attestations']['board-revision']
+        self.assertTrue(any('board-revision' in e for e in self.write()))
 
     def test_hardware_finding_needs_observation(self):
         f = self.finding()

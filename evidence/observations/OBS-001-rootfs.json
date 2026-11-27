@@ -1,0 +1,50 @@
+{
+  "removed": [],
+  "added": [
+    "/run/initctl",
+    "/run/utmp"
+  ],
+  "changed": [
+    {
+      "path": "/etc",
+      "fields": {
+        "links": [
+          15,
+          16
+        ]
+      }
+    },
+    {
+      "path": "/etc/dropbear",
+      "fields": {
+        "flags": [
+          0,
+          524288
+        ],
+        "inode": [
+          125,
+          32769
+        ],
+        "links": [
+          1,
+          2
+        ],
+        "mode": [
+          41471,
+          16877
+        ],
+        "target": [
+          "/var/run/dropbear",
+          null
+        ]
+      }
+    }
+  ],
+  "original_paths": 27112,
+  "card_paths": 27114,
+  "scope": "Reachable directory tree, regular file contents, symlinks, inode IDs, modes, ownership fields, flags, link counts, xattrs and device IDs; excludes timestamps, journal, allocation state, free space and unreferenced inodes.",
+  "diagnostic_version": "2.1",
+  "original_container_sha256": "0283397edbbc639e92b6107a3771cdd4a1d1f7a0076e1d9461c7062b7f06cfe9",
+  "card_container_sha256": "d97cca531baae1e6a4a3305e39745785e51ea821920edd824ca036385a1e5caa",
+  "note": "Comparison is of local snapshots; not a V3 preflight override or authorization."
+}

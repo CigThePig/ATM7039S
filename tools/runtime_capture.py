@@ -709,10 +709,10 @@ def catalogued_components(root=ROOT):
         m = json.loads(p.read_text(encoding='utf-8'))
         if isinstance(m, dict):
             for c in m.get('components', []):
-                comps.append(dict(manifest=str(p.relative_to(root)), id=c['id'], sha256=c['sha256'], size=c.get('size')))
+                comps.append(dict(manifest=p.relative_to(root).as_posix(), id=c["id"], sha256=c['sha256'], size=c.get('size')))
             for s in m.get('gzip_streams', []):
                 for v in s.get('linux_version_strings', []):
-                    versions.append(dict(manifest=str(p.relative_to(root)), component_sha256=m.get('sha256'), text=v['text']))
+                    versions.append(dict(manifest=p.relative_to(root).as_posix(), component_sha256=m.get('sha256'), text=v['text']))
     return comps, versions
 
 

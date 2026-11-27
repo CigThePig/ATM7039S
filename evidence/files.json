@@ -647,5 +647,45 @@
     "size": 11050,
     "raw_url": "https://raw.githubusercontent.com/u-boot/u-boot/9d67454e920b3908529c9fc642a8c911db040896/arch/arm/include/asm/arch-rockchip/sdram_rk322x.h",
     "view_url": "https://github.com/u-boot/u-boot/blob/9d67454e920b3908529c9fc642a8c911db040896/arch/arm/include/asm/arch-rockchip/sdram_rk322x.h"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/mmc/core/host.c",
+    "sha256": "24dc8530045b48958ca0c6c416c17704f5798c27c90a3b8807743556d9707d89",
+    "size": 15934,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/mmc/core/host.c",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/mmc/core/host.c"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/mmc/core/bus.c",
+    "sha256": "105e4d5d7c1e1f96ed9e1b53cb0540935e1c2184f52819792bf463b4cc3b68f4",
+    "size": 10006,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/mmc/core/bus.c",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/mmc/core/bus.c"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/bootdev-owl.c",
+    "sha256": "18bee46578d3e1a9a172a98f83e7023debf126e9fcd8cff80999a2089b2d0b57",
+    "size": 5428,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/bootdev-owl.c",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/bootdev-owl.c"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/include/mach/bootdev.h",
+    "sha256": "e8cc87f19e8c478a5fb15ba113ac3bd9eeb1891fc47b701dbdf9d61c0688173f",
+    "size": 1078,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/include/mach/bootdev.h",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/include/mach/bootdev.h"
+  },
+  {
+    "source": "vendor-kernel",
+    "path": "drivers/cpufreq/owl-cpufreq.c",
+    "sha256": "084ce4185a23e190ad323fa1dd90289132a215263c081c01bfa66fb30450c5ce",
+    "size": 27791,
+    "raw_url": "https://raw.githubusercontent.com/rg35xx-cfw/s500_kernel/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/cpufreq/owl-cpufreq.c",
+    "view_url": "https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/drivers/cpufreq/owl-cpufreq.c"
   }
 ]
