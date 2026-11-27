@@ -37,7 +37,7 @@ Tick each item before you start.
 | ☐ | Its battery charged to at least half | Charge it **before** the session, then unplug the cable. |
 | ☐ | One spare microSD card, 8 GB or larger | Brand-name, known to work. Everything on it will be erased. |
 | ☐ | A microSD card reader for the computer | Built-in slot or USB reader. |
-| ☐ | A computer: Windows 10/11, macOS or Linux | About **7 GB of free disk space**, internet access, and permission to install programs. |
+| ☐ | A computer: Windows 10/11, macOS or Linux | Allow about **14 GB (13 GiB) of free local disk space** for firmware and verification snapshots, internet access, and permission to install programs. |
 | ☐ | About 1 GB of download allowance | The firmware download is 935 MB. |
 | ☐ | Pen and paper, or a text file, for notes | You will write down times and what you saw (template in Appendix B). |
 

@@ -19,6 +19,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 
 BOOT_OFFSET = 8 * 1024 * 1024
 BOOT_SIZE = 3 * 1024 ** 3
@@ -133,6 +134,8 @@ def collect(runner=subprocess.run):
         if r.returncode:
             raise DiscoveryError('Windows did not list its disks: ' + (r.stderr or '').strip()[:300])
         return normalize_windows(json.loads(r.stdout or '[]'))
+    if not sys.platform.startswith('linux'):
+        raise DiscoveryError('The guided lab supports Windows and Linux only. On macOS use the manual procedure: device/V3-STEP-BY-STEP.md.')
     r = runner(['lsblk', '-J', '-b', '-o', 'NAME,PATH,TYPE,SIZE,START,PARTN,TRAN,RM,HOTPLUG,MODEL,LABEL,FSTYPE,MOUNTPOINTS,PTTYPE,PARTTYPE'],
                capture_output=True, text=True, timeout=60)
     if r.returncode:

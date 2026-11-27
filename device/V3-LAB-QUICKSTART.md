@@ -6,7 +6,11 @@ You do the hands-on parts. The computer does all the checking and tells you what
 
 ## Start
 
-Double-click **`ATM7039S-Lab.cmd`** in the project folder. (Linux/macOS: `./start-lab.sh`.)
+The guided lab currently supports Windows and Linux. **macOS users:** follow the [manual V3 procedure](V3-STEP-BY-STEP.md); automated disk discovery is not implemented on macOS.
+
+Double-click **`ATM7039S-Lab.cmd`** in the project folder. (Linux: `./start-lab.sh`.)
+
+For a fresh lab allow about **13 GiB (14 GB) of free local space**. The lab calculates the actual additional requirement from pinned firmware sizes, reusable verified files, both card snapshots and a safety margin. It rechecks before flashing and before the capture script is installed. Do not delete an active session's files to make room.
 
 The first start sets itself up (about a minute). A page opens in your web browser. Keep the small black window open while you work.
 

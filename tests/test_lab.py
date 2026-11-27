@@ -375,6 +375,13 @@ class DiskTests(Tmp):
         self.assertNotIn('Signature', v)
         self.assertNotIn(str(self.tmp), v)
 
+    def test_macos_discovery_refuses_before_calling_lsblk(self):
+        run = mock.Mock()
+        with mock.patch.object(disks.sys, 'platform', 'darwin'), mock.patch.object(disks.os, 'name', 'posix'):
+            with self.assertRaisesRegex(disks.DiscoveryError, 'V3-STEP-BY-STEP'):
+                disks.collect(runner=run)
+        run.assert_not_called()
+
     def test_windows_collector_parses_single_object_json(self):
         w = self.world()
         one = json.dumps(w.card.disk())
@@ -754,6 +761,28 @@ class SimulatedSession(Tmp):
                 self.confirm('flash')
             self.assertEqual(self.lab.session.current()['id'], 'flash')
 
+    def test_space_rechecked_before_flash_and_install(self):
+        self.run_step('computer')
+        self.run_step('firmware')
+        with mock.patch.object(steps.shutil, 'disk_usage', return_value=mock.Mock(free=0)):
+            with self.assertRaisesRegex(session.SessionError, 'Not enough free disk space'):
+                self.confirm('insert-blank')
+            self.assertEqual(self.lab.session.current()['id'], 'insert-blank')
+        self.confirm('insert-blank')
+        with mock.patch.object(steps.shutil, 'disk_usage', return_value=mock.Mock(free=0)):
+            self.assertFalse(self.lab.flash_info()['target_unique'])
+            with self.assertRaisesRegex(session.SessionError, 'Not enough free disk space'):
+                self.confirm('flash')
+        self.world.card.flash()
+        self.confirm('flash')
+        self.assertEqual(self.run_step('check-fresh')['status'], 'complete', self.lab.problem)
+        self.world.card.first_boot()
+        self.confirm('first-boot')
+        self.assertEqual(self.run_step('check-prepared')['status'], 'complete', self.lab.problem)
+        with mock.patch.object(steps.shutil, 'disk_usage', return_value=mock.Mock(free=0)):
+            self.assertEqual(self.run_step('install-script')['status'], 'blocked')
+        self.assertFalse((self.world.card.share / 'roms/ports/ATM7039S-capture.sh').exists())
+
     def test_flash_ambiguous_targets_block_before_confirmation(self):
         self.run_step('computer')
         self.run_step('firmware')
@@ -1028,7 +1057,65 @@ class LinuxRawPermissionTests(unittest.TestCase):
                 steps.default_raw_reader({'path':'/dev/sdz'})
 
 
+class StorageBudgetTests(Tmp):
+    def setUp(self):
+        super().setUp()
+        self.env = steps.Env(root=ROOT, data=self.tmp, network_check=lambda: True)
+        self.a, self.gz, self.img = steps._image_paths(self.env)
+        self.rootcat = self.env.json('evidence/firmware/koriki-v1.0-rootfs.json')
+        self.size = self.rootcat['container_size']
+        self.pristine = self.env.cache / 'firmware' / 'koriki-v1.0-rootfs.ext4'
+
+    def test_fresh_budget_includes_two_snapshots_and_margin(self):
+        b = steps.storage_budget(self.env)
+        self.assertEqual(b['required_bytes'], self.a['size'] + self.a['expanded_size'] +
+                         3 * self.size + steps.SESSION_SPACE_MARGIN)
+        self.assertGreater(b['required_bytes'], 12 * steps.GIB)
+        self.assertEqual(b['components']['prepared_and_postflight'], 2 * self.size)
+        with mock.patch.object(steps.shutil, 'disk_usage', return_value=mock.Mock(free=9 * steps.GIB)):
+            self.assertIn('Not enough free disk space', steps.storage_problem(self.env))
+            result = steps.step_computer(self.env, None, jobs.Job('budget', 'fast'))
+            self.assertFalse(result.ok)
+            self.assertIn('Not enough free disk space', result.blocking_reason)
+        with mock.patch.object(steps.shutil, 'disk_usage', return_value=mock.Mock(free=b['required_bytes'])):
+            self.assertIsNone(steps.storage_problem(self.env))
+
+    def test_verified_cache_credit_and_remaining_snapshot_count(self):
+        # No multi-GiB fixtures: mock the existing marker-validation contract.
+        with mock.patch.object(steps, 'is_verified', side_effect=lambda p, size, sha: p in (self.img, self.pristine)):
+            self.assertEqual(steps.storage_budget(self.env)['required_bytes'],
+                             2 * self.size + steps.SESSION_SPACE_MARGIN)
+            self.assertEqual(steps.storage_budget(self.env, 1)['required_bytes'],
+                             self.size + steps.SESSION_SPACE_MARGIN)
+        with mock.patch.object(steps, 'is_verified', side_effect=lambda p, size, sha: p == self.gz):
+            self.assertEqual(steps.storage_budget(self.env)['required_bytes'],
+                             self.a['expanded_size'] + 3 * self.size + steps.SESSION_SPACE_MARGIN)
+
+    def test_unverified_files_and_old_snapshots_not_credited(self):
+        self.img.parent.mkdir(parents=True)
+        self.img.write_bytes(b'unverified')
+        self.gz.with_name(self.gz.name + '.partial').write_bytes(b'partial')
+        snaps = self.env.cache / 'card-snapshots'
+        snaps.mkdir()
+        (snaps / 'old.ext4').write_bytes(b'old')
+        b = steps.storage_budget(self.env)
+        self.assertEqual(b['components']['expanded_image'], self.a['expanded_size'])
+        self.assertEqual(b['components']['archive'], self.a['size'])
+        self.assertEqual(b['components']['prepared_and_postflight'], 2 * self.size)
+
+
 class LauncherTests(unittest.TestCase):
+    def test_macos_launcher_and_direct_cli_refuse_before_setup(self):
+        import lab_launch
+        from v3lab import __main__ as cli
+        with mock.patch.object(sys, 'platform', 'darwin'), mock.patch.object(lab_launch, 'LOG') as log, mock.patch.object(cli, 'Lab') as lab:
+            with mock.patch('builtins.print') as output:
+                self.assertEqual(lab_launch.main(), 2)
+                self.assertIn('V3-STEP-BY-STEP', output.call_args[0][0])
+                self.assertEqual(cli.main(['open']), 2)
+            log.parent.mkdir.assert_not_called()
+            lab.assert_not_called()
+
     def test_launcher_rejects_old_python(self):
         import lab_launch
         with mock.patch.object(sys, 'version_info', (3, 9, 0)):

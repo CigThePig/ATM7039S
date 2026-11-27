@@ -95,9 +95,12 @@ class Lab:
                 target_matches = disks.compatible_binding(self.session.data['card'],
                     disks.media_binding(candidates[0], self.session.data['salt']))
                 if target_matches:
-                    access_problem = steps.raw_access_problem(self.env, candidates[0])
+                    access_problem = (steps.raw_access_problem(self.env, candidates[0])
+                                      or steps.storage_problem(self.env))
         except Exception as e:  # listing is advisory here; Etcher shows the authoritative list
-            self.log.warning('flash listing failed: %s', e)
+            self.log.warning('flash listing or storage check failed: %s', e)
+            target_matches = False
+            access_problem = 'Unable to verify the target or local storage; do not flash. Retry after checking the computer.'
         return dict(image=str(img), image_ready=img.exists(), removable=removable,
                     access_problem=access_problem,
                     target_unique=len(removable) == 1 and img.exists() and target_matches and not access_problem)
@@ -190,7 +193,7 @@ class Lab:
             candidates = disks.flash_candidates(self.env.inventory())
             if len(candidates) != 1:
                 raise SessionError('connect exactly one marked spare card before continuing; do not flash')
-            problem = steps.raw_access_problem(self.env, candidates[0])
+            problem = steps.raw_access_problem(self.env, candidates[0]) or steps.storage_problem(self.env)
             if problem:
                 raise SessionError(problem)
             # Save the compatibility binding only after all physical confirmations.

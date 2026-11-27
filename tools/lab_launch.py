@@ -2,7 +2,7 @@
 
 Standard library only, so it runs on a fresh Python. It never needs administrator rights:
 the environment lives in .venv-lab inside the project folder. It is started by
-ATM7039S-Lab.cmd (Windows, double-click) or start-lab.sh (Linux/macOS).
+ATM7039S-Lab.cmd (Windows, double-click) or start-lab.sh (Linux). macOS uses the manual procedure.
 """
 import hashlib
 import os
@@ -29,6 +29,9 @@ SUPPORTED = ((3, 11), (3, 13))   # tested range; newer Pythons broke a pinned li
 
 
 def main():
+    if sys.platform != 'win32' and not sys.platform.startswith('linux'):
+        say('The guided lab supports Windows and Linux only. On macOS use device/V3-STEP-BY-STEP.md.')
+        return 2
     v = tuple(sys.version_info[:2])
     if not SUPPORTED[0] <= v <= SUPPORTED[1]:
         say(f'This lab is tested with Python 3.11 to 3.13; this is Python {v[0]}.{v[1]}.\n'

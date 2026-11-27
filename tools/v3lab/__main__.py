@@ -18,6 +18,9 @@ def main(argv=None):
     p.add_argument('--port', type=int, default=0)
     p.add_argument('--no-browser', action='store_true')
     a = p.parse_args(argv)
+    if sys.platform != 'win32' and not sys.platform.startswith('linux'):
+        print('The guided lab supports Windows and Linux only. On macOS use device/V3-STEP-BY-STEP.md.', file=sys.stderr)
+        return 2
     if hasattr(sys.stdout, 'reconfigure'):
         sys.stdout.reconfigure(errors='backslashreplace')
     if a.command == 'selftest':

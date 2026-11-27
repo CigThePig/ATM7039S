@@ -20,10 +20,11 @@ import socket
 import sys
 
 from . import disks, rootfs
-from .download import download, expand_gzip, manifest_entry, verify_existing
+from .download import download, expand_gzip, is_verified, manifest_entry, verify_existing
 from .store import StoreError, atomic_write_json, read_json, require_space, sha256_file, verified_copy
 
 GIB = 1024 ** 3
+SESSION_SPACE_MARGIN = GIB  # manifests, checkpoints, small captures/logs and copy overhead
 
 
 @dataclasses.dataclass
@@ -239,6 +240,45 @@ def scan_file(env, path, sha, job, label):
 
 # --------------------------------------------------------------------------- steps
 
+def storage_budget(env, remaining_snapshots=2):
+    """Additional free bytes needed on the lab-data filesystem, not total usage.
+
+    Only credit pinned firmware artifacts that still have valid verification
+    markers. A verified expanded image makes the archive unnecessary. Existing
+    card snapshots are not credited: their future digests are unknown and even
+    a duplicate requires a full temporary copy. Partial/rejected files and old
+    sessions already consume space; never assume they can be deleted.
+    """
+    if remaining_snapshots not in (0, 1, 2):
+        raise ValueError('invalid remaining snapshot count')
+    a, gz, img = _image_paths(env)
+    rootcat = env.json('evidence/firmware/koriki-v1.0-rootfs.json')
+    size = rootcat['container_size']
+    local = env.cache / 'firmware' / 'koriki-v1.0-rootfs.ext4'
+    image_ok = is_verified(img, a['expanded_size'], a['expanded_sha256'])
+    archive_ok = image_ok or is_verified(gz, a['size'], a['sha256'])
+    pristine_ok = is_verified(local, size, rootcat['container_sha256'])
+    components = dict(archive=0 if archive_ok else a['size'],
+                      expanded_image=0 if image_ok else a['expanded_size'],
+                      pristine_container=0 if pristine_ok else size,
+                      prepared_and_postflight=remaining_snapshots * size,
+                      margin=SESSION_SPACE_MARGIN)
+    return dict(required_bytes=sum(components.values()), components=components,
+                remaining_snapshots=remaining_snapshots)
+
+
+def storage_problem(env, remaining_snapshots=2):
+    budget = storage_budget(env, remaining_snapshots)
+    free = shutil.disk_usage(env.data).free
+    need = budget['required_bytes']
+    if free < need:
+        return (f'Not enough free disk space to finish verification: need {need / GIB:.2f} GiB '
+                f'additional free space, only {free / GIB:.2f} GiB available. '
+                'Free space on the drive holding lab-data, without deleting active session files. '
+                'Do not flash or boot the card until the space check passes.')
+    return None
+
+
 def step_computer(env, session, job):
     job.start_phase('checking this computer', 5, 'checks')
     lines, problems = [], []
@@ -257,13 +297,14 @@ def step_computer(env, session, job):
     enc = sys.flags.utf8_mode or (sys.getfilesystemencoding().lower() in ('utf-8', 'utf8'))
     lines.append('UTF-8 mode on.' if enc else 'UTF-8 mode off: text files are still read as UTF-8 explicitly.')
     job.advance()
-    need = 8 * GIB
     env.data.mkdir(parents=True, exist_ok=True)
+    budget = storage_budget(env)
+    need = budget['required_bytes']
     free = shutil.disk_usage(env.data).free
-    lines.append(f'{free / GIB:.1f} GiB free where the lab keeps its files ({env.data}).')
+    lines.append(f'{free / GIB:.2f} GiB free where the lab keeps its files ({env.data}); '
+                 f'{need / GIB:.2f} GiB needed, including both card snapshots and a safety margin.')
     if free < need:
-        problems.append(f'about {need / GIB:.0f} GiB of free space is needed for the firmware and card copies; '
-                        f'only {free / GIB:.1f} GiB is free on that drive')
+        problems.append(storage_problem(env) or 'free space changed during the check; retry')
     job.advance()
     a, gz, img = _image_paths(env)
     have = img.exists() or gz.exists()
@@ -274,7 +315,7 @@ def step_computer(env, session, job):
         problems.append('the firmware has not been downloaded yet and github.com cannot be reached')
     job.advance()
     return StepResult(not problems, 'Computer is ready.' if not problems else 'This computer needs attention.',
-                      dict(python=f'{v.major}.{v.minor}.{v.micro}', free_bytes=free, network=net),
+                      dict(python=f'{v.major}.{v.minor}.{v.micro}', free_bytes=free, network=net, storage=budget),
                       '; '.join(problems) or None, lines)
 
 
@@ -311,6 +352,9 @@ def step_firmware(env, session, job):
 
 
 def step_check_fresh(env, session, job):
+    problem = storage_problem(env)
+    if problem:
+        raise StoreError(problem)
     found, view = _card(env, session, 'not-yet-booted')
     boot = Path(found['boot_mount'])
     results = _boot_checks(env, boot, 'fresh')
@@ -451,6 +495,9 @@ def step_check_prepared(env, session, job):
 
 
 def step_install_script(env, session, job):
+    problem = storage_problem(env, remaining_snapshots=1)
+    if problem:
+        raise StoreError(problem)
     found, view = _card(env, session, 'booted')
     share = Path(found['share_mount'])
     src = env.root / 'device/capture.sh'
