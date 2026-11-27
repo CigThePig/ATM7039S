@@ -64,13 +64,17 @@ ATM_FIRMWARE_DIR=FW python -m unittest tests.test_predram -v
 python -m unittest discover -s tests -v; python tools/research.py validate; python tools/research.py generate --check
 ```
 
-## Tests executed (this session, Linux, Python 3.13)
+## Tests executed (this session, Linux, Python 3.13, Capstone 5.0.6, Unicorn 2.1.4)
 
-* `tests.test_predram`: 27 tests.
-  * Without firmware: 25 pass, 2 skipped (FirmwareBacked).
-  * With `ATM_FIRMWARE_DIR` and all five images: see the PR description for the final run.
-* Full suite, `research.py validate`, `generate --check`, `render_catalogue.py` and `render_html.py`: results are in the PR description.
-* GitHub Actions: not observed by this session.
+| Run | Result |
+|---|---|
+| `python -m unittest discover -s tests` (no firmware) | 457 tests, OK, 21 skipped (firmware-, qemu- or tool-dependent, as before) |
+| `ATM_FIRMWARE_DIR=FW python -m unittest tests.test_predram tests.test_boot_chain -v` (all five images) | 53 tests, OK, 0 skipped. Committed `sd2-predram.json` regenerated exactly; PR #5/#8 boot-chain evidence unchanged |
+| `research.py validate` | 0 errors |
+| `research.py generate --check`, `render_catalogue.py`, `render_html.py` | clean, no diff, 47 documents rendered |
+| Not run here | browser (Playwright) and Windows CI jobs; `test_dram_complete` firmware-backed comparisons (`ATM7039S_STOCK_LOADERS`) |
+
+GitHub Actions results were not observed by this session.
 
 ## Unresolved emulator assumptions
 
