@@ -16,7 +16,7 @@ jobs:
       - run: python -m pip install shellcheck-py==0.10.0.1
       - run: python -m unittest discover -s tests -v
       - name: Lab launcher self-test (fresh venv, as the operator runs it)
-        run: ./start-lab.sh selftest
+        run: ./start-lab.sh selftest | tee selftest.txt && grep -q 'selftest OK' selftest.txt
       - run: python tools/research.py validate
       - run: python tools/research.py generate --check
       - run: python tools/render_catalogue.py
@@ -46,8 +46,9 @@ jobs:
           $dest = Join-Path $env:RUNNER_TEMP 'ATM7039S Lab ü'
           Copy-Item -Recurse -Path $PWD -Destination $dest
           Set-Location $dest
-          cmd /c "ATM7039S-Lab.cmd selftest < NUL"
-          if ($LASTEXITCODE -ne 0) { throw "launcher self-test failed ($LASTEXITCODE)" }
+          $out = cmd /c "ATM7039S-Lab.cmd selftest < NUL" 2>&1 | Out-String
+          Write-Host $out
+          if ($LASTEXITCODE -ne 0 -or $out -notmatch 'selftest OK') { throw "launcher self-test failed ($LASTEXITCODE)" }
       - name: PowerShell scripts parse
         shell: pwsh
         run: |

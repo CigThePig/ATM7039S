@@ -799,6 +799,18 @@ class LauncherTests(unittest.TestCase):
                 self.assertEqual(lab_launch.main(), 2)
             self.assertIn('3.11', p.call_args[0][0])
 
+    def test_launcher_rejects_too_new_python(self):
+        import lab_launch
+        with mock.patch.object(sys, 'version_info', (3, 15, 2)):
+            with mock.patch('builtins.print') as p:
+                self.assertEqual(lab_launch.main(), 2)
+            self.assertIn('3.12', p.call_args[0][0])
+
+    def test_windows_launcher_prefers_tested_pythons_and_keeps_exit_code(self):
+        text = (ROOT / 'ATM7039S-Lab.cmd').read_text()
+        self.assertIn('(3.13 3.12 3.11)', text)
+        self.assertIn('exit /b %RC%', text)
+
     def test_windows_launcher_has_crlf_and_no_admin(self):
         data = (ROOT / 'ATM7039S-Lab.cmd').read_bytes()
         self.assertIn(b'\r\n', data)

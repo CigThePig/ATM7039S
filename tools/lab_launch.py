@@ -25,10 +25,15 @@ def venv_python():
     return VENV / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
 
 
+SUPPORTED = ((3, 11), (3, 13))   # tested range; newer Pythons broke a pinned library (dissect.cstruct) in CI
+
+
 def main():
-    if sys.version_info < (3, 11):
-        say('This lab needs Python 3.11 or newer. You have ' + sys.version.split()[0] + '.\n'
-            'Install it from https://www.python.org/downloads/ (tick "Add python.exe to PATH"), then start the lab again.')
+    v = tuple(sys.version_info[:2])
+    if not SUPPORTED[0] <= v <= SUPPORTED[1]:
+        say(f'This lab is tested with Python 3.11 to 3.13; this is Python {v[0]}.{v[1]}.\n'
+            'Install Python 3.12 from https://www.python.org/downloads/ (tick "Add python.exe to PATH"); '
+            'it can sit next to the version you have. Then start the lab again.')
         return 2
     LOG.parent.mkdir(parents=True, exist_ok=True)
     want = hashlib.sha256(REQ.read_bytes() + sys.version.encode()).hexdigest()
@@ -37,8 +42,8 @@ def main():
     if not py.exists() or not stamp.exists() or stamp.read_text().strip() != want:
         say('Setting up the lab (one time, about a minute). Nothing is installed outside this folder.')
         try:
-            if not py.exists():
-                venv.EnvBuilder(with_pip=True, clear=True).create(VENV)
+            # A new interpreter or a damaged environment: rebuild it from scratch (about a minute).
+            venv.EnvBuilder(with_pip=True, clear=True).create(VENV)
             with open(LOG, 'a', encoding='utf-8') as log:
                 cmd = [str(py), '-m', 'pip', 'install', '--disable-pip-version-check', '--no-input', '-r', str(REQ)]
                 say('  installing helper libraries…')
