@@ -99,3 +99,7 @@ The [DRAM reconstruction](../reports/dram-complete-reconstruction.md) completes 
 | Resume failure | mode 1 returns ≠ 0 | — | not written | RTC alarm +3 s, s2 flag set again, PMIC power-off |
 | Resume check | vector bit 31 and alarm wake | mode 1, then back to self-refresh | not written | PMIC power-off |
 | ADFU request | PMIC reg 0x35 bit 1, or GPIO 0x55aa55aa on non-SD0 boot codes | none | not written | ROM ADFU |
+
+## Physical observation OBS-001 (2026-11-27)
+
+The offline reconstruction above is retained as a historical hypothesis. The running kernel reports `boot_dev=sd2`, SD media on controller `0xb0238000` as `mmcblk0`, and `host_id: 2 ... host->index: 0`. Therefore the SD0 physical mapping in BOOT-016 cannot be treated as established for the observed device. U-Boot's own index, branch, AFI bytes and ROM selection remain unobserved. See [session report](../reports/v3-first-hardware-capture.md) and C-BOOTSLOT for the revised scope and offline trace tasks.

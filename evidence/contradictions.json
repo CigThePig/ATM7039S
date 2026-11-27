@@ -235,7 +235,10 @@
       "STOR-002",
       "MMC-001"
     ],
-    "status": "Open. Candidate explanations: the reconstruction of U-Boot's mmc numbering is wrong; SD0 fails to initialise with TF2 empty so SD2 becomes mmc 0 (BOOT-016 limitation); the vendor kernel enumerates the controllers differently from U-Boot; or Koriki's script paths are stale. Matters for any replacement bootloader, which must read the card from the right controller.",
-    "next_validation": "V3 (read-only): with TF2 empty, the sysfs ancestry of the disk mounted at /boot (block-sysfs, mounts) shows which controller holds the only card, which is also the controller U-Boot read from. Prediction P-BOOTDEV."
+    "status": "Partially resolved by OBS-001: Linux boot partition is on SD media at 0xb0238000 (SD2), named mmcblk0; boot_dev=sd2 and boot log host_id 2 -> index 0 agree. This does not directly establish ROM choice, AFI bytes, U-Boot MMC index or which branch actually ran. BOOT-016 SD0 interpretation is not a confirmed physical mapping.",
+    "next_validation": "Offline: trace AFI producer boot code, check_boot_flag branches, emmcboot/mmcboot environment and MMC initialization/error paths against the observed Linux handoff; later separately approved early serial if still necessary.",
+    "observations": [
+      "OBS-001"
+    ]
   }
 ]

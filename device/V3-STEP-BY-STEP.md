@@ -114,6 +114,8 @@ Create a new private local results folder outside the project and cloud sync now
 python -m pip install -r requirements-dev.txt -r requirements-firmware.txt
 ```
 
+On Windows, if installation reports Access is denied, use `python -m pip install --user -r requirements-dev.txt -r requirements-firmware.txt` in the normal terminal. If Python reports a UnicodeDecodeError, run `$env:PYTHONUTF8 = '1'` and retry. Do not upgrade pip merely for this test.
+
 Wait until it finishes. The last line should say `Successfully installed …`, or that the requirements are already satisfied. Warnings about pip versions can be ignored. **A red line containing `ERROR` is not OK: stop and ask.**
 
 ---
@@ -284,7 +286,8 @@ What to do if it reports a problem:
 
 | Message | What to do |
 |---|---|
-| `card-boot:… DIFFERS` or `missing`, or `card-rootfs FAIL` | Something changed the boot partition. Do not use this card. Start again from Part 3. |
+| `card-boot:… DIFFERS` or `missing` | Stop; preserve the card and report the mismatch. |
+| `card-rootfs FAIL` | Do not boot or reflash automatically. First boot can modify the ext4 container, as in OBS-001. Use the read-only diagnostic and obtain explicit review of the specific differences. A catalogue hash mismatch remains a FAIL until reviewed. |
 | `card-overclocking FAIL` | Do not edit the file by hand. Start again from Part 3. |
 | `card-first-boot WARN` | The first boot did not finish. Repeat Part 4. |
 | `card-script FAIL` | The copied file is not the registered script. Delete it, then repeat 5.3 exactly. |
@@ -502,3 +505,7 @@ The capture shows what the boot chain handed to Linux. It cannot show:
 * whether there is storage that Linux does not see.
 
 Those need a different, separately approved test. A missing item in the results means "not collected", never "broken".
+
+## Windows operator helper
+
+From the project folder, use `powershell -NoProfile -File tools/v3_operator.ps1 -Action Setup`, `-Action Prepared`, or `-Action Analyse -CaptureFolder 'C:\path\to\private\atm-capture-...'`, or `-Action Postflight`. This helper detects labelled mounted partitions on the same disk, saves local outputs, and never formats, flashes, boots or copies the capture script to a card. It does not replace mandatory raw checks or the owner's checklist. See [OBS-001 report](../reports/v3-first-hardware-capture.md).

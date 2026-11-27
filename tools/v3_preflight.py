@@ -290,9 +290,12 @@ def check_card_rootfs(folder, root=ROOT):
     size = container.stat().st_size
     if size != cat['container_size']:
         return [result('card-rootfs', 'FAIL', f"boot/BATOCERA is {size} bytes, catalogued {cat['container_size']}")]
-    ok = file_sha(container) == cat['container_sha256']
+    digest = file_sha(container)
+    ok = digest == cat['container_sha256']
     return [result('card-rootfs', 'PASS' if ok else 'FAIL',
-                   'boot/BATOCERA ' + ('equals' if ok else 'DIFFERS from') + ' the catalogued root filesystem')]
+                   'boot/BATOCERA ' + ('equals' if ok else 'DIFFERS from') + ' the catalogued root filesystem' +
+                   ('' if ok else '; first boot can change ext4 metadata and runtime paths. Preserve card and run the read-only rootfs review; do not reflash or bypass automatically.'),
+                   sha256=digest, expected_sha256=cat['container_sha256'])]
 
 
 def check_share_dir(folder, root=ROOT):
@@ -365,9 +368,15 @@ def run(args, root=ROOT):
     else:
         results.append(result('image', 'SKIP', 'no --image given: firmware components not verified'))
     if args.boot_dir:
-        results += check_boot_dir(args.boot_dir, root)
+        try:
+            results += check_boot_dir(args.boot_dir, root)
+        except (OSError, ValueError) as e:
+            results.append(result('card-boot:access', 'FAIL', f'Cannot read boot partition: {e}. Check the BATOCERA drive letter; do not format.'))
     if args.share_dir:
-        results += check_share_dir(args.share_dir, root)
+        try:
+            results += check_share_dir(args.share_dir, root)
+        except (OSError, ValueError) as e:
+            results.append(result('card-share:access', 'FAIL', f'Cannot read SHARE partition: {e}. Check drive letter; do not format.'))
     if args.boot_region or getattr(args, 'windows_boot_letter', None) or getattr(args, 'card_device', None):
         try:
             if args.boot_region:
