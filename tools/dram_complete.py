@@ -181,7 +181,11 @@ class Pmic:
 
 # ---------------------------------------------------------------- the harness
 class Harness(de.Emulation):
-    def __init__(self, loader, scenario=None, pmic=None, ram=None, limit=3_000_000, boot_code=0, clear_globals=True):
+    def __init__(self, loader, scenario=None, pmic=None, ram=None, limit=3_000_000, boot_code=0, clear_globals=True,
+                 gpio=None):
+        """gpio: optional gpio_model.GpioModel answering the GPIO/pad window 0xb01b0000..0xb01b0100 (PR #9);
+        None keeps the PR #6 behaviour (last written value or reset seed)."""
+        self.gpio = gpio
         self.s = scenario or Scenario()
         super().__init__(loader, scenario='x16-1rank-2Gb', reset_seed=self.s.reset_seed)
         self.hw = dict(ranks=self.s.ranks, width=self.s.width, col_bits=self.s.col_bits, row_bits=self.s.row_bits,
@@ -240,6 +244,8 @@ class Harness(de.Emulation):
         elif self.in_memtest and address == self._memtest_lr:
             self.in_memtest = False
         if address == de.F_DELAY:
+            if self.gpio is not None:
+                self.gpio.advance(self.reg('r0'))          # requested microseconds (delay is stubbed)
             self.setreg('pc', self.reg('lr'))
         elif address == de.F_PRINTF:
             sp = self.reg('sp')
@@ -262,6 +268,8 @@ class Harness(de.Emulation):
         return ok
 
     def _oracle(self, addr):
+        if self.gpio is not None and self.gpio.covers(addr):
+            return self.gpio.read(addr), 'gpio_model (synthetic, see gpio_model.py)'
         s, tag = self.s, f'scenario {self.s.name}: '
         if addr == de.ZQ0SR0:
             return (0x80000000 if s.zq_done else 0), tag + ('ZQ done (code unknown)' if s.zq_done else 'ZQ never done')
@@ -296,6 +304,8 @@ class Harness(de.Emulation):
     def _mmio_write(self, uc, access, address, size, value, user):
         super()._mmio_write(uc, access, address, size, value, user)
         a = address & ~3
+        if self.gpio is not None and self.gpio.covers(a):
+            self.gpio.write(a, self.regs[a])
         if a == de.PIR and value & 0x80 and self.pgsr == 0x3F and self.s.training_pgsr is not None:
             self.pgsr = self.s.training_pgsr
 
@@ -616,12 +626,14 @@ RESUME_CASES = [
 ]
 
 
-def run_caller(loader, pmic, scenario, ini_patch=None, ram=None, follow_resume=True, limit=3_000_000, boot_code=0):
+def run_caller(loader, pmic, scenario, ini_patch=None, ram=None, follow_resume=True, limit=3_000_000, boot_code=0,
+               gpio=None):
     """Execute 0xb40665d0(ini, 0) as main does, then, on return 2, 0xb40664e4 (main's resume branch).
 
     boot_code is the word block 0 leaves at 0xb4064c00. The committed PR #6 evidence uses the default 0 (SD0 path);
-    predram_analysis.py compares 0 and 2 through here (PR #9)."""
-    h = Harness(loader, scenario=scenario, pmic=pmic, ram=ram, limit=limit, boot_code=boot_code)
+    predram_analysis.py compares 0 and 2 through here (PR #9). gpio: optional gpio_model.GpioModel for the
+    adfu_check loopback (adfu_analysis.py); None keeps the historical GPIO responses."""
+    h = Harness(loader, scenario=scenario, pmic=pmic, ram=ram, limit=limit, boot_code=boot_code, gpio=gpio)
     for off, b in (ini_patch or {}).items():
         h.uc.mem_write(de.INI_LOAD + off, bytes(b))
     afi_before = bytes(h.uc.mem_read(AFI, 16))

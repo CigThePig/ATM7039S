@@ -946,7 +946,9 @@ class Machine:
         self.error = f'unmapped access 0x{address:08x} at pc 0x{self.reg(15):x} (no memory is modelled there)'
         return False
 
-    def call(self, entry, sp):
+    def call(self, entry, sp, args=()):
+        for k, v in enumerate(args):
+            self.reg(k, v)
         self.reg(13, sp)
         self.reg(14, 0xFFFFFFF0)
         self.stops.setdefault(0xFFFFFFF0, 'return')
@@ -961,8 +963,12 @@ class Machine:
 
 class Trace:
     def __init__(self, loader, disk, code, funcs, boot_code, scenario='no-loopback', seed=0, pmic=None,
-                 ini_patch=None, limit=3_000_000):
+                 ini_patch=None, limit=3_000_000, gpio=None, timer_step=24, i2c_fail_regs=(), rom_copy_stub=False):
+        """gpio, timer_step, i2c_fail_regs and rom_copy_stub are opt-in (PR #9 ADFU work); their defaults keep
+        the behaviour that produced sd2-predram.json."""
         self.boot_code, self.scenario, self.seed = boot_code, scenario, seed
+        self.gpio, self.timer_step, self.i2c_fail = gpio, timer_step, set(i2c_fail_regs)
+        self.rom_copies = []
         self.pmic = Pmic(pmic)
         self.disk, self.code = disk, code
         self.entries = {f for f in funcs if funcs[f] is not None} | set(NAMES)
@@ -980,6 +986,26 @@ class Trace:
                           ROM_REENTRY: 'ROM re-entry 0xb40691a4 (ADFU)', ADFU_EXIT: "main's ADFU exit 0xb4065494",
                           RESUME_ENTRY: 'resume entry 0xb40664e4'}
         self.emu.on_code = self._on_code
+        if rom_copy_stub:
+            self.emu.stubs[0xB406AF64] = ('memcpy (ROM sources not copied)', self._memcpy)
+
+    def _memcpy(self, emu):
+        dst, src, n = emu.reg(0), emu.reg(1), emu.reg(2)
+        if src >= 0xFFFF0000:
+            self.rom_copies.append(dict(dest=h32(dst), source=h32(src), length=h32(n)))
+            self.events.append(dict(op='rom-copy-requested', dest=h32(dst), source=h32(src), length=n,
+                                    function=self._frame()[0]))
+            return dst                       # ROM bytes are unavailable: nothing is invented
+        emu.uc.mem_write(dst, emu.read(src, n))
+        return dst
+
+    def run_function(self, entry, args=()):
+        """Execute one function as if called (lr = sentinel); stops as configured."""
+        self.emu.call(entry, STACK_TOP, args)
+        st = self.emu.stopped
+        return dict(stopped=st['name'] if st else None, error=self.emu.error, instructions=self.emu.count,
+                    regs_at_stop=None if not st or 'regs' not in st else [h32(x) for x in st['regs'][:4]] +
+                    [h32(st['regs'][13])])
 
     def _on_code(self, pc):
         self._track(pc)
@@ -1032,8 +1058,13 @@ class Trace:
     def _mmio_read(self, a, size):
         rule = 'seeded'
         if a == 0xB0168010:
-            self.mem[a] = (self.mem.get(a, 0) + 24) & 0xFFFFFFFF
-            v, rule = self.mem[a], 'timer'
+            self.mem[a] = (self.mem.get(a, 0) + self.timer_step) & 0xFFFFFFFF
+            if self.gpio is not None:
+                self.gpio.advance(self.timer_step / 24)
+            v, rule = self.mem[a], 'timer' if self.timer_step == 24 else 'timer-stalled' if not self.timer_step \
+                else 'timer-step'
+        elif self.gpio is not None and self.gpio.covers(a):
+            v, rule = self.gpio.read(a, self.emu.reg(15)), 'gpio_model'
         elif 0xB0120000 <= a < 0xB012E000 and a & 0x1FFF == 0xC:
             v, rule = 0x400, 'uart_stat'
         elif 0xB0170000 <= a < 0xB0180000 and a & 0x3FFF == 0x20:
@@ -1051,6 +1082,8 @@ class Trace:
 
     def _mwrite(self, address, size, value):
         self.mem[address] = value & 0xFFFFFFFF
+        if self.gpio is not None and self.gpio.covers(address):
+            self.gpio.write(address, value, self.emu.reg(15))
         f, inner = self._frame()
         self.events.append(dict(op='write', address=address, value=value & 0xFFFFFFFF, width=size,
                                 pc=self._site(), insn=self.emu.reg(15), function=f, inner=inner))
@@ -1088,6 +1121,10 @@ class Trace:
 
     def _i2c_read(self, emu):
         slave, reg, buf, n = emu.reg(0), emu.reg(1) & 0xFF, emu.reg(3), emu.u32(emu.reg(13))
+        if reg in self.i2c_fail:
+            self.pmic.log.append(('r-fail', reg, 0))
+            self.events.append(dict(op='pmic-read-fail', slave=slave, reg=reg, value=0, function=self._caller_name()))
+            return 1                         # i2c_read's error return (0xb406ac50: non-zero -> 1)
         v = self.pmic.regs.get(reg, 0) & 0xFFFF
         emu.uc.mem_write(buf, bytes([v >> 8, v & 0xFF])[:n])
         self.pmic.log.append(('r', reg, v))

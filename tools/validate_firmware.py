@@ -151,6 +151,29 @@ def predram_checks(folder):
             if run['result']['error']:errors.append('pre-DRAM run error '+lab)
     except (KeyError,ValueError,OSError,TypeError) as e:errors.append('invalid pre-DRAM evidence: '+str(e))
     return errors
+def adfu_checks(folder):
+    """Consistency of adfu-loopback.json (PR #9): provenance, anchors, model agreement, no hardware claims."""
+    p=folder/'adfu-loopback.json'
+    if not p.exists():return []
+    errors=[]
+    try:
+        m=json.loads(p.read_text());loaders=json.loads((folder/'stock-loaders.json').read_text())['loaders']
+        fids={f['id'] for f in json.loads((folder.parent/'findings.json').read_text())}
+        for name,r in m['releases'].items():
+            if loaders.get(name,{}).get('sha256')!=r['loader_sha256']:errors.append('ADFU loader hash mismatch '+name)
+            if not r.get('verified'):errors.append('ADFU image not verified '+name)
+        if not all(m['regions']['identical_across_releases'].values()):errors.append('ADFU regions differ between releases')
+        if not m['anchors']['all_match_in_every_release']:errors.append('ADFU instruction anchor mismatch')
+        for s in m['scenarios']:
+            if not s['comparison']['agree']:errors.append('ADFU reference/firmware disagreement '+s['name'])
+            if s['firmware']['outcome'].startswith('emulator'):errors.append('ADFU emulator failure '+s['name'])
+        for f in m['findings']:
+            if f not in fids:errors.append('ADFU evidence cites unknown finding '+f)
+        if not m['model']['assumptions']:errors.append('ADFU model assumptions missing')
+        if m['reentry']['reached_dram_init'] or any(x['reached_dram_init'] for x in m['full_path'] if 'loopback' in x['name'] and 'code2' in x['name']):
+            errors.append('ADFU decision reached DRAM init')
+    except (KeyError,ValueError,OSError,TypeError) as e:errors.append('invalid ADFU evidence: '+str(e))
+    return errors
 def validate(root):
     errors=[];index={}
     folder=root/'evidence/firmware'
@@ -180,6 +203,7 @@ def validate(root):
     errors.extend(stock_index(root,index))
     errors.extend(dram_complete_checks(folder))
     errors.extend(predram_checks(folder))
+    errors.extend(adfu_checks(folder))
     cited=[(f['id'],e) for f in json.loads((root/'evidence/findings.json').read_text()) for e in f['evidence']]
     hw=root/'registers/canonical/hardware.json'
     if hw.exists():
