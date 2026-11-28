@@ -82,6 +82,10 @@ U-Boot consumers:
 
 When the magic is absent, U-Boot assumes PRODUCE and runs `ramboot`. The resume path (`0xb40664e4`) does not rewrite the AFI (PR #6).
 
+## Pre-DRAM inputs (PR #9)
+
+Nothing before DRAM init writes the AFI. The values it later carries are fixed before DRAM init: `uart_index`/`uart_pad`/`baud` from ini+0x0e/+0x0f/+0x10, held in `0xb407082c..0xb4070834`, and `boot_dev` from the boot-code word `0xb4064c00` (0 → `0x20`, 2 → `0x22`). The ini byte printed as `bootdev=` (+0x0c, `0x22` in every release) is not used for the AFI. See [predram-initialization.md](predram-initialization.md).
+
 ## Every DRAM outcome (PR #6)
 
 [MEM-010](../evidence/findings.json): the AFI is written by `0xb4066588` → `0xb4066500` only on the cold path, after the write-back, **whether or not DRAM init succeeded**.
@@ -97,6 +101,12 @@ When the magic is absent, U-Boot assumes PRODUCE and runs `ramboot`. The resume 
 
 `boot_chain.py analyze --dram-scenario NAME` derives the size from the loader's own DRAM code instead of `--ram-mib`.
 
+The [SD2 DRAM comparison](../reports/sd2-dram-reconstruction.md) observes actual SRAM byte/word stores, including repeated writes of identical bytes, and retains the complete 16-byte result. On every paired cold AFI emission the device byte is `0x20` for code 0 and `0x22` for code 2, with the same computed size. Use the observed main continuation and classified cold outcome before passing an AFI produced by the harness to a later consumer.
+
 ## What a running Linux can confirm (PR #7)
 
 The V3 capture sees the end of this chain only: the `/memory` node U-Boot wrote (P-RAM), the `/chosen` initrd location (P-INITRD) and the AFI-derived `console=ttyS3` and `boot_dev=sd0` terms (P-CONSOLE, P-AFI-BOOTDEV). A `/memory` of `0x1f000000` would mean U-Boot's fallback, i.e. no valid AFI size. The physical DRAM size and the loader's own decisions are not observable after boot. The 3.10 procfs tree does not export `/memreserve/` (FW-019).
+
+## Exact bytes in the unified reconstruction
+
+The unified loader carries all 16 bytes in SRAM from the producer through app.bin. Actual U-Boot getters and `dram_init` receive those bytes. The resulting global-data size flows into the FDT memory bank. The transfer rejects contradictory cold outcomes and preserves the fourth byte, including the distinctive value used in the isolated consumer control. [Unified results](../reports/unified-boot-chain-reconstruction.md#9-afi-transfer)

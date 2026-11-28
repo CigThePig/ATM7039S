@@ -19,7 +19,7 @@ print('Rendered',len(files),'documents to site/')
 
 # Copy only original textual research artifacts needed by relative links.
 import shutil
-for folder in ['evidence','registers','comparisons','reports','tools']:
+for folder in ['evidence','registers','comparisons','reports','specifications','tools']:
  for p in (ROOT/folder).rglob('*'):
   if p.is_file() and p.suffix in ['.json','.csv','.h','.py','.log']:
    dest=site/p.relative_to(ROOT);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest)

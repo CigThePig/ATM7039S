@@ -1608,7 +1608,7 @@ Evidence:
 
 - [anbernic-stock-archive / evidence/firmware/stock-dram-complete.json](https://archive.org/details/RG35XX_original_firmwares)
 
-Limits: The electrical meaning of the PMIC writes (likely regulator settings, possibly including the DRAM supply) is not established; the PMIC detection routine was stubbed in emulation. Corrects the PR #4 description of 0xb4069254 as a pre-DRAM clock setup (C-PREDRAM-9254).
+Limits: The electrical meaning of the PMIC writes (likely regulator settings, possibly including the DRAM supply) is not established; the PMIC detection routine was stubbed in emulation. Corrects the PR #4 description of 0xb4069254 as a pre-DRAM clock setup (C-PREDRAM-9254). PR #9 refinement (BOOT-025): the status write-back clears bits 0 and 1 (bic #3), and the GPIO test is a loopback: bit 11 of 0xb01b0020 is driven with 0x55aa55aa while bit 10 is sampled, with OUTEN/INEN restored afterwards; 0xb01b0064 bit 17 and the data bit are not restored. pmu_detect is now executed (PMIC-002).
 
 ## FW-018
 
@@ -1841,3 +1841,213 @@ Evidence:
 - [owner-device](https://github.com/CigThePig/ATM7039S/tree/main/evidence/observations)
 
 Limits: A claimed resource range is what a driver asked the kernel for; it is not proof that every register in it exists or is safe to access, and absent entries (for example the GPU, which is mapped by pvrsrvkm without a named iomem entry) are not proof of absence. Only one serial port is listed, although ttyS3 is the console.
+
+## BOOT-024
+
+Before the cold DRAM init wrapper 0xb40690b8 the stock early loader (identical code in stock 221203, 221223, 230309, 20231014 and Koriki v1.0) runs, in this order: main 0xb4065400 clears the globals 0xb4070800..0xb407087b, reloads bootloader.ini (8 sectors, disk 0x202600 for boot codes 0 and 2) through the Boot ROM service 0xb4060400 (r9=4), then dram_caller 0xb40665d0 runs ini_to_globals 0xb4065ff8, timer_init(0) 0xb4069440, uart_init 0xb4066784 (index/baud/pad from ini+0x0e/+0x10/+0x0f), the SPI-NAND restore 0xb40663f8 only for code 5, ini_print and the "1.1" version check (else return -1 -> ADFU), board_mfp_init 0xb406a608(ini+0x0d), pmu_init 0xb40699e8(type 2) with pmu_detect 0xb4069890, adfu_check 0xb4069254(ini word +0x14), publish_globals 0xb406622c, the resume test (return 2 if 0xb4070874 and 0xb4070878 are non-zero) and the second-record copy (ini+0x2c != 0). Neither block 0 nor any of this code writes SP, CPSR, SPSR or CP15; SCTLR.I is changed only after DRAM init or on the ADFU exit, and VBAR is written (0xffff0000) only by rom_reentry_adfu 0xb40691a4, so stack, mode, interrupt masks, vectors and cache/MMU state are inherited from the Boot ROM. All analysed code is A32. The deepest pre-DRAM stack use under emulation is 136 bytes.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / main](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / dram_caller](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / ini_to_globals](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / block 0](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / evidence/firmware/sd2-predram.json call_graph, predram_graph, execution_environment, block0, runs](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Static reachability plus bounded emulation under synthetic peripheral responses (synthetic_rules); neither shows what the Boot ROM leaves in CPU state or SRAM. The SP value, exception vectors and interrupt state are unknown. The 136-byte stack depth is measured with the emulator's SP choice, not the ROM's.
+
+## BOOT-025
+
+The only pre-DRAM operation that differs between boot code 0 (SD0) and boot code 2 (SD2, the path OBS-001 implies) is the GPIO loopback test in adfu_check 0xb4069254: after the PMIC status check (reg 0x35, from the table halfword at 0xb406b9d4), if the ini word +0x14 is non-zero (1 in every release) and get_boot_code() != 0, it clears 0xb01b0064 bit 17, saves GPIO C OUTEN/INEN (0xb01b0018/0xb01b001c), makes bit 10 an input and bit 11 an output, then for 32 bits drives bit 11 of 0xb01b0020 with 0x55aa55aa LSB first, waits delay_ms(1) and samples bit 10; it restores OUTEN/INEN and enters ADFU (0xb40691a4) only if the sampled word equals 0x55aa55aa. On the normal return it leaves 0xb01b0064 bit 17 cleared and 0xb01b0020 bit 11 = 0, and adds 32 x 1000 us of requested delay. Executing main from 0xb4065400 with codes 0 and 2 gives event-for-event identical MMIO, PMIC, console and storage sequences apart from that inserted block; with the PR #6 DRAM harness (reference scenario) the full MMIO write and read sequences through DRAM init differ only by the same GPIO block, and the AFI boot_dev is 0x20 vs 0x22. load_ini and the storage dispatch take the same branch for codes 0 and 2. The same holds byte for byte in all five pinned releases.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / adfu_check](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / load_ini](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / storage_read_dispatch](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / evidence/firmware/sd2-predram.json code0_vs_code2, dram_stage_code0_vs_code2, structure.adfu_check, boot_code.consumers, register_inventory](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Code-level equivalence only. Hardware state may still differ between an SD0 and an SD2 boot: whatever the Boot ROM leaves (clocks, pin mux, SD controller state) is not represented, the GPIO C10/C11 wiring of the board is unknown (a loopback would send a production unit to ADFU), the elapsed time is requested, not measured, and the DRAM comparison uses synthetic PUBL/uPCTL/PMIC responses in one scenario only. Pin names C10/C11 follow the related-SoC bank layout. C-PREDRAM-PATH stays open. Refined by BOOT-026/GPIO-003/GPIO-004 (PR #9, ADFU loopback reconstruction): the loopback pins are SD0 DAT0/DAT1 (vendor pinctrl data) and the left-over state is not used later by the loader.
+
+## CLK-007
+
+timer_init(0) 0xb4069440 stores the timer index at 0xb407080c, sets bit 27 of 0xb01600a4 (clk_gate_on(59); CMU_DEVCLKEN1 in the related header), writes 0 to 0xb0168008, 0xb0168010 and 0xb016800c twice, then 4 to 0xb0168008 (base 0xb0168008 + 12n; related-header names T0_CTL/T0_VAL/T0_CMP). delay_us 0xb40693f8(n) reads the count word base+8 and spins until (int32)(count - (start + 24 n)) >= 0, a wrap-safe signed comparison with no iteration bound; delay_ms(n) = delay_us(1000 n). It is the first hardware set-up of dram_caller and every pre-DRAM wait depends on it: the 1 us UART reset pulse, the 300 us PMIC clock-out wait, the I2C transfer timeout (501 x 1 ms) and the 32 x 1 ms code-2 GPIO test.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / delay_us, delay_ms, timer_init, timer_reset, timer_start](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / timer_count](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / evidence/firmware/sd2-predram.json structure.timer, register_inventory](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: 24 ticks per us is the firmware's assumption; that the timer counts up at 24 MHz from HOSC is inferred from that constant and the UART formula, not measured. A timer that does not advance would hang every delay. The emulated timer advances 24 per read (synthetic). Register names are related-SoC labels.
+
+## UART-004
+
+uart_init 0xb4066784(index=ini+0x0e=3, baud=ini+0x10=115200, pad=ini+0x0f=0) looks up a 24-entry table at 0xb406b520 (0x30 bytes per entry); entry 14 (UART3, pad 0) gives base 0xb0126000, divider register 0xb01600b0, clock gate bit 51 (0xb01600a4 bit 19) and reset bit 47 (0xb01600ac bit 15) and **no pin-mux writes** (other entries carry up to three MFP read-modify-writes). The routine sets the gate, pulses the reset (clear, delay_us(1), set), writes 0x8003 to base+0 and 24000000/(8*baud) - 1 = 25 to 0xb01600b0 (115384.6 baud if the clock is 24 MHz), and stores the table entry pointer at 0xb4070800. putc sends CR before LF; uart_tx waits while status (base+0xc) bit 6 is set, writes base+8, then waits until bit 10 is set; both polls are unbounded. The configuration is identical for boot codes 0 and 2 and in all five releases.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / uart_init, putc, uart_set_baud, uart_setup, uart_tx](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / UART table](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / evidence/firmware/sd2-predram.json uart, structure.uart, register_inventory](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Which pins carry UART3 TX/RX while the loader runs is not established: the loader does not program the mux for pad 0, so it relies on state set by the Boot ROM, by reset defaults or by board_mfp_init (which runs after uart_init). Status-bit meanings and the 24 MHz clock are related-SoC inferences. No physical connection is proposed.
+
+## PMIC-002
+
+pmu_init 0xb40699e8 is called with type 2 and the ini bytes +0x18..+0x1b; for type 2 every PMIC access goes over I2C bus ini+0x18 = 1 (controller 0xb0174000) to slave 0x65 with 16-bit big-endian registers. Bus selection 0xb406a788 (cached at 0xb406ba10) clears MFP_CTL3 (0xb01b004c) bits 16 and 18, sets 0xb0160084 bit 0 (300 us wait if it was clear), gates 0xb01600a4 bit 15, sets 0xb01b0068 bits 9-10 and writes 0x10 to I2C base+4. pmu_detect first calls 0xb4069710(1) (MFP_CTL3 bit 30 clear, 0xb01b0084 bits 31:30 = 2, 0xb01600d0 = 0x8000002d, 0xb01b0090 = 0x10, 0xb01b0094 = 0x20000000), requires reg 0xff = 0x00ca (retrying once with 0xb4069710(0), then printing "not find HOSC" and pulsing GPIO 90), probes the slave and requires reg 0x32 = 0x1bc0 (else a permanent loop). Type-2 init then writes, in order: 0x51 |= 0x800, 0x39 &= 0x7fff, 0x11 = 0xe84f, 0x12 = 0x68cc, 0x14 = 0x80ca | ((ini+0x1b adjusted) << 8) (0x89ca for ini 3), 0x15 = 0xe8ce, 0x16 = 0x334b (only if reg 0xdc > 0), 0x29 &= 0x7fc5, then reads 0x03 (s2 flag bit 4 -> resume path) and on the cold path writes 0x00 = (0x00 & 0x1f) | 0xe0c0 and clears reg 0x3f bit 3 if reg 0xdc reads 0. Version 0 hangs ("pmu ver=0 not support"). All of this is identical for boot codes 0 and 2 and in all five releases. The bus and address agree with the atc2603c node at 0x65 under I2C1 in the board DT (PMIC-001), so type 2 is most likely that device (inference).
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / pmu_init](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / pmu_detect](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / clock-out select](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / I2C bus select](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / evidence/firmware/sd2-predram.json runs.code2.pmic, register_inventory, structure.i2c](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: The PMIC transaction layer (0xb406ac10/0xb406ac60) was served by a register file, so values read from the PMIC are synthetic (pmic_defaults) and the order shown is the cold, non-resume path. No register write is converted into a voltage: the electrical meaning of regs 0x11-0x16, 0x29, 0x39, 0x51 and 0x00 is not established. The 0xb4069710 sequence looks like routing a clock to a pin for the PMIC ("not find HOSC"), which is a hypothesis.
+
+## GPIO-002
+
+board_mfp_init 0xb406a608(ini+0x0d) accepts 0 or 1 (larger values return -1) and does one read-modify-write from a two-entry table at 0xb406b4c8: entry 0 is 0xb01b0044 clear 0xfc000000 set 0x24000000, entry 1 is 0xb01b0048 (MFP_CTL2 in the related header) clear 0x000e39e0 set 0x000619c0. Every release ships ini+0x0d = 1. It runs after uart_init and before pmu_init and is the only board-selected register write before DRAM init.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / board_mfp_init](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / table](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / evidence/firmware/sd2-predram.json board, register_inventory](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Which pin functions these fields select on the ATM7039S is not established; S500/ATM7059 pinctrl names are analogies. The reset value of the register is unknown, so the full resulting value is not known either.
+
+## BOOT-026
+
+adfu_check 0xb4069254 (identical bytes, helpers and literal pools in all five pinned releases) always reads PMIC register 0x35 first and prints it; only bit 1 is examined. Bit 1 set -> write back status & ~3 (bits 15:2 kept, result ignored) and tail-call 0xb40691a4 without touching GPIO; an I2C read failure returns -1, which becomes 0xffff, so it also enters ADFU (writing 0xfffc). Otherwise it returns if the argument (ini word +0x14) is 0 (full 32-bit test) or the boot-code word is 0; any other code runs the test. The test always completes 32 iterations with no early exit: each iteration clears GPIO_CDAT bit 11, writes the next bit of 0x55aa55aa (LSB first) as a second read-modify-write, waits delay_ms(1) and only then samples bit 10, accumulating rx |= sample << i in the same order; it restores CINEN/COUTEN and compares rx with a fresh 0x55aa55aa literal for exact equality. 41 scenarios (PMIC values, read failure, guards incl. codes 1/4/5/0x80000000, ideal/absent/inverted/delayed/partial/pseudorandom/interrupted/late-matching inputs, two read semantics, eight initial states) give identical results from the firmware instructions and from an independent reference model: only an exact echo enters ADFU, e.g. one wrong bit, an inverted or a one-bit-late echo returns normally. A stalled timer hangs in delay_us (no firmware timeout).
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / adfu_check and literal pool](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / pmic_read error return](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / evidence/firmware/adfu-loopback.json anchors, decoded_constants, scenarios, scenario_summary, stalled_timer](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: All GPIO, PMIC and timer responses are synthetic. The firmware runs and the reference model share the GPIO read-semantics and sample-window assumptions, so their agreement verifies the reading of the instructions, not pad behaviour. The meaning of PMIC register 0x35 is not established; the register file does not model any clear-on-write behaviour. Physical timing (32 x 1 ms requested) depends on the real timer clock and adds I2C, printf and MMIO latency.
+
+## BOOT-027
+
+Once ADFU is chosen, rom_reentry_adfu 0xb40691a4 re-initialises timer 0, copies 0x2e00 bytes from Boot ROM 0xffff5200 over SRAM 0xb4060000 (block 0, the AFI and SRAM up to 0xb4062e00), waits 5 ms, writes CMU 0xb0160000 := 0x30a and 0xb0160004 := 0x114, waits 5 ms, sets 0xb0160004 bit 12, clears 0xb016001c bits 19:16, waits 5 us, writes VBAR := 0xffff0000, sets SP := 0xb4070800 and blx 0xb4060000 (now ROM code). Executed up to that jump with the ROM copy recorded but not performed, DRAM init is never reached; a return from the ROM code would pop from the new stack and is not a defined path.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / rom_reentry_adfu](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / evidence/firmware/adfu-loopback.json reentry, full_path, dram_stage](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: The ROM bytes at 0xffff5200 are not available, so nothing after the jump is known; the emulator stops there. CMU register meanings are related-header labels.
+
+## GPIO-003
+
+In the pinned vendor ATM7059 pinctrl data used by the RG35XX vendor kernel, GPIOC10 is the P_SD0_D0 pad and GPIOC11 the P_SD0_D1 pad, and PAD_PULLCTL1 (0xb01b0064) bit 17 is P_SD0_D0's pull field (1 bit, value 1 = pull-up, no pull-down). The ADFU loopback therefore drives SD0 DAT1 and samples SD0 DAT0 after removing DAT0's pull-up; SD0 is the TF2 slot (PR #8). In all five shipped kernel DTBs these pads appear only in the SD0 default pin state (mux sd0, pull <2>) and as the optional UART5 pair; no GPIO property uses pins 74/75. Before the test, board_mfp_init (ini+0x0d = 1) sets MFP_CTL2[19:17] (SD0_D0), [13:11] (D2/D3), [8:7] (CMD) and [6:5] (CLK) to the values the vendor lists as JTAG and leaves [16:14] (D1) as found. The most likely purpose is a factory or service fixture in the TF2 slot linking DAT1 to DAT0 to request ADFU on units that boot from SD2; this is a hypothesis.
+
+**Confidence:** inferred · **Scope:** ATM7039S-board · **Validation:** static-inspection
+
+Evidence:
+
+- [vendor-kernel / arch/arm/mach-owl/pinctrl_data-atm7059.c / P_SD0_D0 = _GPIOC(10)](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/pinctrl_data-atm7059.c#L169-L169)
+
+- [vendor-kernel / arch/arm/mach-owl/pinctrl_data-atm7059.c / PAD_PULL_CONF(P_SD0_D0, 1, 17, 1, 0x1, 0)](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/pinctrl_data-atm7059.c#L2642-L2642)
+
+- [vendor-kernel / arch/arm/mach-owl/pinctrl_data-atm7059.c / mfp2_19_17 function list](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/mach-owl/pinctrl_data-atm7059.c#L1091-L1097)
+
+- [vendor-kernel / arch/arm/boot/dts/rg35xx_atm7039.dts / mmc0_default](https://github.com/rg35xx-cfw/s500_kernel/blob/81cc77b59250341b9abe90ed4188cde7b7aa1eeb/arch/arm/boot/dts/rg35xx_atm7039.dts#L165-L166)
+
+- [koriki-v1.0-release / board_mfp_init table](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / evidence/firmware/adfu-loopback.json board](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Pad identity and mux/pull encodings come from ATM7059-named vendor data, not from an ATM7039S document or the silicon. No schematic, board photograph or fixture description was available, so the TF2 contact wiring and the fixture purpose are not established; a UART adapter on the same pair is an alternative reading. Whether GPIO enables override the JTAG/ROM-left mux, and what DAT0 does with its pull-up removed, are unknown. Mainline pinctrl-s500.c could not be fetched in this session (HTTP 429), so it was not cross-checked.
+
+## GPIO-004
+
+On normal return from the loopback test, GPIO_COUTEN and GPIO_CINEN are restored exactly (saved before any change, for every initial value tested); PAD_PULLCTL1 keeps bit 17 cleared and all other bits as read; GPIO_CDAT ends with bit 11 = 0 (the last pattern bit), and whether its other bits are preserved depends on the unknown read semantics: if a read returns the latch they are unchanged, if it returns pad levels for non-output pins then those latch bits (C10 included) are rewritten with the levels read. No MFP or PMIC register is written on that path. Nothing in the rest of the loader reads or writes these registers afterwards: the executed main path to 0xb40690b8 and the PR #6 DRAM caller (reference scenario, now run with the GPIO model) show no later access to them, and the DRAM-stage MMIO writes outside the GPIO block are identical for code 0 and code 2. The DRAM routine does write 0xb01b00b4 (MEM_MARGIN_CTRL1 in the header) = 0x3ff, for both codes. Later stages may reconfigure the pads: app.bin 0x9430 sets the SD0 pull bits including bit 17 (no direct caller found), U-Boot initialises SD0 on this path, and the Linux mmc0_default state reprograms SD0 mux and pulls.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / state changes and restoration](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / evidence/firmware/adfu-loopback.json persistent_state, scenarios init-*, full_path, dram_stage, downstream](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+- [koriki-v1.0-release / evidence/firmware/sd2-dram-comparison.json, static_gpio_address_scan and downstream_gpio_accesses; no downstream access in the executed cold, failure, retry and resume cases](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Absence of a downstream dependency holds for constant-address accesses and for the executed synthetic paths; computed accesses are counted, not resolved. Whether app.bin 0x9430 or U-Boot runs a pad rewrite on the shipped path was not traced. Electrical consequences of a pull-less DAT0 and the changed latches are unknown. It does not show that DRAM behaves the same on hardware.
+
+## BOOT-028
+
+Through the executed DRAM caller and main outcome dispatch, boot codes 0 and 2 agree after their verified boot-word reads, the ADFU GPIO loopback accesses and the AFI boot-device byte are accounted for. This holds for the normal-continuation, returned-failure, bounded poll and resume scenarios across all five hash-verified releases. The ideal-loopback control takes ADFU before DRAM for code 2 and continues for code 0.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / evidence/firmware/sd2-dram-comparison.json, releases, distinct_pairs and normalization](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: The Boot ROM, electrical training, I2C transport and pad coupling are outside this result. Full comparison boundaries begin at the supplied SRAM INI and start through main 0xb4065420; later app.bin and U-Boot execution use separate evidence.
+
+## MEM-012
+
+On both boot codes, the stock DRAM caller can produce AFI stores and SRAM INI write-back after an initialization error, and main takes the recovery branch. A diagnostic memory-test failure after successful initialization still reaches the next-stage boundary. Actual stores and the main branch are independently observable in the synthetic trace. A boot-classified success and physical memory reliability are different properties.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / evidence/firmware/sd2-dram-comparison.json, distinct_pairs: terminal, memory_test, record_final and afi](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: AFI and diagnostic data are from synthetic RAM. OBS-001 constrains the kernel address range and DT memory property only.
+
+## BOOT-029
+
+A modeled SD Boot ROM boundary leads to actual block-0 selection, live loader initialization through DRAM and app.bin, and the loaded U-Boot entry on all five pinned releases. Executed U-Boot consumers read the loader-produced AFI and set global RAM size and boot role. The modeled script loads the selected partition, and executed FDT fixups and the ARM jump use the resulting memory and image state.
+
+**Confidence:** strongly-supported · **Scope:** release-binary · **Validation:** reproducible-static-analysis
+
+Evidence:
+
+- [koriki-v1.0-release / evidence/firmware/unified-boot-chain.json, scenarios, stage_graph and obs_001](https://github.com/rg35xx-cfw/Koriki/releases/tag/koriki_rg35xx_v1.0)
+
+Limits: Uses synthetic ROM, PMIC, GPIO, DRAM and CHIPID responses. U-Boot startup, its real relocation and board state, and Hush are modeled boundaries. OBS-001 constrains the kernel-side handoff fields. The kernel was not executed.

@@ -40,6 +40,7 @@ Usage::
 import argparse
 from dataclasses import dataclass, field, asdict
 import hashlib
+import gc
 import json
 from pathlib import Path
 import struct
@@ -181,7 +182,11 @@ class Pmic:
 
 # ---------------------------------------------------------------- the harness
 class Harness(de.Emulation):
-    def __init__(self, loader, scenario=None, pmic=None, ram=None, limit=3_000_000, boot_code=0, clear_globals=True):
+    def __init__(self, loader, scenario=None, pmic=None, ram=None, limit=3_000_000, boot_code=0, clear_globals=True,
+                 gpio=None):
+        """gpio: optional gpio_model.GpioModel answering the GPIO/pad window 0xb01b0000..0xb01b0100 (PR #9);
+        None keeps the PR #6 behaviour (last written value or reset seed)."""
+        self.gpio = gpio
         self.s = scenario or Scenario()
         super().__init__(loader, scenario='x16-1rank-2Gb', reset_seed=self.s.reset_seed)
         self.hw = dict(ranks=self.s.ranks, width=self.s.width, col_bits=self.s.col_bits, row_bits=self.s.row_bits,
@@ -240,6 +245,8 @@ class Harness(de.Emulation):
         elif self.in_memtest and address == self._memtest_lr:
             self.in_memtest = False
         if address == de.F_DELAY:
+            if self.gpio is not None:
+                self.gpio.advance(self.reg('r0'))          # requested microseconds (delay is stubbed)
             self.setreg('pc', self.reg('lr'))
         elif address == de.F_PRINTF:
             sp = self.reg('sp')
@@ -262,6 +269,8 @@ class Harness(de.Emulation):
         return ok
 
     def _oracle(self, addr):
+        if self.gpio is not None and self.gpio.covers(addr):
+            return self.gpio.read(addr), 'gpio_model (synthetic, see gpio_model.py)'
         s, tag = self.s, f'scenario {self.s.name}: '
         if addr == de.ZQ0SR0:
             return (0x80000000 if s.zq_done else 0), tag + ('ZQ done (code unknown)' if s.zq_done else 'ZQ never done')
@@ -296,6 +305,8 @@ class Harness(de.Emulation):
     def _mmio_write(self, uc, access, address, size, value, user):
         super()._mmio_write(uc, access, address, size, value, user)
         a = address & ~3
+        if self.gpio is not None and self.gpio.covers(a):
+            self.gpio.write(a, self.regs[a])
         if a == de.PIR and value & 0x80 and self.pgsr == 0x3F and self.s.training_pgsr is not None:
             self.pgsr = self.s.training_pgsr
 
@@ -616,9 +627,14 @@ RESUME_CASES = [
 ]
 
 
-def run_caller(loader, pmic, scenario, ini_patch=None, ram=None, follow_resume=True, limit=3_000_000):
-    """Execute 0xb40665d0(ini, 0) as main does, then, on return 2, 0xb40664e4 (main's resume branch)."""
-    h = Harness(loader, scenario=scenario, pmic=pmic, ram=ram, limit=limit)
+def run_caller(loader, pmic, scenario, ini_patch=None, ram=None, follow_resume=True, limit=3_000_000, boot_code=0,
+               gpio=None):
+    """Execute 0xb40665d0(ini, 0) as main does, then, on return 2, 0xb40664e4 (main's resume branch).
+
+    boot_code is the word block 0 leaves at 0xb4064c00. The committed PR #6 evidence uses the default 0 (SD0 path);
+    predram_analysis.py compares 0 and 2 through here (PR #9). gpio: optional gpio_model.GpioModel for the
+    adfu_check loopback (adfu_analysis.py); None keeps the historical GPIO responses."""
+    h = Harness(loader, scenario=scenario, pmic=pmic, ram=ram, limit=limit, boot_code=boot_code, gpio=gpio)
     for off, b in (ini_patch or {}).items():
         h.uc.mem_write(de.INI_LOAD + off, bytes(b))
     afi_before = bytes(h.uc.mem_read(AFI, 16))
@@ -728,7 +744,7 @@ def mode_comparison(loader):
 def mode1_model_sweep(loader, clocks=range(100, 1201)):
     """Unicorn mode 1 against ddr_model.run(mode=1) at every clock (primary record, reference hardware)."""
     bad = []
-    for clk in clocks:
+    for step, clk in enumerate(clocks, 1):
         h = Harness(loader)
         h.call(de.F_INI_COPY, r0=de.INI_LOAD)
         h.uc.mem_write(de.PARAM, clk.to_bytes(2, 'little'))
@@ -739,6 +755,9 @@ def mode1_model_sweep(loader, clocks=range(100, 1201)):
         if [(int(w['address'], 16), int(w['value'], 16)) for w in h.writes] != [(w.address, w.value) for w in m['writes']] \
                 or [p['text'] for p in h.prints] != m['prints'] or (ret == 0) != (m['result'] == '0x0'):
             bad.append(clk)
+        del h
+        if step % 8 == 0:
+            gc.collect()
     return dict(clocks=[min(clocks), max(clocks)], count=len(clocks), mismatches=bad)
 
 
@@ -826,6 +845,11 @@ def geometry_study(loader):
                                          reported_capacity_mib=h.param()['capacity_mib'] if ret == 0 else None,
                                          rcc=hex(h.param()['rcc']), cs=h.param()['cs'], writeback=wb,
                                          equals_shipped_primary=wb == shipped, memtest_last_line=mt))
+                        # Unicorn holds bound-method hook cycles. Reclaim their mapped pages
+                        # during the sweep, before exhausting the process's mapping limit.
+                        del h
+                        if len(rows) % 8 == 0:
+                            gc.collect()
     groups = {}
     for r in rows:
         k = (r['return_value'], r['reported_capacity_mib'], r['rcc'], r['cs'], r['memtest_last_line'])

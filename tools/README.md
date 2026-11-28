@@ -167,6 +167,56 @@ Tests: `tests/test_boot_chain.py` covers hand-encoded A32 fixtures (call trackin
 
 Tests: `tests/test_dram_complete.py` (models, boundary values, committed evidence, harness RAM/fault mechanics on hand-encoded A32). `ATM7039S_STOCK_LOADERS=DIR` re-runs the firmware-backed comparisons.
 
+### Pre-DRAM reconstruction (PR #9)
+
+| Command | What it does | Limits |
+|---|---|---|
+| `predram_analysis.py evidence OUT --image NAME=IMG … [--reference NAME]` | Verifies each whole image against the acquisition manifest and builds a recursive-descent call graph from `0xb4065400` to the DRAM boundary `0xb40690b8`, with constant tracking, boot-code references, annotated bit-indexed helpers and instruction-anchored structure facts. It runs bounded Unicorn traces of main for boot codes 0/2 and a few scenarios (seed, loopback, handshake off, PMIC status), re-runs `dram_complete.run_caller` for codes 0/2 and compares releases. Writes `evidence/firmware/sd2-predram.json` (deterministic) | Static reachability is not execution. Every peripheral read follows a named synthetic rule. Stubs only printf, the Boot ROM read service and the I2C transaction layer. About 10 s per release |
+| `predram_analysis.py trace IMG --boot-code N [--scenario loopback]` / `graph IMG` | Readable event list / call graph for one image | Same models |
+
+Tests: `tests/test_predram.py` covers synthetic A32 fixtures (calls, tail calls, indirect calls, branches, constant tracking, data words, hangs, unsupported jumps, helper formulas, MMIO rules) and the committed evidence. `ATM_FIRMWARE_DIR=DIR` regenerates the evidence and checks helper formulas against execution.
+
+### ADFU loopback (PR #9, part 2)
+
+| Command / API | What it does | Limits |
+|---|---|---|
+| `adfu_analysis.py evidence OUT --sources SRC --image NAME=IMG …` | Hash-verifies images and the routine's regions. Checks 46 instruction anchors. Runs 41 routine-level scenarios of `0xb4069254` against an independent `reference_model`, plus a stalled-timer run, whole-path runs of main, `dram_complete.run_caller(boot_code=2, gpio=…)` and the bounded `0xb40691a4` re-entry. Surveys the pinned vendor pinctrl/DTS/header lines and the shipped DTBs. Writes `evidence/firmware/adfu-loopback.json` (deterministic) | Synthetic GPIO/PMIC/timer responses. Model and reference share the GPIO assumptions. ROM code is never invented. About 2 minutes |
+| `adfu_analysis.py run IMG --boot-code N --arg A --pmic S --input const0\|const1\|follow\|invert\|delay\|prbs:SEED` | One scenario with its firmware/reference comparison | Same |
+| `gpio_model.GpioModel(initial=…, inputs={pin: rule}, read_semantics='mixed'\|'latch', strict=True)` | Synthetic GPIO/pad window for `predram_analysis.Trace(gpio=…)` and `dram_complete.Harness/run_caller(gpio=…)` | Every assumption in `GpioModel.assumptions()` |
+
+Tests: `tests/test_adfu_analysis.py`. `ATM_FIRMWARE_DIR` re-runs scenarios. With `ATM_SOURCES_DIR` as well, it regenerates the whole evidence file.
+
 ### V3 operator recovery
 
 **The lab (Windows/Linux; macOS uses the manual procedure)** (`ATM7039S-Lab.cmd`, `start-lab.sh` → `lab_launch.py` → `python -m v3lab`) runs the whole computer side of a V3 session; see [v3lab/README.md](v3lab/README.md). `boot_chain.py boot-path IMAGE OUT --release R --observation evidence/observations/OBS-001.json` executes every boot-device hypothesis end to end and compares the resulting command line with an observation ([report](../reports/sd2-boot-path-reconciliation.md)). `v3_preflight.py --phase auto|fresh|prepared|post-capture [--image] [--baseline]` checks the card's root filesystem by byte hash before the first boot and semantically afterwards. `v3_rootfs_review.py --phase prepared|post-capture` (3.0) is the stand-alone form of that check with a private report in `lab-data/rootfs-review/`; the 2.x diagnostic used during OBS-001 is superseded (its report stays as evidence). `v3_operator.ps1` is a legacy fallback.
+
+## SD2 DRAM caller comparison
+
+`sd2_dram_analysis.py` executes the DRAM caller and main's continuation decision in Unicorn with new synthetic PMIC, RAM, GPIO and training state for each boot code. `--firmware-dir FW` selects a directory of hash-pinned expanded images. The evidence command verifies all five images; the other execution commands accept `--release` and default to Koriki v1.0.
+
+```sh
+python tools/sd2_dram_analysis.py list
+python tools/sd2_dram_analysis.py run --firmware-dir FW --scenario reference --detail
+python tools/sd2_dram_analysis.py run --firmware-dir FW --scenario mixed-gpio-resume --boot-code 2
+python tools/sd2_dram_analysis.py suite --firmware-dir FW --release stock-20231014 --group resume
+python tools/sd2_dram_analysis.py evidence --firmware-dir FW OUT.json
+```
+
+`run` without `--boot-code` compares both paths. The `run` and `suite` commands support repeatable `--mmio ADDRESS=WORD` and a stage `--limit`. `suite --group` accepts `cold`, `resume`, `memory`, `gpio`, `geometry`, `control` or `all`. The [report](../reports/sd2-dram-reconstruction.md) explains each terminal outcome, raw trace and result field. Set `ATM_FIRMWARE_DIR=FW` to enable the optional five-release evidence regeneration tests in `tests/test_sd2_dram_analysis.py`.
+
+## Unified boot chain
+
+`unified_boot_chain.py` verifies a locally available pinned image and follows the supported SD path through the pre-kernel boundary. Run `python tools/unified_boot_chain.py list` for releases and scenarios. Use `run --firmware-dir FW --coverage --compare-obs` for the reference, `run --detail --output trace.json` with a firmware directory for local events and snapshots, and `evidence --firmware-dir FW OUT.json` to regenerate the combined results. [Architecture and command details](../docs/boot-chain-emulation.md)
+
+## Bootloader initialization contract
+
+| Command | Purpose |
+|---|---|
+| `python tools/bootloader_contract.py generate` | Generate the structured contract, the Markdown operation reference and the generated tables in the contract document from the curated source and pinned evidence |
+| `python tools/bootloader_contract.py validate` | Check deterministic outputs, evidence and operand references, structured DRAM/record/AFI/SRAM/timing semantics, named boundary windows, global and per-attempt ordering, retry prediction, terminal branches with confirmed absences, and delivered state |
+| `python tools/bootloader_contract.py compare` | Show configuration and selected reference results across the five pinned releases |
+| `ATM_FIRMWARE_DIR=FW python tools/bootloader_contract.py replay --check` | Execute 16 selected cases from pinned expanded images and compare the ordered artifact byte for byte |
+| `ATM_SOURCES_DIR=SRC python tools/bootloader_contract.py sources` | Check each pinned source reference against a local file by git blob SHA-1 and line bounds; reports `unavailable` instead of claiming verification |
+| `ATM_FIRMWARE_DIR=FW python tools/contract_semantics.py check` | Re-execute the 240-run DRAM selector/capacity matrix on the actual Koriki and 20231014 loaders, re-disassemble the cited instructions and compare `evidence/firmware/dram-selector-semantics.json` byte for byte (`generate` rewrites it) |
+
+The `replay` command without `--check` regenerates the trace. Ordinary validation runs without firmware or emulator dependencies; `contract_semantics.py` imports `ddr_model.py` as its independent model and reads the committed firmware matrix. `ATM_SOURCES_DIR` uses the `tools/build_dataset.py` folder names (`linux/`, `u-boot_s500/`). The semantic tests are in `tests/test_contract_semantics.py`. [Reproduction and scope](../docs/bootloader-initialization-contract.md#18-dependencies-provenance-and-reproduction)

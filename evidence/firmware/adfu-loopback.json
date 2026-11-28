@@ -1,0 +1,8126 @@
+{
+ "format_version": 1,
+ "tool": "adfu_analysis.py v1",
+ "reference_release": "koriki-v1.0",
+ "findings": [
+  "BOOT-025",
+  "BOOT-026",
+  "BOOT-027",
+  "GPIO-003",
+  "GPIO-004"
+ ],
+ "tool_versions": {
+  "predram_analysis": 1,
+  "capstone": "5.0.6",
+  "unicorn": "2.1.4"
+ },
+ "releases": {
+  "koriki-v1.0": {
+   "file": "koriki-v1.0.img",
+   "source": "koriki-v1.0-release",
+   "archive": "koriki-v1.0.img.gz",
+   "expected_sha256": "d5bd300740884d80faee2fd3ae70d91f86e6a316610c56efc0e1f7545539d6ae",
+   "expected_size": 4303355904,
+   "actual_sha256": "d5bd300740884d80faee2fd3ae70d91f86e6a316610c56efc0e1f7545539d6ae",
+   "verified": true,
+   "loader_disk_offset": "0x200200",
+   "loader_size": 229376,
+   "loader_sha256": "a3a56aca752559c0690c259420de006c6def815bfae8ddcdc38fd840f3ad67a1",
+   "block0_sha256": "0b74b6090bb166c54c903ee43bb162059f69ac7c0e657b212803c86834a39ee6",
+   "bootloader_code_sha256": "6b17b88c92e4d9f90f3f123e4a340b692d001bada4f78f24889481b73adf6ea9"
+  },
+  "stock-221203": {
+   "file": "stock-221203.img",
+   "source": "anbernic-stock-archive",
+   "archive": "RG35XX-221203.zip",
+   "expected_sha256": "7c466a74bcbf4f29a99f307f12886d7258e0f41a4c48edc15524893e3ebecde7",
+   "expected_size": 1073741824,
+   "actual_sha256": "7c466a74bcbf4f29a99f307f12886d7258e0f41a4c48edc15524893e3ebecde7",
+   "verified": true,
+   "loader_disk_offset": "0x200200",
+   "loader_size": 229376,
+   "loader_sha256": "c4630f0a4231f743f64f24df4fe169118fb268653c4da2f6af48fd22e095a406",
+   "block0_sha256": "0b74b6090bb166c54c903ee43bb162059f69ac7c0e657b212803c86834a39ee6",
+   "bootloader_code_sha256": "6b17b88c92e4d9f90f3f123e4a340b692d001bada4f78f24889481b73adf6ea9"
+  },
+  "stock-221223": {
+   "file": "stock-221223.img",
+   "source": "anbernic-stock-archive",
+   "archive": "RG35XX-EN-221223.rar",
+   "expected_sha256": "0bd553d52eb42ebd76c99b389703bba22b57cacb543bc510ea6367346139eecc",
+   "expected_size": 1073741824,
+   "actual_sha256": "0bd553d52eb42ebd76c99b389703bba22b57cacb543bc510ea6367346139eecc",
+   "verified": true,
+   "loader_disk_offset": "0x200200",
+   "loader_size": 229376,
+   "loader_sha256": "bb59f0651f34baed066bad75e40f2ee9f7ab8dbe3e287e52a8428c9bcbf1b5ec",
+   "block0_sha256": "0b74b6090bb166c54c903ee43bb162059f69ac7c0e657b212803c86834a39ee6",
+   "bootloader_code_sha256": "6b17b88c92e4d9f90f3f123e4a340b692d001bada4f78f24889481b73adf6ea9"
+  },
+  "stock-230309": {
+   "file": "stock-230309.img",
+   "source": "anbernic-stock-archive",
+   "archive": "RG35XX-64GB230309EN.rar",
+   "expected_sha256": "e3772f5909aa0014749cc6ba8328861c995162ca44f956e15cce5ee2309d7407",
+   "expected_size": 1073741824,
+   "actual_sha256": "e3772f5909aa0014749cc6ba8328861c995162ca44f956e15cce5ee2309d7407",
+   "verified": true,
+   "loader_disk_offset": "0x200200",
+   "loader_size": 229376,
+   "loader_sha256": "a3a56aca752559c0690c259420de006c6def815bfae8ddcdc38fd840f3ad67a1",
+   "block0_sha256": "0b74b6090bb166c54c903ee43bb162059f69ac7c0e657b212803c86834a39ee6",
+   "bootloader_code_sha256": "6b17b88c92e4d9f90f3f123e4a340b692d001bada4f78f24889481b73adf6ea9"
+  },
+  "stock-20231014": {
+   "file": "stock-20231014.img",
+   "source": "anbernic-stock-archive",
+   "archive": "RG35XX-20231014-EN4GB.rar",
+   "expected_sha256": "e5f61b7d0122f1e0a0409c167e3f3ecf692518356972641dd3956d6ebfa66ec8",
+   "expected_size": 3965190144,
+   "actual_sha256": "e5f61b7d0122f1e0a0409c167e3f3ecf692518356972641dd3956d6ebfa66ec8",
+   "verified": true,
+   "loader_disk_offset": "0x200200",
+   "loader_size": 229376,
+   "loader_sha256": "ec9e4ec812020fef9e5ecf8354811ecf43abc40e9cf991f3bb31d14deb4bf6c3",
+   "block0_sha256": "0b74b6090bb166c54c903ee43bb162059f69ac7c0e657b212803c86834a39ee6",
+   "bootloader_code_sha256": "6b17b88c92e4d9f90f3f123e4a340b692d001bada4f78f24889481b73adf6ea9"
+  }
+ },
+ "regions": {
+  "reference": {
+   "adfu_check incl. literal pool": {
+    "range": "0xb4069254..0xb40693e0",
+    "sha256": "57715b1f5b4b5215c501491ab71d163eb0cb8417ae7d6aa774a2ae9c525787f1"
+   },
+   "rom_reentry_adfu incl. literal pool": {
+    "range": "0xb40691a4..0xb4069254",
+    "sha256": "ad23f4980d24ef3e8af1077c56dbbebb590e232f6ec1d03109d9c8acbb04472b"
+   },
+   "adfu_fail_print": {
+    "range": "0xb40693e0..0xb40693f8",
+    "sha256": "e2cd63a68aa80eddb9b133b9211d0ab2d97add4d7572ce53afd318fd52bf80d1"
+   },
+   "delay_us/delay_ms incl. pool": {
+    "range": "0xb40693f8..0xb4069440",
+    "sha256": "2c93fa5b876e6db463f11b9f494409bee44b6e7594be2283382ca35bcc794431"
+   },
+   "timer_init/reset/start/count/base": {
+    "range": "0xb4069440..0xb4069524",
+    "sha256": "69a58fa990de9aa8fa84ada9d1312f98d408e5bdeee22e4ba11b0aa60f500def"
+   },
+   "accessors 0xb4069194/0xb406919c": {
+    "range": "0xb4069194..0xb40691a4",
+    "sha256": "6ce1ab11ed584d3024cf15ea65703ab791be3b2d5bc1900000c4fd9dc8a24d80"
+   },
+   "pmic t2 read/write + I2C t1 select": {
+    "range": "0xb40695ac..0xb40697fc",
+    "sha256": "748ba9298bd06f312a2baa8344b7071812768a1de8f02800065d402db32f7ad5"
+   },
+   "get_boot_code incl. pool": {
+    "range": "0xb40664f0..0xb4066500",
+    "sha256": "a0aa13efae4978dc4b22538cad678a5edab3af2717aa9530e4fc420a0865517f"
+   },
+   "dram_caller call site (ini word +0x14 -> r0)": {
+    "range": "0xb4066658..0xb4066688",
+    "sha256": "db11345c0bdc21ebe293a147c233f3b3ca6d3264789e184cc79fcc0ccb773cc3"
+   },
+   "memcpy": {
+    "range": "0xb406af64..0xb406af84",
+    "sha256": "d7687811228559d5fc284139d47c063d913f3c08b0455d39bc63e1c2d602f9fa"
+   },
+   "PMIC register table 0xb406b9d0": {
+    "range": "0xb406b9d0..0xb406b9d8",
+    "sha256": "7c1d5777daa4a9990d6ebdc4ad553b35d3ef05892d279dc2d6433a6f7f6b89c9"
+   },
+   "strings pmu_status / Prepare to entry ADFU mode": {
+    "range": "0xb406b295..0xb406b2c4",
+    "sha256": "06fcc3bcff9ad82146da085b4f39297e1ec8ffea5e944ef679141744da34fb57"
+   }
+  },
+  "identical_across_releases": {
+   "adfu_check incl. literal pool": true,
+   "rom_reentry_adfu incl. literal pool": true,
+   "adfu_fail_print": true,
+   "delay_us/delay_ms incl. pool": true,
+   "timer_init/reset/start/count/base": true,
+   "accessors 0xb4069194/0xb406919c": true,
+   "pmic t2 read/write + I2C t1 select": true,
+   "get_boot_code incl. pool": true,
+   "dram_caller call site (ini word +0x14 -> r0)": true,
+   "memcpy": true,
+   "PMIC register table 0xb406b9d0": true,
+   "strings pmu_status / Prepare to entry ADFU mode": true
+  }
+ },
+ "anchors": {
+  "rows": [
+   {
+    "at": "0xb4069254",
+    "insn": "ldr r3, [pc, #0x164]",
+    "matches": true,
+    "meaning": "r3 = 0xb406b9d0 (PMIC register table)"
+   },
+   {
+    "at": "0xb4069258",
+    "insn": "push {r4, r5, r6, r7, r8, lr}",
+    "matches": true,
+    "meaning": "callee-saved r4-r8 and lr pushed"
+   },
+   {
+    "at": "0xb406925c",
+    "insn": "ldrh r6, [r3, #4]",
+    "matches": true,
+    "meaning": "r6 = halfword 0xb406b9d4 = 0x35 (status register number)"
+   },
+   {
+    "at": "0xb4069260",
+    "insn": "mov r7, r0",
+    "matches": true,
+    "meaning": "r7 = argument (caller passes the ini word at +0x14)"
+   },
+   {
+    "at": "0xb4069268",
+    "insn": "bl #0xb40697f4",
+    "matches": true,
+    "meaning": "pmic_read_t2(0x35) -> 0xb4069610: value, or -1 on I2C error (no retry)"
+   },
+   {
+    "at": "0xb406926c",
+    "insn": "lsl r0, r0, #0x10",
+    "matches": true,
+    "meaning": "r5 = r0 & 0xffff (so -1 becomes 0xffff)"
+   },
+   {
+    "at": "0xb4069270",
+    "insn": "lsr r5, r0, #0x10",
+    "matches": true,
+    "meaning": ""
+   },
+   {
+    "at": "0xb406927c",
+    "insn": "bl #0xb4066854",
+    "matches": true,
+    "meaning": "printf(\"pmu_status = 0x%x\\n\", r5) - always printed"
+   },
+   {
+    "at": "0xb4069280",
+    "insn": "ands r4, r5, #2",
+    "matches": true,
+    "meaning": "r4 = status & 2; only bit 1 is examined"
+   },
+   {
+    "at": "0xb4069284",
+    "insn": "beq #0xb4069298",
+    "matches": true,
+    "meaning": "bit 1 clear -> guards"
+   },
+   {
+    "at": "0xb4069288",
+    "insn": "bic r1, r5, #3",
+    "matches": true,
+    "meaning": "write-back value = status & ~3 (bits 0 and 1 cleared, 15:2 kept)"
+   },
+   {
+    "at": "0xb4069290",
+    "insn": "bl #0xb40697f8",
+    "matches": true,
+    "meaning": "pmic_write_t2(0x35, value); return value ignored"
+   },
+   {
+    "at": "0xb4069294",
+    "insn": "b #0xb40693b0",
+    "matches": true,
+    "meaning": "to the ADFU print and tail call; no GPIO access on this path"
+   },
+   {
+    "at": "0xb4069298",
+    "insn": "cmp r7, #0",
+    "matches": true,
+    "meaning": "argument == 0 -> return (full 32-bit compare)"
+   },
+   {
+    "at": "0xb406929c",
+    "insn": "popeq {r4, r5, r6, r7, r8, pc}",
+    "matches": true,
+    "meaning": ""
+   },
+   {
+    "at": "0xb40692a0",
+    "insn": "bl #0xb40664f0",
+    "matches": true,
+    "meaning": "get_boot_code() = word 0xb4064c00"
+   },
+   {
+    "at": "0xb40692a4",
+    "insn": "cmp r0, #0",
+    "matches": true,
+    "meaning": "boot code == 0 -> return; any non-zero code runs the test"
+   },
+   {
+    "at": "0xb40692a8",
+    "insn": "popeq {r4, r5, r6, r7, r8, pc}",
+    "matches": true,
+    "meaning": ""
+   },
+   {
+    "at": "0xb40692b8",
+    "insn": "ldr r6, [pc, #0x10c]",
+    "matches": true,
+    "meaning": "r6 = 0x55aa55aa (shift register for the drive bits)"
+   },
+   {
+    "at": "0xb40692bc",
+    "insn": "mov r5, r4",
+    "matches": true,
+    "meaning": "r5 = r4 = 0: received word; r4 = 0 is also the loop counter (from the ands)"
+   },
+   {
+    "at": "0xb40692c0",
+    "insn": "bic r0, r0, #0x20000",
+    "matches": true,
+    "meaning": "PAD_PULLCTL1 &= ~bit 17 (read-modify-write, never restored)"
+   },
+   {
+    "at": "0xb40692d0",
+    "insn": "mov r8, r0",
+    "matches": true,
+    "meaning": "r8 = saved GPIO_CINEN"
+   },
+   {
+    "at": "0xb40692dc",
+    "insn": "mov r7, r0",
+    "matches": true,
+    "meaning": "r7 = saved GPIO_COUTEN (argument no longer needed)"
+   },
+   {
+    "at": "0xb40692ec",
+    "insn": "bic r0, r0, #0x400",
+    "matches": true,
+    "meaning": "COUTEN &= ~bit 10"
+   },
+   {
+    "at": "0xb4069300",
+    "insn": "orr r0, r0, #0x400",
+    "matches": true,
+    "meaning": "CINEN |= bit 10"
+   },
+   {
+    "at": "0xb4069314",
+    "insn": "bic r0, r0, #0x800",
+    "matches": true,
+    "meaning": "CINEN &= ~bit 11"
+   },
+   {
+    "at": "0xb4069328",
+    "insn": "orr r0, r0, #0x800",
+    "matches": true,
+    "meaning": "COUTEN |= bit 11"
+   },
+   {
+    "at": "0xb406933c",
+    "insn": "bic r0, r0, #0x800",
+    "matches": true,
+    "meaning": "loop: CDAT &= ~bit 11 (first write of the iteration)"
+   },
+   {
+    "at": "0xb406934c",
+    "insn": "and r2, r6, #1",
+    "matches": true,
+    "meaning": "r2 = next drive bit (LSB of r6)"
+   },
+   {
+    "at": "0xb4069354",
+    "insn": "lsr r6, r6, #1",
+    "matches": true,
+    "meaning": "r6 >>= 1"
+   },
+   {
+    "at": "0xb4069358",
+    "insn": "orr r0, r0, r2, lsl #11",
+    "matches": true,
+    "meaning": "CDAT = (fresh read) | bit << 11 (second write; no clear)"
+   },
+   {
+    "at": "0xb4069360",
+    "insn": "mov r0, #1",
+    "matches": true,
+    "meaning": ""
+   },
+   {
+    "at": "0xb4069364",
+    "insn": "bl #0xb4069434",
+    "matches": true,
+    "meaning": "delay_ms(1) = delay_us(1000): after the drive, before the sample"
+   },
+   {
+    "at": "0xb4069370",
+    "insn": "tst r0, #0x400",
+    "matches": true,
+    "meaning": "sample CDAT bit 10"
+   },
+   {
+    "at": "0xb406937c",
+    "insn": "orr r5, r5, r1, lsl r4",
+    "matches": true,
+    "meaning": "received |= sample << i (LSB first, same order as driven)"
+   },
+   {
+    "at": "0xb4069380",
+    "insn": "add r4, r4, #1",
+    "matches": true,
+    "meaning": ""
+   },
+   {
+    "at": "0xb4069384",
+    "insn": "cmp r4, #0x20",
+    "matches": true,
+    "meaning": "32 iterations; no exit inside the loop"
+   },
+   {
+    "at": "0xb4069388",
+    "insn": "bne #0xb4069330",
+    "matches": true,
+    "meaning": ""
+   },
+   {
+    "at": "0xb4069390",
+    "insn": "ldr r1, [pc, #0x38]",
+    "matches": true,
+    "meaning": "CINEN := saved value (exact restore)"
+   },
+   {
+    "at": "0xb406939c",
+    "insn": "ldr r1, [pc, #0x30]",
+    "matches": true,
+    "meaning": "COUTEN := saved value (exact restore)"
+   },
+   {
+    "at": "0xb40693a4",
+    "insn": "ldr ip, [pc, #0x20]",
+    "matches": true,
+    "meaning": "ip = 0x55aa55aa (fresh literal; r6 is exhausted)"
+   },
+   {
+    "at": "0xb40693a8",
+    "insn": "cmp r5, ip",
+    "matches": true,
+    "meaning": "exact 32-bit equality"
+   },
+   {
+    "at": "0xb40693ac",
+    "insn": "popne {r4, r5, r6, r7, r8, pc}",
+    "matches": true,
+    "meaning": "mismatch -> normal return (r0 is not a status; caller ignores it)"
+   },
+   {
+    "at": "0xb40693b4",
+    "insn": "bl #0xb4066854",
+    "matches": true,
+    "meaning": "printf(\"Prepare to entry ADFU mode\\n\")"
+   },
+   {
+    "at": "0xb40693b8",
+    "insn": "pop {r4, r5, r6, r7, r8, lr}",
+    "matches": true,
+    "meaning": "restores the caller's lr, then tail-calls"
+   },
+   {
+    "at": "0xb40693bc",
+    "insn": "b #0xb40691a4",
+    "matches": true,
+    "meaning": "rom_reentry_adfu (never returns in practice)"
+   }
+  ],
+  "all_match_in_every_release": true
+ },
+ "decoded_constants": {
+  "status_register": 53,
+  "pattern": "0x55aa55aa",
+  "compare": "0x55aa55aa",
+  "pull_register": "0xb01b0064",
+  "outen": "0xb01b0018",
+  "inen": "0xb01b001c",
+  "dat": "0xb01b0020",
+  "loop_count": 32,
+  "pull_clear": 131072,
+  "status_mask": 2,
+  "status_clear": 3,
+  "delay_ms": 1
+ },
+ "pseudocode": "adfu_check(arg):                                   ; 0xb4069254, arg = ini word +0x14 (1 in every release)\n  reg  = halfword[0xb406b9d4]                      ; 0x35\n  s    = pmic_read(reg) & 0xffff                   ; I2C error -> -1 -> 0xffff\n  printf(\"pmu_status = 0x%x\\n\", s)\n  if s & 2:                                         ; only bit 1\n      pmic_write(reg, s & ~3)                       ; result ignored\n      goto enter                                    ; GPIO untouched\n  if arg == 0: return\n  if word[0xb4064c00] == 0: return                  ; boot code 0 (SD0) returns here\n  PULLCTL1 = PULLCTL1 & ~(1 << 17)                  ; not restored\n  in_saved  = CINEN ; out_saved = COUTEN\n  COUTEN &= ~(1<<10) ; CINEN |= 1<<10               ; C10 input\n  CINEN  &= ~(1<<11) ; COUTEN |= 1<<11              ; C11 output\n  shift = 0x55aa55aa ; rx = 0\n  for i in 0..31:                                   ; no early exit\n      CDAT = CDAT & ~(1<<11)                        ; write 1\n      CDAT = CDAT | ((shift & 1) << 11)             ; write 2 (fresh read, no clear)\n      shift >>= 1\n      delay_ms(1)\n      rx |= ((CDAT >> 10) & 1) << i\n  CINEN = in_saved ; COUTEN = out_saved\n  if rx != 0x55aa55aa: return\nenter:\n  printf(\"Prepare to entry ADFU mode\\n\")\n  tail-call rom_reentry_adfu()                      ; 0xb40691a4\n",
+ "control_flow": {
+  "mermaid": "flowchart TD\n  E[\"0xb4069254 entry, r7 = arg\"] --> R[\"0xb4069268 pmic_read(0x35) & 0xffff<br/>printf pmu_status\"]\n  R -->|\"bit 1 set (0xb4069280)\"| W[\"0xb4069288 pmic_write(0x35, s & ~3)\"] --> A\n  R -->|\"bit 1 clear\"| G1{\"0xb4069298 arg == 0?\"}\n  G1 -->|yes| RET[\"pop pc: return\"]\n  G1 -->|no| G2{\"0xb40692a0 boot code == 0?\"}\n  G2 -->|yes| RET\n  G2 -->|no| S[\"0xb40692c0 PULLCTL1 &= ~bit17; save CINEN/COUTEN;<br/>C10 in, C11 out\"]\n  S --> L[\"loop i = 0..31 (0xb4069330..0xb4069388):<br/>CDAT &= ~b11; CDAT |= bit_i<<11; delay_ms(1); rx |= C10<<i\"]\n  L --> X[\"0xb4069390 restore CINEN, COUTEN\"] --> C{\"0xb40693a8 rx == 0x55aa55aa?\"}\n  C -->|no| RET\n  C -->|yes| A[\"0xb40693b0 printf ADFU; tail-call 0xb40691a4\"]",
+  "exits": [
+   "return (PMIC bit 1 clear and arg 0)",
+   "return (boot code 0)",
+   "return (loopback mismatch)",
+   "tail call 0xb40691a4 (PMIC bit 1 or loopback match)"
+  ],
+  "calls": [
+   "0xb40697f4 pmic_read_t2",
+   "0xb4066854 printf",
+   "0xb40697f8 pmic_write_t2",
+   "0xb40664f0 get_boot_code",
+   "0xb406919c read32",
+   "0xb4069194 write32",
+   "0xb4069434 delay_ms (32x)",
+   "0xb40691a4 (tail)"
+  ],
+  "register_allocation": {
+   "r4": "status & 2, then loop counter i (0 on the test path)",
+   "r5": "status, then received word",
+   "r6": "status register number, then drive shift register",
+   "r7": "argument, then saved COUTEN",
+   "r8": "saved CINEN",
+   "ip": "compare literal"
+  },
+  "dependencies": [
+   "timer 0 running (delay_ms -> delay_us polls 0xb0168010, set up by timer_init)",
+   "PMIC/I2C bus selected by pmu_init (pmic_read re-selects bus [0xb4070864])",
+   "boot-code word 0xb4064c00 (block 0)",
+   "UART for printf (uart_init)"
+  ]
+ },
+ "pmic_rules": {
+  "always_read": "Register 0x35 is read and printed on every call, before the argument and boot-code guards.",
+  "examined_bits": "bit 1 only (ands r4, r5, #2).",
+  "write_back": "status & ~3 written back (bits 0 and 1 cleared, bits 15:2 kept) through pmic_write; its return value is ignored; then ADFU. The GPIO registers are not touched on this path.",
+  "precedence": "PMIC bit 1 > argument == 0 > boot code == 0 > loopback result.",
+  "read_failure": "pmic_read returns -1 on an I2C error with no retry (0xb4069610); & 0xffff gives 0xffff, bit 1 is set, so a failed read of reg 0x35 enters ADFU and writes back 0xfffc.",
+  "i2c_bound": "The I2C transfer (0xb406a994) polls at most 501 x delay_ms(1) before failing (not exercised here: the transaction layer is a register file).",
+  "register_meaning": "Not established. The loader prints it as \"pmu_status\" and treats bit 1 as an ADFU request. No pinned ATC2603C source or document was available offline to name reg 0x35; no write-one-to-clear or other semantics are assumed. The register file only stores the write."
+ },
+ "gpio_registers": [
+  {
+   "address": "0xb01b0018",
+   "name": "GPIO_COUTEN",
+   "bank": "C",
+   "bits": "10 cleared, 11 set during the test; restored",
+   "width": 32,
+   "naming": "vendor header regs_map-atm7039.h (pinned)",
+   "semantics": "output enable per bit (name; behaviour not verified)",
+   "confidence": "inferred"
+  },
+  {
+   "address": "0xb01b001c",
+   "name": "GPIO_CINEN",
+   "bank": "C",
+   "bits": "10 set, 11 cleared during the test; restored",
+   "width": 32,
+   "naming": "vendor header",
+   "semantics": "input enable per bit (name)",
+   "confidence": "inferred"
+  },
+  {
+   "address": "0xb01b0020",
+   "name": "GPIO_CDAT",
+   "bank": "C",
+   "bits": "11 driven (two writes per iteration), 10 sampled",
+   "width": 32,
+   "naming": "vendor header",
+   "semantics": "Whether a read returns the output latch, the pad level or a mix is NOT established; the model offers \"mixed\" and \"latch\". Every write is a read-modify-write of the whole word, so under \"mixed\" the latch bits of other input pins (and C10) are rewritten with their sampled levels.",
+   "confidence": "unknown read semantics"
+  },
+  {
+   "address": "0xb01b0064",
+   "name": "PAD_PULLCTL1",
+   "bank": "pads",
+   "bits": "17 cleared, never restored",
+   "width": 32,
+   "naming": "vendor header",
+   "semantics": "Vendor ATM7059 pinctrl data: bit 17 is the P_SD0_D0 (= GPIOC10) pull field, value 1 = pull-up, no pull-down; so clearing it most likely removes the pull-up from the sampled input. Electrical effect not verified.",
+   "confidence": "inferred (pinned vendor source)"
+  }
+ ],
+ "board": {
+  "sources": [
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+    "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+    "line_start": 169,
+    "line_end": 169,
+    "found": true,
+    "meaning": "GPIOC10 is the P_SD0_D0 pad"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+    "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+    "line_start": 170,
+    "line_end": 170,
+    "found": true,
+    "meaning": "GPIOC11 is the P_SD0_D1 pad"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+    "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+    "line_start": 69,
+    "line_end": 69,
+    "found": true,
+    "meaning": "GPIO numbering: C = 64 + n"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+    "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+    "line_start": 2642,
+    "line_end": 2642,
+    "found": true,
+    "meaning": "PAD_PULLCTL1 bit 17 = P_SD0_D0 pull, width 1, pull-up value 1, no pull-down value"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+    "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+    "line_start": 2643,
+    "line_end": 2643,
+    "found": true,
+    "meaning": "PAD_PULLCTL1 bit 16 = P_SD0_D1 pull (not touched by the test)"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+    "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+    "line_start": 1087,
+    "line_end": 1088,
+    "found": true,
+    "meaning": "MFP_CTL2[19:17] selects the P_SD0_D0 function"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+    "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+    "line_start": 1091,
+    "line_end": 1097,
+    "found": true,
+    "meaning": "values 0 SD0, 1 NOR, 2 reserved, 3 JTAG, 4 UART2, 5 UART5"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+    "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+    "line_start": 1103,
+    "line_end": 1104,
+    "found": true,
+    "meaning": "MFP_CTL2[16:14] selects the P_SD0_D1 function"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+    "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+    "line_start": 1107,
+    "line_end": 1112,
+    "found": true,
+    "meaning": "values 0 SD0, 1 NOR, 4 UART2"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+    "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+    "line_start": 1119,
+    "line_end": 1121,
+    "found": true,
+    "meaning": "MFP_CTL2[13:11] selects SD0_D2/D3"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+    "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+    "line_start": 1153,
+    "line_end": 1154,
+    "found": true,
+    "meaning": "MFP_CTL2[8:7] selects SD0_CMD"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/pinctrl_data-atm7059.c",
+    "sha256": "a98a2f2ebd62a2e1aa164dc640584cc8677ea3f36d5efb8094d665b65e651683",
+    "line_start": 1167,
+    "line_end": 1168,
+    "found": true,
+    "meaning": "MFP_CTL2[6:5] selects SD0_CLK"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
+    "sha256": "8350d5a078d0063b8827f4a22aa77aeaec5858f080ddcd4d27c7f6411b8378ee",
+    "line_start": 2087,
+    "line_end": 2087,
+    "found": true,
+    "meaning": "GPIO_COUTEN = 0xb01b0018"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
+    "sha256": "8350d5a078d0063b8827f4a22aa77aeaec5858f080ddcd4d27c7f6411b8378ee",
+    "line_start": 2088,
+    "line_end": 2088,
+    "found": true,
+    "meaning": "GPIO_CINEN = 0xb01b001c"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
+    "sha256": "8350d5a078d0063b8827f4a22aa77aeaec5858f080ddcd4d27c7f6411b8378ee",
+    "line_start": 2089,
+    "line_end": 2089,
+    "found": true,
+    "meaning": "GPIO_CDAT = 0xb01b0020"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
+    "sha256": "8350d5a078d0063b8827f4a22aa77aeaec5858f080ddcd4d27c7f6411b8378ee",
+    "line_start": 2098,
+    "line_end": 2098,
+    "found": true,
+    "meaning": "MFP_CTL2 = 0xb01b0048"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/mach-owl/include/mach/regs_map-atm7039.h",
+    "sha256": "8350d5a078d0063b8827f4a22aa77aeaec5858f080ddcd4d27c7f6411b8378ee",
+    "line_start": 2107,
+    "line_end": 2107,
+    "found": true,
+    "meaning": "PAD_PULLCTL1 = 0xb01b0064"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/boot/dts/rg35xx_atm7039.dts",
+    "sha256": "f16585a4e76bd82d5dd966c9d57bb3475ee0cb31f318517aec791d187ccfec2c",
+    "line_start": 163,
+    "line_end": 163,
+    "found": true,
+    "meaning": "SD0 default pin state"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/boot/dts/rg35xx_atm7039.dts",
+    "sha256": "f16585a4e76bd82d5dd966c9d57bb3475ee0cb31f318517aec791d187ccfec2c",
+    "line_start": 165,
+    "line_end": 166,
+    "found": true,
+    "meaning": "SD0 data/cmd/clk groups muxed to sd0"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/boot/dts/rg35xx_atm7039.dts",
+    "sha256": "f16585a4e76bd82d5dd966c9d57bb3475ee0cb31f318517aec791d187ccfec2c",
+    "line_start": 170,
+    "line_end": 171,
+    "found": true,
+    "meaning": "SD0 D0-D3/CMD pull <2>"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/boot/dts/rg35xx_atm7039.dts",
+    "sha256": "f16585a4e76bd82d5dd966c9d57bb3475ee0cb31f318517aec791d187ccfec2c",
+    "line_start": 135,
+    "line_end": 135,
+    "found": true,
+    "meaning": "alternative SD0 state sharing UART"
+   },
+   {
+    "source": "vendor-kernel",
+    "path": "arch/arm/boot/dts/rg35xx_atm7039.dts",
+    "sha256": "f16585a4e76bd82d5dd966c9d57bb3475ee0cb31f318517aec791d187ccfec2c",
+    "line_start": 91,
+    "line_end": 92,
+    "found": true,
+    "meaning": "D0/D1 groups as UART5 (serial5_default and mmc_share_uart)"
+   }
+  ],
+  "dtbs": {
+   "koriki-v1.0": {
+    "file": "KERNEL.DTB",
+    "sha256": "ad4b8b4dd98fbb95bde8854ff0bd9c2e870c3c0c21f27be0122c741f36686f0f",
+    "size": 28111,
+    "references": [
+     {
+      "node": "/pinctrl@b01b0040/serial5_default/serial_5",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc_share_uart/serial_5",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc0_default/sd0_mfp_d0_d3_cmd_clk",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14",
+       "mfp2_13_11",
+       "mfp2_8_7",
+       "mfp2_6_5"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc0_default/sd0_pull_d0_d3_cmd",
+      "property": "actions,pins",
+      "value": [
+       "P_SD0_D0",
+       "P_SD0_D1",
+       "P_SD0_D2",
+       "P_SD0_D3",
+       "P_SD0_CMD"
+      ]
+     }
+    ],
+    "gpio_74_75_specifiers": []
+   },
+   "stock-221203": {
+    "file": "kernel.dtb",
+    "sha256": "2c558f01665b0fd34381d0819d696260a4fd9b5ca24299237c54e150e136878f",
+    "size": 32009,
+    "references": [
+     {
+      "node": "/pinctrl@b01b0040/serial5_default/serial_5",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc_share_uart/serial_5",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc0_default/sd0_mfp_d0_d3_cmd_clk",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14",
+       "mfp2_13_11",
+       "mfp2_8_7",
+       "mfp2_6_5"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc0_default/sd0_pull_d0_d3_cmd",
+      "property": "actions,pins",
+      "value": [
+       "P_SD0_D0",
+       "P_SD0_D1",
+       "P_SD0_D2",
+       "P_SD0_D3",
+       "P_SD0_CMD"
+      ]
+     }
+    ],
+    "gpio_74_75_specifiers": []
+   },
+   "stock-221223": {
+    "file": "kernel.dtb",
+    "sha256": "07fc051eb4d3ede2b28b529f7046847eb0785d951de3b98fbeb1570c189aaee9",
+    "size": 32047,
+    "references": [
+     {
+      "node": "/pinctrl@b01b0040/serial5_default/serial_5",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc_share_uart/serial_5",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc0_default/sd0_mfp_d0_d3_cmd_clk",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14",
+       "mfp2_13_11",
+       "mfp2_8_7",
+       "mfp2_6_5"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc0_default/sd0_pull_d0_d3_cmd",
+      "property": "actions,pins",
+      "value": [
+       "P_SD0_D0",
+       "P_SD0_D1",
+       "P_SD0_D2",
+       "P_SD0_D3",
+       "P_SD0_CMD"
+      ]
+     }
+    ],
+    "gpio_74_75_specifiers": []
+   },
+   "stock-230309": {
+    "file": "kernel.dtb",
+    "sha256": "94ef841c1feceb13d44b5b7a2e152785506e8ea6683bad02d83eba421ad7ff48",
+    "size": 32197,
+    "references": [
+     {
+      "node": "/pinctrl@b01b0040/serial5_default/serial_5",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc_share_uart/serial_5",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc0_default/sd0_mfp_d0_d3_cmd_clk",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14",
+       "mfp2_13_11",
+       "mfp2_8_7",
+       "mfp2_6_5"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc0_default/sd0_pull_d0_d3_cmd",
+      "property": "actions,pins",
+      "value": [
+       "P_SD0_D0",
+       "P_SD0_D1",
+       "P_SD0_D2",
+       "P_SD0_D3",
+       "P_SD0_CMD"
+      ]
+     }
+    ],
+    "gpio_74_75_specifiers": []
+   },
+   "stock-20231014": {
+    "file": "kernel.dtb",
+    "sha256": "94ef841c1feceb13d44b5b7a2e152785506e8ea6683bad02d83eba421ad7ff48",
+    "size": 32197,
+    "references": [
+     {
+      "node": "/pinctrl@b01b0040/serial5_default/serial_5",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc_share_uart/serial_5",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc0_default/sd0_mfp_d0_d3_cmd_clk",
+      "property": "actions,groups",
+      "value": [
+       "mfp2_19_17",
+       "mfp2_16_14",
+       "mfp2_13_11",
+       "mfp2_8_7",
+       "mfp2_6_5"
+      ]
+     },
+     {
+      "node": "/pinctrl@b01b0040/mmc0_default/sd0_pull_d0_d3_cmd",
+      "property": "actions,pins",
+      "value": [
+       "P_SD0_D0",
+       "P_SD0_D1",
+       "P_SD0_D2",
+       "P_SD0_D3",
+       "P_SD0_CMD"
+      ]
+     }
+    ],
+    "gpio_74_75_specifiers": []
+   }
+  },
+  "board_mfp_init_sd0_fields": {
+   "register": "0xb01b0048",
+   "clear": "0x000e39e0",
+   "set": "0x000619c0",
+   "fields": [
+    {
+     "bits": "19:17",
+     "pads": "P_SD0_D0 (C10)",
+     "value": 3,
+     "vendor_function": "JTAG"
+    },
+    {
+     "bits": "16:14",
+     "pads": "P_SD0_D1 (C11)",
+     "value": null,
+     "vendor_function": "not written (Boot ROM / reset value)"
+    },
+    {
+     "bits": "13:11",
+     "pads": "P_SD0_D2, P_SD0_D3",
+     "value": 3,
+     "vendor_function": "JTAG"
+    },
+    {
+     "bits": "8:7",
+     "pads": "P_SD0_CMD",
+     "value": 3,
+     "vendor_function": "JTAG"
+    },
+    {
+     "bits": "6:5",
+     "pads": "P_SD0_CLK",
+     "value": 2,
+     "vendor_function": "JTAG"
+    }
+   ],
+   "order": "board_mfp_init runs before adfu_check, so these values are in place during the loopback test",
+   "note": "Field-to-function mapping from the vendor ATM7059 pinctrl data used by the RG35XX vendor kernel; not verified on silicon."
+  },
+  "interpretation": [
+   {
+    "claim": "GPIO C10/C11 are the SD0 DAT0/DAT1 pads (P_SD0_D0/P_SD0_D1).",
+    "basis": "pinned vendor pinctrl data",
+    "confidence": "strongly-supported for the pad identity; ball and connector wiring not seen"
+   },
+   {
+    "claim": "SD0 is the TF2 slot on the original RG35XX.",
+    "basis": "PR #8 (BOOT-023, STOR-003; DT sd_card on b0230000)",
+    "confidence": "inferred"
+   },
+   {
+    "claim": "The loopback therefore tests DAT1 -> DAT0 of the TF2 card slot while the unit boots from SD2.",
+    "basis": "the two facts above",
+    "confidence": "inferred"
+   },
+   {
+    "claim": "No shipped DTB uses pins 74/75 as plain GPIOs (buttons, card detect, power); they appear only as SD0 data (mmc0_default) and as the optional UART5 pair (serial5_default, mmc_share_uart).",
+    "basis": "all five shipped kernel.dtb files",
+    "confidence": "verified for the DTBs"
+   },
+   {
+    "claim": "board_mfp_init (ini+0x0d = 1) muxes SD0_D0, D2, D3, CMD and CLK to the vendor JTAG function before the test; D1 is left as the Boot ROM/reset left it.",
+    "basis": "firmware table 0xb406b4c8 + vendor function lists",
+    "confidence": "inferred (mux numbering from vendor source)"
+   },
+   {
+    "claim": "Purpose: a factory/service fixture in the TF2 slot that connects DAT1 to DAT0 (and drives no pull) would make an SD2-booting unit enter ADFU. This fits the evidence but is a hypothesis; no Actions document, fixture description or board schematic was available.",
+    "basis": "inference",
+    "confidence": "speculative"
+   },
+   {
+    "claim": "Contradictory or alternative readings: the vendor DTS comment lists the same pads for UART2/UART5 debug use; a UART adapter in TF2 is another plausible intended partner. Whether GPIO enables override the JTAG mux on this pad is unknown.",
+    "basis": "vendor DTS, mux table",
+    "confidence": "unknown"
+   }
+  ]
+ },
+ "model": {
+  "module": "tools/gpio_model.py",
+  "assumptions": [
+   "strict mode: any access in 0xb01b0000..0xb01b0100 outside the modelled registers is reported as unexpected (answers 0); pass-through mode (strict=False) stores such writes and returns them, logging each access, for whole-path runs where other routines legitimately use the block.",
+   "Register addresses and names from the vendor header regs_map-atm7039.h (pinned); semantics not verified.",
+   "OUTEN/INEN/PULLCTL reads return the last value written.",
+   "DAT read semantics are a selectable hypothesis (mixed: OUTEN -> latch, else INEN -> pad input, else undriven constant; latch: always the latch).",
+   "Pad input levels are synthetic rules of the model clock and of other pins' latches; pull, mux, electrical drive and propagation delay are not modelled.",
+   "Pin mux is not modelled: GPIO enables are assumed to control the pad whatever MFP_CTL selects.",
+   "Sample windows are delimited by gaps of window_gap_us between DAT accesses on the model clock, which the harness advances (synthetic timer reads or requested delays)."
+  ],
+  "harness_rules": {
+   "timer": "T0 count word (timer base+8, 0xb0168010): +24 per read (1 synthetic us per read)",
+   "pmic": "PMIC I2C transactions (0xb406ac10 read / 0xb406ac60 write) served by a register file (Pmic)",
+   "pre-state": "I2C bus 1 pre-selected (0xb4070864 = 1, 0xb406ba10 = 1) as pmu_init leaves it",
+   "printf": "stubbed, text captured"
+  }
+ },
+ "scenarios": [
+  {
+   "name": "pmic-0x0000",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "pmic-0x0000",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "const",
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "received_word": "0x00000000",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "2c70519f33763ae13725683a89d01c53ca817768929ea2b55a89c465136b01c6"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x00000000",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "pmic-0x0001-bit0-only",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0001",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "pmic-0x0001-bit0-only",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "const",
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "received_word": "0x00000000",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0001"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x1"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "2c70519f33763ae13725683a89d01c53ca817768929ea2b55a89c465136b01c6"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x00000000",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "pmic-0x0002-bit1",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0002",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "pmic-0x0002-bit1",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 93,
+    "driven_bits": [],
+    "sampled_bits": [],
+    "received_word": null,
+    "compared_with": null,
+    "delay_calls": 0,
+    "delay_us_requested": 0,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0002"
+     },
+     {
+      "op": "w",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 0,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x2",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 0,
+    "gpio_writes_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   "reference": {
+    "decision": "adfu (PMIC status bit 1)",
+    "gpio_test": false,
+    "received": null,
+    "delays_ms": 0,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": [
+     {
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ]
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "pmic-0x0003-bits01",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0003",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "pmic-0x0003-bits01",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 93,
+    "driven_bits": [],
+    "sampled_bits": [],
+    "received_word": null,
+    "compared_with": null,
+    "delay_calls": 0,
+    "delay_us_requested": 0,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0003"
+     },
+     {
+      "op": "w",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 0,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x3",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 0,
+    "gpio_writes_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   "reference": {
+    "decision": "adfu (PMIC status bit 1)",
+    "gpio_test": false,
+    "received": null,
+    "delays_ms": 0,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": [
+     {
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ]
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "pmic-0xff06-bit1-plus-high",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0xff06",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "pmic-0xff06-bit1-plus-high",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0xffffffff",
+      "GPIO_CINEN": "0xffffffff",
+      "GPIO_CDAT": "0xffffffff",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0xffffffff",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 93,
+    "driven_bits": [],
+    "sampled_bits": [],
+    "received_word": null,
+    "compared_with": null,
+    "delay_calls": 0,
+    "delay_us_requested": 0,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0xff06"
+     },
+     {
+      "op": "w",
+      "reg": "0x35",
+      "value": "0xff04"
+     }
+    ],
+    "gpio_write_count": 0,
+    "initial": {
+     "GPIO_COUTEN": "0xffffffff",
+     "GPIO_CINEN": "0xffffffff",
+     "GPIO_CDAT": "0xffffffff",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0xffffffff",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0xffffffff",
+     "GPIO_CINEN": "0xffffffff",
+     "GPIO_CDAT": "0xffffffff",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0xffffffff",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0xff06",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 0,
+    "gpio_writes_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   "reference": {
+    "decision": "adfu (PMIC status bit 1)",
+    "gpio_test": false,
+    "received": null,
+    "delays_ms": 0,
+    "final": {
+     "0xb01b0018": "0xffffffff",
+     "0xb01b001c": "0xffffffff",
+     "0xb01b0020": "0xffffffff",
+     "0xb01b0064": "0xffffffff"
+    },
+    "pmic_writes": [
+     {
+      "reg": "0x35",
+      "value": "0xff04"
+     }
+    ]
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "pmic-0x8005-unrelated-no-bit1",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x8005",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "pmic-0x8005-unrelated-no-bit1",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "const",
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "received_word": "0x00000000",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x8005"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x8005"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "2c70519f33763ae13725683a89d01c53ca817768929ea2b55a89c465136b01c6"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x00000000",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "pmic-read-failure",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": true,
+    "gpio_model": {
+     "label": "pmic-read-failure",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "const",
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 93,
+    "driven_bits": [],
+    "sampled_bits": [],
+    "received_word": null,
+    "compared_with": null,
+    "delay_calls": 0,
+    "delay_us_requested": 0,
+    "pmic": [
+     {
+      "op": "r-fail",
+      "reg": "0x35",
+      "value": "0x0000"
+     },
+     {
+      "op": "w",
+      "reg": "0x35",
+      "value": "0xfffc"
+     }
+    ],
+    "gpio_write_count": 0,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0xffff",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 0,
+    "gpio_writes_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   "reference": {
+    "decision": "adfu (PMIC status bit 1)",
+    "gpio_test": false,
+    "received": null,
+    "delays_ms": 0,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": [
+     {
+      "reg": "0x35",
+      "value": "0xfffc"
+     }
+    ]
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "pmic-bit1-code0",
+   "inputs": {
+    "boot_code": "0x00000000",
+    "arg": "0x00000001",
+    "pmic_status": "0x0002",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "pmic-bit1-code0",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 93,
+    "driven_bits": [],
+    "sampled_bits": [],
+    "received_word": null,
+    "compared_with": null,
+    "delay_calls": 0,
+    "delay_us_requested": 0,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0002"
+     },
+     {
+      "op": "w",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 0,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x2",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 0,
+    "gpio_writes_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   "reference": {
+    "decision": "adfu (PMIC status bit 1)",
+    "gpio_test": false,
+    "received": null,
+    "delays_ms": 0,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": [
+     {
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ]
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "pmic-bit1-arg0",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000000",
+    "pmic_status": "0x0002",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "pmic-bit1-arg0",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 93,
+    "driven_bits": [],
+    "sampled_bits": [],
+    "received_word": null,
+    "compared_with": null,
+    "delay_calls": 0,
+    "delay_us_requested": 0,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0002"
+     },
+     {
+      "op": "w",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 0,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x2",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 0,
+    "gpio_writes_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   "reference": {
+    "decision": "adfu (PMIC status bit 1)",
+    "gpio_test": false,
+    "received": null,
+    "delays_ms": 0,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": [
+     {
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ]
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "guard-code0-loopback",
+   "inputs": {
+    "boot_code": "0x00000000",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "guard-code0-loopback",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 59,
+    "driven_bits": [],
+    "sampled_bits": [],
+    "received_word": null,
+    "compared_with": null,
+    "delay_calls": 0,
+    "delay_us_requested": 0,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 0,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 0,
+    "gpio_writes_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   "reference": {
+    "decision": "return (boot code 0)",
+    "gpio_test": false,
+    "received": null,
+    "delays_ms": 0,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "guard-arg0-loopback",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000000",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "guard-arg0-loopback",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 53,
+    "driven_bits": [],
+    "sampled_bits": [],
+    "received_word": null,
+    "compared_with": null,
+    "delay_calls": 0,
+    "delay_us_requested": 0,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 0,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 0,
+    "gpio_writes_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   "reference": {
+    "decision": "return (argument 0)",
+    "gpio_test": false,
+    "received": null,
+    "delays_ms": 0,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "guard-arg-0x80000000",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x80000000",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "guard-arg-0x80000000",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 449958,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "received_word": "0x55aa55aa",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "66aa203739bd588e4bc505bcea549ebf2c639bed35cab79628d68d7e17450d81"
+   },
+   "reference": {
+    "decision": "adfu (loopback matched)",
+    "gpio_test": true,
+    "received": "0x55aa55aa",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "guard-code1",
+   "inputs": {
+    "boot_code": "0x00000001",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "guard-code1",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 449958,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "received_word": "0x55aa55aa",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "66aa203739bd588e4bc505bcea549ebf2c639bed35cab79628d68d7e17450d81"
+   },
+   "reference": {
+    "decision": "adfu (loopback matched)",
+    "gpio_test": true,
+    "received": "0x55aa55aa",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "guard-code4",
+   "inputs": {
+    "boot_code": "0x00000004",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "guard-code4",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 449958,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "received_word": "0x55aa55aa",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "66aa203739bd588e4bc505bcea549ebf2c639bed35cab79628d68d7e17450d81"
+   },
+   "reference": {
+    "decision": "adfu (loopback matched)",
+    "gpio_test": true,
+    "received": "0x55aa55aa",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "guard-code5",
+   "inputs": {
+    "boot_code": "0x00000005",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "guard-code5",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 449958,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "received_word": "0x55aa55aa",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "66aa203739bd588e4bc505bcea549ebf2c639bed35cab79628d68d7e17450d81"
+   },
+   "reference": {
+    "decision": "adfu (loopback matched)",
+    "gpio_test": true,
+    "received": "0x55aa55aa",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "guard-code-0x80000000",
+   "inputs": {
+    "boot_code": "0x80000000",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "guard-code-0x80000000",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 449958,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "received_word": "0x55aa55aa",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "66aa203739bd588e4bc505bcea549ebf2c639bed35cab79628d68d7e17450d81"
+   },
+   "reference": {
+    "decision": "adfu (loopback matched)",
+    "gpio_test": true,
+    "received": "0x55aa55aa",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "input-loopback",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "input-loopback",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 449958,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "received_word": "0x55aa55aa",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "66aa203739bd588e4bc505bcea549ebf2c639bed35cab79628d68d7e17450d81"
+   },
+   "reference": {
+    "decision": "adfu (loopback matched)",
+    "gpio_test": true,
+    "received": "0x55aa55aa",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "input-low",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "input-low",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "const",
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "received_word": "0x00000000",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "2c70519f33763ae13725683a89d01c53ca817768929ea2b55a89c465136b01c6"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x00000000",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "input-high",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "input-high",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "const",
+       1
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "received_word": "0xffffffff",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000400",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {
+     "GPIO_CDAT": {
+      "initial": "0x00000000",
+      "final": "0x00000400",
+      "changed_bits": "0x00000400"
+     }
+    },
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "db874c2006c2adf86c3139dcca5090bc76f88501261364eead9d3faf4857f4a3"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0xffffffff",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000400",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "input-inverted",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "input-inverted",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "invert",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "received_word": "0xaa55aa55",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000400",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {
+     "GPIO_CDAT": {
+      "initial": "0x00000000",
+      "final": "0x00000400",
+      "changed_bits": "0x00000400"
+     }
+    },
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "6cb84da2ae37615609cb3714dbd43a34d01b294f7205c4445fdc6a9fe20f888e"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0xaa55aa55",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000400",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "input-one-wrong-bit-13",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "input-one-wrong-bit-13",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow_except",
+       75,
+       {
+        "13": 1
+       }
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "received_word": "0x55aa75aa",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "20ce242b4880ebcd298e8272e72bb090e5d54ef18f5d6a90c8136b38418aa080"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x55aa75aa",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "input-wrong-first-bit",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "input-wrong-first-bit",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow_except",
+       75,
+       {
+        "0": 1
+       }
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "received_word": "0x55aa55ab",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "af1006668563b6dd509b69e516b83573bba8ff0df35127edfdef889edc028817"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x55aa55ab",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "input-wrong-last-bit",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "input-wrong-last-bit",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow_except",
+       75,
+       {
+        "31": 1
+       }
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "received_word": "0xd5aa55aa",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "66aa203739bd588e4bc505bcea549ebf2c639bed35cab79628d68d7e17450d81"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0xd5aa55aa",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "input-wrong-bits-3-9-22",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "input-wrong-bits-3-9-22",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow_except",
+       75,
+       {
+        "3": 0,
+        "9": 1,
+        "22": 1
+       }
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     1,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "received_word": "0x55ea57a2",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "8ae6910bbae94ee2f61a70a1af586fcdc0cea63299b68e5c1bcb864f72fa467e"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x55ea57a2",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "input-prbs-0x1234",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "input-prbs-0x1234",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "prbs",
+       4660
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     1,
+     0,
+     1
+    ],
+    "received_word": "0xb8001234",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "2f9e13b5dfc6a74e55c5a194513712cdab0f84cf2accea33c8fc40f3ecf04291"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0xb8001234",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "input-one-bit-delayed",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "input-one-bit-delayed",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "delay",
+       75,
+       1500,
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "received_word": "0xab54ab54",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "53a41af31b11588d676ac9cbd6c1e97f7b3f6bc35a69b6168ab92e552c9fd10e"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0xab54ab54",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "input-interrupted-after-16",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "input-interrupted-after-16",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow_except",
+       75,
+       {
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0,
+        "24": 0,
+        "25": 0,
+        "26": 0,
+        "27": 0,
+        "28": 0,
+        "29": 0,
+        "30": 0,
+        "31": 0
+       }
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "received_word": "0x000055aa",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "c8bf7f39827005363a5625b90f0d15aa84e86511010f6699c86eac726c86444d"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x000055aa",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "input-matches-from-bit-8",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "input-matches-from-bit-8",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "script",
+       [
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0
+       ],
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "received_word": "0x55aa5555",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000400",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {
+     "GPIO_CDAT": {
+      "initial": "0x00000000",
+      "final": "0x00000400",
+      "changed_bits": "0x00000400"
+     }
+    },
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "a1a2e839fe462b8230ec5b9a0359a3d36745b72c2e21d172b16ab3b566a97556"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x55aa5555",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000400",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "semantics-latch-loopback",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "semantics-latch-loopback",
+     "strict": true,
+     "read_semantics": "latch",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "received_word": "0x00000000",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "2c70519f33763ae13725683a89d01c53ca817768929ea2b55a89c465136b01c6"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x00000000",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "semantics-latch-latch-preset",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "semantics-latch-latch-preset",
+     "strict": true,
+     "read_semantics": "latch",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000400",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "received_word": "0xffffffff",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000400",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000400",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "db874c2006c2adf86c3139dcca5090bc76f88501261364eead9d3faf4857f4a3"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0xffffffff",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000400",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "init-ones-loopback",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "init-ones-loopback",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0xffffffff",
+      "GPIO_CINEN": "0xffffffff",
+      "GPIO_CDAT": "0xffffffff",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0xffffffff",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 449958,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "received_word": "0x55aa55aa",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0xffffffff",
+     "GPIO_CINEN": "0xffffffff",
+     "GPIO_CDAT": "0xffffffff",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0xffffffff",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0xffffffff",
+     "GPIO_CINEN": "0xffffffff",
+     "GPIO_CDAT": "0xfffff3ff",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0xfffdffff",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {
+     "GPIO_CDAT": {
+      "initial": "0xffffffff",
+      "final": "0xfffff3ff",
+      "changed_bits": "0x00000c00"
+     },
+     "PAD_PULLCTL1": {
+      "initial": "0xffffffff",
+      "final": "0xfffdffff",
+      "changed_bits": "0x00020000"
+     }
+    },
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "bac79af9c62067752386ac0866862ec5033ec8322ddf9e29cfab62a24907664c"
+   },
+   "reference": {
+    "decision": "adfu (loopback matched)",
+    "gpio_test": true,
+    "received": "0x55aa55aa",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0xffffffff",
+     "0xb01b001c": "0xffffffff",
+     "0xb01b0020": "0xfffff3ff",
+     "0xb01b0064": "0xfffdffff"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "init-ones-low",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "init-ones-low",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0xffffffff",
+      "GPIO_CINEN": "0xffffffff",
+      "GPIO_CDAT": "0xffffffff",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0xffffffff",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "const",
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "received_word": "0x00000000",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0xffffffff",
+     "GPIO_CINEN": "0xffffffff",
+     "GPIO_CDAT": "0xffffffff",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0xffffffff",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0xffffffff",
+     "GPIO_CINEN": "0xffffffff",
+     "GPIO_CDAT": "0xfffff3ff",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0xfffdffff",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {
+     "GPIO_CDAT": {
+      "initial": "0xffffffff",
+      "final": "0xfffff3ff",
+      "changed_bits": "0x00000c00"
+     },
+     "PAD_PULLCTL1": {
+      "initial": "0xffffffff",
+      "final": "0xfffdffff",
+      "changed_bits": "0x00020000"
+     }
+    },
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "a07e1e4fa3a88db0e065db815bcb5a73c81b2a30c7db15ccfe7dc7e03d490713"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x00000000",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0xffffffff",
+     "0xb01b001c": "0xffffffff",
+     "0xb01b0020": "0xfffff3ff",
+     "0xb01b0064": "0xfffdffff"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "init-mixed-loopback",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "init-mixed-loopback",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x0000f0f0",
+      "GPIO_CINEN": "0x00ff0f00",
+      "GPIO_CDAT": "0x12345678",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00030000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 449958,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "received_word": "0x55aa55aa",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x0000f0f0",
+     "GPIO_CINEN": "0x00ff0f00",
+     "GPIO_CDAT": "0x12345678",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00030000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x0000f0f0",
+     "GPIO_CINEN": "0x00ff0f00",
+     "GPIO_CDAT": "0x00005070",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00010000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {
+     "GPIO_CDAT": {
+      "initial": "0x12345678",
+      "final": "0x00005070",
+      "changed_bits": "0x12340608"
+     },
+     "PAD_PULLCTL1": {
+      "initial": "0x00030000",
+      "final": "0x00010000",
+      "changed_bits": "0x00020000"
+     }
+    },
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "0ad406f12e1de349e3fdd7c3c81d0b57d7a69b7458fec102c74eb8f626c7d4b3"
+   },
+   "reference": {
+    "decision": "adfu (loopback matched)",
+    "gpio_test": true,
+    "received": "0x55aa55aa",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x0000f0f0",
+     "0xb01b001c": "0x00ff0f00",
+     "0xb01b0020": "0x00005070",
+     "0xb01b0064": "0x00010000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "init-mixed-low",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "init-mixed-low",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x0000f0f0",
+      "GPIO_CINEN": "0x00ff0f00",
+      "GPIO_CDAT": "0x12345678",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00030000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "const",
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "received_word": "0x00000000",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x0000f0f0",
+     "GPIO_CINEN": "0x00ff0f00",
+     "GPIO_CDAT": "0x12345678",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00030000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x0000f0f0",
+     "GPIO_CINEN": "0x00ff0f00",
+     "GPIO_CDAT": "0x00005070",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00010000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {
+     "GPIO_CDAT": {
+      "initial": "0x12345678",
+      "final": "0x00005070",
+      "changed_bits": "0x12340608"
+     },
+     "PAD_PULLCTL1": {
+      "initial": "0x00030000",
+      "final": "0x00010000",
+      "changed_bits": "0x00020000"
+     }
+    },
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "9c4dcf0740c15c8bf20093783d90703e80d6a1a68a899f0881011f2b6bb5d37b"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x00000000",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x0000f0f0",
+     "0xb01b001c": "0x00ff0f00",
+     "0xb01b0020": "0x00005070",
+     "0xb01b0064": "0x00010000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "init-unrelated-bits-low",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "init-unrelated-bits-low",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x80000001",
+      "GPIO_CINEN": "0x00010000",
+      "GPIO_CDAT": "0x80000001",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00020000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "const",
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "received_word": "0x00000000",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x80000001",
+     "GPIO_CINEN": "0x00010000",
+     "GPIO_CDAT": "0x80000001",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00020000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x80000001",
+     "GPIO_CINEN": "0x00010000",
+     "GPIO_CDAT": "0x80000001",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {
+     "PAD_PULLCTL1": {
+      "initial": "0x00020000",
+      "final": "0x00000000",
+      "changed_bits": "0x00020000"
+     }
+    },
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "f7f69fd8fcfb09c5364e55e3ba280e4937361660c7b84adcf80f5a52967be016"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x00000000",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x80000001",
+     "0xb01b001c": "0x00010000",
+     "0xb01b0020": "0x80000001",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "init-unrelated-bits-undriven-high",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "init-unrelated-bits-undriven-high",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 1,
+     "idle_level": 1,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x80000001",
+      "GPIO_CINEN": "0x00010000",
+      "GPIO_CDAT": "0x80000001",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00020000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "const",
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "received_word": "0x00000000",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x80000001",
+     "GPIO_CINEN": "0x00010000",
+     "GPIO_CDAT": "0x80000001",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00020000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x80000001",
+     "GPIO_CINEN": "0x00010000",
+     "GPIO_CDAT": "0xfffff3ff",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {
+     "GPIO_CDAT": {
+      "initial": "0x80000001",
+      "final": "0xfffff3ff",
+      "changed_bits": "0x7ffff3fe"
+     },
+     "PAD_PULLCTL1": {
+      "initial": "0x00020000",
+      "final": "0x00000000",
+      "changed_bits": "0x00020000"
+     }
+    },
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "a49311eef78577c40767902a769f2918c1a4aa263631e8b069e22d90cfac82f7"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x00000000",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x80000001",
+     "0xb01b001c": "0x00010000",
+     "0xb01b0020": "0xfffff3ff",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "init-pull-bit17-set",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "init-pull-bit17-set",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00020000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "const",
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "received_word": "0x00000000",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00020000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {
+     "PAD_PULLCTL1": {
+      "initial": "0x00020000",
+      "final": "0x00000000",
+      "changed_bits": "0x00020000"
+     }
+    },
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "2c70519f33763ae13725683a89d01c53ca817768929ea2b55a89c465136b01c6"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x00000000",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "init-pull-bit17-clear",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "init-pull-bit17-clear",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000000",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0xfffdffff",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "const",
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "received_word": "0x00000000",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0xfffdffff",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0xfffdffff",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {},
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "d6c8e677d83f1b64287f6f0abf89747485b4e0b93744f941c51aad45edd41f35"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x00000000",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0xfffdffff"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "init-c11-latch-set",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "init-c11-latch-set",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000800",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "const",
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "received_word": "0x00000000",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000800",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {
+     "GPIO_CDAT": {
+      "initial": "0x00000800",
+      "final": "0x00000000",
+      "changed_bits": "0x00000800"
+     }
+    },
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "2c70519f33763ae13725683a89d01c53ca817768929ea2b55a89c465136b01c6"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x00000000",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "init-c11-latch-clear",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "init-c11-latch-clear",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000000",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0xfffff7ff",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "const",
+       0
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "normal return",
+    "stopped_in": null,
+    "instructions": 449953,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "received_word": "0x00000000",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0xfffff7ff",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000000",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {
+     "GPIO_CDAT": {
+      "initial": "0xfffff7ff",
+      "final": "0x00000000",
+      "changed_bits": "0xfffff7ff"
+     }
+    },
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "2c70519f33763ae13725683a89d01c53ca817768929ea2b55a89c465136b01c6"
+   },
+   "reference": {
+    "decision": "return (loopback mismatch)",
+    "gpio_test": true,
+    "received": "0x00000000",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000000",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  },
+  {
+   "name": "init-c10-was-output",
+   "inputs": {
+    "boot_code": "0x00000002",
+    "arg": "0x00000001",
+    "pmic_status": "0x0000",
+    "pmic_read_fails": false,
+    "gpio_model": {
+     "label": "init-c10-was-output",
+     "strict": true,
+     "read_semantics": "mixed",
+     "undriven": 0,
+     "idle_level": 0,
+     "window_gap_us": 500,
+     "initial": {
+      "GPIO_COUTEN": "0x00000400",
+      "GPIO_CINEN": "0x00000000",
+      "GPIO_CDAT": "0x00000400",
+      "PAD_PULLCTL0": "0x00000000",
+      "PAD_PULLCTL1": "0x00000000",
+      "PAD_PULLCTL2": "0x00000000"
+     },
+     "inputs": {
+      "GPIOC10": [
+       "follow",
+       75
+      ]
+     }
+    }
+   },
+   "firmware": {
+    "outcome": "ADFU boundary (0xb40691a4 reached)",
+    "stopped_in": null,
+    "instructions": 449958,
+    "driven_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "sampled_bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "received_word": "0x55aa55aa",
+    "compared_with": "0x55aa55aa",
+    "delay_calls": 32,
+    "delay_us_requested": 32000,
+    "pmic": [
+     {
+      "op": "r",
+      "reg": "0x35",
+      "value": "0x0000"
+     }
+    ],
+    "gpio_write_count": 71,
+    "initial": {
+     "GPIO_COUTEN": "0x00000400",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000400",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "final": {
+     "GPIO_COUTEN": "0x00000400",
+     "GPIO_CINEN": "0x00000000",
+     "GPIO_CDAT": "0x00000000",
+     "PAD_PULLCTL0": "0x00000000",
+     "PAD_PULLCTL1": "0x00000000",
+     "PAD_PULLCTL2": "0x00000000"
+    },
+    "changed": {
+     "GPIO_CDAT": {
+      "initial": "0x00000400",
+      "final": "0x00000000",
+      "changed_bits": "0x00000400"
+     }
+    },
+    "unexpected_gpio_accesses": [],
+    "other_mmio": [],
+    "printed": [
+     "pmu_status = 0x0",
+     "Prepare to entry ADFU mode"
+    ],
+    "model_clock_us": 32032,
+    "gpio_writes_sha256": "51697595da77f165ac1b901321e045af8b5ce58a63dd1e6a4ef46001530ae819"
+   },
+   "reference": {
+    "decision": "adfu (loopback matched)",
+    "gpio_test": true,
+    "received": "0x55aa55aa",
+    "delays_ms": 32,
+    "final": {
+     "0xb01b0018": "0x00000400",
+     "0xb01b001c": "0x00000000",
+     "0xb01b0020": "0x00000000",
+     "0xb01b0064": "0x00000000"
+    },
+    "pmic_writes": []
+   },
+   "comparison": {
+    "agree": true,
+    "checks": {
+     "decision": true,
+     "gpio_test_ran": true,
+     "pmic_writes": true,
+     "delays": true,
+     "driven_bits": true,
+     "sampled_bits": true,
+     "received_word": true,
+     "gpio_write_sequence": true,
+     "final_registers": true,
+     "printed": true
+    }
+   }
+  }
+ ],
+ "scenario_summary": {
+  "total": 41,
+  "agree": 41,
+  "adfu": [
+   "pmic-0x0002-bit1",
+   "pmic-0x0003-bits01",
+   "pmic-0xff06-bit1-plus-high",
+   "pmic-read-failure",
+   "pmic-bit1-code0",
+   "pmic-bit1-arg0",
+   "guard-arg-0x80000000",
+   "guard-code1",
+   "guard-code4",
+   "guard-code5",
+   "guard-code-0x80000000",
+   "input-loopback",
+   "init-ones-loopback",
+   "init-mixed-loopback",
+   "init-c10-was-output"
+  ],
+  "errors": []
+ },
+ "other_releases_spot_check": {
+  "stock-221203": {
+   "loopback": "ADFU boundary (0xb40691a4 reached)",
+   "low": "normal return",
+   "agree": true
+  },
+  "stock-221223": {
+   "loopback": "ADFU boundary (0xb40691a4 reached)",
+   "low": "normal return",
+   "agree": true
+  },
+  "stock-230309": {
+   "loopback": "ADFU boundary (0xb40691a4 reached)",
+   "low": "normal return",
+   "agree": true
+  },
+  "stock-20231014": {
+   "loopback": "ADFU boundary (0xb40691a4 reached)",
+   "low": "normal return",
+   "agree": true
+  }
+ },
+ "stalled_timer": {
+  "name": "timer-stalled (T0 count never advances)",
+  "outcome": "instruction budget exhausted (emulator bound, not a firmware timeout)",
+  "stopped_in": "timer_count",
+  "instruction_limit": 200000,
+  "delay_calls_entered": 1,
+  "gpio_writes": 7,
+  "note": "delay_us 0xb40693f8 polls with no iteration bound; the firmware implements no timeout. The run ends only because the emulator stops at its instruction budget."
+ },
+ "full_path": [
+  {
+   "name": "main code2 C10 low",
+   "boot_code": 2,
+   "stopped": "DRAM init entry 0xb40690b8 (boundary)",
+   "error": null,
+   "reached_dram_init": true,
+   "gpio_accesses": 187,
+   "gpio_access_functions": [
+    "adfu_check",
+    "board_mfp_init",
+    "i2c_select",
+    "pmu_clkout_select",
+    "pmu_detect"
+   ],
+   "final_gpio": {
+    "GPIO_COUTEN": "0x00000000",
+    "GPIO_CINEN": "0x00000000",
+    "GPIO_CDAT": "0x00000000",
+    "PAD_PULLCTL0": "0x00000000",
+    "PAD_PULLCTL1": "0x00000000",
+    "PAD_PULLCTL2": "0x00000600"
+   },
+   "passthrough_addresses": [
+    "0xb01b0048",
+    "0xb01b004c",
+    "0xb01b0084",
+    "0xb01b0090",
+    "0xb01b0094"
+   ],
+   "unexpected": [],
+   "delays_us": 32301
+  },
+  {
+   "name": "main code2 ideal loopback",
+   "boot_code": 2,
+   "stopped": "ROM re-entry 0xb40691a4 (ADFU)",
+   "error": null,
+   "reached_dram_init": false,
+   "gpio_accesses": 187,
+   "gpio_access_functions": [
+    "adfu_check",
+    "board_mfp_init",
+    "i2c_select",
+    "pmu_clkout_select",
+    "pmu_detect"
+   ],
+   "final_gpio": {
+    "GPIO_COUTEN": "0x00000000",
+    "GPIO_CINEN": "0x00000000",
+    "GPIO_CDAT": "0x00000000",
+    "PAD_PULLCTL0": "0x00000000",
+    "PAD_PULLCTL1": "0x00000000",
+    "PAD_PULLCTL2": "0x00000600"
+   },
+   "passthrough_addresses": [
+    "0xb01b0048",
+    "0xb01b004c",
+    "0xb01b0084",
+    "0xb01b0090",
+    "0xb01b0094"
+   ],
+   "unexpected": [],
+   "delays_us": 32301
+  },
+  {
+   "name": "main code0 ideal loopback",
+   "boot_code": 0,
+   "stopped": "DRAM init entry 0xb40690b8 (boundary)",
+   "error": null,
+   "reached_dram_init": true,
+   "gpio_accesses": 13,
+   "gpio_access_functions": [
+    "board_mfp_init",
+    "i2c_select",
+    "pmu_clkout_select",
+    "pmu_detect"
+   ],
+   "final_gpio": {
+    "GPIO_COUTEN": "0x00000000",
+    "GPIO_CINEN": "0x00000000",
+    "GPIO_CDAT": "0x00000000",
+    "PAD_PULLCTL0": "0x00000000",
+    "PAD_PULLCTL1": "0x00000000",
+    "PAD_PULLCTL2": "0x00000600"
+   },
+   "passthrough_addresses": [
+    "0xb01b0048",
+    "0xb01b004c",
+    "0xb01b0084",
+    "0xb01b0090",
+    "0xb01b0094"
+   ],
+   "unexpected": [],
+   "delays_us": 301
+  }
+ ],
+ "dram_stage": {
+  "code0": {
+   "stopped": null,
+   "return_value": "0x0",
+   "afi_boot_dev": 32,
+   "reached_dram_routine": true,
+   "mmio_writes": 165,
+   "gpio_block_writes": 2,
+   "gpio_block_writes_outside_test": [
+    {
+     "index": 8,
+     "address": "0xb01b0048",
+     "value": "0x619c0"
+    },
+    {
+     "index": 160,
+     "address": "0xb01b00b4",
+     "value": "0x3ff"
+    }
+   ],
+   "writes_after_test_to_test_registers": [],
+   "final_gpio": {
+    "GPIO_COUTEN": "0x00000000",
+    "GPIO_CINEN": "0x00000000",
+    "GPIO_CDAT": "0x00000000",
+    "PAD_PULLCTL0": "0x00000000",
+    "PAD_PULLCTL1": "0x00000000",
+    "PAD_PULLCTL2": "0x00000000"
+   },
+   "passthrough_addresses": [
+    "0xb01b0048",
+    "0xb01b00b4"
+   ],
+   "unexpected": [],
+   "model_clock_us": 1400
+  },
+  "code2-low": {
+   "stopped": null,
+   "return_value": "0x0",
+   "afi_boot_dev": 34,
+   "reached_dram_routine": true,
+   "mmio_writes": 236,
+   "gpio_block_writes": 73,
+   "gpio_block_writes_outside_test": [
+    {
+     "index": 8,
+     "address": "0xb01b0048",
+     "value": "0x619c0"
+    },
+    {
+     "index": 231,
+     "address": "0xb01b00b4",
+     "value": "0x3ff"
+    }
+   ],
+   "writes_after_test_to_test_registers": [],
+   "final_gpio": {
+    "GPIO_COUTEN": "0x00000000",
+    "GPIO_CINEN": "0x00000000",
+    "GPIO_CDAT": "0x00000000",
+    "PAD_PULLCTL0": "0x00000000",
+    "PAD_PULLCTL1": "0x00000000",
+    "PAD_PULLCTL2": "0x00000000"
+   },
+   "passthrough_addresses": [
+    "0xb01b0048",
+    "0xb01b00b4"
+   ],
+   "unexpected": [],
+   "model_clock_us": 33400
+  },
+  "code2-loopback": {
+   "stopped": "ROM re-entry 0xb40691a4 (ADFU)",
+   "return_value": null,
+   "afi_boot_dev": null,
+   "reached_dram_routine": false,
+   "mmio_writes": 80,
+   "gpio_block_writes": 72,
+   "gpio_block_writes_outside_test": [
+    {
+     "index": 8,
+     "address": "0xb01b0048",
+     "value": "0x619c0"
+    }
+   ],
+   "writes_after_test_to_test_registers": [],
+   "final_gpio": {
+    "GPIO_COUTEN": "0x00000000",
+    "GPIO_CINEN": "0x00000000",
+    "GPIO_CDAT": "0x00000000",
+    "PAD_PULLCTL0": "0x00000000",
+    "PAD_PULLCTL1": "0x00000000",
+    "PAD_PULLCTL2": "0x00000000"
+   },
+   "passthrough_addresses": [
+    "0xb01b0048"
+   ],
+   "unexpected": [],
+   "model_clock_us": 32000
+  },
+  "code0_vs_code2_low_non_gpio_writes_identical": true,
+  "note": "dram_complete.run_caller(..., boot_code=b, gpio=GpioModel(...)); scenario \"reference\"; every PUBL/uPCTL/PMIC response synthetic. Other DRAM scenarios not re-run (out of scope)."
+ },
+ "reentry": {
+  "stopped": "jump to 0xb4060000 (SRAM now holds the ROM copy; not emulated)",
+  "error": null,
+  "sp_at_jump": "0xb4070800",
+  "events": [
+   "read 0xb01600a4 = 0x00000000",
+   "write 0xb01600a4 = 0x08000000",
+   "write 0xb0168008 = 0x00000000",
+   "write 0xb016800c = 0x00000000",
+   "write 0xb0168008 = 0x00000000",
+   "write 0xb016800c = 0x00000000",
+   "write 0xb0168008 = 0x00000004",
+   "ROM copy requested: 0x2e00 bytes 0xffff5200 -> 0xb4060000 (not performed)",
+   "write 0xb0160000 = 0x0000030a",
+   "write 0xb0160004 = 0x00000114",
+   "read 0xb0160004 = 0x00000114",
+   "write 0xb0160004 = 0x00001114",
+   "read 0xb016001c = 0x00000000",
+   "write 0xb016001c = 0x00000000"
+  ],
+  "delays": [
+   5000,
+   5000,
+   5
+  ],
+  "rom_copies": [
+   {
+    "dest": "0xb4060000",
+    "source": "0xffff5200",
+    "length": "0x00002e00"
+   }
+  ],
+  "reached_dram_init": false,
+  "sequence": [
+   "0xb40691ac timer_init(0) again",
+   "0xb40691bc memcpy(0xb4060000, ROM 0xffff5200, 0x2e00): overwrites block 0, the AFI 0xb4060300 and SRAM up to 0xb4062e00 (part of the ini copy)",
+   "0xb40691c4 delay_ms(5)",
+   "0xb40691d0 CMU 0xb0160000 := 0x30a",
+   "0xb40691dc CMU 0xb0160004 := 0x114",
+   "0xb40691e4 delay_ms(5)",
+   "0xb40691f8 0xb0160004 |= 0x1000",
+   "0xb406920c 0xb016001c &= ~0xf0000",
+   "0xb4069214 delay_us(5)",
+   "0xb406921c VBAR := 0xffff0000",
+   "0xb4069224 SP := 0xb4070800",
+   "0xb406922c blx 0xb4060000 (r3 = 0xb4070800 - 0x10800)"
+  ],
+  "note": "If the ROM code ever returned, 0xb4069230 would pop {r3, pc} from the new stack at 0xb4070800 (loader globals), not the caller's frame, so a return is not a defined path. DRAM init is not reached from here."
+ },
+ "persistent_state": {
+  "method": "firmware execution (scenarios init-*) cross-checked with the reference model",
+  "registers": [
+   {
+    "register": "GPIO_COUTEN 0xb01b0018",
+    "temporary": "bit 10 cleared, bit 11 set",
+    "restore": "write of the value read at 0xb40692d8, before any change",
+    "final": "= initial, every bit, every initial value tested",
+    "conditional": false
+   },
+   {
+    "register": "GPIO_CINEN 0xb01b001c",
+    "temporary": "bit 10 set, bit 11 cleared",
+    "restore": "write of the value read at 0xb40692cc",
+    "final": "= initial",
+    "conditional": false
+   },
+   {
+    "register": "PAD_PULLCTL1 0xb01b0064",
+    "temporary": "-",
+    "restore": "none",
+    "final": "initial & ~(1 << 17); other bits as read back",
+    "conditional": "changes only if bit 17 was set"
+   },
+   {
+    "register": "GPIO_CDAT 0xb01b0020",
+    "temporary": "64 writes: per iteration bit 11 cleared, then set to the pattern bit; every write is a whole-word read-modify-write",
+    "restore": "none",
+    "final": "bit 11 = last pattern bit = 0. Under \"latch\" read semantics every other bit is unchanged. Under \"mixed\" read semantics the latch bit of every non-output pin is rewritten with the level read: bit 10 = the C10 level at the second read of the last iteration (just after bit 11 was cleared), other input pins = their input level, pins with neither enable = the undriven value (scenarios init-mixed-*, init-unrelated-bits-undriven-high)",
+    "conditional": "bit 11 changes only if it was 1; the rest depends on the unknown read semantics and on the initial direction registers"
+   }
+  ],
+  "pmic": "Normal return writes no PMIC register; the PMIC path writes 0x35 := status & ~3 and does not return.",
+  "mux": "The test does not write any MFP register."
+ },
+ "downstream": {
+  "static": {
+   "reachable from main (pre- and post-DRAM)": {
+    "functions": 137,
+    "watched_accesses_outside_adfu_check": [
+     {
+      "site": "0xb40698ec",
+      "function": "pmu_detect",
+      "access": "rmw",
+      "register": "GPIO_CINEN"
+     },
+     {
+      "site": "0xb40698ec",
+      "function": "pmu_detect",
+      "access": "rmw",
+      "register": "GPIO_COUTEN"
+     },
+     {
+      "site": "0xb40698ec",
+      "function": "pmu_detect",
+      "access": "rmw",
+      "register": "GPIO_CDAT"
+     },
+     {
+      "site": "0xb4069900",
+      "function": "pmu_detect",
+      "access": "rmw",
+      "register": "GPIO_CINEN"
+     },
+     {
+      "site": "0xb4069900",
+      "function": "pmu_detect",
+      "access": "rmw",
+      "register": "GPIO_COUTEN"
+     },
+     {
+      "site": "0xb4069900",
+      "function": "pmu_detect",
+      "access": "rmw",
+      "register": "GPIO_CDAT"
+     },
+     {
+      "site": "0xb406a804",
+      "function": "i2c_select",
+      "access": "read",
+      "register": "MFP_CTL2"
+     }
+    ],
+    "unresolved_accesses": 332
+   },
+   "DRAM routine subtree from 0xb40690b8": {
+    "functions": 23,
+    "watched_accesses_outside_adfu_check": [],
+    "unresolved_accesses": 122
+   }
+  },
+  "later_stage_literals": {
+   "app.bin (loader 0x19000.., runs at 0x1000)": {
+    "MFP_CTL2": {
+     "count": 17,
+     "first": [
+      "0x00009218",
+      "0x000095b4",
+      "0x000098b0",
+      "0x0000aff0"
+     ]
+    },
+    "PAD_PULLCTL1": {
+     "count": 2,
+     "first": [
+      "0x000095b8",
+      "0x000098c8"
+     ]
+    }
+   },
+   "U-Boot payload (0x05000000)": {
+    "MFP_CTL2": {
+     "count": 13,
+     "first": [
+      "0x0508fb2c",
+      "0x0508fb5c",
+      "0x0508fb8c",
+      "0x0508fc58"
+     ]
+    }
+   },
+   "app.bin 0x9430": "decoded: PAD_PULLCTL1 = (v & ~0x3f000) | 0x3e000 (sets bits 13-17, clears 12: by the vendor table the pull bits of SD0 CMD, D3..D0 set and SD0_CLK cleared); no direct caller found, so whether it runs on the shipped (SFVD present) path is not established",
+   "note": "Literal words are data, not proof of use; only app.bin 0x9430 was decoded."
+  },
+  "linux_dt": "All five shipped DTBs give mmc@b0230000 (SD0, TF2) a default pin state that muxes mfp2_19_17/16_14/13_11/8_7/6_5 to sd0 and sets pull <2> on P_SD0_D0..D3/CMD, so when the SD0 host binds, Linux reprograms the pads the test changed (value semantics of <2> in the vendor driver not pinned).",
+  "classification": {
+   "demonstrated": [
+    "None in the loader: after adfu_check returns, no executed access (main path to 0xb40690b8, and the PR #6 DRAM caller through DRAM init, reference scenario) reads or writes the GPIO/pad window."
+   ],
+   "no_dependency_found": [
+    "Constant-address scan of all code reachable from main and of the DRAM routine subtree: no access to PAD_PULLCTL1, GPIO_C* or MFP_CTL2 outside adfu_check/board_mfp_init (unresolved computed accesses counted, not resolved)."
+   ],
+   "possible": [
+    "app.bin 0x9430 rewrites SD0 pulls including bit 17 (caller not found).",
+    "U-Boot initialises SD0 as mmc 0 on the code-2 path (BOOT-023) and carries MFP_CTL2 literals; whether it rewrites PULLCTL1 is not traced.",
+    "Linux mmc0_default pin state reprograms SD0 mux and pulls.",
+    "A floating, un-pulled DAT0 on an empty TF2 slot until reconfigured (electrical, unknown)."
+   ],
+   "unknown": [
+    "Physical effect of the changed pull and latch on the TF2 slot or a card in it.",
+    "Whether the pads were in GPIO, JTAG or SD0 function electrically during the test."
+   ]
+  }
+ },
+ "unknowns": [
+  "GPIO_CDAT read semantics (latch vs pad level) on ATM7039S.",
+  "Whether GPIO output/input enables take effect while MFP_CTL2 selects JTAG (D0) or the ROM-left function (D1).",
+  "Electrical meaning of PAD_PULLCTL1 bit 17 on silicon (vendor data says pull-up enable).",
+  "PCB wiring of the TF2 slot DAT0/DAT1 (only DT/pinctrl naming was seen; no schematic).",
+  "Meaning of PMIC register 0x35 and its bit 1 on the fitted PMIC.",
+  "Real duration of the 32 delays (timer clock not measured; I2C/printf and MMIO latency add to it).",
+  "What the ROM code at 0xffff5200 (copied to SRAM) does - unavailable."
+ ]
+}

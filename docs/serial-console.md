@@ -41,6 +41,21 @@ This points to a vendor debug pattern where UART signals share pins with a card 
 
 The early loader's own configuration settles the AFI `uart_index` statically. Every examined loader carries `uart_index=3`, `uart_pad=0` and `115200` in `bootloader.ini` (+0x0e/+0x0f/+0x10): stock 221203, 221223, 230309, 20231014 and Koriki v1.0 (byte-identical to 230309). Loader routine `0xb4065ff8` copies them into the parameter block from which the AFI is written. Both the stock and Koriki DTBs enable UART3 (`0xb0126000`), so the expected kernel console is **`ttyS3`**. Stock `default.prop` sets `ro.debuggable=1`, which starts a root `console` shell service (USB-002). P-CONSOLE is left as pre-registered; `/proc/cmdline` from the V3 capture still decides it. See the [stock dossier](../reports/anbernic-stock-reverse-engineering.md).
 
+## Loader UART initialization (PR #9, UART-004)
+
+The early loader sets UART3 up itself, before DRAM init, for both boot codes:
+
+* clock gate `0xb01600a4` bit 19;
+* reset pulse `0xb01600ac` bit 15;
+* `0xb0126000` := `0x8003`;
+* divider `0xb01600b0` := 25, which is 24 MHz/(8·26) ≈ 115385 baud if the clock is 24 MHz.
+
+Its table entry for UART3/pad 0 contains **no pin-mux write**, so the loader does not choose the UART3 pins. They come from Boot ROM or reset state (or from the later board MFP write), and which balls carry them remains unknown. TX polling is unbounded. Everything the loader prints before DRAM is listed in `evidence/firmware/sd2-predram.json` (`runs.code2.printed`): `row_col 72`, `ddr_cap 256`, `bootdev= 0x22`, `scan 1`, `g_current_bus = 1`, `--pmu- ok`, the PMIC reg 0x11 echo, `PMU_CTL3 …`, `pmu_status = 0x0`. These are emulation outputs, not observed console text. Nothing here proposes a connection.
+
+## The TF2 DAT0/DAT1 pair and the loader (PR #9, GPIO-003)
+
+The pads the vendor DT can switch to UART5 (`mfp2_19_17`/`mfp2_16_14`, SD0 D0/D1) are the same pads the loader's code-2 ADFU loopback test uses as GPIO C10/C11. Just before that test, `board_mfp_init` sets the D0 mux field to the vendor's JTAG value. So on an SD2 boot the loader does not route UART5 there. A device on these TF2 contacts would also be driven or sampled by the 32 ms loopback. This is offline evidence only. It proposes no connection.
+
 ## Update from the boot-chain reconstruction (PR #5)
 
 Emulating the whole pre-kernel chain on all four stock images and Koriki v1.0 gives AFI `uart_index` 3 and the final command line `console=ttyS3 …` (UART3, enabled in the DTB: prediction P-CONSOLE's `ttys3` outcome). U-Boot's autoboot uses `bootdelay=0` with the default abort key `s500`: typing it on U-Boot's serial console during the single poll before `run bootcmd` would stop autoboot. That note is for planning only and authorises nothing ([report](../reports/stock-boot-chain-reconstruction.md)).

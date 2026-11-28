@@ -222,13 +222,13 @@
   },
   {
     "id": "C-RESUME-DRAMRST",
-    "issue": "The resume init issues PIR 0x3f, whose bit 5 is DRAMRST (RESET# pulse) in the related RK3288 PUBL layout, while every other feature of mode 1 (no DRAMINIT, PREA/REF bursts, no probe or memory test, a jump to a kernel resume vector, reads of kernel-left data at DRAM 0x400) presumes DRAM contents survive self-refresh. A DDR3 RESET# pulse would void that. Mode 1 also shortens tDINIT2 to about 100 ns and sends 0x3f for LPDDR types, which have no RESET#.",
+    "issue": "The resume init issues PIR 0x3f, whose bit 5 is DRAMRST (RESET# pulse) in the related RK3288 PUBL layout, while every other feature of mode 1 (no DRAMINIT, PREA/REF bursts, no probe or memory test, a jump to a kernel resume vector, reads of kernel-left data at DRAM 0x400) presumes DRAM contents survive self-refresh. A DDR3 RESET# pulse would remove the assumption of valid retained contents. Mode 1 also shortens tDINIT2 to about 100 ns and sends 0x3f for LPDDR types, which have no RESET#.",
     "findings": [
       "MEM-008",
       "DDR-006"
     ],
-    "status": "Open. Not decidable offline without the PUBL v1 databook or a public driver for this PUBL revision with a resume path.",
-    "next_validation": "Offline: a PUBL v1 databook or a vendor (e.g. older Rockchip RK30/RK3188) DDR driver with a self-refresh resume sequence. Hardware: a suspend/resume cycle with a read-only UART log (separate approval required)."
+    "status": "Open. Both boot codes execute the same mode-1 PIR 0x3f writes and resume flow in emulation. RK3288 cold boot requests DRAMRST and DRAMINIT together. Microchip SAMA7D6 documents that its matching bit-5 reset can run independently of bit 6. Neither relates the behavior to a verified ATM7039S PHY revision. Register traces do not observe RESET# or data retention.",
+    "next_validation": "Find revision-specific ATM7039S PUBL documentation, direct vendor resume source or independent evidence of the PHY revision and pad reset behavior."
   },
   {
     "id": "C-BOOTSLOT",
@@ -240,9 +240,10 @@
       "MMC-001",
       "STOR-001",
       "STOR-002",
-      "STOR-003"
+      "STOR-003",
+      "BOOT-029"
     ],
-    "status": "Resolved offline for Koriki v1.0 (PR #8), building on OBS-001: the TF1 boot card is on SD2. The executed chain block-0 code 2 -> AFI 0x22 -> emmcboot (devpart 1:1) -> U-Boot mmc 1 = SD2 0xb0238000 -> boot_dev=sd2 is the only one of six emulated hypotheses that reproduces the observed command line (BOOT-022). U-Boot numbering is registration order and does not shift when SD0 is empty (BOOT-023); Linux numbering is chosen independently from boot_dev (STOR-003). BOOT-016 described the AFI 0x20 path, which this unit did not take. ROM behaviour, the CMU bit and the AFI bytes remain inferred, not observed.",
+    "status": "Resolved offline for Koriki v1.0 (PR #8), building on OBS-001: the TF1 boot card is on SD2. The executed chain block-0 code 2 -> AFI 0x22 -> emmcboot (devpart 1:1) -> U-Boot mmc 1 = SD2 0xb0238000 -> boot_dev=sd2 is the only one of six emulated hypotheses that reproduces the observed command line (BOOT-022). U-Boot numbering is registration order and does not shift when SD0 is empty (BOOT-023); Linux numbering is chosen independently from boot_dev (STOR-003). BOOT-016 described the AFI 0x20 path, which this unit did not take. ROM behaviour, the CMU bit and the AFI bytes remain inferred, not observed. The unified reference additionally uses the active emmcboot script and registered SD2 backing image for its FAT reads (BOOT-029).",
     "next_validation": "Optional confirmation, not needed to use the result: an early serial log would show \"bootdev= 0x22\", \"emmc boot\" and U-Boot's mmc messages; /proc/bootdev (read-only) would show the kernel's g_boot_dev. A capture with a second card in TF2 would show sd_card on b0230000.",
     "observations": [
       "OBS-001"
@@ -250,16 +251,38 @@
   },
   {
     "id": "C-PREDRAM-PATH",
-    "issue": "The DRAM and loader reconstruction (PR #4-#6) modelled the code-0 (SD0) path. On the observed code-2 path the pre-DRAM routine 0xb4069254 also performs the GPIO 0x55aa55aa ADFU handshake that is skipped for code 0 (BOOT-021), and app.bin/bootloader.bin branches keyed on the boot code were exercised only for code 0 in the committed DRAM evidence.",
+    "issue": "The DRAM reconstruction in PR #4–#6 primarily exercised code 0 (SD0). The code-2 (SD2) hypothesis from OBS-001 adds the GPIO 0x55aa55aa recovery handshake in 0xb4069254. Does it change DRAM caller behavior, and can the comparison be transferred to board and Boot ROM state across boot media?",
     "findings": [
       "BOOT-021",
       "BOOT-022",
-      "MEM-010"
+      "BOOT-024",
+      "BOOT-025",
+      "BOOT-026",
+      "BOOT-027",
+      "GPIO-003",
+      "GPIO-004",
+      "MEM-010",
+      "PMIC-002",
+      "BOOT-028",
+      "MEM-012",
+      "BOOT-029"
     ],
-    "status": "Open. The storage reads and AFI are identical for codes 0 and 2 (boot_chain.py boot-path), but the DRAM-stage emulation (dram_complete.py) has not been re-run with boot code 2, so code-dependent DRAM-stage behaviour is not yet reconstructed for the path the device actually takes.",
-    "next_validation": "Offline: re-run the DRAM-stage scenarios with boot code 2 and diff the MMIO sequences against code 0.",
+    "status": "Open, with the caller-level comparison completed. The five pinned releases independently reproduce the same DRAM caller behavior for both boot codes under the tested synthetic states, after the verified ADFU GPIO accesses, boot-word reads and AFI device byte are accounted for (BOOT-028). No DRAM scenario consumed the persistent GPIO values in the executed firmware. An exact synthetic echo sends code 2 to ADFU before DRAM. Boot ROM state per medium, TF2 pad wiring and semantics, physical training and electrical coupling remain open. The unified framework carries live pre-DRAM state through the loader and app.bin, adding coverage under the modeled assumptions (BOOT-029).",
+    "next_validation": "The remaining questions require applicable SoC, board or Boot ROM evidence and observations of the physical early boot state. No additional hardware observation is authorized by the SD2 DRAM study.",
     "observations": [
       "OBS-001"
     ]
+  },
+  {
+    "id": "C-PREDRAM-LABELS",
+    "issue": "boot_chain.LOADER_STUBS labels 0xb4069440 \"early PMIC/clock setup (MMIO)\", 0xb4069254 \"PMIC status read (I2C)\" and 0xb406a608 \"board init helper\"; PR #6 and the instructions show 0xb4069440 is timer 0 init (CLK-007), 0xb4069254 the ADFU check with the code-dependent GPIO loopback (BOOT-025) and 0xb406a608 a single MFP read-modify-write (GPIO-002).",
+    "findings": [
+      "CLK-007",
+      "BOOT-025",
+      "GPIO-002",
+      "BOOT-021"
+    ],
+    "status": "Resolved by instruction reading and execution (PR #9). The labels are stub descriptions recorded in committed stock-boot-chain.json evidence and are left unchanged as history; the stubs mean those routines never execute in boot_chain.loader_main, which is why its boot-path runs cannot show code-dependent pre-DRAM behaviour.",
+    "next_validation": "None needed offline."
   }
 ]

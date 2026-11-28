@@ -1,0 +1,133 @@
+[
+  {
+    "id": "arm-linux-boot-protocol",
+    "source": "linux",
+    "revision": "adc218676eef25575469234709c2d87185ca223a",
+    "path": "Documentation/arch/arm/booting.rst",
+    "git_blob_sha1": "5974e37b3d2029eab0eb92a45818cf5f976e0690",
+    "line_ranges": [
+      [
+        77,
+        81
+      ],
+      [
+        130,
+        142
+      ],
+      [
+        186,
+        234
+      ]
+    ],
+    "license": "Linux kernel documentation; no file-specific SPDX in the inspected file",
+    "scope": "ARM Linux software interface; target kernel policy must be verified separately"
+  },
+  {
+    "id": "atc2603c-register-layout",
+    "source": "linux",
+    "revision": "adc218676eef25575469234709c2d87185ca223a",
+    "path": "include/linux/mfd/atc260x/atc2603c.h",
+    "git_blob_sha1": "07ac640ef3e13858145e9582ec404031314c54cc",
+    "line_ranges": [
+      [
+        26,
+        48
+      ],
+      [
+        67,
+        83
+      ],
+      [
+        107,
+        124
+      ],
+      [
+        196,
+        199
+      ]
+    ],
+    "license": "GPL-2.0+",
+    "scope": "ATC2603C source layout; fitted RG35XX part, revision and pin semantics remain unverified"
+  },
+  {
+    "id": "atc2603c-regulator-driver",
+    "source": "linux",
+    "revision": "adc218676eef25575469234709c2d87185ca223a",
+    "path": "drivers/regulator/atc260x-regulator.c",
+    "git_blob_sha1": "3e9f8fd54fca8fe9059ccf37df86b0fd494e3f56",
+    "line_ranges": [
+      [
+        209,
+        224
+      ],
+      [
+        300,
+        312
+      ]
+    ],
+    "license": "GPL-2.0+",
+    "scope": "Upstream ATC2603C regulator model; does not identify board rails or electrical behavior"
+  },
+  {
+    "id": "uboot-afi-layout",
+    "source": "uboot",
+    "revision": "0a557e37a5274d40bcd357585d4bcd3b73619371",
+    "path": "arch/arm/include/asm/arch-owl/owl_afi.h",
+    "git_blob_sha1": "58aec05a83c030f1bd9538d1162fa79b5fa43b71",
+    "line_ranges": [
+      [
+        5,
+        15
+      ],
+      [
+        17,
+        18
+      ],
+      [
+        27,
+        30
+      ]
+    ],
+    "license": "GPL-2.0+ U-Boot tree; no file-specific SPDX in the inspected file",
+    "scope": "Pinned Actions U-Boot afinfo_t layout and boot-device codes; magic slot is four bytes, three compared"
+  },
+  {
+    "id": "uboot-afi-getters",
+    "source": "uboot",
+    "revision": "0a557e37a5274d40bcd357585d4bcd3b73619371",
+    "path": "board/actions/owl/owl_afi.c",
+    "git_blob_sha1": "cb2c9b792ac1cd7757272e748914bbe69512fb6d",
+    "line_ranges": [
+      [
+        9,
+        9
+      ],
+      [
+        12,
+        20
+      ],
+      [
+        22,
+        30
+      ],
+      [
+        33,
+        40
+      ],
+      [
+        42,
+        50
+      ],
+      [
+        52,
+        60
+      ],
+      [
+        62,
+        70
+      ]
+    ],
+    "license": "GPL-2.0+ U-Boot tree; no file-specific SPDX in the inspected file",
+    "scope": "Pinned Actions U-Boot getters at 0xB4060300 and their no-magic fallbacks"
+  }
+]
