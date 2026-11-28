@@ -1008,10 +1008,11 @@ def render_reference(contract):
         catalogue = catalogue or 'Firmware evidence'
         rows.append(f'| `{key}` | `{reg["address"]:#x}` | {reg["space"]} | {reg["width"]} | {catalogue} |')
     rows += ['', '## Dependencies', '',
-             '| From | To | Relationship | When | Justification |', '|---|---|---|---|---|']
+             '| From | To | Relationship | Order check | When | Justification |', '|---|---|---|---|---|---|']
     for row in contract['dependencies'].values():
         cond = ', '.join(f'{key}={json.dumps(values, separators=(",", ":"))}' for key, values in row['when'].items())
-        rows.append(f'| `{row["from"]}` | `{row["to"]}` | {row["relation"]} | {cond or "all paths"} | {row["why"]} |')
+        rows.append(f'| `{row["from"]}` | `{row["to"]}` | {row["relation"]} | {row["trace_order"] or "—"} | '
+                    f'{cond or "all paths"} | {row["why"]} |')
     return ('\n'.join(rows) + '\n').encode('utf-8')
 
 

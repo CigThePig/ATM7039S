@@ -134,18 +134,19 @@ A state check now has a `role`. An `execution` check needs a positive predicate 
 | A8 | UART divisor `floor(24 MHz/(8·baud)) − 1` | Audited helper subtracts only for a nonzero quotient; baud 0 returns −1 | Qualified |
 | A9 | Persistent training failure restores selectors | Instructions `0xb4069020..34`; firmware rows | Added to semantics and documentation |
 | A10 | Nonzero-bank capacities below 256 MiB | DCU_CFG `0xffffff2c` in firmware rows | Recorded as a limitation |
+| A11 | New validator: retry prediction truncated when the last attempt failed before training | Found on review; dedicated regression test | Fixed with an explicit attempt-count check |
 
 The targeted audit also re-derived the following without discrepancy: the timer setup sequence, the signed delay compare and the millisecond scaling, DDR clock rounding and the PLL word, the 468 MHz timing values and the resume tRFC of 75, the memory diagnostic word count, sample counts and stride, PMIC register values at the accessor, storage sector counts and destinations, AFI bytes, U-Boot memory fallback, ARM Linux register and cache state, and the initrd bounds.
 
 ## 11. Regression and mutation tests
 
-`tests/test_contract_semantics.py` (50 tests) covers selector, rank and fallback rules, input versus working selectors, the four capacity examples, exponent bounds, bank codes, no-alias probing, raw-selector substitution, generalization of the eight-bank formula, record offsets, widths, swaps and release references, AFI layout, byte order, magic length, capacity conversion, the Linux-requirement claim, failed-initialization admission and field-crossing stores, SRAM length, endpoints, reversal, extent, overlap and ownership, timing classes, static bindings, FDT coverage, and pinned sources. `tests/test_bootloader_contract.py` (51 tests) adds windows, RLE clipping, the invalid-INI and recovery timer cases, attempt mutations (second-attempt swap, missing reset, early training, retry without eligible failure, wrong configuration, excess attempts, mislabelled outcome, valid early failure) and the execution-evidence regressions. Each mutation test drives the layer that owns the protection on copied fixtures, so a trace-hash or generated-file mismatch cannot stand in for the semantic check.
+`tests/test_contract_semantics.py` (50 tests) covers selector, rank and fallback rules, input versus working selectors, the four capacity examples, exponent bounds, bank codes, no-alias probing, raw-selector substitution, generalization of the eight-bank formula, record offsets, widths, swaps and release references, AFI layout, byte order, magic length, capacity conversion, the Linux-requirement claim, failed-initialization admission and field-crossing stores, SRAM length, endpoints, reversal, extent, overlap and ownership, timing classes, static bindings, FDT coverage, and pinned sources. `tests/test_bootloader_contract.py` (52 tests) adds windows, RLE clipping, the invalid-INI and recovery timer cases, attempt mutations (second-attempt swap, missing reset, early training, retry without eligible failure, wrong configuration, excess attempts including before a programming failure, mislabelled outcome, valid early failure) and the execution-evidence regressions. Each mutation test drives the layer that owns the protection on copied fixtures, so a trace-hash or generated-file mismatch cannot stand in for the semantic check.
 
 | Run | Passed | Failed | Skipped |
 |---|---:|---:|---:|
-| Contract modules without firmware or sources | 98 | 0 | 3 (two firmware-backed, one pinned sources) |
-| Contract modules with `ATM_FIRMWARE_DIR` and `ATM_SOURCES_DIR` | 101 | 0 | 0 |
-| Full repository suite, then research validation and rendering | see §14 | | |
+| Contract modules without firmware or sources | 99 | 0 | 3 (two firmware-backed, one pinned sources) |
+| Contract modules with `ATM_FIRMWARE_DIR` and `ATM_SOURCES_DIR` | 102 | 0 | 0 |
+| Full repository suite, historical firmware suites, research validation and rendering | see §14 | | |
 
 ## 12. Historical compatibility
 
@@ -162,7 +163,15 @@ No historical tool, model or evidence file changed. `evidence/firmware/boot-init
 
 ## 14. Validation status
 
-See the [research handoff](pr9-research-progress.md#corrective-verification-of-the-initialization-contract) for the final ordinary, research and historical regression results recorded at commit time.
+| Check (2026-11-28, this container) | Passed | Failed | Skipped |
+|---|---:|---:|---:|
+| `python -m unittest discover -s tests` (no firmware or sources) | 582 | 0 | 32 optional |
+| `tests.test_contract_semantics` and `tests.test_bootloader_contract`, with images and sources | 102 | 0 | 0 |
+| Historical firmware-backed suites with all five images, `ATM7039S_STOCK_LOADERS` and `ATM_SOURCES_DIR`: unified boot chain, SD2 DRAM, pre-DRAM, stock boot chain, ADFU, DRAM-complete, DDR timing (one run with the contract modules, 269 tests) | 167 | 0 | 0 |
+| `bootloader_contract.py replay --check`; `contract_semantics.py check`; `bootloader_contract.py sources` | byte-identical; byte-identical; 5/5 verified | — | — |
+| `research.py validate`; `generate --check`; `render_catalogue.py` with clean catalogue diff; `render_html.py` | zero errors; clean; clean; 56 documents | — | — |
+
+Not executed here: the browser (Playwright) and Windows CI jobs, the lab launcher self-test, and the full 520-run SD2 DRAM regeneration. No historical model changed, so a full regeneration was not required; the SD2 DRAM test module ran and passed. GitHub Actions status is recorded only when a run completes.
 
 ## 15. Remaining uncertainties
 

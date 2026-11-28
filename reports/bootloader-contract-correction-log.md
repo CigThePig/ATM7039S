@@ -57,3 +57,12 @@ Conclusion: the specification statement "0 auto x32 then x16" is wrong. Status: 
 * Several new negative controls were first caught by an earlier layer (scenario-level zero-count or exact-count checks). Those tests now assert the earlier layer's message. Where a test targets a later layer, it removes only the earlier check in a spec copy, so each protection is demonstrated on its own.
 * `config-read` and `load-early` gained storage-event checks. Such a check must match a declared observed-transfer SRAM range.
 * The FDT reservation fact (A6) is checked in five Linux-entry traces.
+
+## Checkpoints E and F: firmware-backed reproduction and repository validation
+
+* Firmware: all five pinned images were acquired and whole-image verified. Koriki and 20231014 came first. The three older stock images followed for the historical suites; `stock-221223` (RAR4) needed `unar`, as its manifest entry records, and the first attempt with 7z alone failed with "member length 0". Archives were deleted after verification. Loader regions for `ATM7039S_STOCK_LOADERS` came from the verified images (448 sectors at `0x200200`). Pinned sources came from `tools/fetch_sources.py` plus the five contract references.
+* `replay --check`: byte-identical. `contract_semantics.py check`: byte-identical. `sources`: 5/5 verified.
+* Historical and contract firmware-backed run (all five images, loaders, sources): 269 tests, OK, 0 skipped.
+* Ordinary suite: 614 tests, OK, 32 optional skips. Research validation reports zero errors. `generate --check` is clean, the catalogue diff is clean, and 56 HTML documents rendered.
+* Not executed: Playwright browser job, Windows jobs, lab launcher self-test (these lab components were unchanged) and the 520-run SD2 regeneration (no historical model changed).
+* Resource note: peak disk use about 20 GiB of the allowance; memory was never constrained.

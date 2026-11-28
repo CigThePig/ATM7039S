@@ -375,7 +375,17 @@ ATM_SOURCES_DIR=SRC python tools/bootloader_contract.py sources
 
 `FW` needs `koriki-v1.0.img` and `stock-20231014.img` for the contract. The historical suites need all five images. `SRC` uses the `tools/build_dataset.py` folder names (`linux/`, `u-boot_s500/`).
 
-<!-- results -->
+## Results
+
+| Check (2026-11-28, this container) | Passed | Failed | Skipped |
+|---|---:|---:|---:|
+| `python -m unittest discover -s tests` (no firmware or sources) | 582 | 0 | 32 optional |
+| `tests.test_contract_semantics` and `tests.test_bootloader_contract`, with images and sources | 102 | 0 | 0 |
+| Historical firmware-backed suites with all five images, `ATM7039S_STOCK_LOADERS` and `ATM_SOURCES_DIR`: unified boot chain, SD2 DRAM, pre-DRAM, stock boot chain, ADFU, DRAM-complete, DDR timing (one run with the contract modules, 269 tests) | 167 | 0 | 0 |
+| `bootloader_contract.py replay --check`; `contract_semantics.py check`; `bootloader_contract.py sources` | byte-identical; byte-identical; 5/5 verified | — | — |
+| `research.py validate`; `generate --check`; `render_catalogue.py` with clean catalogue diff; `render_html.py` | zero errors; clean; clean; 56 documents | — | — |
+
+Not executed here: the browser (Playwright) and Windows CI jobs, the lab launcher self-test, and the full 520-run SD2 DRAM regeneration. No historical model changed, so a full regeneration was not required; the SD2 DRAM test module ran and passed. GitHub Actions status is recorded only when a run completes.
 
 ## Open questions
 
