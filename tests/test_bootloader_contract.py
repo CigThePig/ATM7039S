@@ -379,6 +379,34 @@ class PerAttemptValidation(Layered):
         with self.assertRaisesRegex(ValueError, 'exceed the attempt bound'):
             self.attempts(self.KEY, spec=bad)
 
+    def test_excess_retry_before_programming_failure(self):
+        # Make the second training-failure attempt end after its ZQ poll (a programming failure), then
+        # fix the input to one rank so the first training error leaves no retry candidate.
+        key = 'koriki-v1.0/training-failure'
+        case, rows = self.case(key)
+        second = contract.attempt_intervals(self.spec, case)[1]
+        index = 0
+        zq_seen = False
+        for count, values in rows:
+            if second['start'] <= index < second['end']:
+                if zq_seen:
+                    values[7] = 0xB40600F0
+                zq_seen = zq_seen or values[7] == 0xB4068654
+            index += count
+        case['boundaries'] = [b for b in case['boundaries'] if not (
+            second['start'] <= b[2] < second['end'] and b[0] in ('controller-phy-programmed', 'training-request',
+                                                                 'training-dterr'))]
+        case['result']['dram']['training'] = case['result']['dram']['training'][:1]
+        # The scenario's own two-error count would catch this first; drop it to exercise the retry layer.
+        spec = deepcopy(self.spec)
+        spec['operations']['train']['checks'] = [c for c in spec['operations']['train']['checks'] if c['count'] != [2, 2]]
+        self.attempts(key, spec, case=case, rows=rows)    # still consistent with automatic ranks
+        raw = bytearray.fromhex(case['result']['dram']['ini_initial']['secondary'])
+        raw[9] = 2
+        case['result']['dram']['ini_initial']['secondary'] = raw.hex()
+        with self.assertRaisesRegex(ValueError, '2 attempts executed, retry rules permit 1'):
+            self.attempts(key, spec, case=case, rows=rows)
+
     def test_valid_early_failure_omits_later_operations(self):
         key = 'koriki-v1.0/zq-failure'
         self.attempts(key)

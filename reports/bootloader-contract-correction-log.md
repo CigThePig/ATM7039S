@@ -50,3 +50,10 @@ Conclusion: the specification statement "0 auto x32 then x16" is wrong. Status: 
 * Additional discrepancy A5: `boot-select` mixes the block-0 store and the early loader's later read of the code word, so only its first occurrence precedes `load-early`. `first-before-first` now requires an explicit `occurrence_justification` and is rejected for DRAM operations.
 * Pinned sources: all five references (three Linux, two new U-Boot AFI references) verified by git blob SHA-1 and line bounds against files fetched at the ledger revisions into a local `ATM_SOURCES_DIR`.
 * Tests: `tests.test_contract_semantics` 49 tests, OK, 1 skipped (firmware); `tests.test_bootloader_contract` 51 tests, OK, 1 skipped (firmware).
+
+## Review of the new validator
+
+* Defect A11 in the new attempt validator, found on review before the final commit: when the last attempt failed before training (ZQ, PHY init or poll), the retry prediction was truncated by `zip`, so an attempt the rules did not permit could pass unnoticed. Fixed with an explicit attempt-count check. The regression test `test_excess_retry_before_programming_failure` first confirms that the modified trace is consistent, then requires the exact message `2 attempts executed, retry rules permit 1`.
+* Several new negative controls were first caught by an earlier layer (scenario-level zero-count or exact-count checks). Those tests now assert the earlier layer's message. Where a test targets a later layer, it removes only the earlier check in a spec copy, so each protection is demonstrated on its own.
+* `config-read` and `load-early` gained storage-event checks. Such a check must match a declared observed-transfer SRAM range.
+* The FDT reservation fact (A6) is checked in five Linux-entry traces.

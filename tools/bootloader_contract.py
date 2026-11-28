@@ -828,9 +828,15 @@ def check_attempts(spec, key, facts, case, events, positions, found=None):
         if (final['bus_sel'], final['cs']) != (predicted['working_bus'], predicted['working_cs']):
             raise ValueError(f'{key}: final working selectors differ from the retry rules')
     else:
-        calls_needed = len(observed) - 1
-        semantics.attempts(sem, bus_in, cs_in, lambda r, w: calls.append((r, w)) or len(calls) > calls_needed)
-        calls = calls[:len(observed)]
+        # The last attempt ended before training. Earlier attempts all failed training (checked above),
+        # so the rules must offer exactly one further candidate after each of them.
+        def stop_after_observed(ranks, width):
+            calls.append((ranks, width))
+            return len(calls) == len(observed)
+
+        semantics.attempts(sem, bus_in, cs_in, stop_after_observed)
+        if len(calls) != len(observed):
+            raise ValueError(f'{key}: {len(observed)} attempts executed, retry rules permit {len(calls)}')
     for number, (attempt, (ranks, width)) in enumerate(zip(observed, calls), 1):
         for name, value in (('ranks', ranks), ('width_bits', width)):
             if name in attempt['config'] and attempt['config'][name] != value:
