@@ -2082,6 +2082,38 @@
           ]
         },
         {
+          "kind": "event",
+          "match": {
+            "pc": [
+              3020293120
+            ],
+            "site": [
+              3020293120
+            ],
+            "domain": [
+              "storage"
+            ],
+            "op": [
+              "read"
+            ],
+            "address": [
+              3020313600
+            ],
+            "width": [
+              40960
+            ]
+          },
+          "when": {
+            "completed": [
+              "early-loader-entry"
+            ]
+          },
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
           "kind": "state",
           "path": [
             "storage_reads",
@@ -2299,6 +2331,38 @@
         "ini-printed-device"
       ],
       "checks": [
+        {
+          "kind": "event",
+          "match": {
+            "pc": [
+              3020293120
+            ],
+            "site": [
+              3020293120
+            ],
+            "domain": [
+              "storage"
+            ],
+            "op": [
+              "read"
+            ],
+            "address": [
+              3020301312
+            ],
+            "width": [
+              4096
+            ]
+          },
+          "when": {
+            "completed": [
+              "early-loader-entry"
+            ]
+          },
+          "count": [
+            1,
+            1
+          ]
+        },
         {
           "kind": "state",
           "path": [
@@ -12927,7 +12991,11 @@
       "mmu": "off",
       "data_cache": "off",
       "reference_execution_limit": "before first instruction",
-      "modern_platform_validation": null
+      "modern_platform_validation": null,
+      "reference_fdt_reservation": {
+        "covers_final_blob": false,
+        "note": "In every executed Linux-entry case U-Boot reserves the FDT before its final fixups grow it. Koriki SD2: /memreserve/ [0x3800000, +0x7000) while the final totalsize is 28800 (0x7080), leaving 0x80 bytes outside the reservation. An independent loader should reserve the final blob size."
+      }
     }
   },
   "semantics": {

@@ -3381,7 +3381,11 @@
       "r0": 0,
       "r1_policy": "document target machine type policy",
       "r2": "physical DTB",
-      "reference_execution_limit": "before first instruction"
+      "reference_execution_limit": "before first instruction",
+      "reference_fdt_reservation": {
+        "covers_final_blob": false,
+        "note": "In every executed Linux-entry case U-Boot reserves the FDT before its final fixups grow it. Koriki SD2: /memreserve/ [0x3800000, +0x7000) while the final totalsize is 28800 (0x7080), leaving 0x80 bytes outside the reservation. An independent loader should reserve the final blob size."
+      }
     },
     "independent-second-stage": {
       "abi": null,
@@ -5057,6 +5061,38 @@
     "config-read": {
       "behavior": "Reads LBA 0x1013, eight sectors to 0xb4062400, then decodes INI fields.",
       "checks": [
+        {
+          "count": [
+            1,
+            1
+          ],
+          "kind": "event",
+          "match": {
+            "address": [
+              3020301312
+            ],
+            "domain": [
+              "storage"
+            ],
+            "op": [
+              "read"
+            ],
+            "pc": [
+              3020293120
+            ],
+            "site": [
+              3020293120
+            ],
+            "width": [
+              4096
+            ]
+          },
+          "when": {
+            "completed": [
+              "early-loader-entry"
+            ]
+          }
+        },
         {
           "equals": 4,
           "kind": "state",
@@ -7678,6 +7714,38 @@
             ],
             "phase": [
               "terminal"
+            ]
+          },
+          "when": {
+            "completed": [
+              "early-loader-entry"
+            ]
+          }
+        },
+        {
+          "count": [
+            1,
+            1
+          ],
+          "kind": "event",
+          "match": {
+            "address": [
+              3020313600
+            ],
+            "domain": [
+              "storage"
+            ],
+            "op": [
+              "read"
+            ],
+            "pc": [
+              3020293120
+            ],
+            "site": [
+              3020293120
+            ],
+            "width": [
+              40960
             ]
           },
           "when": {

@@ -356,7 +356,7 @@ Addresses are firmware-visible MMIO addresses, assumed physical (no MMU). "Relat
 * The column probe sets DCU_CFG column code 3 and takes c = the first alias index in 0..3, or 3 if there is none.
 * The row probe uses the found column code and row code 3. It tests exponents 0x19 + c + k (×16), takes r = k at the first alias or at exponent 31, and **leaves r = 0 when nothing aliases**. Its exponent-32 error `0xf000fa11` cannot fire, because exponent 31 always ends the search first (x32 with c = 3 reports r = 2, 2048 MiB).
 * The bank code comes from the record (rcc bits 1:0, 0 = 8 banks) and is not probed.
-* Capacity = 2^(r + c + bus + cs + 3) MiB for 8 banks.
+* Capacity = 2^(r + c + bus + cs + 3) MiB for 8 banks, where `bus` is the width operand (1 for ×16, 2 for ×32, as in the [DDR timing reconstruction](ddr-timing-reconstruction.md#72-capacity-probe)), not the record's bus selector. Clarification added by the [contract verification](bootloader-contract-verification.md); the result is unchanged.
 
 **Consistent with the stored configuration.** The persisted primary record (rcc `0x48`, 256 MiB, cs 1) equals the write-back for one ×16 2 Gb rank under PR #4's wrap model.
 

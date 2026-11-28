@@ -419,6 +419,12 @@ def check_structure(spec, history):
                 sel = check['match']
                 require(set(sel) <= VALID_EVENT_MATCH and {'pc', 'site', 'width', 'address', 'domain', 'op'} <= sel.keys(),
                         f'{key}: instruction address, bus address and width required for trace checks')
+                if sel['domain'] == ['storage']:
+                    transfers = {(r['start'], r['end'] - r['start']) for r in spec['interfaces']['sram-layout']['ranges']
+                                 if r['basis'] == 'observed-transfer'}
+                    require(all((a, w) in transfers for a in sel['address'] for w in sel['width']),
+                            f'{key}: storage access must match a declared observed-transfer range')
+                    continue
                 for addr in sel['address']:
                     for width in sel['width']:
                         require(any(regs[reg]['space'] in sel['domain'] and (regs[reg]['address'], regs[reg]['width'])
@@ -576,7 +582,8 @@ def validate_trace(spec, trace, history):
     semantic.update(configuration_checks=semantics.check_configuration(spec, history, trace),
                     afi_checks=semantics.check_afi(spec, trace, history),
                     sram_checks=semantics.check_sram(spec, trace),
-                    timing_checks=semantics.check_timing(spec, trace))
+                    timing_checks=semantics.check_timing(spec, trace),
+                    linux_handoff_checks=semantics.check_linux_handoff(spec, trace))
     static_verified = semantics.check_static_operations(spec, trace)
     checked = Counter()
     observed, state_only, absent = set(), set(), set()
@@ -652,6 +659,7 @@ def validate_trace(spec, trace, history):
         dram_attempts=stats['attempts'], absence_confirmations=stats['absence_confirmations'],
         operation_definitions=len(spec['operations']),
         operations_observed_in_trace=len(observed), operations_state_only=len(state_only - observed),
+        operations_checked_without_execution=sorted(set(checked) - observed - state_only),
         operations_confirmed_absent=len(absent),
         operations_without_checks=sorted(k for k, op in spec['operations'].items() if not op['checks']),
         operations_static_verified=static_verified,

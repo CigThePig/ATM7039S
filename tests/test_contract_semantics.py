@@ -427,6 +427,17 @@ class TimingAndStatic(Fixtures):
             cs.check_static_operations(bad, self.trace)
 
 
+class LinuxHandoff(Fixtures):
+    def test_reference_fdt_reservation_does_not_cover_final_blob(self):
+        self.assertEqual(cs.check_linux_handoff(self.spec, self.trace), 5)
+        dt = self.trace['cases']['koriki-v1.0/sd2-reference']['result']['stages']['device-tree']['state']
+        self.assertEqual((dt['dt_memreserve'][0], dt['fdt_totalsize_after']), (['0x3800000', '0x7000'], 0x7080))
+        bad = deepcopy(self.spec)
+        bad['interfaces']['arm-linux-dt']['reference_fdt_reservation']['covers_final_blob'] = True
+        with self.assertRaisesRegex(ValueError, 'FDT reservation coverage is False'):
+            cs.check_linux_handoff(bad, self.trace)
+
+
 SRC = os.environ.get('ATM_SOURCES_DIR')
 
 

@@ -526,6 +526,25 @@ def trace_facts(history, case_id):
                 mode=run['stages']['recovery-resume-decision'].get('state', {}).get('decision'))
 
 
+def check_linux_handoff(contract, trace):
+    """Reference FDT reservation coverage, from the executed U-Boot state."""
+    rule = contract['interfaces']['arm-linux-dt']['reference_fdt_reservation']
+    checked = 0
+    for case_id, case in trace['cases'].items():
+        stage = case['result']['stages']['device-tree']
+        if stage['status'] != 'completed':
+            continue
+        dt = stage['state']
+        start, size = int(dt['ft_addr'], 16), dt['fdt_totalsize_after']
+        covers = any(int(a, 16) <= start and start + size <= int(a, 16) + int(n, 16) for a, n in dt['dt_memreserve'])
+        require(covers == rule['covers_final_blob'],
+                f'{case_id}: FDT reservation coverage is {covers}, contract states {rule["covers_final_blob"]}')
+        require(any(int(a, 16) == start for a, _ in dt['dt_memreserve']), f'{case_id}: FDT start is not reserved')
+        checked += 1
+    require(checked, 'no executed device-tree stage')
+    return checked
+
+
 # ---------------------------------------------------------------------------
 # SRAM layout
 

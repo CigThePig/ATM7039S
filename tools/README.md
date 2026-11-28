@@ -212,9 +212,11 @@ python tools/sd2_dram_analysis.py evidence --firmware-dir FW OUT.json
 
 | Command | Purpose |
 |---|---|
-| `python tools/bootloader_contract.py generate` | Generate the structured contract and Markdown operation reference from the curated source and pinned evidence |
-| `python tools/bootloader_contract.py validate` | Check deterministic outputs, evidence and operand references, conditional edges, event order, terminal paths and delivered state |
+| `python tools/bootloader_contract.py generate` | Generate the structured contract, the Markdown operation reference and the generated tables in the contract document from the curated source and pinned evidence |
+| `python tools/bootloader_contract.py validate` | Check deterministic outputs, evidence and operand references, structured DRAM/record/AFI/SRAM/timing semantics, named boundary windows, global and per-attempt ordering, retry prediction, terminal branches with confirmed absences, and delivered state |
 | `python tools/bootloader_contract.py compare` | Show configuration and selected reference results across the five pinned releases |
 | `ATM_FIRMWARE_DIR=FW python tools/bootloader_contract.py replay --check` | Execute 16 selected cases from pinned expanded images and compare the ordered artifact byte for byte |
+| `ATM_SOURCES_DIR=SRC python tools/bootloader_contract.py sources` | Check each pinned source reference against a local file by git blob SHA-1 and line bounds; reports `unavailable` instead of claiming verification |
+| `ATM_FIRMWARE_DIR=FW python tools/contract_semantics.py check` | Re-execute the 240-run DRAM selector/capacity matrix on the actual Koriki and 20231014 loaders, re-disassemble the cited instructions and compare `evidence/firmware/dram-selector-semantics.json` byte for byte (`generate` rewrites it) |
 
-The `replay` command without `--check` regenerates the trace. Ordinary validation runs without firmware or emulator dependencies. [Reproduction and scope](../docs/bootloader-initialization-contract.md#18-dependencies-provenance-and-reproduction)
+The `replay` command without `--check` regenerates the trace. Ordinary validation runs without firmware or emulator dependencies; `contract_semantics.py` imports `ddr_model.py` as its independent model and reads the committed firmware matrix. `ATM_SOURCES_DIR` uses the `tools/build_dataset.py` folder names (`linux/`, `u-boot_s500/`). The semantic tests are in `tests/test_contract_semantics.py`. [Reproduction and scope](../docs/bootloader-initialization-contract.md#18-dependencies-provenance-and-reproduction)

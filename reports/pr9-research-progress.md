@@ -305,7 +305,7 @@ The specification is based on reviewed PR head `c525a28bd4fb1b758e5a784075e3c6a0
 - [Engineering specification](../docs/bootloader-initialization-contract.md) covers the ROM boundary, SRAM ownership, clocks, timer, UART, PMIC, board mux, DRAM, AFI, app.bin, U-Boot, storage, Linux, recovery and retention. It defines four implementation profiles from SRAM entry through independent Linux transfer.
 - [Structured contract](../evidence/firmware/bootloader-initialization-contract.json) has 12 stages, 72 operation IDs, 71 curated register references, 21 configuration fields, 95 typed dependencies, ten terminal branch rules and 18 prioritized uncertainties. The curated [input](../specifications/bootloader-initialization.json) distinguishes instruction and model evidence from compatibility, conservative, board-specific and other implementation classifications. Source selections bind to paths, keys/IDs and SHA-256. Known compatibility addresses coexist with explicit unknown physical data. The pinned upstream ARM ABI and PMIC comparison have [file-level provenance](../specifications/bootloader-source-references.json).
 - [Register timeline](../evidence/firmware/boot-initialization-trace.json) contains 16 focused cases. It preserves 31,059 ordered hook events in RLE, plus 614 indexed supplemental observations for delay requests, selected SRAM stores and CPU control writes. The raw access coordinate includes actual PC and distinct accessor/poll site where relevant. Later U-Boot/startup assumptions, transferred-state calls, script/FAT model and Linux-boundary state are explicit. The [generated reference](../docs/bootloader-operation-reference.md) and [dependency report](boot-initialization-dependencies.md) provide the human-readable view.
-- The validator checks 1,304 assertions over 65 executed or state-checked operations and 63 ordered dependencies. It reconstructs the exact AFI and primary INI bytes from SRAM stores, checking downstream AFI, RAM bank and entry state. It covers GPIO omission on SD0, mode-1 PIR/precharge, ZQ timeout, an unbounded PGSR control, diagnostic failure, placement failure and the SFVD-absent dispatch.
+- The validator checks 1,304 assertions over 65 executed or state-checked operations and 63 ordered dependencies (figures at review revision `984d223`; superseded by the [corrective verification](#corrective-verification-of-the-initialization-contract) below). It reconstructs the exact AFI and primary INI bytes from SRAM stores, checking downstream AFI, RAM bank and entry state. It covers GPIO omission on SD0, mode-1 PIR/precharge, ZQ timeout, an unbounded PGSR control, diagnostic failure, placement failure and the SFVD-absent dispatch.
 - Reverified separate SD0/SD2 post-DRAM clock words `0xb0160050`/`0xb0160058`. Re-entry restarts timer 0 and makes extra writes outside the initial timer phase. Pinned Koriki U-Boot startup statically loads initial stack `0x050ffff0`, uses r9 startup data, and computes relocation from runtime state; the actual destination and allocations remain unresolved.
 - Historical unified and standalone evidence, contradictions and OBS-001 remain intact. The unified runner's only shared code change exposes an overridable loader class for replay instrumentation. Existing behavior and archived trace hashes are preserved.
 
@@ -339,3 +339,44 @@ python tools/render_html.py
 Actual ROM entry and SRAM ownership would remove the first SRAM-only blockers. A verified board revision with DRAM markings and a stock early boot record would distinguish the plausible geometry/training outcomes. PMIC identity and stock rail behavior would qualify the electrical power sequence. A trustworthy U-Boot startup memory map would distinguish relocation and reservation requirements for profile C. No observations in this section are procedures or authorization.
 
 Stock messages such as `--pmu- ok`, `PMU_CTL3`, `s2 flag`, `pmu_status`, `DRAM init mode0` or `mode1`, rank/width and lane `Fail:` lines, `Ok:DCU_CFG:`, `==ddr_test`, `== ok==` or diagnostic mismatch, `load fail to adfu`, and `load uboot:` would discriminate different outcomes. The `bootdev= 0x22` print is an INI field shared by both SD outcomes. For downstream medium, correlate `emmc boot`/boot flag with the actual controller and command line. Retention stays a separate qualification issue under C-RESUME-DRAMRST.
+
+---
+
+# Corrective verification of the initialization contract
+
+An independent review of `984d2232c6d783762b1d3cef2c8fc5edb6448ac9` reported six issues. All six were confirmed against the actual loader instructions and corrected. The firmware reconstruction, historical DRAM experiments, unified emulator, OBS-001 and every historical evidence file are unchanged. The raw ordered timeline is byte-identical and still reproduces from firmware. Full detail is in the [verification report](bootloader-contract-verification.md), and the chronological record is in the [correction log](bootloader-contract-correction-log.md).
+
+## Corrected semantics
+
+- **Bus selector.** Cold input 0 is fixed x32 with no fallback, 1 is fixed x16, and 2..255 start x32 with automatic x16 fallback (`0xb4067434..0xb4067464`). The working byte encodes the attempt width (0 x32, 1 x16). A persistent training failure writes back `min(input, 2)` for bus and the cs input (0 for inputs above 2) (`0xb4069020..34`). Only internal `0x1017fa11` retries. DFI, ZQ, PHY-init and capacity failures return `0x1747fa11` immediately. The previous DFI retry transition was wrong.
+- **Capacity.** `capacity_MiB = 2^(row_code + column_code + capacity_width_operand + chip_select_count + 3)` for bank code 0, with operand 1 for x16 and 2 for x32 (`0xb4068e18/1c`). Bank codes 1–3 give `3·2^(… + 1)`. Accepted exponent 25..31 (32..2048 MiB). Larger exponents return `0xc000fa11` → `0x1747fa11`.
+- **Other corrections.** The FDT reservation of the reference does not cover the final blob (`0x7000` reserved, `0x7080` total). PMIC byte order is static-only. The UART divisor subtracts one only for a nonzero quotient. INI bytes +0x19/+0x1a were added as open fields. Per-release references are keyed.
+
+## New verification architecture
+
+- `specifications/bootloader-initialization.json` adds `semantics` (dram-bus, dram-rank, dram-retry, dram-capacity, dram-timing), structured record placement, AFI fields with generation/admission/consumer rules, SRAM ranges with basis, derivation and declared overlaps, `attempts`, explicit boundary windows, state-check roles, branch absence confirmations and terminal PCs, static instruction bindings and the FDT reservation fact.
+- `tools/contract_semantics.py` interprets those definitions and compares them with `evidence/firmware/dram-selector-semantics.json`, which records 240 executions of the actual Koriki and 20231014 loaders with an instruction and literal audit. It also compares them with `tools/ddr_model.py` (12,224 combinations), historical SD2/unified evidence, firmware bytes in the trace, executed U-Boot getters and pinned sources.
+- `tools/bootloader_contract.py` adds fail-closed windows with RLE clipping, an `Observation` that separates execution, value and absence, per-attempt DRAM validation with retry prediction, forbidden-anchor scanning, generated contract tables, the `sources` mode and itemized coverage statistics.
+
+## Coverage after correction
+
+72 operation definitions: 57 observed in the event stream, 8 executed only through stage state, 1 checked by a value assertion only (`memory-plan`), 5 bound only to audited static instructions or the U-Boot startup audit (`clock-basis`, `globals`, `publish-pointers`, `uart-output`, `uboot-relocate`), and 1 without verification (`rom-entry`, whose physical entry state is unknown). `delay` is both observed and statically bound. There are 1,350 applied checks in 16 traces. Of 95 dependencies, 49 are ordered globally and 14 within 20 executed DRAM attempts; 32 have no trace order and 3 are unresolved. Eleven failure paths confirm the absence of Linux entry. The specification no longer contains a `first-before-first` DRAM comparison.
+
+## Reproduction
+
+```sh
+python tools/bootloader_contract.py generate
+python tools/bootloader_contract.py validate
+python -m unittest tests.test_contract_semantics tests.test_bootloader_contract -v
+ATM_FIRMWARE_DIR=FW python tools/bootloader_contract.py replay --check
+ATM_FIRMWARE_DIR=FW python tools/contract_semantics.py check
+ATM_SOURCES_DIR=SRC python tools/bootloader_contract.py sources
+```
+
+`FW` needs `koriki-v1.0.img` and `stock-20231014.img` for the contract. The historical suites need all five images. `SRC` uses the `tools/build_dataset.py` folder names (`linux/`, `u-boot_s500/`).
+
+<!-- results -->
+
+## Open questions
+
+The correction leaves every physical uncertainty open. These are the Boot ROM entry state, SRAM extent and ownership, medium-specific ROM behavior, PMIC identity and rails, DRAM geometry, real PHY training, controller/PHY revision, GPIO electrical semantics, U-Boot relocation and reservations, `C-RESUME-DRAMRST`, and modern Linux prerequisites. The contract is an offline engineering reference. It does not authorize physical testing or flashing.
