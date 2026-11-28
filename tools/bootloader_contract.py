@@ -238,6 +238,16 @@ def find_events(rows, checks, boundaries, window=None):
     return select_events(rows, checks, window or (0, None))
 
 
+def check_rmw(who, rmw, writes, reads):
+    for start, count, event in writes:
+        before = [row for row in reads if row[0] < start]
+        prior = before[-1][2] if before else None
+        if (count != 1 or prior is None or prior['address'] != event['address'] or
+                prior['width'] != event['width'] or prior['domain'] != event['domain'] or
+                (prior['value'] & ~rmw['clear'] | rmw['set']) != event['value']):
+            raise ValueError(f'{who}: RMW mismatch at event {start}')
+
+
 def check_access(operation, check, rows, boundaries, supplemental, result):
     selector = check['match'] if check['kind'] != 'state' else None
     count, positions = 0, []
@@ -270,14 +280,7 @@ def check_access(operation, check, rows, boundaries, supplemental, result):
         count = sum(n for _, n, _ in selected)
         if 'rmw' in check:
             rmw = check['rmw']
-            preceding = select_events(rows, rmw['read'], window)
-            for start, n, event in selected:
-                before = [row for row in preceding if row[0] < start]
-                prior = before[-1] if before else None
-                if (n != 1 or prior is None or prior[2]['address'] != event['address'] or
-                        prior[2]['width'] != event['width'] or prior[2]['domain'] != event['domain'] or
-                        (prior[2]['value'] & ~rmw['clear'] | rmw['set']) != event['value']):
-                    raise ValueError(f'{operation}: RMW mismatch at event {start}')
+            check_rmw(operation, rmw, selected, select_events(rows, rmw['read'], window))
     lo, hi = check['count']
     if count < lo or (hi is not None and count > hi):
         raise ValueError(f'{operation}: {check["kind"]} match {selector}: count {count}, expected {lo}..{hi}')
@@ -742,6 +745,7 @@ def check_attempts(spec, key, facts, case, events, positions, found=None):
     observed = []
     for attempt in intervals:
         lo, hi = 2 * attempt['start'], 2 * (attempt['end'] if attempt['end'] is not None else total)
+        window = lo // 2, hi // 2
         inside = {op: [p for p in ps if lo <= p < hi] for op, ps in positions.items()}
         anchor_inside = {op: [p for p in anchors(spec['operations'][op], events, case['boundaries'], case['supplemental'],
                                                  case['result']) if p is not None and lo <= p < hi]
@@ -761,13 +765,19 @@ def check_attempts(spec, key, facts, case, events, positions, found=None):
         for op in cfg['required']['all'] + cfg['required'][outcome]:
             if not inside.get(op):
                 raise ValueError(f'{who}: required operation {op} absent')
-            # Unbounded access checks describe accesses repeated by every attempt.
+            # Supplemental requests and unbounded accesses recur in every attempt.
             for obs in (found or {}).get(op, []):
                 check = obs.check
-                if (check['kind'] == 'event' and check['count'][0] >= 1 and check['count'][1] is None and
+                per_attempt = check['kind'] == 'supplemental' or (
+                    check['kind'] == 'event' and check['count'][1] is None)
+                if (per_attempt and check['count'][0] >= 1 and
                         not any(lo <= p < hi for p in obs.execution_positions)):
                     raise ValueError(f"{who}: required operation {op} lacks access at site "
                                      f"{check['match']['site'][0]:#x} in this attempt")
+                if 'rmw' in check:
+                    rmw = check['rmw']
+                    check_rmw(f'{who}: {op}', rmw, select_events(events, check['match'], window),
+                              select_events(events, rmw['read'], window))
         for op in cfg['forbidden'][outcome]:
             if inside.get(op) or anchor_inside[op]:
                 raise ValueError(f'{who}: forbidden operation {op} present')
@@ -783,13 +793,14 @@ def check_attempts(spec, key, facts, case, events, positions, found=None):
                 covered.add(edge_id)
         config = {}
         for name, rule in cfg['configuration'].items():
-            words = [e['value'] for start, n, e in events if lo <= 2 * start + 1 < hi and e['op'] == 'w' and
-                     e['address'] == rule['address'] and e.get('site') == rule['site']]
-            if len(words) > 1:
-                raise ValueError(f'{who}: {name} programmed {len(words)} times')
-            if words:
-                config[name] = (rule['values'][f'{words[0]:#x}'] if 'values' in rule else
-                                rule['set'] if words[0] >> rule['bit'] & 1 else rule['clear'])
+            writes = select_events(events, {'op': ['w'], 'address': [rule['address']], 'site': [rule['site']]}, window)
+            count = sum(n for _, n, _ in writes)
+            if count > 1:
+                raise ValueError(f'{who}: {name} programmed {count} times')
+            if writes:
+                word = writes[0][2]['value']
+                config[name] = (rule['values'][f'{word:#x}'] if 'values' in rule else
+                                rule['set'] if word >> rule['bit'] & 1 else rule['clear'])
         observed.append(dict(outcome=outcome, config=config))
     training = [a for a in observed if a['outcome'] in ('training-error', 'trained')]
     if [(a['config'].get('ranks'), a['config'].get('width_bits'), a['outcome']) for a in training] != [

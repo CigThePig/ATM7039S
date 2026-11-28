@@ -13,7 +13,8 @@
   ],
   "independent_check": "Built vendor DTC locally; FDT-to-DTS round trip comparison has zero property differences.",
   "pending": [
-    "C-PREDRAM-PATH: narrowed offline (PR #9); open on Boot ROM state, C10/C11 wiring and non-reference DRAM scenarios for code 2",
+    "C-PREDRAM-PATH: five-release SD0/SD2 comparison complete under the named models; open on medium-specific Boot ROM state, physical GPIOC10/C11 wiring and electrical behavior, and real DRAM training and geometry",
+    "C-RESUME-DRAMRST: open on the electrical effect of mode-1 PIR 0x3f and preservation of retained DRAM",
     "Lab on real Windows hardware (only simulated storage and CI runners so far)",
     "Next physical test: proposal only, reports/next-hardware-research.md (no approval)",
     "Actual ATM7039S register semantics and reset values",
@@ -35,6 +36,9 @@
     "predram_analysis.py evidence on all five pinned images (whole-image SHA-256 verified): pre-DRAM code, tables and executed event sequences identical",
     "code 0 vs code 2 from 0xb4065400 to 0xb40690b8: only the adfu_check GPIO loopback block differs",
     "dram_complete.run_caller reference scenario, codes 0 and 2: MMIO sequences differ only by the same GPIO block",
-    "evidence regeneration is byte-identical (deterministic)"
+    "SD2 DRAM comparison: 520 caller/dispatch runs across Koriki v1.0 and stock 221203, 221223, 230309 and 20231014 cover cold initialization, retries, faults, diagnostic continuation, geometry, recovery and resume; matching boot-code outcomes under the named models account for GPIO loopback, boot-word reads and AFI device bytes, with the exact-echo ADFU control classified separately",
+    "20231014 ODT and drive differences remain visible in MR1, ZQ0CR1, console and INI write-back",
+    "Unified replay: 35 scenarios over five releases, with live early-loader and app.bin execution to the loaded U-Boot entry, then bounded consumers, modeled environment, executed FDT fixups and the first Linux instruction boundary",
+    "Contract checks: 16 ordered traces and a 240-run selector and capacity matrix, with the independent DDR model and instruction audit"
   ]
 }

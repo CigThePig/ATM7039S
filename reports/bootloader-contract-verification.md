@@ -167,11 +167,11 @@ No historical tool, model or evidence file changed. `evidence/firmware/boot-init
 |---|---:|---:|---:|
 | `python -m unittest discover -s tests` (no firmware or sources) | 582 | 0 | 32 optional |
 | `tests.test_contract_semantics` and `tests.test_bootloader_contract`, with images and sources | 102 | 0 | 0 |
-| Historical firmware-backed suites with all five images, `ATM7039S_STOCK_LOADERS` and `ATM_SOURCES_DIR`: unified boot chain, SD2 DRAM, pre-DRAM, stock boot chain, ADFU, DRAM-complete, DDR timing (one run with the contract modules, 269 tests) | 167 | 0 | 0 |
+| Historical firmware-backed suites: unified boot chain, SD2 DRAM, pre-DRAM, stock boot chain, ADFU, DRAM-complete and DDR timing | 167 reported | 0 reported | 0 reported |
 | `bootloader_contract.py replay --check`; `contract_semantics.py check`; `bootloader_contract.py sources` | byte-identical; byte-identical; 5/5 verified | — | — |
 | `research.py validate`; `generate --check`; `render_catalogue.py` with clean catalogue diff; `render_html.py` | zero errors; clean; clean; 56 documents | — | — |
 
-Not executed here: the browser (Playwright) and Windows CI jobs, the lab launcher self-test, and the full 520-run SD2 DRAM regeneration. No historical model changed, so a full regeneration was not required; the SD2 DRAM test module ran and passed. GitHub Actions status is recorded only when a run completes.
+The historical tally and correction log disagree on whether `test_byte_exact_regeneration` executed. Use the named closeout result in §17 for the 520-run comparison. The browser, Windows and lab launcher checks are separate from the local firmware-backed run.
 
 ## 15. Remaining uncertainties
 
@@ -190,3 +190,42 @@ ATM_FIRMWARE_DIR=FW ATM_SOURCES_DIR=SRC python -m unittest tests.test_contract_s
 ```
 
 `FW` holds `koriki-v1.0.img` and `stock-20231014.img` from `tools/acquire_firmware.py … --expand`. `SRC` holds `linux/` and `u-boot_s500/` trees, or the referenced files at those paths, at the ledger revisions.
+
+## 17. PR #9 closeout
+
+Started from `9fcaa49a8e291d6a33eb007f3eb7f60b7bdc05dc` with Git 2.56.1, Python 3.12.14, Unicorn 2.1.4, Capstone 5.0.6, Z3 4.15.4.0 and 7-Zip 25.01 with the RAR codec. The five expanded images match the whole-image SHA-256 values in the acquisition manifest. Stock loader regions came from those verified files. [Input layout and commands](pr9-research-progress.md#reproduce-the-closeout)
+
+The selector matrix passed in a fresh process but returned `UC_ERR_NOMEM` when run after the ordered replay in the combined test process. The matrix now collects Unicorn hook cycles between cases, following the full SD2 caller replay's cleanup pattern. The same combined suite exercised the change.
+
+### Independent review
+
+| Claim | Instruction or consumer checked |
+|---|---|
+| Cold width, ranks and retry | `0xb4067418..64` sets the working selectors. `0xb4068f34..5c` distinguishes retryable training failure `0x1017fa11` from DFI timeout `0xdf00fa11`. `0xb4068fac..9034` orders rank retry ahead of eligible width fallback and handles the final write-back. The selector matrix runs both fixed widths and automatic configurations against one- and two-rank synthetic devices. |
+| Capacity and release differences | `0xb4068df8..8e70` reads the working width byte, selects operand 1 or 2, rejects exponent values above 31 and chooses the bank branch with `tst r2, #3`. The executed boundary cases and independent DDR model agree. The shipped 20231014 ODT/drive inputs still change MR1, ZQ0CR1, console and INI write-back. These results describe firmware behavior under synthetic geometry and diagnostic responses. |
+| Trace and coverage | The invalid-INI timer uses the explicit `caller-finishing` alternative. Missing or ambiguous named boundaries fail, and repeated events are clipped to the requested interval. Moving a reset delay to the preceding attempt or borrowing its RMW read used to pass. The validator now checks supplemental requests, RMW reads and repeated rank and width writes within each attempt. Value and absence checks remain distinct from executed anchors. |
+| Cold admission and handoff | Main tests the caller return at `0xb4065428` and branches to `0xb4065440` on zero. ADFU and resume stop at their own boundaries. Returned DRAM errors may write INI and AFI before recovery, while a diagnostic failure can continue through the same cold load branch. The reference AFI device bytes `0x20` and `0x22` reach U-Boot's device getter, MMC and boot-flag routines. `dram_init` puts the AFI-derived size in `gd+0x34`, which supplies the RAM bank. |
+| FDT and Linux | The live path ends at the loaded U-Boot entry. The bounded consumers and modeled environment bridge feed the actual `image_setup_linux`, libfdt and cleanup before the Linux entry stop. The contract now checks the exact `0x7000` reservation and `0x7080` final size against the fixups. An independent loader should use the final size. U-Boot's full runtime allocation map is a separate open question. |
+| OBS-001 | The boot mount resolves to the SD card on `b0238000.mmc`. The exported DT and `/proc/iomem` agree on the 256 MiB addressable range, and `/proc/cmdline` and `/chosen` supply the bootargs, `ttyS3` and `[0x02000000,0x023a43b1)` initrd comparison. The capture begins in running Linux. ROM entry, live AFI, rails, physical geometry and training, and retention remain open. |
+
+### Closeout results
+
+| Check | Result |
+|---|---|
+| `tests.test_sd2_dram_analysis.FirmwareBackedTests.test_byte_exact_regeneration` | 1 passed, 0 skipped. Full five-release, 520-run evidence reproduced byte for byte. |
+| `tests.test_unified_boot_chain.FirmwareBacked.test_byte_exact_reproduction` | 1 passed, 0 skipped. Full five-release, 35-scenario evidence reproduced byte for byte. |
+| `python tools/bootloader_contract.py replay --check` | Byte-identical, 16 cases, 20 DRAM attempts and 1,350 assertions. |
+| `python tools/contract_semantics.py check` | Byte-identical, 240 runs with the instruction and literal audit. |
+| `python tools/bootloader_contract.py sources` | Verified `arm-linux-boot-protocol`, `atc2603c-register-layout`, `atc2603c-regulator-driver`, `uboot-afi-layout` and `uboot-afi-getters`. |
+
+The firmware-backed suites used all three input directories. Counts include their ordinary fixture tests and the two named replays above.
+
+| Test module | Passed | Skipped |
+|---|---:|---:|
+| `test_bootloader_contract`, `test_contract_semantics` | 106 | 0 |
+| `test_sd2_dram_analysis`, `test_unified_boot_chain` | 29 | 0 |
+| `test_predram`, `test_adfu_analysis`, `test_boot_chain` | 79 | 0 |
+| `test_dram_complete`, `test_ddr_timing` | 59 | 0 |
+| **Total** | **273** | **0** |
+
+With the firmware and source variables unset, `python -m unittest discover -s tests -v` ran 618 tests with 31 optional skips. Optional tool skips include the QEMU and ext4 fixture checks in this environment. `python tools/research.py validate`, `python tools/bootloader_contract.py validate`, `python tools/research.py generate --check`, `python tools/render_catalogue.py` and `python tools/render_html.py` passed. The catalogue and generated outputs stayed clean. See the [pull request](https://github.com/CigThePig/ATM7039S/pull/9) for the validated commit and its GitHub Actions run.

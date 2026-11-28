@@ -12993,8 +12993,10 @@
       "reference_execution_limit": "before first instruction",
       "modern_platform_validation": null,
       "reference_fdt_reservation": {
+        "reserved_bytes": 28672,
+        "final_blob_bytes": 28800,
         "covers_final_blob": false,
-        "note": "In every executed Linux-entry case U-Boot reserves the FDT before its final fixups grow it. Koriki SD2: /memreserve/ [0x3800000, +0x7000) while the final totalsize is 28800 (0x7080), leaving 0x80 bytes outside the reservation. An independent loader should reserve the final blob size."
+        "note": "The ordered Linux-entry traces show an FDT reservation made before the final fixups grow the blob. An independent loader should reserve the final blob size. The stock runtime allocation map remains open."
       }
     }
   },

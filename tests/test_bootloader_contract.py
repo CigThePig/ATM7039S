@@ -344,6 +344,40 @@ class PerAttemptValidation(Layered):
         with self.assertRaisesRegex(ValueError, 'attempt 2 .*required operation dram-reset lacks access at site 0xb4068024'):
             self.attempts(self.KEY, case=case, rows=rows)
 
+    def test_reset_delay_from_first_attempt_cannot_satisfy_second(self):
+        case, rows = self.case(self.KEY)
+        delays = [row for row in case['supplemental'] if row.get('site') == 0xB406802C]
+        first, second = delays
+        second['event_index'] = first['event_index']
+        case['supplemental'].sort(key=lambda row: row['event_index'])
+        with self.assertRaisesRegex(ValueError, 'attempt 2 .*dram-reset lacks access at site 0xb406802c'):
+            self.attempts(self.KEY, case=case, rows=rows)
+
+    def test_rmw_read_from_first_attempt_cannot_satisfy_second(self):
+        case, rows = self.case(self.KEY)
+        selector = self.spec['operations']['dram-gates-off']['checks'][1]['rmw']['read']
+        index, _, _ = contract.select_events(list(contract.indexed_events(rows)), selector,
+                                             (self.second_attempt(rows, case), None))[0]
+        row = next(row for row, (start, _, _) in zip(rows, contract.indexed_events(rows)) if start == index)
+        row[1][7] = 0xB40600F0
+        with self.assertRaisesRegex(ValueError, 'attempt 2 .*dram-gates-off: RMW mismatch'):
+            self.attempts(self.KEY, case=case, rows=rows)
+
+    def test_repeated_configuration_write_in_one_trace_run(self):
+        case, rows = self.case(self.KEY)
+        start = self.second_attempt(rows, case)
+        pos = self.row_at_site(rows, 0xB40686D8, start)
+        index = sum(count for count, _ in rows[:pos])
+        rows[pos][0] = 2
+        for boundary in case['boundaries']:
+            if boundary[2] > index:
+                boundary[2] += 1
+        for anchor in case['supplemental']:
+            if anchor['event_index'] > index:
+                anchor['event_index'] += 1
+        with self.assertRaisesRegex(ValueError, 'attempt 2 .*ranks programmed 2 times'):
+            self.attempts(self.KEY, case=case, rows=rows)
+
     def test_retry_without_eligible_failure(self):
         case, rows = self.case(self.KEY)
         bounds = case['boundaries']

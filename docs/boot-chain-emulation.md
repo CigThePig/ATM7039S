@@ -13,6 +13,8 @@
 
 A cold outcome must include valid returns, the actual `0xb4065440` branch and exactly 16 produced AFI bytes. Resume and recovery have their own terminal states. A failed diagnostic can continue when firmware reaches the cold branch.
 
+The Koriki SD2 fixups leave a final FDT size of `0x7080` bytes and a stock FDT reservation of `0x7000` bytes, both at `0x03800000`. An independent loader should reserve the final blob size. The full U-Boot runtime allocation map remains open. The next offline study should derive the relocated code, stack, global data and allocation ranges, then check those intervals against the kernel load and decompression envelope, final DTB and initrd placements. [Initialization contract](bootloader-initialization-contract.md#15-arm-linux-handoff)
+
 ## State envelope
 
 The version, stage, method, verified image SHA-256, scenario digest, predecessor digest and payload are canonical JSON hashed with SHA-256. The next stage validates the predecessor before it runs. The same loader machine is checked against the preceding state summary. Full CPU snapshots include PC, SP, LR, CPSR and general registers. Reported SCTLR and VBAR are Unicorn register values. The payload retains exact AFI and INI records, hardware summaries and hashes of SRAM, stack window, full MMIO and ordered events where available.

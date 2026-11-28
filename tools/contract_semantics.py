@@ -536,10 +536,14 @@ def check_linux_handoff(contract, trace):
             continue
         dt = stage['state']
         start, size = int(dt['ft_addr'], 16), dt['fdt_totalsize_after']
-        covers = any(int(a, 16) <= start and start + size <= int(a, 16) + int(n, 16) for a, n in dt['dt_memreserve'])
+        reservations = [(int(a, 16), int(n, 16)) for a, n in dt['dt_memreserve']]
+        covers = any(a <= start and start + size <= a + n for a, n in reservations)
         require(covers == rule['covers_final_blob'],
                 f'{case_id}: FDT reservation coverage is {covers}, contract states {rule["covers_final_blob"]}')
-        require(any(int(a, 16) == start for a, _ in dt['dt_memreserve']), f'{case_id}: FDT start is not reserved')
+        require((start, rule['reserved_bytes']) in reservations,
+                f'{case_id}: FDT reservation differs from {rule["reserved_bytes"]:#x} bytes')
+        require(size == rule['final_blob_bytes'],
+                f'{case_id}: final FDT size is {size:#x}, contract states {rule["final_blob_bytes"]:#x}')
         checked += 1
     require(checked, 'no executed device-tree stage')
     return checked
@@ -731,8 +735,8 @@ def execute(directory):
                               dcu_print=next((p for p in result['prints'] if p.startswith(('Ok:DCU_CFG', 'Fail: 0x'))), None),
                               trace=result['trace'])))
             del result, harness
+            gc.collect()  # Release Unicorn hook cycles and their mappings between cases.
         del loader
-        gc.collect()
     return doc
 
 

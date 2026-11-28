@@ -1,5 +1,40 @@
 # PR #9 research progress and handoff
 
+## Current status
+
+PR #9 is the offline reference for the original RG35XX. It starts at the modeled Boot ROM boundary and follows the live block-0 loader through pre-DRAM, DRAM, cold-path dispatch and `app.bin` to the loaded U-Boot entry. Bounded U-Boot routines consume the emitted AFI, and a modeled environment bridge supplies the selected files for executed FDT fixups, cleanup and transfer to the first Linux instruction boundary.
+
+| Evidence | Reference |
+|---|---|
+| Pre-DRAM and ADFU | [Pre-DRAM reconstruction](sd2-predram-reconstruction.md), [ADFU loopback](adfu-loopback-reconstruction.md) |
+| SD0/SD2 caller and integrated comparison | [DRAM report](sd2-dram-reconstruction.md), [520-run evidence](../evidence/firmware/sd2-dram-comparison.json), [emulation boundaries](../docs/boot-chain-emulation.md), [35-scenario evidence](../evidence/firmware/unified-boot-chain.json) |
+| Initialization contract | [Specification](../docs/bootloader-initialization-contract.md), [operation reference](../docs/bootloader-operation-reference.md), [ordered timeline](../evidence/firmware/boot-initialization-trace.json), [selector evidence](../evidence/firmware/dram-selector-semantics.json), [verification and results](bootloader-contract-verification.md#17-pr-9-closeout) |
+
+### Reproduce the closeout
+
+Install `requirements-dev.txt` and `requirements-firmware.txt`. Use `tools/acquire_firmware.py … --expand` with the [acquisition manifest](../evidence/firmware/acquisitions.json) to prepare `koriki-v1.0.img`, `stock-221203.img`, `stock-221223.img`, `stock-230309.img` and `stock-20231014.img` in `FW`. Use a RAR5-capable extractor for 20231014. For each stock image, copy 448 sectors from byte offset `0x200200` into `LOADERS/loader-<date>.bin`. Use `tools/fetch_sources.py SRC` for the ADFU source layout and place the [five exact pinned contract files](../specifications/bootloader-source-references.json) under the folders named by `tools/build_dataset.py`. [Acquisition and tool commands](../tools/README.md)
+
+```sh
+export ATM_FIRMWARE_DIR=FW ATM_SOURCES_DIR=SRC ATM7039S_STOCK_LOADERS=LOADERS
+python -m unittest -v tests.test_sd2_dram_analysis.FirmwareBackedTests.test_byte_exact_regeneration
+python -m unittest -v tests.test_unified_boot_chain.FirmwareBacked.test_byte_exact_reproduction
+python tools/bootloader_contract.py replay --check
+python tools/contract_semantics.py check
+python tools/bootloader_contract.py sources
+```
+
+The closeout compares all 520 caller runs, 35 integrated scenarios, 16 ordered traces and 240 selector and capacity runs against the committed artifacts byte for byte. The [verification report](bootloader-contract-verification.md#17-pr-9-closeout) records the named results, source statuses, test counts and the ordinary validation and rendering commands. CI uses the ordinary suite and repository checks without downloading firmware.
+
+### Remaining questions
+
+- **Next offline PR.** Execute U-Boot startup and relocation to recover the relocated code, stack, global data, and allocation ranges. Compare the live intervals against kernel loading and decompression, final DTB size, and initrd placement. The stock `0x7000` FDT reservation and `0x7080` final blob are already visible in the bounded fixups.
+- **Independent SRAM loader.** Establish authentic Boot ROM entry state and service behavior. Establish SRAM ownership and the ROM work areas separately before selecting code, data and stack ranges.
+- **Physical qualification.** OBS-001 supports SD2 at `0xb0238000`, a 256 MiB kernel-addressable span, and comparison of bootargs, ttyS3 and initrd bounds. Live AFI, PMIC rails, pad behavior, physical DRAM geometry and training, and retention remain open. `C-PREDRAM-PATH` and `C-RESUME-DRAMRST` track those questions. Independent bootloader implementation, resume, modern Linux and OysterOS remain follow-up work.
+
+## Historical research checkpoints
+
+The following sections record earlier research passes. Their test counts and CI results refer to those passes.
+
 Branch: `sd2-predram-reconstruction`, from main `1c28e36` (PR #8 merge). Draft PR: "SD2 Pre-DRAM Initialization and Unified Boot-Chain Reconstruction". Offline only: there was no hardware interaction of any kind.
 
 ## Completed

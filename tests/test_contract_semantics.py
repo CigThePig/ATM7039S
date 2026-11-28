@@ -437,6 +437,17 @@ class LinuxHandoff(Fixtures):
         with self.assertRaisesRegex(ValueError, 'FDT reservation coverage is False'):
             cs.check_linux_handoff(bad, self.trace)
 
+    def test_reference_fdt_sizes_match_executed_handoff(self):
+        for field, value, message in (
+            ('reserved_bytes', 0x6F00, 'FDT reservation differs'),
+            ('final_blob_bytes', 0x7090, 'final FDT size is 0x7080'),
+        ):
+            with self.subTest(field=field):
+                bad = deepcopy(self.spec)
+                bad['interfaces']['arm-linux-dt']['reference_fdt_reservation'][field] = value
+                with self.assertRaisesRegex(ValueError, message):
+                    cs.check_linux_handoff(bad, self.trace)
+
 
 SRC = os.environ.get('ATM_SOURCES_DIR')
 

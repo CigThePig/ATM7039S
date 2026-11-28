@@ -83,7 +83,7 @@ The bounded interpreter follows `run`, `if/then/fi`, `test -n`, `setenv`, `echo`
 
 Actual `image_setup_linux` executes with the loaded DTB, relocated-in-place policy, the loaded ramdisk range, post-script environment, raw AFI and modeled board/global data. The LMB contains the declared RAM bank, in-bank input reservations and the bounded helper scratch range. The model checks occupied input intervals and records generated DT reservations. The real U-Boot relocation and runtime reservation map remain unknown. The in-place path does not allocate external relocation space in these runs.
 
-For Koriki SD2, the resulting FDT starts at `0x03800000`, totals 28800 bytes, and reserves its aligned 0x7000-byte range plus the exact initrd payload. `/memory/reg` reports base 0 and 256 MiB for the reference, 128 or 512 MiB in the alternate cases. The initrd payload is `[0x02000000, 0x023a43b1)`.
+For Koriki SD2, the resulting FDT starts at `0x03800000` and totals `0x7080` bytes. Its stock reservation covers `0x7000` bytes from the same address, leaving the final `0x80` bytes outside that entry. The initrd reservation covers the exact payload at `[0x02000000, 0x023a43b1)`. `/memory/reg` reports base 0 and 256 MiB for the reference, 128 or 512 MiB in the alternate cases. The FDT reservation is visible in the bounded fixups. The runtime U-Boot allocations require their own reconstruction.
 
 ## 16. Linux entry
 
