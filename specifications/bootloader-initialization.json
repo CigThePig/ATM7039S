@@ -260,6 +260,76 @@
       "classification": "pinned-source",
       "pointer": [],
       "id": "atc2603c-regulator-driver"
+    },
+    "selector-semantics": {
+      "path": "evidence/firmware/dram-selector-semantics.json",
+      "classification": "executed-synthetic",
+      "pointer": [
+        "runs"
+      ]
+    },
+    "selector-instructions": {
+      "path": "evidence/firmware/dram-selector-semantics.json",
+      "classification": "static",
+      "pointer": [
+        "instruction_audit"
+      ]
+    },
+    "dram-dfi-timeout": {
+      "path": "evidence/firmware/sd2-dram-comparison.json",
+      "classification": "executed-synthetic",
+      "pointer": [
+        "releases",
+        "koriki-v1.0",
+        "pairs",
+        "dfi-timeout"
+      ]
+    },
+    "dram-bus-auto": {
+      "path": "evidence/firmware/sd2-dram-comparison.json",
+      "classification": "executed-synthetic",
+      "pointer": [
+        "releases",
+        "koriki-v1.0",
+        "pairs",
+        "bus-auto-patched-record"
+      ]
+    },
+    "afi-missing-control": {
+      "path": "evidence/firmware/unified-boot-chain.json",
+      "classification": "executed-synthetic",
+      "pointer": [
+        "isolated_afi_controls",
+        "missing"
+      ]
+    },
+    "afi-reserved-control": {
+      "path": "evidence/firmware/unified-boot-chain.json",
+      "classification": "executed-synthetic",
+      "pointer": [
+        "isolated_afi_controls",
+        "distinctive-reserved-byte"
+      ]
+    },
+    "predram-sram-map": {
+      "path": "evidence/firmware/sd2-predram.json",
+      "classification": "static",
+      "pointer": [
+        "execution_environment",
+        "sram_map"
+      ]
+    },
+    "uboot-afi-getters": {
+      "path": "specifications/bootloader-source-references.json",
+      "classification": "pinned-source",
+      "pointer": [],
+      "id": "uboot-afi-getters"
+    },
+    "uboot-afi-layout": {
+      "path": "specifications/bootloader-source-references.json",
+      "classification": "pinned-source",
+      "pointer": [],
+      "id": "uboot-afi-layout"
     }
   },
   "stages": {
@@ -1139,7 +1209,18 @@
       "width": 4,
       "record": "ini",
       "meaning": "ASCII 1.1 plus terminator",
-      "reference": "1.1",
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "value": "1.1"
+        }
+      ],
       "evidence": [
         "pre"
       ]
@@ -1148,8 +1229,19 @@
       "offset": 12,
       "width": 1,
       "record": "ini",
-      "meaning": "Printed only",
-      "reference": 34,
+      "meaning": "Printed as bootdev only; not the boot medium (both SD paths print 0x22)",
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "value": "0x22"
+        }
+      ],
       "evidence": [
         "pre"
       ]
@@ -1159,7 +1251,18 @@
       "width": 1,
       "record": "ini",
       "meaning": "Board mux profile",
-      "reference": 1,
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "value": 1
+        }
+      ],
       "evidence": [
         "pre"
       ]
@@ -1169,7 +1272,18 @@
       "width": 1,
       "record": "ini",
       "meaning": "UART controller index",
-      "reference": 3,
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "value": 3
+        }
+      ],
       "evidence": [
         "pre"
       ]
@@ -1179,7 +1293,18 @@
       "width": 1,
       "record": "ini",
       "meaning": "UART table pad selector",
-      "reference": 0,
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "value": 0
+        }
+      ],
       "evidence": [
         "pre"
       ]
@@ -1189,7 +1314,18 @@
       "width": 4,
       "record": "ini",
       "meaning": "Little-endian requested baud",
-      "reference": 115200,
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "value": 115200
+        }
+      ],
       "evidence": [
         "pre"
       ]
@@ -1198,8 +1334,19 @@
       "offset": 20,
       "width": 4,
       "record": "ini",
-      "meaning": "Enables loopback when nonzero",
-      "reference": 1,
+      "meaning": "Little-endian word; nonzero enables the GPIO loopback test for nonzero boot code",
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "value": 1
+        }
+      ],
       "evidence": [
         "pre"
       ]
@@ -1208,8 +1355,61 @@
       "offset": 24,
       "width": 1,
       "record": "ini",
-      "meaning": "PMIC bus",
-      "reference": 1,
+      "meaning": "PMIC I2C bus index, copied to 0xb4070858[0]",
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "value": 1
+        }
+      ],
+      "evidence": [
+        "pre"
+      ]
+    },
+    "pmic-byte-19": {
+      "offset": 25,
+      "width": 1,
+      "record": "ini",
+      "meaning": "Copied to 0xb4070858[1]; consumer and significance open",
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "value": 0
+        }
+      ],
+      "evidence": [
+        "pre"
+      ]
+    },
+    "pmic-byte-1a": {
+      "offset": 26,
+      "width": 1,
+      "record": "ini",
+      "meaning": "Copied to 0xb407085c; consumer and significance open",
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "value": 3
+        }
+      ],
       "evidence": [
         "pre"
       ]
@@ -1218,8 +1418,19 @@
       "offset": 27,
       "width": 1,
       "record": "ini",
-      "meaning": "Operand to PMIC reg 0x14 calculation",
-      "reference": 3,
+      "meaning": "Operand to the PMIC reg 0x14 calculation, copied to 0xb4070860",
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "value": 3
+        }
+      ],
       "evidence": [
         "pre"
       ]
@@ -1228,8 +1439,19 @@
       "offset": 44,
       "width": 4,
       "record": "ini",
-      "meaning": "Nonzero selects second DRAM record on cold path",
-      "reference": 1,
+      "meaning": "Little-endian record-selection word; nonzero selects the secondary DRAM record on the cold path only",
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "value": 1
+        }
+      ],
       "evidence": [
         "pre"
       ]
@@ -1238,8 +1460,19 @@
       "offset": 1024,
       "width": 4,
       "record": "ini",
-      "meaning": "Configuration write-back guard",
-      "reference": "SFVD",
+      "meaning": "Configuration write-back guard tested by app.bin",
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "value": "SFVD"
+        }
+      ],
       "evidence": [
         "pre"
       ]
@@ -1248,119 +1481,305 @@
       "offset": 0,
       "width": 2,
       "record": "working-dram-record",
-      "meaning": "Requested clock in MHz",
-      "reference": 468,
+      "meaning": "Requested clock in MHz (u16 little-endian copied from the low half of a 4-byte INI slot). Cold mode rounds down to a 12 MHz multiple",
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "primary": 468,
+          "secondary": 468
+        }
+      ],
       "evidence": [
         "dram"
-      ]
+      ],
+      "ini_offsets": {
+        "primary": 28,
+        "secondary": 76
+      },
+      "ini_slot_width": 4,
+      "endianness": "little",
+      "ini_uncopied_bytes": "INI slot bytes above the copied u16 are ignored on input and zeroed by write-back"
     },
     "dram-mib": {
       "offset": 2,
       "width": 2,
       "record": "working-dram-record",
-      "meaning": "Capacity in MiB",
+      "meaning": "Capacity in MiB (u16 little-endian copied from the low half of a 4-byte INI slot). Cold timing starts from a forced 2048; the probe or failure path stores the final value",
       "reference": [
-        256,
-        0
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "primary": 256,
+          "secondary": 0
+        }
       ],
       "evidence": [
-        "dram"
-      ]
+        "dram",
+        "selector-semantics"
+      ],
+      "ini_offsets": {
+        "primary": 32,
+        "secondary": 80
+      },
+      "ini_slot_width": 4,
+      "endianness": "little",
+      "ini_uncopied_bytes": "INI slot bytes above the copied u16 are ignored on input and zeroed by write-back"
     },
     "dram-bus": {
       "offset": 4,
       "width": 1,
       "record": "working-dram-record",
-      "meaning": "Bus selector (0 auto x32 then x16, 1 x16)",
-      "reference": 1,
+      "meaning": "Input bus-width selector. Cold normalization (semantics.dram-bus): 0 fixed x32, 1 fixed x16, 2..255 x32 with automatic x16 fallback. The working byte then encodes the attempt width (0 = x32, 1 = x16); a persistent training failure stores min(input, 2)",
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "primary": 1,
+          "secondary": 1
+        }
+      ],
       "evidence": [
-        "dram"
-      ]
+        "dram",
+        "selector-semantics"
+      ],
+      "ini_offsets": {
+        "primary": 36,
+        "secondary": 84
+      },
+      "ini_slot_width": 1,
+      "endianness": "little"
     },
     "dram-cs": {
       "offset": 5,
       "width": 1,
       "record": "working-dram-record",
-      "meaning": "Chip selects (0 auto, 1 single or 2 dual)",
+      "meaning": "Input chip-select selector. Cold normalization (semantics.dram-rank): 1 or 2 fixed; 0 and 3..255 automatic, trying two ranks then one. The working byte holds the attempt rank count; a persistent training failure stores the input when it is at most 2, else 0",
       "reference": [
-        1,
-        0
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "primary": 1,
+          "secondary": 0
+        }
       ],
       "evidence": [
-        "dram"
-      ]
+        "dram",
+        "selector-semantics"
+      ],
+      "ini_offsets": {
+        "primary": 37,
+        "secondary": 85
+      },
+      "ini_slot_width": 1,
+      "endianness": "little"
     },
     "dram-type": {
       "offset": 6,
       "width": 1,
       "record": "working-dram-record",
-      "meaning": "Low nibble DDR3/LPDDR-class, high nibble controls idle path",
-      "reference": 16,
+      "meaning": "Low nibble 0 selects the DDR3-style branch, nonzero an LPDDR-class branch; high nibble 1 skips idle self-refresh programming",
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "primary": 16,
+          "secondary": 16
+        }
+      ],
       "evidence": [
         "dram"
-      ]
+      ],
+      "ini_offsets": {
+        "primary": 38,
+        "secondary": 86
+      },
+      "ini_slot_width": 1,
+      "endianness": "little"
     },
     "dram-rcc": {
       "offset": 7,
       "width": 1,
       "record": "working-dram-record",
-      "meaning": "Row, column and bank encoding",
+      "meaning": "Row code bits 7:6, column code bits 3:2, bank code bits 1:0 (0 selects the eight-bank capacity branch). The cold alias probe runs only when rcc & 0xcc == 0; the bank code is never probed",
       "reference": [
-        72,
-        0
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "primary": 72,
+          "secondary": 0
+        }
       ],
       "evidence": [
-        "dram"
-      ]
+        "dram",
+        "selector-semantics"
+      ],
+      "ini_offsets": {
+        "primary": 39,
+        "secondary": 87
+      },
+      "ini_slot_width": 1,
+      "endianness": "little"
     },
     "dram-rd-odt": {
       "offset": 8,
       "width": 1,
       "record": "working-dram-record",
-      "meaning": "Read termination selector",
+      "meaning": "Read termination selector (ZQ0CR1 ODT field)",
       "reference": [
-        1,
-        2
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0"
+          ],
+          "primary": 1,
+          "secondary": 1
+        },
+        {
+          "releases": [
+            "stock-20231014"
+          ],
+          "primary": 2,
+          "secondary": 2
+        }
       ],
       "evidence": [
         "dram"
-      ]
+      ],
+      "ini_offsets": {
+        "primary": 40,
+        "secondary": 88
+      },
+      "ini_slot_width": 1,
+      "endianness": "little"
     },
     "dram-wr-odt": {
       "offset": 9,
       "width": 1,
       "record": "working-dram-record",
-      "meaning": "Write termination selector",
+      "meaning": "Write termination selector (MR1 RTT_NOM)",
       "reference": [
-        1,
-        2
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0"
+          ],
+          "primary": 1,
+          "secondary": 1
+        },
+        {
+          "releases": [
+            "stock-20231014"
+          ],
+          "primary": 2,
+          "secondary": 2
+        }
       ],
       "evidence": [
         "dram"
-      ]
+      ],
+      "ini_offsets": {
+        "primary": 41,
+        "secondary": 89
+      },
+      "ini_slot_width": 1,
+      "endianness": "little"
     },
     "dram-drive": {
       "offset": 10,
       "width": 1,
       "record": "working-dram-record",
-      "meaning": "Drive encoded operand",
+      "meaning": "Drive operand ORed into ZQ0CR1",
       "reference": [
-        12,
-        9
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0"
+          ],
+          "primary": 12,
+          "secondary": 12
+        },
+        {
+          "releases": [
+            "stock-20231014"
+          ],
+          "primary": 9,
+          "secondary": 9
+        }
       ],
       "evidence": [
         "dram"
-      ]
+      ],
+      "ini_offsets": {
+        "primary": 42,
+        "secondary": 90
+      },
+      "ini_slot_width": 1,
+      "endianness": "little"
     },
     "dram-tail": {
       "offset": 11,
       "width": 1,
       "record": "working-dram-record",
-      "meaning": "Preserved final record byte, significance open",
-      "reference": 0,
+      "meaning": "Copied and written back unchanged; significance open",
+      "reference": [
+        {
+          "releases": [
+            "stock-221203",
+            "stock-221223",
+            "stock-230309",
+            "koriki-v1.0",
+            "stock-20231014"
+          ],
+          "primary": 0,
+          "secondary": 0
+        }
+      ],
       "evidence": [
         "dram"
-      ]
+      ],
+      "ini_offsets": {
+        "primary": 43,
+        "secondary": 91
+      },
+      "ini_slot_width": 1,
+      "endianness": "little"
     }
   },
   "operations": {
@@ -1675,7 +2094,8 @@
               "early-loader-entry"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -1690,7 +2110,8 @@
               "early-loader-entry"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -1705,7 +2126,8 @@
               "early-loader-entry"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -1720,7 +2142,8 @@
               "early-loader-entry"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -1735,7 +2158,8 @@
               "early-loader-entry"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         }
       ],
       "model_assumptions": [
@@ -1794,7 +2218,8 @@
               "rom-failure"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         }
       ],
       "model_assumptions": [],
@@ -1822,7 +2247,35 @@
       "checks": [],
       "model_assumptions": [],
       "polling": null,
-      "delay_requirement": null
+      "delay_requirement": null,
+      "static_instructions": [
+        [
+          3020313600,
+          "ldr r0, [pc, #0x11c]"
+        ],
+        [
+          3020313604,
+          "mov r1, #0"
+        ],
+        [
+          3020313608,
+          "ldr r2, [pc, #0x118]"
+        ],
+        [
+          3020313612,
+          "bl #0xb406af4c"
+        ]
+      ],
+      "static_literals": [
+        [
+          3020313892,
+          3020359680
+        ],
+        [
+          3020313896,
+          124
+        ]
+      ]
     },
     "config-read": {
       "stage": "sram",
@@ -1859,7 +2312,8 @@
               "early-loader-entry"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -1874,7 +2328,8 @@
               "early-loader-entry"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -1889,7 +2344,8 @@
               "early-loader-entry"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -1904,7 +2360,8 @@
               "early-loader-entry"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -1919,7 +2376,8 @@
               "early-loader-entry"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         }
       ],
       "model_assumptions": [],
@@ -1930,24 +2388,53 @@
       "stage": "sram",
       "function": "inherited clock basis",
       "function_address": null,
-      "behavior": "Firmware arithmetic assumes a 24 MHz oscillator/timer basis.",
+      "behavior": "Firmware arithmetic assumes a 24 MHz basis: the delay target adds 24 ticks per requested microsecond and the UART divisor is udiv(24000000, 8*baud) minus one when nonzero. The physical oscillator is unmeasured.",
       "implementation": [
         "conservative",
         "unknown"
       ],
       "justification": "Clock source, divider and reset gates must be qualified before timing-sensitive operations.",
       "evidence": [
+        "pre-instructions",
         "rom-gap",
-        "pre-instructions"
+        "selector-instructions"
       ],
-      "evidence_classification": "unknown",
-      "confidence": "open",
+      "evidence_classification": "static",
+      "confidence": "supported",
       "registers": [],
       "configuration_fields": [],
       "checks": [],
       "model_assumptions": [],
       "polling": null,
-      "delay_requirement": null
+      "delay_requirement": null,
+      "static_instructions": [
+        [
+          3020329996,
+          "mov r3, #0x18"
+        ],
+        [
+          3020319204,
+          "lsl r1, r1, #3"
+        ],
+        [
+          3020319208,
+          "ldr r0, [pc, #0x20]"
+        ],
+        [
+          3020319212,
+          "bl #0xb406ae80"
+        ],
+        [
+          3020319224,
+          "subne r0, r0, #1"
+        ]
+      ],
+      "static_literals": [
+        [
+          3020319248,
+          24000000
+        ]
+      ]
     },
     "timer": {
       "stage": "sram",
@@ -2050,9 +2537,6 @@
             "width": [
               4
             ],
-            "before_boundary": [
-              "before-adfu"
-            ],
             "value": [
               4
             ]
@@ -2065,7 +2549,18 @@
           "count": [
             1,
             1
-          ]
+          ],
+          "window": {
+            "before": {
+              "phase": "before-adfu",
+              "occurrence": "only",
+              "else": {
+                "phase": "caller-finishing",
+                "occurrence": "only",
+                "why": "Invalid INI is rejected before the ADFU check; the caller boundary bounds the same pre-recovery interval"
+              }
+            }
+          }
         }
       ],
       "model_assumptions": [],
@@ -2092,7 +2587,37 @@
         "timer-count"
       ],
       "configuration_fields": [],
-      "checks": [],
+      "checks": [
+        {
+          "kind": "supplemental",
+          "match": {
+            "kind": [
+              "delay-us"
+            ],
+            "pc": [
+              3020329976
+            ],
+            "site": [
+              3020334904
+            ],
+            "value": [
+              1
+            ],
+            "method": [
+              "executed timer poll"
+            ]
+          },
+          "when": {
+            "completed": [
+              "early-loader-entry"
+            ]
+          },
+          "count": [
+            1,
+            1
+          ]
+        }
+      ],
       "model_assumptions": [
         "Early timer increments by 2400 per read; DRAM calls are stubbed."
       ],
@@ -2103,7 +2628,33 @@
         "failure": "stalled timer may never return",
         "wrap": "correct for intervals shorter than 2^31 ticks"
       },
-      "delay_requirement": null
+      "delay_requirement": null,
+      "static_instructions": [
+        [
+          3020329992,
+          "bl #0xb4069504"
+        ],
+        [
+          3020329996,
+          "mov r3, #0x18"
+        ],
+        [
+          3020330000,
+          "mla r5, r3, r5, r0"
+        ],
+        [
+          3020330016,
+          "rsb r0, r5, r0"
+        ],
+        [
+          3020330020,
+          "cmp r0, #0"
+        ],
+        [
+          3020330024,
+          "blt #0xb4069418"
+        ]
+      ]
     },
     "uart-reset": {
       "stage": "power",
@@ -2302,7 +2853,7 @@
     "uart-output": {
       "stage": "power",
       "function": "UART TX helper",
-      "function_address": null,
+      "function_address": 3020319452,
       "behavior": "Wait while status bit 6 is set, write TX at +8, then wait for bit 10.",
       "implementation": [
         "diagnostic",
@@ -2331,7 +2882,33 @@
           "bit 10 set"
         ]
       },
-      "delay_requirement": null
+      "delay_requirement": null,
+      "static_instructions": [
+        [
+          3020319468,
+          "add r0, r0, #0xc"
+        ],
+        [
+          3020319476,
+          "tst r0, #0x40"
+        ],
+        [
+          3020319480,
+          "bne #0xb4066ae8"
+        ],
+        [
+          3020319492,
+          "add r1, r1, #8"
+        ],
+        [
+          3020319512,
+          "tst r0, #0x400"
+        ],
+        [
+          3020319516,
+          "beq #0xb4066b0c"
+        ]
+      ]
     },
     "ini-reject": {
       "stage": "selection",
@@ -3802,9 +4379,6 @@
             ],
             "width": [
               2
-            ],
-            "before_boundary": [
-              "before-adfu"
             ]
           },
           "when": {
@@ -3826,7 +4400,13 @@
           "count": [
             1,
             1
-          ]
+          ],
+          "window": {
+            "before": {
+              "phase": "before-adfu",
+              "occurrence": "only"
+            }
+          }
         }
       ],
       "model_assumptions": [],
@@ -4328,7 +4908,39 @@
       "checks": [],
       "model_assumptions": [],
       "polling": null,
-      "delay_requirement": null
+      "delay_requirement": null,
+      "static_instructions": [
+        [
+          3020317240,
+          "str r0, [r3, #0xc60]"
+        ],
+        [
+          3020317244,
+          "str r2, [r3, #0xc64]"
+        ],
+        [
+          3020317264,
+          "str ip, [r3, #0xc68]"
+        ],
+        [
+          3020317268,
+          "str r1, [r3, #0xc6c]"
+        ],
+        [
+          3020317272,
+          "str r0, [r3, #0xc70]"
+        ],
+        [
+          3020317276,
+          "str r2, [r3, #0xc74]"
+        ]
+      ],
+      "static_literals": [
+        [
+          3020317284,
+          3020308480
+        ]
+      ]
     },
     "cold-record": {
       "stage": "selection",
@@ -4388,7 +5000,8 @@
               "cold"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         }
       ],
       "model_assumptions": [],
@@ -4449,7 +5062,8 @@
               "resume"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         }
       ],
       "model_assumptions": [],
@@ -5594,7 +6208,8 @@
               "resume",
               "resume-power-off",
               "sfvd-absent",
-              "sd2-64m-storage-limit"
+              "sd2-64m-storage-limit",
+              "phy-poll"
             ]
           },
           "count": [
@@ -5832,7 +6447,12 @@
               "phy-poll"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "dram-and-main-dispatch",
+          "stage_status": [
+            "terminal"
+          ]
         }
       ],
       "model_assumptions": [],
@@ -6646,7 +7266,8 @@
               "sd0-reference"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         }
       ],
       "model_assumptions": [],
@@ -6710,7 +7331,8 @@
               "sd0-reference"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -6725,7 +7347,8 @@
               "diagnostic-failure"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         }
       ],
       "model_assumptions": [],
@@ -7024,7 +7647,8 @@
               "sd0-reference"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -7039,7 +7663,8 @@
               "sd2-reference"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -7054,7 +7679,8 @@
               "returned-dram-failure"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         }
       ],
       "model_assumptions": [],
@@ -7111,7 +7737,8 @@
               "training-failure"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -7125,7 +7752,8 @@
               "zq-failure"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         }
       ],
       "model_assumptions": [],
@@ -7184,7 +7812,8 @@
               "adfu-before-dram"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "supplemental",
@@ -7270,7 +7899,8 @@
               "resume"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         }
       ],
       "model_assumptions": [],
@@ -7875,7 +8505,8 @@
               "dram-and-main-dispatch"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -7890,7 +8521,8 @@
               "dram-and-main-dispatch"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -7905,7 +8537,8 @@
               "dram-and-main-dispatch"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         },
         {
           "kind": "state",
@@ -7920,7 +8553,8 @@
               "dram-and-main-dispatch"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         }
       ],
       "model_assumptions": [],
@@ -7956,7 +8590,12 @@
               "sd2-64m-storage-limit"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "load-app-and-uboot",
+          "stage_status": [
+            "terminal"
+          ]
         },
         {
           "kind": "state",
@@ -7971,7 +8610,12 @@
               "sd2-64m-storage-limit"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "load-app-and-uboot",
+          "stage_status": [
+            "terminal"
+          ]
         }
       ],
       "model_assumptions": [],
@@ -8185,7 +8829,8 @@
               "sfvd-absent"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         }
       ],
       "model_assumptions": [],
@@ -8287,7 +8932,17 @@
       "checks": [],
       "model_assumptions": [],
       "polling": null,
-      "delay_requirement": null
+      "delay_requirement": null,
+      "static_anchors": [
+        "0x50036b4",
+        "0x50036c0",
+        "0x5003704",
+        "0x5003774",
+        "0x5003790"
+      ],
+      "static_literals_from_audit": [
+        "0x5003744"
+      ]
     },
     "afi-consume": {
       "stage": "uboot",
@@ -8323,7 +8978,12 @@
               "linux-entry-boundary"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "uboot-afi-and-ram",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8340,7 +9000,12 @@
               "linux-entry-boundary"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "uboot-afi-and-ram",
+          "stage_status": [
+            "completed"
+          ]
         }
       ],
       "model_assumptions": [],
@@ -8387,7 +9052,12 @@
               "sd2"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "mmc-registration",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8409,7 +9079,12 @@
               "sd2"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "mmc-registration",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8431,7 +9106,12 @@
               "sd2"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "mmc-registration",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8453,7 +9133,12 @@
               "sd2"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "mmc-registration",
+          "stage_status": [
+            "completed"
+          ]
         }
       ],
       "model_assumptions": [],
@@ -8496,7 +9181,12 @@
               "sd0"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "boot-device",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8515,7 +9205,12 @@
               "sd2"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "boot-device",
+          "stage_status": [
+            "completed"
+          ]
         }
       ],
       "model_assumptions": [],
@@ -8553,7 +9248,12 @@
               "linux-entry-boundary"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "boot-files",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8570,7 +9270,12 @@
               "linux-entry-boundary"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "boot-files",
+          "stage_status": [
+            "completed"
+          ]
         }
       ],
       "model_assumptions": [],
@@ -8610,7 +9315,8 @@
               "linux-entry-boundary"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "value"
         }
       ],
       "model_assumptions": [],
@@ -8655,7 +9361,12 @@
               "linux-entry-boundary"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "device-tree",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8674,7 +9385,12 @@
               "koriki-v1.0"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "device-tree",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8693,7 +9409,12 @@
               "koriki-v1.0"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "device-tree",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8712,7 +9433,12 @@
               "koriki-v1.0"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "device-tree",
+          "stage_status": [
+            "completed"
+          ]
         }
       ],
       "model_assumptions": [],
@@ -8755,7 +9481,12 @@
               "koriki-v1.0"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "linux-entry",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8774,7 +9505,12 @@
               "koriki-v1.0"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "linux-entry",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8793,7 +9529,12 @@
               "koriki-v1.0"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "linux-entry",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8812,7 +9553,12 @@
               "koriki-v1.0"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "linux-entry",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8831,7 +9577,12 @@
               "koriki-v1.0"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "linux-entry",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8850,7 +9601,12 @@
               "koriki-v1.0"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "linux-entry",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8869,7 +9625,12 @@
               "koriki-v1.0"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "linux-entry",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8888,7 +9649,12 @@
               "koriki-v1.0"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "linux-entry",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8907,7 +9673,12 @@
               "koriki-v1.0"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "linux-entry",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8926,7 +9697,12 @@
               "koriki-v1.0"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "linux-entry",
+          "stage_status": [
+            "completed"
+          ]
         },
         {
           "kind": "state",
@@ -8951,7 +9727,9 @@
               "sfvd-absent"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "absence",
+          "stage": "linux-entry"
         },
         {
           "kind": "state",
@@ -8967,7 +9745,12 @@
               "linux-entry-boundary"
             ]
           },
-          "match": {}
+          "match": {},
+          "role": "execution",
+          "stage": "linux-entry",
+          "stage_status": [
+            "completed"
+          ]
         }
       ],
       "model_assumptions": [],
@@ -9002,7 +9785,8 @@
       },
       "trace_order": "first-before-first",
       "from": "boot-select",
-      "to": "load-early"
+      "to": "load-early",
+      "occurrence_justification": "boot-select also covers the early loader reading the boot-code word at 0xb4065414 after it is installed; only the block-0 producer occurrence precedes the ROM load"
     },
     "load-early--globals": {
       "why": "Main runs from the installed span.",
@@ -10020,7 +10804,7 @@
           "cold"
         ]
       },
-      "trace_order": "first-before-first",
+      "trace_order": "last-before-first",
       "from": "cold-record",
       "to": "dram-gates-off"
     },
@@ -10036,7 +10820,7 @@
           "resume"
         ]
       },
-      "trace_order": "first-before-first",
+      "trace_order": "last-before-first",
       "from": "resume-record",
       "to": "dram-gates-off"
     },
@@ -10070,7 +10854,7 @@
           "resume"
         ]
       },
-      "trace_order": "first-before-first",
+      "trace_order": "per-attempt",
       "from": "dram-gates-off",
       "to": "dram-reset"
     },
@@ -10087,7 +10871,7 @@
           "resume"
         ]
       },
-      "trace_order": "first-before-first",
+      "trace_order": "per-attempt",
       "from": "dram-reset",
       "to": "dram-pll-enable"
     },
@@ -10104,7 +10888,7 @@
           "resume"
         ]
       },
-      "trace_order": "first-before-first",
+      "trace_order": "per-attempt",
       "from": "dram-pll-enable",
       "to": "phy-reset"
     },
@@ -10121,7 +10905,7 @@
           "resume"
         ]
       },
-      "trace_order": "first-before-first",
+      "trace_order": "per-attempt",
       "from": "phy-reset",
       "to": "phy-timing"
     },
@@ -10138,7 +10922,7 @@
           "resume"
         ]
       },
-      "trace_order": "first-before-first",
+      "trace_order": "per-attempt",
       "from": "phy-timing",
       "to": "zq-poll"
     },
@@ -10158,10 +10942,11 @@
           "resume",
           "resume-power-off",
           "sfvd-absent",
-          "sd2-64m-storage-limit"
+          "sd2-64m-storage-limit",
+          "phy-poll"
         ]
       },
-      "trace_order": "first-before-first",
+      "trace_order": "per-attempt",
       "from": "zq-poll",
       "to": "phy-reset-poll"
     },
@@ -10181,10 +10966,11 @@
           "resume",
           "resume-power-off",
           "sfvd-absent",
-          "sd2-64m-storage-limit"
+          "sd2-64m-storage-limit",
+          "phy-poll"
         ]
       },
-      "trace_order": "first-before-first",
+      "trace_order": "per-attempt",
       "from": "phy-reset-poll",
       "to": "dram-init"
     },
@@ -10200,7 +10986,7 @@
           "resume"
         ]
       },
-      "trace_order": "last-before-first",
+      "trace_order": "per-attempt",
       "from": "dram-init",
       "to": "resume-precharge"
     },
@@ -10223,7 +11009,7 @@
           "sd2-64m-storage-limit"
         ]
       },
-      "trace_order": "first-before-first",
+      "trace_order": "per-attempt",
       "from": "dram-init",
       "to": "train"
     },
@@ -10239,7 +11025,7 @@
           "resume"
         ]
       },
-      "trace_order": "last-before-first",
+      "trace_order": "per-attempt",
       "from": "resume-precharge",
       "to": "train"
     },
@@ -10260,7 +11046,7 @@
           "resume"
         ]
       },
-      "trace_order": "last-before-first",
+      "trace_order": "per-attempt",
       "from": "train",
       "to": "train-passed"
     },
@@ -10281,7 +11067,7 @@
           "resume"
         ]
       },
-      "trace_order": "first-before-first",
+      "trace_order": "per-attempt",
       "from": "train-passed",
       "to": "dfi-ready"
     },
@@ -10302,7 +11088,7 @@
           "resume"
         ]
       },
-      "trace_order": "last-before-first",
+      "trace_order": "per-attempt",
       "from": "dfi-ready",
       "to": "controller-timing"
     },
@@ -10323,7 +11109,7 @@
           "resume"
         ]
       },
-      "trace_order": "last-before-first",
+      "trace_order": "per-attempt",
       "from": "controller-timing",
       "to": "controller-go"
     },
@@ -10379,7 +11165,7 @@
           "resume"
         ]
       },
-      "trace_order": "first-before-first",
+      "trace_order": "last-before-first",
       "from": "resume-record",
       "to": "capacity-final"
     },
@@ -10527,7 +11313,7 @@
           "dram-and-main-dispatch"
         ]
       },
-      "trace_order": "first-before-first",
+      "trace_order": "last-before-first",
       "from": "cold-continue",
       "to": "post-dram-clock"
     },
@@ -10831,7 +11617,9 @@
       "evidence": [
         "unified",
         "dram"
-      ]
+      ],
+      "dram_terminal_pc": "0xb4065440",
+      "confirm_absent": []
     },
     "rom-failure": {
       "when": {
@@ -10848,12 +11636,17 @@
         "cold-record",
         "afi-produce",
         "cold-continue",
-        "uboot-entry"
+        "uboot-entry",
+        "linux-entry"
       ],
       "rule": "Synthetic service failure stops before loading main.",
       "evidence": [
         "unified",
         "dram"
+      ],
+      "dram_terminal_pc": null,
+      "confirm_absent": [
+        "linux-entry"
       ]
     },
     "bad-ini": {
@@ -10870,12 +11663,17 @@
         "cold-record",
         "afi-produce",
         "cold-continue",
-        "uboot-entry"
+        "uboot-entry",
+        "linux-entry"
       ],
       "rule": "INI check rejects before programming DRAM.",
       "evidence": [
         "unified",
         "dram"
+      ],
+      "dram_terminal_pc": "0xb4065494",
+      "confirm_absent": [
+        "linux-entry"
       ]
     },
     "early-recovery": {
@@ -10892,12 +11690,17 @@
         "cold-record",
         "afi-produce",
         "cold-continue",
-        "uboot-entry"
+        "uboot-entry",
+        "linux-entry"
       ],
       "rule": "Pending PMIC or GPIO echo terminates before DRAM.",
       "evidence": [
         "unified",
         "dram"
+      ],
+      "dram_terminal_pc": "0xb40691a4",
+      "confirm_absent": [
+        "linux-entry"
       ]
     },
     "cold-failed": {
@@ -10914,12 +11717,17 @@
       ],
       "forbids": [
         "cold-continue",
-        "uboot-entry"
+        "uboot-entry",
+        "linux-entry"
       ],
       "rule": "AFI and error dispatch occur together.",
       "evidence": [
         "unified",
         "dram"
+      ],
+      "dram_terminal_pc": "0xb4065494",
+      "confirm_absent": [
+        "linux-entry"
       ]
     },
     "phy-stall": {
@@ -10937,12 +11745,17 @@
         "train",
         "afi-produce",
         "cold-continue",
-        "uboot-entry"
+        "uboot-entry",
+        "linux-entry"
       ],
       "rule": "Trace budget establishes terminal classification only.",
       "evidence": [
         "unified",
         "dram"
+      ],
+      "dram_terminal_pc": "0xb40670f4",
+      "confirm_absent": [
+        "linux-entry"
       ]
     },
     "retained-vector": {
@@ -10961,12 +11774,17 @@
         "capacity-detect",
         "afi-produce",
         "cold-continue",
-        "uboot-entry"
+        "uboot-entry",
+        "linux-entry"
       ],
       "rule": "Retained vector is separate from cold dispatch.",
       "evidence": [
         "unified",
         "dram"
+      ],
+      "dram_terminal_pc": "0x108000",
+      "confirm_absent": [
+        "linux-entry"
       ]
     },
     "retained-failed": {
@@ -10985,12 +11803,17 @@
         "capacity-detect",
         "afi-produce",
         "cold-continue",
-        "uboot-entry"
+        "uboot-entry",
+        "linux-entry"
       ],
       "rule": "Failure ends at PMIC power-off boundary.",
       "evidence": [
         "unified",
         "dram"
+      ],
+      "dram_terminal_pc": "0xb4066c30",
+      "confirm_absent": [
+        "linux-entry"
       ]
     },
     "image-range": {
@@ -11004,12 +11827,17 @@
         "reject-placement"
       ],
       "forbids": [
-        "uboot-entry"
+        "uboot-entry",
+        "linux-entry"
       ],
       "rule": "Valid DRAM initialization can still produce an invalid image destination.",
       "evidence": [
         "unified",
         "dram"
+      ],
+      "dram_terminal_pc": "0xb4065440",
+      "confirm_absent": [
+        "linux-entry"
       ]
     },
     "app-unsupported": {
@@ -11024,12 +11852,17 @@
         "app-write-intent"
       ],
       "forbids": [
-        "uboot-entry"
+        "uboot-entry",
+        "linux-entry"
       ],
       "rule": "SFVD absent stops at write intent.",
       "evidence": [
         "unified",
         "dram"
+      ],
+      "dram_terminal_pc": "0xb4065440",
+      "confirm_absent": [
+        "linux-entry"
       ]
     }
   },
@@ -11585,21 +12418,12 @@
       "from_operation": "train",
       "to_operation": "dram-gates-off",
       "mode": "cold",
-      "when": "PGSR == 0x3f and another chip-select or width candidate remains",
-      "bound": "up to four attempts with auto rank and width, two with shipped x16 width",
+      "when": "Training PIR returns PGSR 0x3f (internal 0x1017fa11) and semantics.dram-retry leaves a rank or width candidate",
+      "bound": "At most four attempts (input bus >= 2 with automatic ranks); two with the shipped x16 secondary record",
       "evidence": [
+        "selector-semantics",
         "dram",
         "timing"
-      ]
-    },
-    {
-      "from_operation": "dfi-ready",
-      "to_operation": "dram-gates-off",
-      "mode": "cold",
-      "when": "DFI timeout on an eligible first attempt",
-      "bound": "uses the same remaining candidate budget",
-      "evidence": [
-        "dram"
       ]
     }
   ],
@@ -11623,56 +12447,356 @@
         3020554240
       ],
       "ranges": [
-        [
-          3020292096,
-          3020292608,
-          "first-sector"
-        ],
-        [
-          3020292864,
-          3020292880,
-          "afi"
-        ],
-        [
-          3020293120,
-          3020299776,
-          "rom-service-candidate"
-        ],
-        [
-          3020301312,
-          3020305408,
-          "reloaded-ini"
-        ],
-        [
-          3020305408,
-          3020311552,
-          "alternate-write-back-predecessor-gap"
-        ],
-        [
-          3020311552,
-          3020311556,
-          "boot-code"
-        ],
-        [
-          3020311648,
-          3020311672,
-          "pointer-table"
-        ],
-        [
-          3020313600,
-          3020354560,
-          "early-loader-installation"
-        ],
-        [
-          3020359680,
-          3020359804,
-          "loader-globals"
-        ],
-        [
-          3020292096,
-          3020303872,
-          "recovery-copy-destination"
-        ]
+        {
+          "id": "first-sector",
+          "space": "sram",
+          "start": 3020292096,
+          "end": 3020292608,
+          "basis": "static-span",
+          "stages": [
+            "rom",
+            "sram",
+            "app"
+          ],
+          "owner": "Block 0 instructions and literals; app.bin later saves its target at 0xb4060018",
+          "evidence": [
+            "block0",
+            "predram-sram-map"
+          ],
+          "derivation": {
+            "kind": "length",
+            "bytes": 512
+          }
+        },
+        {
+          "id": "afi",
+          "space": "sram",
+          "start": 3020292864,
+          "end": 3020292880,
+          "basis": "interface",
+          "stages": [
+            "handoff",
+            "load",
+            "app",
+            "uboot"
+          ],
+          "owner": "AFI producer and U-Boot getters",
+          "evidence": [
+            "afi-consumers",
+            "predram-sram-map"
+          ],
+          "derivation": {
+            "kind": "length",
+            "bytes": 16
+          }
+        },
+        {
+          "id": "rom-service-candidate",
+          "space": "sram",
+          "start": 3020293120,
+          "end": 3020299776,
+          "basis": "static-inference",
+          "stages": [
+            "rom",
+            "sram",
+            "load"
+          ],
+          "owner": "Zero-filled on disk; ROM service entry 0xb4060400 and alternate reader 0xb40612b0 inferred ROM-populated",
+          "evidence": [
+            "rom-gap",
+            "predram-sram-map"
+          ]
+        },
+        {
+          "id": "alternate-write-back-source",
+          "space": "sram",
+          "start": 3020301312,
+          "end": 3020311552,
+          "basis": "static-span",
+          "stages": [
+            "app"
+          ],
+          "owner": "Static app.bin alternate writer: 20 sectors from 0xb4062400 to LBA 0x1013 (not executed)",
+          "evidence": [
+            "app"
+          ],
+          "derivation": {
+            "kind": "sectors",
+            "sectors": 20,
+            "sector_bytes": 512
+          }
+        },
+        {
+          "id": "reloaded-ini",
+          "space": "sram",
+          "start": 3020301312,
+          "end": 3020305408,
+          "basis": "observed-transfer",
+          "stages": [
+            "sram",
+            "power",
+            "selection",
+            "dram",
+            "handoff",
+            "load",
+            "app"
+          ],
+          "owner": "INI reloaded by main (selector 4, LBA 0x1013); SFVD at +0x400",
+          "evidence": [
+            "pre",
+            "predram-sram-map"
+          ],
+          "derivation": {
+            "kind": "sectors",
+            "sectors": 8,
+            "sector_bytes": 512,
+            "storage_read": 1
+          }
+        },
+        {
+          "id": "boot-code",
+          "space": "sram",
+          "start": 3020311552,
+          "end": 3020311556,
+          "basis": "observed-access",
+          "stages": [
+            "rom",
+            "sram",
+            "selection",
+            "handoff",
+            "load"
+          ],
+          "owner": "Boot-code word written by block 0",
+          "evidence": [
+            "block0",
+            "predram-sram-map"
+          ],
+          "derivation": {
+            "kind": "length",
+            "bytes": 4
+          }
+        },
+        {
+          "id": "pointer-table",
+          "space": "sram",
+          "start": 3020311648,
+          "end": 3020311672,
+          "basis": "observed-access",
+          "stages": [
+            "selection",
+            "load",
+            "app"
+          ],
+          "owner": "Pointer table published by 0xb406622c",
+          "evidence": [
+            "pre",
+            "predram-sram-map"
+          ],
+          "derivation": {
+            "kind": "length",
+            "bytes": 24
+          }
+        },
+        {
+          "id": "early-loader-installation",
+          "space": "sram",
+          "start": 3020313600,
+          "end": 3020354560,
+          "basis": "observed-transfer",
+          "stages": [
+            "sram",
+            "power",
+            "selection",
+            "dram",
+            "handoff",
+            "load",
+            "recovery",
+            "resume"
+          ],
+          "owner": "Early loader installed by the block-0 ROM call (selector 4, LBA 0x102b)",
+          "evidence": [
+            "pre",
+            "block0"
+          ],
+          "derivation": {
+            "kind": "sectors",
+            "sectors": 80,
+            "sector_bytes": 512,
+            "storage_read": 0
+          }
+        },
+        {
+          "id": "i2c-bus-cache",
+          "space": "sram",
+          "start": 3020339728,
+          "end": 3020339732,
+          "basis": "observed-access",
+          "stages": [
+            "power"
+          ],
+          "owner": "I2C bus cache inside the installed loader image",
+          "evidence": [
+            "pre",
+            "predram-sram-map"
+          ],
+          "derivation": {
+            "kind": "length",
+            "bytes": 4
+          }
+        },
+        {
+          "id": "loader-globals",
+          "space": "sram",
+          "start": 3020359680,
+          "end": 3020359804,
+          "basis": "observed-access",
+          "stages": [
+            "sram",
+            "power",
+            "selection",
+            "dram",
+            "handoff",
+            "load",
+            "app",
+            "resume"
+          ],
+          "owner": "Globals cleared by main; working DRAM records at 0xb4070820 and 0xb407084c",
+          "evidence": [
+            "pre",
+            "predram-sram-map"
+          ],
+          "derivation": {
+            "kind": "length",
+            "bytes": 124
+          }
+        },
+        {
+          "id": "recovery-copy-destination",
+          "space": "sram",
+          "start": 3020292096,
+          "end": 3020303872,
+          "basis": "observed-access",
+          "stages": [
+            "recovery"
+          ],
+          "owner": "Requested ROM copy destination in the ADFU re-entry path",
+          "evidence": [
+            "adfu",
+            "adfu-logic"
+          ],
+          "derivation": {
+            "kind": "length",
+            "bytes": 11776
+          }
+        },
+        {
+          "id": "rom-copy-source",
+          "space": "rom",
+          "start": 4294922752,
+          "end": 4294934528,
+          "basis": "observed-access",
+          "stages": [
+            "recovery"
+          ],
+          "owner": "Requested ROM copy source; contents absent",
+          "evidence": [
+            "adfu",
+            "adfu-logic"
+          ],
+          "derivation": {
+            "kind": "length",
+            "bytes": 11776
+          }
+        },
+        {
+          "id": "recovery-stack",
+          "space": "sram",
+          "start": null,
+          "end": null,
+          "basis": "observed-access",
+          "stages": [
+            "recovery"
+          ],
+          "owner": "SP assigned at ROM re-entry; down-growing; depth unknown",
+          "evidence": [
+            "adfu"
+          ],
+          "top": 3020359680,
+          "grows": "down"
+        },
+        {
+          "id": "initial-stack-model",
+          "space": "sram",
+          "start": null,
+          "end": null,
+          "basis": "emulator-assumption",
+          "stages": [
+            "rom",
+            "sram",
+            "power",
+            "selection",
+            "dram"
+          ],
+          "owner": "Emulator SP; the ROM-provided physical SP is unknown",
+          "evidence": [
+            "rom-gap",
+            "predram-sram-map"
+          ],
+          "top": 3020550144,
+          "grows": "down"
+        }
+      ],
+      "emulator_mapping_basis": "emulator-assumption",
+      "overlaps": [
+        {
+          "a": "recovery-copy-destination",
+          "b": "first-sector",
+          "relation": "recovery-overwrite",
+          "why": "ADFU re-entry abandons the cold path and overwrites block 0",
+          "open": false
+        },
+        {
+          "a": "recovery-copy-destination",
+          "b": "afi",
+          "relation": "recovery-overwrite",
+          "why": "Recovery runs instead of AFI consumers",
+          "open": false
+        },
+        {
+          "a": "recovery-copy-destination",
+          "b": "rom-service-candidate",
+          "relation": "recovery-overwrite",
+          "why": "Recovery no longer calls the earlier service through these addresses",
+          "open": false
+        },
+        {
+          "a": "recovery-copy-destination",
+          "b": "reloaded-ini",
+          "relation": "recovery-overwrite",
+          "why": "Copy through 0xb4062e00 overwrites the first 0xa00 INI bytes",
+          "open": false
+        },
+        {
+          "a": "recovery-copy-destination",
+          "b": "alternate-write-back-source",
+          "relation": "recovery-overwrite",
+          "why": "The static write-back source is not used after recovery",
+          "open": false
+        },
+        {
+          "a": "alternate-write-back-source",
+          "b": "reloaded-ini",
+          "relation": "containment",
+          "why": "The alternate writer persists the reloaded INI and twelve further sectors of unresolved provenance",
+          "open": false
+        },
+        {
+          "a": "early-loader-installation",
+          "b": "i2c-bus-cache",
+          "relation": "containment",
+          "why": "Cache word lives in the installed image",
+          "open": false
+        }
       ]
     },
     "afi": {
@@ -11681,47 +12805,107 @@
       "word_endianness": "little",
       "magic_checked_bytes": 3,
       "format": [
-        [
-          0,
-          3,
-          "magic"
-        ],
-        [
-          3,
-          1,
-          "retained reserved byte"
-        ],
-        [
-          4,
-          1,
-          "boot_mode"
-        ],
-        [
-          5,
-          1,
-          "boot_dev"
-        ],
-        [
-          6,
-          1,
-          "uart_index"
-        ],
-        [
-          7,
-          1,
-          "uart_pad"
-        ],
-        [
-          8,
-          4,
-          "uart_baud"
-        ],
-        [
-          12,
-          4,
-          "capacity_bytes"
+        {
+          "offset": 0,
+          "width": 3,
+          "field": "magic",
+          "encoding": "bytes"
+        },
+        {
+          "offset": 3,
+          "width": 1,
+          "field": "reserved_byte_3",
+          "encoding": "u8"
+        },
+        {
+          "offset": 4,
+          "width": 1,
+          "field": "boot_mode",
+          "encoding": "u8"
+        },
+        {
+          "offset": 5,
+          "width": 1,
+          "field": "boot_dev",
+          "encoding": "u8"
+        },
+        {
+          "offset": 6,
+          "width": 1,
+          "field": "uart_index",
+          "encoding": "u8",
+          "source_field": "uart-index"
+        },
+        {
+          "offset": 7,
+          "width": 1,
+          "field": "uart_pad",
+          "encoding": "u8",
+          "source_field": "uart-pad"
+        },
+        {
+          "offset": 8,
+          "width": 4,
+          "field": "uart_baud",
+          "encoding": "u32le",
+          "source_field": "uart-baud"
+        },
+        {
+          "offset": 12,
+          "width": 4,
+          "field": "capacity_bytes",
+          "encoding": "u32le"
+        }
+      ],
+      "producer_reserved_value": 0,
+      "cold_boot_mode": 0,
+      "capacity_shift": 20,
+      "capacity_conversion": "(uint32)(working capacity_MiB << 20); 4096 MiB or more wraps",
+      "boot_device_by_medium": {
+        "sd0": 32,
+        "sd2": 34
+      },
+      "generation": {
+        "mode": "cold",
+        "requires_dram_return": true,
+        "note": "Produced after every returned cold DRAM call, including failures (2048 MiB fallback). Not produced by resume, early recovery, invalid INI, ROM failure or an unbounded poll."
+      },
+      "admission": {
+        "dram_return": "0x0",
+        "dram_terminal_pc": "0xb4065440",
+        "note": "A stock consumer runs only after main continuation with a zero DRAM return. Valid AFI bytes alone do not establish DRAM initialization."
+      },
+      "consumer": {
+        "magic": "414649",
+        "magic_checked_bytes": 3,
+        "getters": {
+          "mode": "boot_mode",
+          "device": "boot_dev",
+          "uart": "uart_index",
+          "pad": "uart_pad",
+          "baud": "uart_baud",
+          "size": "capacity_bytes"
+        },
+        "fallback": {
+          "mode": 1,
+          "device": 32,
+          "uart": 5,
+          "pad": 0,
+          "baud": 115200,
+          "size": 0
+        },
+        "minimum_size_bytes": 8388608,
+        "fallback_ram_bytes": 520093696,
+        "evidence": [
+          "uboot-afi-getters",
+          "uboot-afi-layout",
+          "afi-consumers",
+          "afi-missing-control",
+          "afi-reserved-control"
         ]
-      ]
+      },
+      "required_by_linux": false,
+      "linux_note": "Linux receives memory through the device tree. AFI is a stock U-Boot input only."
     },
     "independent-second-stage": {
       "address": null,
@@ -11745,5 +12929,503 @@
       "reference_execution_limit": "before first instruction",
       "modern_platform_validation": null
     }
+  },
+  "semantics": {
+    "dram-bus": {
+      "scope": "Cold mode only (resume flag at 0xb4070804 zero), before the DDR3/LPDDR type branch at 0xb40674e4. Resume uses the stored working byte without normalization or retry.",
+      "input_field": "dram-bus",
+      "rules": [
+        {
+          "input_min": 0,
+          "input_max": 0,
+          "initial_width_bits": 32,
+          "automatic_width_fallback": false,
+          "working_bus_selector": 0,
+          "retained_selector": 0
+        },
+        {
+          "input_min": 1,
+          "input_max": 1,
+          "initial_width_bits": 16,
+          "automatic_width_fallback": false,
+          "working_bus_selector": 1,
+          "retained_selector": 1
+        },
+        {
+          "input_min": 2,
+          "input_max": 255,
+          "initial_width_bits": 32,
+          "automatic_width_fallback": true,
+          "working_bus_selector": 0,
+          "retained_selector": 2
+        }
+      ],
+      "working_selector_width_bits": {
+        "0": 32,
+        "1": 16
+      },
+      "capacity_width_operand": {
+        "16": 1,
+        "32": 2
+      },
+      "names": {
+        "input_bus_selector": "INI byte +0x24/+0x54",
+        "retained_selector": "stack word [sp+0x40] = min(input, 2)",
+        "working_bus_selector": "working record byte +4",
+        "bus_width_bits": "32 when the working byte is 0, else 16",
+        "capacity_width_operand": "1 for x16, 2 for x32; also the density divisor"
+      },
+      "instructions": [
+        [
+          3020321844,
+          "ldrb r2, [r4, #4]"
+        ],
+        [
+          3020321852,
+          "sub lr, r2, #1"
+        ],
+        [
+          3020321856,
+          "cmp r2, #2"
+        ],
+        [
+          3020321860,
+          "movlo r3, r2"
+        ],
+        [
+          3020321864,
+          "movhs r3, #2"
+        ],
+        [
+          3020321868,
+          "str r3, [sp, #0x40]"
+        ],
+        [
+          3020321872,
+          "rsbs ip, lr, #0"
+        ],
+        [
+          3020321884,
+          "adc fp, ip, lr"
+        ],
+        [
+          3020321892,
+          "strb fp, [r4, #4]"
+        ]
+      ],
+      "evidence": [
+        "selector-semantics",
+        "dram",
+        "timing"
+      ]
+    },
+    "dram-rank": {
+      "scope": "Cold mode only. Resume uses the stored chip-select byte; zero there divides by zero in the density calculation.",
+      "input_field": "dram-cs",
+      "rules": [
+        {
+          "input_min": 0,
+          "input_max": 0,
+          "initial_ranks": 2,
+          "automatic": true,
+          "retained_selector": 0
+        },
+        {
+          "input_min": 1,
+          "input_max": 1,
+          "initial_ranks": 1,
+          "automatic": false,
+          "retained_selector": 1
+        },
+        {
+          "input_min": 2,
+          "input_max": 2,
+          "initial_ranks": 2,
+          "automatic": false,
+          "retained_selector": 2
+        },
+        {
+          "input_min": 3,
+          "input_max": 255,
+          "initial_ranks": 2,
+          "automatic": true,
+          "retained_selector": 0
+        }
+      ],
+      "instructions": [
+        [
+          3020321808,
+          "ldrb r0, [r0, #5]"
+        ],
+        [
+          3020321816,
+          "cmp r0, #2"
+        ],
+        [
+          3020321820,
+          "strhi r3, [sp, #0x30]"
+        ],
+        [
+          3020321828,
+          "cmp r0, #1"
+        ],
+        [
+          3020321840,
+          "mov r3, #2"
+        ],
+        [
+          3020321848,
+          "strb r3, [r4, #5]"
+        ]
+      ],
+      "evidence": [
+        "selector-semantics",
+        "dram"
+      ]
+    },
+    "dram-retry": {
+      "mode": "cold",
+      "eligible_internal_codes": [
+        "0x1017fa11"
+      ],
+      "eligibility": "Only PGSR 0x3f after the training PIR (0xb40687a8) yields 0x1017fa11 and reaches the retry test",
+      "collapsed_internal_codes": [
+        "0x2a00fa11",
+        "0x9a00fa11",
+        "0xdf00fa11",
+        "0xc000fa11",
+        "0xf000fa11",
+        "0xfa11"
+      ],
+      "collapsed_return": "0x1747fa11",
+      "order": [
+        "rank",
+        "width"
+      ],
+      "rank_step": {
+        "from_ranks": 2,
+        "to_ranks": 1
+      },
+      "width_step": {
+        "from_width_bits": 32,
+        "to_width_bits": 16,
+        "automatic_rank_restart": 2
+      },
+      "max_attempts": 4,
+      "persistent_training_failure_writeback": {
+        "bus_byte": "retained_selector",
+        "cs_byte": "retained_selector"
+      },
+      "reentry": "Every retry re-enters at 0xb40674dc and repeats clock, reset, PHY and controller programming",
+      "instructions": [
+        [
+          3020326824,
+          "cmp r0, #0x3f"
+        ],
+        [
+          3020328760,
+          "bic lr, r1, #0xff000000"
+        ],
+        [
+          3020328792,
+          "cmp r1, r5"
+        ],
+        [
+          3020328876,
+          "cmp r2, #0"
+        ],
+        [
+          3020328888,
+          "cmp ip, #2"
+        ],
+        [
+          3020328904,
+          "moveq r3, #1"
+        ],
+        [
+          3020328920,
+          "cmp r0, #2"
+        ],
+        [
+          3020328932,
+          "cmp r1, #0"
+        ],
+        [
+          3020328968,
+          "strb fp, [r4, #4]"
+        ],
+        [
+          3020328984,
+          "strbeq r0, [r4, #5]"
+        ],
+        [
+          3020329008,
+          "strbeq r0, [r4, #5]"
+        ],
+        [
+          3020329012,
+          "strbeq ip, [r4, #4]"
+        ]
+      ],
+      "evidence": [
+        "selector-semantics",
+        "dram"
+      ]
+    },
+    "dram-capacity": {
+      "mode": "cold",
+      "applies": "After a trained cold attempt and controller GO. Resume stores no new capacity.",
+      "probe_skip_mask": 204,
+      "rcc_fields": {
+        "row_code": [
+          7,
+          6
+        ],
+        "column_code": [
+          3,
+          2
+        ],
+        "bank_code": [
+          1,
+          0
+        ]
+      },
+      "exponent_terms": [
+        "row_code",
+        "column_code",
+        "capacity_width_operand",
+        "chip_select_count"
+      ],
+      "exponent_bias": 23,
+      "max_exponent": 31,
+      "mib_shift": 20,
+      "bank_branches": [
+        {
+          "bank_codes": [
+            0
+          ],
+          "scale": 1,
+          "divide_shift": 0,
+          "formula": "capacity_MiB = 2^(row_code + column_code + capacity_width_operand + chip_select_count + 3)"
+        },
+        {
+          "bank_codes": [
+            1,
+            2,
+            3
+          ],
+          "scale": 3,
+          "divide_shift": 2,
+          "formula": "capacity_MiB = 3 * 2^(row_code + column_code + capacity_width_operand + chip_select_count + 1)"
+        }
+      ],
+      "result_mask": 65535,
+      "arithmetic": "Unsigned 32-bit; exponent = terms + 23 with chip_select_count 1 or 2. Accepted exponent 25..31 (32..2048 MiB eight-bank). Eight-bank value (0x10000 << (e - 20)) >> 16; other banks ((3 << (e - 20)) << 14) >> 16. Stored as a u16 in working bytes +2/+3.",
+      "exponent_overflow": {
+        "internal_code": "0xc000fa11",
+        "returned_code": "0x1747fa11"
+      },
+      "limitations": [
+        "Firmware arithmetic only; not a physical DRAM geometry formula",
+        "Nonzero bank codes below 256 MiB make the final DCU_CFG term ((cap >> 8) - 1) wrap (observed 0xffffff2c)",
+        "Probe aliasing and unsupported geometries can under- or over-report capacity"
+      ],
+      "instructions": [
+        [
+          3020328452,
+          "lsr r3, r2, #6"
+        ],
+        [
+          3020328456,
+          "add r0, r3, lr, lsr #2"
+        ],
+        [
+          3020328468,
+          "add r1, r0, #0x18"
+        ],
+        [
+          3020328472,
+          "movne ip, #1"
+        ],
+        [
+          3020328476,
+          "moveq ip, #2"
+        ],
+        [
+          3020328484,
+          "sub r1, r3, #1"
+        ],
+        [
+          3020328492,
+          "cmp r3, #0x1f"
+        ],
+        [
+          3020328504,
+          "tst r2, #3"
+        ],
+        [
+          3020328508,
+          "sub r3, r3, #0x14"
+        ],
+        [
+          3020328512,
+          "moveq r2, #0x10000"
+        ],
+        [
+          3020328524,
+          "mov ip, #3"
+        ],
+        [
+          3020328544,
+          "lsl r3, r5, #0xe"
+        ],
+        [
+          3020328548,
+          "lsr r0, r3, #0x10"
+        ]
+      ],
+      "evidence": [
+        "selector-semantics",
+        "geometry",
+        "timing"
+      ]
+    },
+    "dram-timing": {
+      "clock_step_mhz": 12,
+      "pll_word_or": 768,
+      "pll_write_site": 3020324940,
+      "cold_timing_capacity_mib": 2048,
+      "density": "capacity_MiB // capacity_width_operand // chip_select_count (integer division)",
+      "trfc_classes": [
+        {
+          "below_density_mib": 256,
+          "ns": 110
+        },
+        {
+          "below_density_mib": 512,
+          "ns": 160
+        },
+        {
+          "below_density_mib": 1024,
+          "ns": 260
+        },
+        {
+          "below_density_mib": null,
+          "ns": 350
+        }
+      ],
+      "trfc_cycles": "F * ns // 1000 + 1",
+      "evidence": [
+        "timing",
+        "dram"
+      ]
+    }
+  },
+  "attempts": {
+    "start_boundary": {
+      "phase": "controller-phy-programming",
+      "pc": 3020324844
+    },
+    "end_phases": [
+      "controller-phy-programming",
+      "capacity-probe",
+      "final-dcu-programming",
+      "cold-return",
+      "resume-alarm-rearm",
+      "terminal"
+    ],
+    "configuration": {
+      "ranks": {
+        "site": 3020326616,
+        "address": 2954657800,
+        "values": {
+          "0x1842e02": 1,
+          "0x18c2e02": 2
+        }
+      },
+      "width_bits": {
+        "site": 3020326444,
+        "address": 2954658368,
+        "bit": 0,
+        "set": 32,
+        "clear": 16
+      }
+    },
+    "outcomes": {
+      "training-error": {
+        "boundary": "training-dterr",
+        "retry_eligible": true
+      },
+      "trained": {
+        "boundary": "training-passed",
+        "retry_eligible": false
+      },
+      "programming-failure": {
+        "boundary": null,
+        "retry_eligible": false
+      },
+      "unbounded-poll": {
+        "boundary": null,
+        "retry_eligible": false
+      }
+    },
+    "required": {
+      "all": [
+        "dram-gates-off",
+        "dram-reset",
+        "dram-pll-enable",
+        "phy-reset",
+        "phy-timing"
+      ],
+      "programming-failure": [
+        "zq-poll"
+      ],
+      "unbounded-poll": [
+        "zq-poll",
+        "phy-reset-poll",
+        "dram-init"
+      ],
+      "training-error": [
+        "zq-poll",
+        "phy-reset-poll",
+        "dram-init",
+        "train"
+      ],
+      "trained": [
+        "zq-poll",
+        "phy-reset-poll",
+        "dram-init",
+        "train",
+        "train-passed"
+      ]
+    },
+    "forbidden": {
+      "programming-failure": [
+        "dram-init",
+        "train",
+        "train-passed",
+        "dfi-ready",
+        "controller-go"
+      ],
+      "unbounded-poll": [
+        "train",
+        "train-passed",
+        "dfi-ready",
+        "controller-go"
+      ],
+      "training-error": [
+        "train-passed",
+        "dfi-ready",
+        "controller-timing",
+        "controller-go",
+        "capacity-detect"
+      ],
+      "trained": []
+    },
+    "evidence": [
+      "dram",
+      "dram-anchors",
+      "selector-semantics"
+    ]
   }
 }

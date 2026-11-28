@@ -27,7 +27,11 @@ EVIDENCE = {'physical-observation', 'executed', 'static', 'executed-synthetic', 
 RELATIONS = {'firmware-data', 'firmware-control', 'documented-hardware', 'ordering-only',
              'model', 'conservative', 'unresolved'}
 CONDITIONS = {'medium', 'mode', 'release', 'scenario', 'outcome', 'completed', 'boot_code'}
-VALID_EVENT_MATCH = set(FIELDS) | {'after_boundary', 'before_boundary'}
+# Boundary restrictions live in an explicit check-level ``window``; selectors match event fields only.
+VALID_EVENT_MATCH = set(FIELDS)
+TRACE_ORDERS = (None, 'last-before-first', 'first-before-first', 'per-attempt')
+STATE_ROLES = {'execution', 'value', 'absence'}
+OCCURRENCES = {'only', 'first', 'last'}
 PRIVATE_PATH = re.compile(r'(/(?:workspace|home|Users|mnt/data)/|[A-Za-z]:\\(?:Users|Documents)\\)')
 
 
@@ -154,52 +158,156 @@ def indexed_events(rows):
         index += count
 
 
-def find_events(rows, checks, boundaries):
-    access = {k: v for k, v in checks.items() if k in FIELDS}
-    lower = max((index for phase, _, index in boundaries if phase in checks.get('after_boundary', [])), default=0)
-    upper = min((index for phase, _, index in boundaries if phase in checks.get('before_boundary', [])),
-                default=float('inf'))
-    return [(i, n, e) for i, n, e in rows if lower <= i < upper and event_matches(e, access)]
+class Observation:
+    """Outcome of one successful check.
+
+    ``execution_positions`` holds trace positions on a doubled scale: event ``i``
+    is ``2*i + 1`` and a boundary or supplemental anchor at event count ``b`` is
+    ``2*b``, so an anchor recorded before event ``b`` orders strictly before it.
+    A passing absence or value assertion never contributes execution evidence."""
+    __slots__ = ('assertion_passed', 'execution_positions', 'state_execution', 'absence_confirmed', 'role')
+
+    def __init__(self, role, positions=(), state_execution=False, absence_confirmed=False):
+        self.assertion_passed = True
+        self.role = role
+        self.execution_positions = list(positions)
+        self.state_execution = state_execution
+        self.absence_confirmed = absence_confirmed
+
+    @property
+    def execution_observed(self):
+        return bool(self.execution_positions) or self.state_execution
+
+
+def event_position(index):
+    return 2 * index + 1
+
+
+def anchor_position(index):
+    return 2 * index
+
+
+def resolve_boundary(rule, boundaries, who):
+    """Index of the boundary a window names. Missing or ambiguous boundaries fail closed."""
+    hits = [index for phase, pc, index in boundaries
+            if phase == rule['phase'] and ('pc' not in rule or pc == rule['pc'])]
+    occurrence = rule['occurrence']
+    if not hits:
+        if 'else' in rule:
+            return resolve_boundary(rule['else'], boundaries, who)
+        raise ValueError(f"{who}: required boundary {rule['phase']} is absent")
+    if occurrence == 'only':
+        if len(hits) != 1:
+            raise ValueError(f"{who}: boundary {rule['phase']} occurs {len(hits)} times; window is ambiguous")
+        return hits[0]
+    if occurrence == 'first':
+        return hits[0]
+    if occurrence == 'last':
+        return hits[-1]
+    if not 1 <= occurrence <= len(hits):
+        raise ValueError(f"{who}: boundary {rule['phase']} occurrence {occurrence} is absent")
+    return hits[occurrence - 1]
+
+
+def window_of(check, boundaries, who):
+    window = check.get('window') or {}
+    lower = resolve_boundary(window['after'], boundaries, who) if 'after' in window else 0
+    upper = resolve_boundary(window['before'], boundaries, who) if 'before' in window else None
+    if upper is not None and lower > upper:
+        raise ValueError(f'{who}: window boundaries are reversed ({lower} > {upper})')
+    return lower, upper
+
+
+def select_events(rows, selector, window=(0, None)):
+    """Matching events clipped to ``[lower, upper)``. RLE runs that straddle a
+    boundary contribute only the repetitions inside the window."""
+    lower, upper = window
+    access = {k: v for k, v in selector.items() if k in FIELDS}
+    out = []
+    for start, count, event in rows:
+        first = max(start, lower)
+        last = start + count if upper is None else min(start + count, upper)
+        if first < last and event_matches(event, access):
+            out.append((first, last - first, event))
+    return out
+
+
+def find_events(rows, checks, boundaries, window=None):
+    """Compatibility wrapper: explicit window or the whole stream."""
+    return select_events(rows, checks, window or (0, None))
 
 
 def check_access(operation, check, rows, boundaries, supplemental, result):
-    selector = check['match']
-    pos = []
-    count = 0
+    selector = check['match'] if check['kind'] != 'state' else None
+    count, positions = 0, []
     if check['kind'] == 'boundary':
-        pos = [index for phase, pc, index in boundaries
-               if event_matches({'phase': phase, 'pc': pc}, selector)]
-        count = len(pos)
+        positions = [anchor_position(index) for phase, pc, index in boundaries
+                     if event_matches({'phase': phase, 'pc': pc}, selector)]
+        count = len(positions)
     elif check['kind'] == 'supplemental':
-        pos = [e['event_index'] for e in supplemental if event_matches(e, selector)]
-        count = len(pos)
+        positions = [anchor_position(e['event_index']) for e in supplemental if event_matches(e, selector)]
+        count = len(positions)
     elif check['kind'] == 'state':
         actual = result
         for key in check['path']:
             actual = actual[key]
         if actual != check['equals']:
             raise ValueError(f"{operation}: {check['path']} was {actual!r}, expected {check['equals']!r}")
-        return [None]
+        role = check['role']
+        if role == 'execution':
+            status = result['stages'][check['stage']]['status']
+            if status not in check['stage_status']:
+                raise ValueError(f"{operation}: execution state claimed from stage {check['stage']} with status {status}")
+            return Observation(role, state_execution=True)
+        if role == 'absence':
+            return Observation(role, absence_confirmed=True)
+        return Observation(role)
     else:
-        selected = find_events(rows, selector, boundaries)
-        pos = [i for i, _, _ in selected]
+        window = window_of(check, boundaries, operation)
+        selected = select_events(rows, selector, window)
+        positions = [event_position(i) for start, n, _ in selected for i in range(start, start + n)]
         count = sum(n for _, n, _ in selected)
         if 'rmw' in check:
             rmw = check['rmw']
-            preceding = find_events(rows, rmw['read'], boundaries)
-            read_index = 0
-            for index, _, event in selected:
-                while read_index < len(preceding) and preceding[read_index][0] < index:
-                    read_index += 1
-                before = preceding[read_index - 1] if read_index else None
-                if (before is None or before[2]['address'] != event['address'] or
-                        before[2]['width'] != event['width'] or before[2]['domain'] != event['domain'] or
-                        (before[2]['value'] & ~rmw['clear'] | rmw['set']) != event['value']):
-                    raise ValueError(f'{operation}: RMW mismatch at event {index}')
+            preceding = select_events(rows, rmw['read'], window)
+            for start, n, event in selected:
+                before = [row for row in preceding if row[0] < start]
+                prior = before[-1] if before else None
+                if (n != 1 or prior is None or prior[2]['address'] != event['address'] or
+                        prior[2]['width'] != event['width'] or prior[2]['domain'] != event['domain'] or
+                        (prior[2]['value'] & ~rmw['clear'] | rmw['set']) != event['value']):
+                    raise ValueError(f'{operation}: RMW mismatch at event {start}')
     lo, hi = check['count']
     if count < lo or (hi is not None and count > hi):
         raise ValueError(f'{operation}: {check["kind"]} match {selector}: count {count}, expected {lo}..{hi}')
-    return pos
+    if hi == 0:
+        # Excludes one access pattern. Only an explicit absence role confirms the
+        # operation itself did not run.
+        role = check.get('role', 'exclusion')
+        return Observation(role, absence_confirmed=role == 'absence')
+    return Observation('execution', positions)
+
+
+def anchors(op, rows, boundaries, supplemental, result):
+    """Presence of an operation regardless of scenario conditions: positive trace
+    selectors anywhere in the stream, or a completed stage named by an execution-
+    role state check. Used to reject forbidden operations."""
+    found = []
+    for check in op['checks']:
+        if check['kind'] == 'state':
+            if check['role'] == 'execution' and result['stages'][check['stage']]['status'] in check['stage_status']:
+                found.append(None)
+            continue
+        if check['count'][0] < 1:
+            continue
+        sel = check['match']
+        if check['kind'] == 'boundary':
+            found += [anchor_position(i) for phase, pc, i in boundaries if event_matches({'phase': phase, 'pc': pc}, sel)]
+        elif check['kind'] == 'supplemental':
+            found += [anchor_position(e['event_index']) for e in supplemental if event_matches(e, sel)]
+        else:
+            found += [event_position(i) for start, n, _ in select_events(rows, sel) for i in range(start, start + n)]
+    return found
 
 
 def check_structure(spec, history):
@@ -221,6 +329,7 @@ def check_structure(spec, history):
     fixtures = {fixture_id(release, name): facts_for(release, history['scenarios'][release][name])
                 for release, names in spec['trace_cases'].items() for name in names}
     ops, stages, regs, unknowns = (spec[key] for key in ('operations', 'stages', 'registers', 'uncertainties'))
+    result_stages = set(next(iter(next(iter(history['scenarios'].values())).values()))['stages'])
     for items in (ops, stages, regs, refs, unknowns, spec['dependencies'], spec['branches'], spec['configuration_fields']):
         require(all(re.fullmatch(r'[a-z][a-z0-9.-]*', key) for key in items), 'invalid identifier')
     for key, stage in stages.items():
@@ -244,6 +353,24 @@ def check_structure(spec, history):
     for key, field in spec['configuration_fields'].items():
         cites(field['evidence'], key)
         require(field['width'] in (1, 2, 4) and field['offset'] >= 0, f'{key}: invalid field')
+        require(field['record'] in ('ini', 'working-dram-record') and field['meaning'], f'{key}: invalid record')
+        require(isinstance(field['reference'], list) and field['reference'] and
+                all(row['releases'] and set(row['releases']) <= spec['firmware'].keys() for row in field['reference']),
+                f'{key}: reference values must name releases')
+        if field['record'] == 'working-dram-record':
+            require(field['endianness'] == 'little' and field['ini_slot_width'] in (1, 4) and
+                    set(field['ini_offsets']) == {'primary', 'secondary'} and
+                    field['ini_offsets']['secondary'] - field['ini_offsets']['primary'] == 0x30,
+                    f'{key}: working field needs little-endian primary/secondary INI placement')
+            require(all({'primary', 'secondary'} <= row.keys() for row in field['reference']),
+                    f'{key}: working reference needs primary and secondary values')
+        else:
+            require(all('value' in row for row in field['reference']), f'{key}: INI reference needs a value')
+    sem = spec['semantics']
+    require({'dram-bus', 'dram-rank', 'dram-retry', 'dram-capacity', 'dram-timing'} <= sem.keys(),
+            'missing structured DRAM semantics')
+    for key, block in sem.items():
+        cites(block['evidence'], f'semantics.{key}')
     for key, reg in regs.items():
         require(reg['space'] in ('mmio', 'pmic', 'sram') and reg['width'] in (1, 2, 4),
                 f'{key}: register address space or access width invalid')
@@ -264,6 +391,24 @@ def check_structure(spec, history):
         for check in op['checks']:
             when(check['when'], key)
             require(check['kind'] in ('event', 'boundary', 'state', 'supplemental'), f'{key}: invalid check kind')
+            if check['kind'] == 'state':
+                require(check['role'] in STATE_ROLES, f'{key}: state check needs a role')
+                if check['role'] == 'execution':
+                    require(check['stage'] in result_stages and check['stage_status'] and
+                            set(check['stage_status']) <= {'completed', 'terminal'} and check['equals'] is not None,
+                            f'{key}: execution state needs a positive predicate from a named stage')
+                if check['role'] == 'absence':
+                    require(check['path'] == ['stages', check['stage'], 'status'] and
+                            check['equals'] not in ('completed', 'terminal'),
+                            f'{key}: absence must assert a stage that did not run')
+            require('window' not in check or check['kind'] == 'event', f'{key}: only event checks take a window')
+            for side, rule in (check.get('window') or {}).items():
+                require(side in ('after', 'before'), f'{key}: invalid window side')
+                while rule is not None:
+                    require(rule['phase'] and (rule['occurrence'] in OCCURRENCES or
+                            isinstance(rule['occurrence'], int) and rule['occurrence'] >= 1),
+                            f'{key}: window boundary needs a phase and explicit occurrence')
+                    rule = rule.get('else')
             if check['kind'] != 'state':
                 lo, hi = check['count']
                 require(lo >= 0 and (hi is None or lo <= hi), f'{key}: invalid count')
@@ -282,7 +427,13 @@ def check_structure(spec, history):
     for key, edge in spec['dependencies'].items():
         require(edge['from'] in ops and edge['to'] in ops and edge['relation'] in RELATIONS and edge['why'],
                 f'{key}: invalid dependency')
-        require(edge['trace_order'] in (None, 'first-before-first', 'last-before-first'), f'{key}: bad order rule')
+        require(edge['trace_order'] in TRACE_ORDERS, f'{key}: bad order rule')
+        require((edge['trace_order'] == 'first-before-first') == bool(edge.get('occurrence_justification')) and
+                (edge['trace_order'] != 'first-before-first' or
+                 not {ops[edge['from']]['stage'], ops[edge['to']]['stage']} & {'dram', 'resume'}),
+                f'{key}: first-occurrence ordering needs a justification and cannot span DRAM attempts')
+        require(edge['trace_order'] != 'per-attempt' or {ops[edge['from']]['stage'], ops[edge['to']]['stage']} <=
+                {'dram', 'resume'}, f'{key}: per-attempt ordering applies to DRAM attempt operations only')
         when(edge['when'], key)
         cites(edge['evidence'], key)
     for fixture in fixtures.values():
@@ -308,7 +459,20 @@ def check_structure(spec, history):
         require(branch['requires'] and branch['forbids'], f'{key}: branch must define positive and negative states')
         require((set(branch['requires']) | set(branch['forbids'])) <= ops.keys() and
                 not set(branch['requires']) & set(branch['forbids']), f'{key}: invalid branch operations')
+        require(set(branch['confirm_absent']) <= set(branch['forbids']), f'{key}: confirmed absence must be forbidden')
+        require(('linux-entry' in branch['requires']) != ('linux-entry' in branch['confirm_absent']),
+                f'{key}: every terminal branch must require Linux entry or confirm its absence')
         cites(branch['evidence'], key)
+    attempts = spec['attempts']
+    cites(attempts['evidence'], 'attempts')
+    require(set(attempts['required']) == {'all'} | attempts['outcomes'].keys() and
+            set(attempts['forbidden']) == attempts['outcomes'].keys(), 'attempt outcome rules incomplete')
+    for outcome, names in list(attempts['required'].items()) + list(attempts['forbidden'].items()):
+        require(set(names) <= ops.keys() and all(ops[n]['stage'] in ('dram', 'resume') for n in names),
+                f'attempts.{outcome}: unknown or non-DRAM operation')
+    for outcome in attempts['outcomes']:
+        require(not set(attempts['required'][outcome]) & set(attempts['forbidden'][outcome]),
+                f'attempts.{outcome}: operation both required and forbidden')
     for key, row in unknowns.items():
         require(row['status'] == 'open' and row['resolution'] is None, f'{key}: unsupported resolution')
         require(set(row['stages']) <= stages.keys() and row['stages'], f'{key}: invalid affected stages')
@@ -326,9 +490,15 @@ def check_structure(spec, history):
         require(all(profile[k] for k in ('maturity', 'prerequisites', 'validation', 'excluded', 'promotion')),
                 f'{key}: incomplete profile')
     for retry in spec['retry_transitions']:
-        require(retry['mode'] == 'cold' and retry['from_operation'] in ops and retry['to_operation'] in ops
-                and retry['when'] and retry['bound'], 'invalid retry transition')
+        require(retry['mode'] == sem['dram-retry']['mode'] == 'cold' and retry['from_operation'] == 'train' and
+                retry['to_operation'] in ops and retry['when'] and retry['bound'],
+                'retry transitions must start from the training error the firmware retries')
         cites(retry['evidence'], 'retry transition')
+    afi = spec['interfaces']['afi']
+    require(afi['required_by_linux'] is False, 'AFI must not be described as a Linux requirement')
+    cites(afi['consumer']['evidence'], 'interfaces.afi.consumer')
+    for row in spec['interfaces']['sram-layout']['ranges']:
+        cites(row['evidence'], f"sram {row['id']}")
     return fixtures
 
 
@@ -347,12 +517,13 @@ def reconstruct_sram(events, base, before):
     return data.hex(), stores
 
 
-def check_handoff(key, case, events):
+def check_handoff(key, case, events, spec=None):
     result = case['result']
     dram = result['dram']
+    address = spec['interfaces']['afi']['address'] if spec else 0xB4060300
     if dram is not None:
         afi = dram['afi']
-        afi_bytes, count = reconstruct_sram(events, 0xB4060300, afi['before'])
+        afi_bytes, count = reconstruct_sram(events, address, afi['before'])
         if (afi_bytes, count) != (afi['bytes'], afi['stores']):
             raise ValueError(f'{key}: ordered AFI stores disagree with the final bytes or store count')
         final, _ = reconstruct_sram(events, 0xB406241C, dram['ini_initial']['primary'])
@@ -398,8 +569,17 @@ def validate_trace(spec, trace, history):
             startup['runtime_reservations'] is not None or startup['payload_sha256'] !=
             spec['firmware'][startup['release']]['uboot_payload_sha256']):
         raise ValueError('incorrect U-Boot startup scope or provenance')
+    import contract_semantics as semantics
+    stats = Counter()
+    semantic = semantics.check_dram_semantics(spec)
+    semantic.update(configuration_checks=semantics.check_configuration(spec, history, trace),
+                    afi_checks=semantics.check_afi(spec, trace, history),
+                    sram_checks=semantics.check_sram(spec, trace),
+                    timing_checks=semantics.check_timing(spec, trace))
+    static_verified = semantics.check_static_operations(spec, trace)
     checked = Counter()
-    covered_edges = set()
+    observed, state_only, absent = set(), set(), set()
+    covered_edges, attempt_edges = set(), set()
     for key, facts in fixtures.items():
         release, name = key.split('/')
         expected = history['scenarios'][release][name]
@@ -441,39 +621,193 @@ def validate_trace(spec, trace, history):
         if any(seq != sorted(seq) or any(not 0 <= i <= event_count for i in seq) for seq in (indexes, supplements)):
             raise ValueError(f'{key}: invalid event index')
         events = list(indexed_events(rows))
-        check_handoff(key, case, events)
-        positions = {}
+        check_handoff(key, case, events, spec)
+        semantics.check_afi_stores(spec['interfaces']['afi'], key, events)
+        found = defaultdict(list)
         for op_id, op in spec['operations'].items():
             for check in op['checks']:
                 if matches(facts, check['when']):
-                    pos = check_access(op_id, check, events, case['boundaries'], case['supplemental'], case['result'])
-                    positions.setdefault(op_id, []).extend(pos)
+                    found[op_id].append(check_access(op_id, check, events, case['boundaries'],
+                                                     case['supplemental'], case['result']))
                     checked[op_id] += 1
+        positions = {op: sorted(p for o in obs for p in o.execution_positions) for op, obs in found.items()}
+        executed = {op for op, obs in found.items() if any(o.execution_observed for o in obs)}
+        confirmed_absent = {op for op, obs in found.items() if any(o.absence_confirmed for o in obs)}
+        observed |= {op for op in executed if positions[op]}
+        state_only |= {op for op in executed if not positions[op]}
+        absent |= confirmed_absent
+        for op_id in executed & confirmed_absent:
+            raise ValueError(f'{key}: {op_id} is both observed and confirmed absent')
         for edge_id, edge in spec['dependencies'].items():
-            if not edge['trace_order'] or not matches(facts, edge['when']):
+            if edge['trace_order'] not in ('last-before-first', 'first-before-first') or not matches(facts, edge['when']):
                 continue
-            left = [value for value in positions.get(edge["from"], []) if value is not None]
-            right = [value for value in positions.get(edge["to"], []) if value is not None]
+            left, right = positions.get(edge['from'], []), positions.get(edge['to'], [])
             if not left or not right:
                 raise ValueError(f'{key}: missing operation for ordered dependency {edge_id}')
-            antecedent = max(left) if edge['trace_order'] == 'last-before-first' else min(left)
-            if antecedent > min(right):
+            if (max(left) if edge['trace_order'] == 'last-before-first' else min(left)) > min(right):
                 raise ValueError(f'{key}: swapped ordering for {edge_id}')
             covered_edges.add(edge_id)
+        attempt_edges |= check_attempts(spec, key, facts, case, events, positions)
+        stats['attempts'] += sum(1 for b in case['boundaries'] if b[0] == spec['attempts']['start_boundary']['phase'])
         active = [branch for branch in spec['branches'].values() if matches(facts, branch['when'])]
         if len(active) != 1:
             raise ValueError(f'{key}: expected exactly one terminal branch, got {len(active)}')
-        for op_id in active[0]['requires']:
-            if not positions.get(op_id):
+        branch = active[0]
+        dram = case['result']['dram']
+        if (dram['terminal']['pc'] if dram else None) != branch['dram_terminal_pc']:
+            raise ValueError(f'{key}: terminal branch expects DRAM terminal {branch["dram_terminal_pc"]}')
+        for op_id in branch['requires']:
+            if op_id not in executed:
                 raise ValueError(f'{key}: terminal branch missing {op_id}')
-        for op_id in active[0]['forbids']:
-            if positions.get(op_id):
+        for op_id in branch['forbids']:
+            if op_id in executed or anchors(spec['operations'][op_id], events, case['boundaries'],
+                                            case['supplemental'], case['result']):
                 raise ValueError(f'{key}: terminal branch reached forbidden {op_id}')
+        for op_id in branch['confirm_absent']:
+            if op_id not in confirmed_absent:
+                raise ValueError(f'{key}: terminal branch lacks a positive absence check for {op_id}')
+        stats['absence_confirmations'] += len(branch['confirm_absent'])
     for op_id, op in spec['operations'].items():
         if op['checks'] and not checked[op_id]:
             raise ValueError(f'{op_id}: operation covered by no trace')
-    return dict(cases=len(fixtures), operations=len(checked), checks=sum(checked.values()),
-                checked_ordered_dependencies=len(covered_edges))
+    edges = spec['dependencies'].values()
+    return dict(
+        cases=len(fixtures), operations=len(checked), checks=sum(checked.values()),
+        checked_ordered_dependencies=len(covered_edges), per_attempt_dependencies=len(attempt_edges),
+        dram_attempts=stats['attempts'], absence_confirmations=stats['absence_confirmations'],
+        operation_definitions=len(spec['operations']),
+        operations_observed_in_trace=len(observed), operations_state_only=len(state_only - observed),
+        operations_confirmed_absent=len(absent),
+        operations_without_checks=sorted(k for k, op in spec['operations'].items() if not op['checks']),
+        operations_static_verified=static_verified,
+        operations_unverified=sorted(k for k, op in spec['operations'].items()
+                                     if not op['checks'] and k not in static_verified),
+        dependencies=len(spec['dependencies']),
+        dependencies_without_trace_order=sum(1 for e in edges if e['trace_order'] is None),
+        dependencies_unresolved=sum(1 for e in edges if e['relation'] == 'unresolved'),
+        semantics=semantic)
+
+
+def attempt_intervals(spec, case):
+    """Attempt identities and event intervals from the executed boundary stream."""
+    cfg = spec['attempts']
+    start = cfg['start_boundary']
+    bounds = case['boundaries']
+    out = []
+    for pos, (phase, pc, index) in enumerate(bounds):
+        if phase != start['phase'] or pc != start['pc']:
+            continue
+        end, inner = None, []
+        for later_phase, _, later in bounds[pos + 1:]:
+            if later_phase in cfg['end_phases']:
+                end = later
+                break
+            inner.append(later_phase)
+        out.append(dict(number=len(out) + 1, start=index, end=end, phases=inner))
+    return out
+
+
+def check_attempts(spec, key, facts, case, events, positions):
+    """Per-attempt operation order, required/forbidden operations and retry transitions."""
+    import contract_semantics as semantics
+    cfg = spec['attempts']
+    sem = spec['semantics']
+    dram = case['result']['dram']
+    intervals = attempt_intervals(spec, case)
+    if not intervals:
+        return set()
+    total = sum(n for _, n, _ in events)
+    covered = set()
+    observed = []
+    for attempt in intervals:
+        lo, hi = 2 * attempt['start'], 2 * (attempt['end'] if attempt['end'] is not None else total)
+        inside = {op: [p for p in ps if lo <= p < hi] for op, ps in positions.items()}
+        anchor_inside = {op: [p for p in anchors(spec['operations'][op], events, case['boundaries'], case['supplemental'],
+                                                 case['result']) if p is not None and lo <= p < hi]
+                         for op in {n for names in cfg['forbidden'].values() for n in names}}
+        phases = attempt['phases']
+        if 'training-dterr' in phases:
+            outcome = 'training-error'
+        elif 'training-passed' in phases:
+            outcome = 'trained'
+        elif 'controller-phy-programmed' not in phases:
+            outcome = 'programming-failure'
+        elif dram['terminal'].get('known_poll'):
+            outcome = 'unbounded-poll'
+        else:
+            raise ValueError(f'{key}: attempt {attempt["number"]} has no classifiable outcome')
+        who = f'{key} attempt {attempt["number"]} ({outcome})'
+        for op in cfg['required']['all'] + cfg['required'][outcome]:
+            if not inside.get(op):
+                raise ValueError(f'{who}: required operation {op} absent')
+        for op in cfg['forbidden'][outcome]:
+            if inside.get(op) or anchor_inside[op]:
+                raise ValueError(f'{who}: forbidden operation {op} present')
+        for edge_id, edge in spec['dependencies'].items():
+            if edge['trace_order'] != 'per-attempt' or not matches(facts, edge['when']):
+                continue
+            left, right = inside.get(edge['from'], []), inside.get(edge['to'], [])
+            if right and not left:
+                raise ValueError(f'{who}: {edge["to"]} without prerequisite {edge["from"]} ({edge_id})')
+            if left and right:
+                if max(left) > min(right):
+                    raise ValueError(f'{who}: swapped ordering for {edge_id}')
+                covered.add(edge_id)
+        config = {}
+        for name, rule in cfg['configuration'].items():
+            words = [e['value'] for start, n, e in events if lo <= 2 * start + 1 < hi and e['op'] == 'w' and
+                     e['address'] == rule['address'] and e.get('site') == rule['site']]
+            if len(words) > 1:
+                raise ValueError(f'{who}: {name} programmed {len(words)} times')
+            if words:
+                config[name] = (rule['values'][f'{words[0]:#x}'] if 'values' in rule else
+                                rule['set'] if words[0] >> rule['bit'] & 1 else rule['clear'])
+        observed.append(dict(outcome=outcome, config=config))
+    training = [a for a in observed if a['outcome'] in ('training-error', 'trained')]
+    if [(a['config'].get('ranks'), a['config'].get('width_bits'), a['outcome']) for a in training] != [
+            (t['ranks'], t['width_bits'], 'trained' if t['pgsr_response'] == '0x1f' else 'training-error')
+            for t in dram['training']]:
+        raise ValueError(f'{key}: attempt configuration or outcome differs from the recorded training results')
+    for attempt in observed[:-1]:
+        if attempt['outcome'] != 'training-error':
+            raise ValueError(f'{key}: retry after a non-retryable {attempt["outcome"]} attempt')
+    if facts['mode'] != 'cold':
+        if len(observed) != 1:
+            raise ValueError(f'{key}: resume attempts must not retry')
+        return covered
+    # Predict the cold sequence from the input record and the structured retry rules.
+    selection = dram['record_selection']
+    raw = bytes.fromhex(dram['ini_initial'][selection])
+    base = semantics.INI_RECORD_BASES[selection]
+    fields = spec['configuration_fields']
+    bus_in = raw[fields['dram-bus']['ini_offsets'][selection] - base]
+    cs_in = raw[fields['dram-cs']['ini_offsets'][selection] - base]
+    outcomes = iter(a['outcome'] == 'trained' for a in observed)
+    calls = []
+
+    def trains(ranks, width):
+        calls.append((ranks, width))
+        result = next(outcomes, None)
+        if result is None:
+            raise ValueError(f'{key}: structured retry rules predict attempt {len(calls)} which did not execute')
+        return result
+
+    if observed[-1]['outcome'] in ('training-error', 'trained'):
+        predicted = semantics.attempts(sem, bus_in, cs_in, trains)
+        if len(predicted['attempts']) != len(observed):
+            raise ValueError(f'{key}: {len(observed)} attempts executed, retry rules predict {len(predicted["attempts"])}')
+        final = dram['record_final']
+        if (final['bus_sel'], final['cs']) != (predicted['working_bus'], predicted['working_cs']):
+            raise ValueError(f'{key}: final working selectors differ from the retry rules')
+    else:
+        calls_needed = len(observed) - 1
+        semantics.attempts(sem, bus_in, cs_in, lambda r, w: calls.append((r, w)) or len(calls) > calls_needed)
+        calls = calls[:len(observed)]
+    for number, (attempt, (ranks, width)) in enumerate(zip(observed, calls), 1):
+        for name, value in (('ranks', ranks), ('width_bits', width)):
+            if name in attempt['config'] and attempt['config'][name] != value:
+                raise ValueError(f'{key}: attempt {number} {name} {attempt["config"][name]} differs from retry rules {value}')
+    return covered
 
 
 def select_result(run):
