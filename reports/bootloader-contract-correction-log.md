@@ -39,3 +39,14 @@ Conclusion: the specification statement "0 auto x32 then x16" is wrong. Status: 
 ## Additional discrepancy A2: reference value semantics
 
 `configuration_fields.*.reference` lists mix `[primary, secondary]` (capacity, cs, rcc) with `[pre-20231014, 20231014]` (ODT, drive). Ambiguous; replaced by keyed structured values.
+
+## Checkpoint B/C: semantic corrections and validator hardening
+
+* `specifications/bootloader-initialization.json`: structured `semantics` (dram-bus, dram-rank, dram-retry, dram-capacity, dram-timing), keyed release references, INI and working placement, AFI field objects with consumer/generation/admission rules, SRAM range objects with basis, stages, derivations and declared overlaps, `attempts`, explicit boundary windows, state-check roles, branch `confirm_absent` and `dram_terminal_pc`.
+* `tools/contract_semantics.py` (new): interpreter plus checks against the firmware matrix, `ddr_model`, historical evidence, the trace and executed getters. `generate`/`check` reproduce `evidence/firmware/dram-selector-semantics.json` (240 runs, instruction and literal audit of both contract releases; the DRAM routine is byte-identical in both).
+* `tools/bootloader_contract.py`: fail-closed windows, RLE clipping, `Observation`, doubled-scale ordering, per-attempt validation with retry prediction, forbidden-anchor scan, `sources` mode, generated contract tables.
+* Additional discrepancy A3 (found by a new negative control): a required attempt operation was satisfied by any one of its anchors. Removing both reset writes from attempt 2 passed because the reset delay request remained. Fixed: each unbounded access check of a required operation must recur inside every attempt.
+* Additional discrepancy A4: `phy-reset-poll` did not apply to `phy-poll` although the raw trace shows the PHY-ready read (event 656, value 7) before the unbounded wait. Condition extended, with the two adjacent dependencies.
+* Additional discrepancy A5: `boot-select` mixes the block-0 store and the early loader's later read of the code word, so only its first occurrence precedes `load-early`. `first-before-first` now requires an explicit `occurrence_justification` and is rejected for DRAM operations.
+* Pinned sources: all five references (three Linux, two new U-Boot AFI references) verified by git blob SHA-1 and line bounds against files fetched at the ledger revisions into a local `ATM_SOURCES_DIR`.
+* Tests: `tests.test_contract_semantics` 49 tests, OK, 1 skipped (firmware); `tests.test_bootloader_contract` 51 tests, OK, 1 skipped (firmware).

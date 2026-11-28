@@ -34,21 +34,38 @@ The selected first stage needs verified load bounds, executable memory and a com
 
 Ranges use a half-open end. The emulator maps `[0xb4060000, 0xb40a0000)`. Only specific firmware accesses and loaded spans below establish use. SRAM physical extent, mirrored addresses, reserved ROM work areas and usable alignment remain open.
 
-| Range or anchor | Stock owner and evidence | Lifetime and constraints |
+<!-- generated:sram-layout start -->
+| Range | Identifier | Basis | Live stages | Owner and derivation |
+|---|---|---|---|---|
+| `[0xb4060000,0xb4060200)` | `first-sector` | static-span | rom, sram, app | Block 0 instructions and literals; app.bin later saves its target at 0xb4060018; end = start + 0x200 |
+| `[0xb4060300,0xb4060310)` | `afi` | interface | handoff, load, app, uboot | AFI producer and U-Boot getters; end = start + 0x10 |
+| `[0xb4060400,0xb4061e00)` | `rom-service-candidate` | static-inference | rom, sram, load | Zero-filled on disk; ROM service entry 0xb4060400 and alternate reader 0xb40612b0 inferred ROM-populated |
+| `[0xb4062400,0xb4064c00)` | `alternate-write-back-source` | static-span | app | Static app.bin alternate writer: 20 sectors from 0xb4062400 to LBA 0x1013 (not executed); end = start + 20 × 512 |
+| `[0xb4062400,0xb4063400)` | `reloaded-ini` | observed-transfer | sram, power, selection, dram, handoff, load, app | INI reloaded by main (selector 4, LBA 0x1013); SFVD at +0x400; end = start + 8 × 512 (storage read 1) |
+| `[0xb4064c00,0xb4064c04)` | `boot-code` | observed-access | rom, sram, selection, handoff, load | Boot-code word written by block 0; end = start + 0x4 |
+| `[0xb4064c60,0xb4064c78)` | `pointer-table` | observed-access | selection, load, app | Pointer table published by 0xb406622c; end = start + 0x18 |
+| `[0xb4065400,0xb406f400)` | `early-loader-installation` | observed-transfer | sram, power, selection, dram, handoff, load, recovery, resume | Early loader installed by the block-0 ROM call (selector 4, LBA 0x102b); end = start + 80 × 512 (storage read 0) |
+| `[0xb406ba10,0xb406ba14)` | `i2c-bus-cache` | observed-access | power | I2C bus cache inside the installed loader image; end = start + 0x4 |
+| `[0xb4070800,0xb407087c)` | `loader-globals` | observed-access | sram, power, selection, dram, handoff, load, app, resume | Globals cleared by main; working DRAM records at 0xb4070820 and 0xb407084c; end = start + 0x7c |
+| `[0xb4060000,0xb4062e00)` | `recovery-copy-destination` | observed-access | recovery | Requested ROM copy destination in the ADFU re-entry path; end = start + 0x2e00 |
+| `[0xffff5200,0xffff8000)` | `rom-copy-source` | observed-access | recovery | Requested ROM copy source; contents absent; end = start + 0x2e00 |
+| top `0xb4070800`, grows down, extent unknown | `recovery-stack` | observed-access | recovery | SP assigned at ROM re-entry; down-growing; depth unknown |
+| top `0xb409f000`, grows down, extent unknown | `initial-stack-model` | emulator-assumption | rom, sram, power, selection, dram | Emulator SP; the ROM-provided physical SP is unknown |
+
+| Overlap | Relation | Justification |
 |---|---|---|
-| `[0xb4060000,0xb4060200)` | Initial 512-byte block 0; first instructions and literals | Executed from entry. app.bin uses word `0xb4060018` to save the U-Boot target. ADFU copy targets this region |
-| `[0xb4060200,0xb4060400)` | Additional disk block in historical loader layout; colocated with runtime AFI | Its presence in the ROM's entry SRAM is unknown. The integrated model installs only the first sector |
-| `[0xb4060300,0xb4060310)` | AFI producer and U-Boot getters | Preserve 16 raw bytes until the last compatible consumer. ADFU overwrites the interval if the physical copy succeeds |
-| `[0xb4060400,0xb4061e00)` | On-disk hole including ROM service entry, alternate-path reader workspace | Reserve while using ROM and never infer availability from disk zeroes. `0xb4060408` is read in the alternate dispatch |
-| `[0xb4062400,0xb4063400)` | 4 KiB INI loaded by main from LBA `0x1013` | Contains primary, selector, secondary and SFVD at `0xb4062800`. Live across DRAM dispatch and app.bin. Recovery overlaps through `0xb4062e00` |
-| `[0xb4063400,0xb4064c00)` | Remainder of 20-sector alternate write-back source. Contains disk code fragment and opaque bytes | Main's normal SD INI load covers only the first eight sectors. Treat remaining contents and provenance as unresolved for any persistence path |
-| `[0xb4064c00,0xb4064c04)` | Boot-code word | Produced by block 0. Read by main, boot-code getter, recovery policy and AFI logic |
-| `[0xb4064c60,0xb4064c78)` | Stock pointer table | Published before record dispatch. Preserve if retaining an app or service that consumes it |
-| `[0xb4065400,0xb406f400)` | 80 sectors installed by the verified block-0 call | Includes early loader instructions, literal pools, UART/PMIC tables and I2C cache near `0xb406ba10`. The broader disk code region through `0xb4093c00` is a provenance span |
-| `[0xb4070800,0xb407087c)` | Main clears this globals region; working records at `0xb4070820` and `0xb407084c` | UART index/pad/baud at `0xb407082c/30/34`. PMIC settings at `0xb4070858`, alarm/flag/vector at `0xb4070870/74/78`. Resume and app paths depend on selected contents |
-| `0xb4070800` | SP assigned at the recorded ROM re-entry exit | Down-growing recovery stack and abandoned main globals represent a distinct lifetime. Recovery stack depth is unknown |
-| `0xb409f000` | Emulated initial SP | The pre-DRAM trace sampled 136 bytes of stack use. Physical extent, alternate path depth, and exception stacks are open |
-| `0xffff0000` and `0xffff5200` | Recovery VBAR and expected ROM copy source respectively | The copy runs through a shim. Memory aliasing and actual exceptions remain unresolved |
+| `recovery-copy-destination` / `first-sector` | recovery-overwrite | ADFU re-entry abandons the cold path and overwrites block 0 |
+| `recovery-copy-destination` / `afi` | recovery-overwrite | Recovery runs instead of AFI consumers |
+| `recovery-copy-destination` / `rom-service-candidate` | recovery-overwrite | Recovery no longer calls the earlier service through these addresses |
+| `recovery-copy-destination` / `reloaded-ini` | recovery-overwrite | Copy through 0xb4062e00 overwrites the first 0xa00 INI bytes |
+| `recovery-copy-destination` / `alternate-write-back-source` | recovery-overwrite | The static write-back source is not used after recovery |
+| `alternate-write-back-source` / `reloaded-ini` | containment | The alternate writer persists the reloaded INI and twelve further sectors of unresolved provenance |
+| `early-loader-installation` / `i2c-bus-cache` | containment | Cache word lives in the installed image |
+
+The emulator maps `[0xb4060000,0xb40a0000)` (emulator-assumption). Physical SRAM extent: unresolved.
+<!-- generated:sram-layout end -->
+
+Further constraints not captured as ranges: the historical disk layout places another block at `[0xb4060200,0xb4060400)`, but its presence in the ROM's entry SRAM is unknown and the model installs only the first sector. The INI holds the primary record, selector, secondary record and SFVD at `0xb4062800`, and stays live across DRAM dispatch and app.bin. The installed loader belongs to a broader disk provenance span ending at `0xb4093c00`. The pre-DRAM trace sampled 136 bytes of stack use under the emulated SP. Recovery sets VBAR `0xffff0000`; memory aliasing and actual exceptions remain unresolved. Ranges marked observed come from executed requests or stores; static ranges are untaken alternatives; none establishes physical SRAM size or ROM work areas. `tools/contract_semantics.py` rejects reversed or out-of-map ranges, transfer ends that differ from destination plus sectors × 512, stores outside declared ranges, and any overlap without a declared containment, stage-reuse or recovery-overwrite relation.
 
 An independent placement needs space for code/literals, writable data, call and exception frames, service scratch, and any compatible AFI or INI bytes still read later. Validate non-overlap against measured or documented ownership, including stack growth, sector-rounded destinations and the recovery overwrite. A complete physical map could allow reclamation after the last consumer. [Pre-DRAM map](predram-initialization.md#execution-environment) · [ROM re-entry](../reports/adfu-loopback-reconstruction.md)
 
@@ -117,17 +134,57 @@ The paired executions found no later DRAM consumer of those persistent GPIO valu
 
 Main calls `0xb40665d0` with the INI and produce flag zero. It copies record fields into SRAM before timer, UART and power setup. A nonzero resume flag and vector select resume before the secondary-record test. Cold mode selects the secondary record when INI +0x2c is nonzero. The shipped records have this selector set. The working global has 12 bytes and uses little-endian 16-bit values where marked.
 
-| Field | Working offset | Primary INI offset | Secondary INI offset | Reference and use |
-|---|---:|---:|---:|---|
-| Clock (MHz, u16) | +0 | +0x1c | +0x4c | 468 requested. Cold mode rounds down to 12 MHz step |
-| Capacity (MiB, u16) | +2 | +0x20 | +0x50 | 256 / 0. Cold timing calculation begins with forced 2048 MiB. Final stored value comes from probes or failure fallback |
-| Bus selector | +4 | +0x24 | +0x54 | 1 for x16. Auto zero begins x32 and may fall back to x16 |
-| Chip selects | +5 | +0x25 | +0x55 | 1 / 0. Auto zero tries two then one; explicit 1/2 fixes initial configuration |
-| Type | +6 | +0x26 | +0x56 | `0x10`. Low nibble 0 selects DDR3-style operations. Low nibble nonzero selects an LPDDR-class path. High nibble 1 skips idle self-refresh programming |
-| Row/column/bank | +7 | +0x27 | +0x57 | `0x48` / 0. Row code bits 7:6, column bits 3:2, banks bits 1:0 with zero as eight-bank encoding |
-| Read/write ODT | +8 / +9 | +0x28 / +0x29 | +0x58 / +0x59 | 1/1 in Koriki and three earlier stock releases, 2/2 in 20231014 |
-| Drive operand | +0xa | +0x2a | +0x5a | 0xc before 20231014 and 9 in 20231014 |
-| Preserved byte | +0xb | +0x2b | +0x5b | Zero in reference; significance open |
+The INI keeps clock and capacity in 4-byte little-endian slots of which only the low halfword is copied; the packed working record is 12 bytes. Generated from the structured fields and checked against the executed working copies of all five releases, the raw INI bytes in every traced case, and the observed write-back:
+
+<!-- generated:dram-record start -->
+| Field | Working offset | Width | Primary INI | Secondary INI | INI slot | Reference primary / secondary | Meaning |
+|---|---:|---:|---:|---:|---:|---|---|
+| `dram-mhz` | +0x0 | 2 | +0x1c | +0x4c | 4 | 468 / 468 (all releases) | Requested clock in MHz (u16 little-endian copied from the low half of a 4-byte INI slot). Cold mode rounds down to a 12 MHz multiple |
+| `dram-mib` | +0x2 | 2 | +0x20 | +0x50 | 4 | 256 / 0 (all releases) | Capacity in MiB (u16 little-endian copied from the low half of a 4-byte INI slot). Cold timing starts from a forced 2048; the probe or failure path stores the final value |
+| `dram-bus` | +0x4 | 1 | +0x24 | +0x54 | 1 | 1 / 1 (all releases) | Input bus-width selector. Cold normalization (semantics.dram-bus): 0 fixed x32, 1 fixed x16, 2..255 x32 with automatic x16 fallback. The working byte then encodes the attempt width (0 = x32, 1 = x16); a persistent training failure stores min(input, 2) |
+| `dram-cs` | +0x5 | 1 | +0x25 | +0x55 | 1 | 1 / 0 (all releases) | Input chip-select selector. Cold normalization (semantics.dram-rank): 1 or 2 fixed; 0 and 3..255 automatic, trying two ranks then one. The working byte holds the attempt rank count; a persistent training failure stores the input when it is at most 2, else 0 |
+| `dram-type` | +0x6 | 1 | +0x26 | +0x56 | 1 | 16 / 16 (all releases) | Low nibble 0 selects the DDR3-style branch, nonzero an LPDDR-class branch; high nibble 1 skips idle self-refresh programming |
+| `dram-rcc` | +0x7 | 1 | +0x27 | +0x57 | 1 | 72 / 0 (all releases) | Row code bits 7:6, column code bits 3:2, bank code bits 1:0 (0 selects the eight-bank capacity branch). The cold alias probe runs only when rcc & 0xcc == 0; the bank code is never probed |
+| `dram-rd-odt` | +0x8 | 1 | +0x28 | +0x58 | 1 | 1 / 1 (stock-221203, stock-221223, stock-230309, koriki-v1.0); 2 / 2 (stock-20231014) | Read termination selector (ZQ0CR1 ODT field) |
+| `dram-wr-odt` | +0x9 | 1 | +0x29 | +0x59 | 1 | 1 / 1 (stock-221203, stock-221223, stock-230309, koriki-v1.0); 2 / 2 (stock-20231014) | Write termination selector (MR1 RTT_NOM) |
+| `dram-drive` | +0xa | 1 | +0x2a | +0x5a | 1 | 12 / 12 (stock-221203, stock-221223, stock-230309, koriki-v1.0); 9 / 9 (stock-20231014) | Drive operand ORed into ZQ0CR1 |
+| `dram-tail` | +0xb | 1 | +0x2b | +0x5b | 1 | 0 / 0 (all releases) | Copied and written back unchanged; significance open |
+
+| INI field | Offset | Width | Reference | Meaning |
+|---|---:|---:|---|---|
+| `ini-version` | +0x0 | 4 | 1.1 (all releases) | ASCII 1.1 plus terminator |
+| `ini-printed-device` | +0xc | 1 | 0x22 (all releases) | Printed as bootdev only; not the boot medium (both SD paths print 0x22) |
+| `board-index` | +0xd | 1 | 1 (all releases) | Board mux profile |
+| `uart-index` | +0xe | 1 | 3 (all releases) | UART controller index |
+| `uart-pad` | +0xf | 1 | 0 (all releases) | UART table pad selector |
+| `uart-baud` | +0x10 | 4 | 115200 (all releases) | Little-endian requested baud |
+| `gpio-enable` | +0x14 | 4 | 1 (all releases) | Little-endian word; nonzero enables the GPIO loopback test for nonzero boot code |
+| `pmic-bus` | +0x18 | 1 | 1 (all releases) | PMIC I2C bus index, copied to 0xb4070858[0] |
+| `pmic-byte-19` | +0x19 | 1 | 0 (all releases) | Copied to 0xb4070858[1]; consumer and significance open |
+| `pmic-byte-1a` | +0x1a | 1 | 3 (all releases) | Copied to 0xb407085c; consumer and significance open |
+| `pmic-adjust` | +0x1b | 1 | 3 (all releases) | Operand to the PMIC reg 0x14 calculation, copied to 0xb4070860 |
+| `dram-select` | +0x2c | 4 | 1 (all releases) | Little-endian record-selection word; nonzero selects the secondary DRAM record on the cold path only |
+| `sfvd` | +0x400 | 4 | SFVD (all releases) | Configuration write-back guard tested by app.bin |
+<!-- generated:dram-record end -->
+
+The cold path normalizes the input selectors before the type branch. The input selector, the stack word that retains it, and the working byte are distinct. The working bus byte encodes the attempt width (0 = x32, 1 = x16); it is not the capacity operand. Generated from `semantics.dram-bus`, `semantics.dram-rank` and `semantics.dram-retry`, which the validator compares with 240 executions of the actual loader, with `tools/ddr_model.py` over 12,224 input/hardware combinations and with the historical SD2 DRAM runs:
+
+<!-- generated:dram-selectors start -->
+| Input bus selector | Initial width | Automatic x16 fallback | Working byte per attempt | Byte after persistent training failure |
+|---|---|---|---|---|
+| 0 | x32 | no | 0 (x32) | 0 |
+| 1 | x16 | no | 1 (x16) | 1 |
+| 2..255 | x32 | yes | 0 (x32), then 1 (x16) after fallback | 2 |
+
+| Input chip-select selector | Initial ranks | Automatic rank retry | Byte after persistent training failure |
+|---|---:|---|---|
+| 0 | 2 | yes, 2 then 1 | 0 |
+| 1 | 1 | no | 1 |
+| 2 | 2 | no | 2 |
+| 3..255 | 2 | yes, 2 then 1 | 0 |
+
+Retry is eligible only for internal 0x1017fa11 (Only PGSR 0x3f after the training PIR (0xb40687a8) yields 0x1017fa11 and reaches the retry test). Other internal codes return 0x1747fa11 without retry. Attempt order with every attempt failing training: bus 2, cs 0: (2,x32) → (1,x32) → (2,x16) → (1,x16); bus 2, cs 1: (1,x32) → (1,x16); bus 2, cs 2: (2,x32) → (2,x16); bus 1, cs 0: (2,x16) → (1,x16); bus 0, cs 0: (2,x32) → (1,x32).
+<!-- generated:dram-selectors end -->
 
 The patched LPDDR cases show DCR `0x1000000c` versus DDR3 `0xb`, distinct MR1/MR2/MR3 and timing branches, initialization request `0x5f` and the same training request `0x81`. Type 1 selects a distinct MCFG field from other nonzero low-nibble values. Only exact type 2 writes the PUBL +0x3fc word. Shipped images exercise the DDR3-style branch only. A fixed independently supported hardware table needs its own validation and input rejection. [Caller comparison and record offsets](../reports/sd2-dram-reconstruction.md) · [Type branches](../reports/dram-complete-reconstruction.md#6-lpddr-branch-type--0xf--0)
 
@@ -160,14 +217,36 @@ MR1 packs `RTT_NOM[wrodt] | 2`. ZQ0CR1 packs `ZQ_ODT[rdodt] | drv`. PTR/DTPR and
 | PGSR `0xb40686a8` | `(status & 7) == 7` | 101 reads, then `0x9a00fa11` |
 | PGSR `0xb4068708` | exactly `0xf` | Unbounded. The trace's cutoff is an emulator instruction budget |
 | PGSR `0xb40687a4` | exactly `0x1f` pass or `0x3f` error | Unbounded for other statuses, including synthetic `0x5f` |
-| DFI `0xb40687cc` | bit 0 set | 101 reads, then `0xdf00fa11`; eligible first attempt can retry |
+| DFI `0xb40687cc` | bit 0 set | 101 reads, then `0xdf00fa11`, returned as `0x1747fa11` without retry |
 | MCMD, CMDTSTAT, STAT | Start clears, command status bit 0 set, or target state reached | Unbounded in the normal setup path. Resume self-refresh entry has a separate 1001-read STAT `0x45` wait that continues afterward |
 
-The error branch retries the full clock/reset/programming pass where eligible. With auto rank and width the attempt sequence is (2,x32), (1,x32), (2,x16), (1,x16). The shipped x16 record reaches the last two. Persistent training error returns `0x1017fa11`. Other internal failure codes, including ZQ, initial PHY, terminal DFI and capacity exponent, generally collapse to `0x1747fa11`; inspect internal console and exact stop PC for diagnosis. An unbounded wait has no firmware return. The out-of-range row exponent check `0xf000fa11` is unreachable in the analyzed algorithm because exponent 31 ends the probe. [Status and failure analysis](../reports/dram-complete-reconstruction.md#5-training-failure-handling-and-the-controller-state-machine)
+Only a training error (PGSR `0x3f`, internal `0x1017fa11`) reaches the retry test at `0xb4068f58`; the retry repeats the full clock/reset/programming pass. With automatic ranks and an input bus selector of 2 or more the sequence is (2,x32), (1,x32), (2,x16), (1,x16). Selector 0 is fixed x32 and never retries x16. The shipped x16 secondary record (bus 1, cs 0) makes (2,x16), (1,x16). Persistent training error returns `0x1017fa11` after writing the retained selectors back to the working record. Every internal code whose low 24 bits are `0x00fa11` (ZQ, initial PHY, DFI, capacity exponent) prints `Fail:` and returns `0x1747fa11` without retry, keeping the last attempt's working selectors; inspect internal console and exact stop PC for diagnosis. The historical DFI-timeout scenario retries only because its first, two-rank attempt fails training. An unbounded wait has no firmware return. The out-of-range row exponent check `0xf000fa11` is unreachable in the analyzed algorithm because exponent 31 ends the probe. [Status and failure analysis](../reports/dram-complete-reconstruction.md#5-training-failure-handling-and-the-controller-state-machine)
 
 ## 10. Geometry, training and diagnostic policy
 
-Cold auto-detection uses training to choose a candidate rank count and width. This measures trainability under a particular recipe. A physically present rank that does not train remains ambiguous. It then programs DMM and measures memory aliasing using `0x6996` at base byte 4 and candidate addresses, using halfwords on x16. The column probe tries indices 0–3 and takes the first alias or uses code 3 if none appears. The row probe uses the chosen column code and, on x16, exponents `0x19 + c + k`. It takes k on alias or exponent 31, else the code remains zero (13 rows). The bank count comes from the INI. Under eight-bank firmware encoding, capacity = `2^(r + c + bus + cs + 3)` MiB, with firmware bus selector `bus` and numeric chip-select count `cs`. The derived size is stored in MiB before AFI conversion. The model's field widths (columns 8+c, rows 13+r) are decode hypotheses. [Geometry methods and outcomes](../reports/sd2-dram-reconstruction.md#6-geometry-and-diagnostic)
+Cold auto-detection uses training to choose a candidate rank count and width. This measures trainability under a particular recipe. A physically present rank that does not train remains ambiguous. It then programs DMM and measures memory aliasing using `0x6996` at base byte 4 and candidate addresses, using halfwords on x16. The column probe tries indices 0–3 and takes the first alias or uses code 3 if none appears. The row probe uses the chosen column code and, on x16, exponents `0x19 + c + k`. It takes k on alias or exponent 31, else the code remains zero (13 rows). The bank code comes from the INI and is never probed. The capacity arithmetic at `0xb4068df8..0xb4068e70` uses a width operand derived from the working byte (1 for x16, 2 for x32), not the selector itself, and the numeric rank count. The derived size is stored in MiB before AFI conversion:
+
+<!-- generated:dram-capacity start -->
+Exponent e = row_code + column_code + capacity_width_operand + chip_select_count + 23; accepted when e ≤ 31, else internal 0xc000fa11 returned as 0x1747fa11. capacity_width_operand is 1 for x16 and 2 for x32; it is not the working bus selector (0 for x32).
+
+* Bank code 0: `capacity_MiB = 2^(row_code + column_code + capacity_width_operand + chip_select_count + 3)`
+* Bank codes 1, 2, 3: `capacity_MiB = 3 * 2^(row_code + column_code + capacity_width_operand + chip_select_count + 1)`
+
+| rcc | Row code | Column code | Bank code | Width | Ranks | Capacity |
+|---|---:|---:|---:|---|---:|---|
+| `0x48` | 1 | 2 | 0 | x16 | 1 | 256 MiB |
+| `0x48` | 1 | 2 | 0 | x32 | 1 | 512 MiB |
+| `0x48` | 1 | 2 | 0 | x16 | 2 | 512 MiB |
+| `0x48` | 1 | 2 | 0 | x32 | 2 | 1024 MiB |
+| `0x00` | 0 | 0 | 0 | x16 | 1 | 32 MiB |
+| `0xcc` | 3 | 3 | 0 | x16 | 1 | 2048 MiB |
+| `0xcc` | 3 | 3 | 0 | x16 | 2 | rejected (0xc000fa11) |
+| `0x49` | 1 | 2 | 1 | x16 | 1 | 192 MiB |
+
+Limitations: Firmware arithmetic only; not a physical DRAM geometry formula. Nonzero bank codes below 256 MiB make the final DCU_CFG term ((cap >> 8) - 1) wrap (observed 0xffffff2c). Probe aliasing and unsupported geometries can under- or over-report capacity.
+<!-- generated:dram-capacity end -->
+
+ The model's field widths (columns 8+c, rows 13+r) are decode hypotheses. [Geometry methods and outcomes](../reports/sd2-dram-reconstruction.md#6-geometry-and-diagnostic)
 
 | Category | Evidence |
 |---|---|
@@ -189,16 +268,22 @@ After a returned cold attempt, `0xb4066280` updates SRAM at INI+0x1c..0x2b from 
 
 The caller `0xb4066588` derives mode and device then invokes the producer `0xb4066500`. The 16 bytes at aligned `0xb4060300` are cleared before copying the three magic bytes and storing the fields. Words are little-endian.
 
-| Byte offset | Size | Contents | Demonstrated use |
-|---:|---:|---|---|
-| 0 | 3 | `41 46 49` (AFI) | Checked by U-Boot getters |
-| 3 | 1 | Zero from reference producer | Preserved in transfer. Distinctive-byte control shows the pinned getters check the first three bytes only |
-| 4 | 1 | Boot mode | Downstream mode/boot policy |
-| 5 | 1 | Boot device `0x20` or `0x22` | Derived from boot word, then consumed by MMC, boot flag and Linux bootargs |
-| 6 | 1 | UART index 3 | Selects `ttyS3` in the target command line |
-| 7 | 1 | UART pad 0 | Compatible getter, physical routing open |
-| 8 | 4 | UART baud 115200 | Compatible getter word |
-| 12 | 4 | `(uint32)(capacity_u16 << 20)` | U-Boot uses at least 8 MiB; otherwise fallback 496 MiB, including when magic is absent |
+<!-- generated:afi-layout start -->
+| Offset | Width | Field | Encoding | Producer source | Getter fallback without magic |
+|---:|---:|---|---|---|---|
+| 0 | 3 | `magic` | bytes | `41 46 49` | — |
+| 3 | 1 | `reserved_byte_3` | u8 | zero; not compared | — |
+| 4 | 1 | `boot_mode` | u8 | 0 on cold boot | 1 |
+| 5 | 1 | `boot_dev` | u8 | sd0 `0x20`, sd2 `0x22` | 32 |
+| 6 | 1 | `uart_index` | u8 | INI `uart-index` | 5 |
+| 7 | 1 | `uart_pad` | u8 | INI `uart-pad` | 0 |
+| 8 | 4 | `uart_baud` | u32le | INI `uart-baud` | 115200 |
+| 12 | 4 | `capacity_bytes` | u32le | (uint32)(working capacity_MiB << 20); 4096 MiB or more wraps | 0 |
+
+Base `0xb4060300`, 16 bytes. Getters compare 3 magic bytes. `dram_init` uses the size when it is at least 8 MiB, otherwise `0x1f000000`. Produced after every returned cold DRAM call, including failures (2048 MiB fallback). Not produced by resume, early recovery, invalid INI, ROM failure or an unbounded poll. A stock consumer runs only after main continuation with a zero DRAM return. Valid AFI bytes alone do not establish DRAM initialization. Linux receives memory through the device tree. AFI is a stock U-Boot input only.
+<!-- generated:afi-layout end -->
+
+The validator decodes each generated AFI with this layout and compares it with the INI fields, the working capacity, the boot medium and, where U-Boot ran, the executed getters and `dram_init`. Every observed AFI store must fall inside one declared field. The structured getter model must also reproduce the four isolated consumer controls, including the distinctive reserved byte `0xa5`, which the pinned getters ignore.
 
 ```text
 SD0  414649000020030000c2010000000010

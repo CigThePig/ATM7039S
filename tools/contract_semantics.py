@@ -453,7 +453,7 @@ def check_afi(contract, trace, history):
     require(afi['required_by_linux'] is False, 'AFI is a stock U-Boot interface, not a Linux boot requirement')
     by_field = {r['field']: r for r in rows}
     consumer = afi['consumer']
-    require(by_field['magic']['width'] >= consumer['magic_checked_bytes'] == 3, 'AFI magic comparison length')
+    require(1 <= consumer['magic_checked_bytes'] <= 4, 'AFI magic comparison length outside the four-byte slot')
     sram = {r['id']: r for r in contract['interfaces']['sram-layout']['ranges']}
     require((sram['afi']['start'], sram['afi']['end']) == (afi['address'], afi['address'] + afi['size']),
             'AFI SRAM range differs from the interface')

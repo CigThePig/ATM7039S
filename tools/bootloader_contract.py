@@ -165,7 +165,7 @@ class Observation:
     is ``2*i + 1`` and a boundary or supplemental anchor at event count ``b`` is
     ``2*b``, so an anchor recorded before event ``b`` orders strictly before it.
     A passing absence or value assertion never contributes execution evidence."""
-    __slots__ = ('assertion_passed', 'execution_positions', 'state_execution', 'absence_confirmed', 'role')
+    __slots__ = ('assertion_passed', 'execution_positions', 'state_execution', 'absence_confirmed', 'role', 'check')
 
     def __init__(self, role, positions=(), state_execution=False, absence_confirmed=False):
         self.assertion_passed = True
@@ -173,6 +173,7 @@ class Observation:
         self.execution_positions = list(positions)
         self.state_execution = state_execution
         self.absence_confirmed = absence_confirmed
+        self.check = None
 
     @property
     def execution_observed(self):
@@ -623,16 +624,7 @@ def validate_trace(spec, trace, history):
         events = list(indexed_events(rows))
         check_handoff(key, case, events, spec)
         semantics.check_afi_stores(spec['interfaces']['afi'], key, events)
-        found = defaultdict(list)
-        for op_id, op in spec['operations'].items():
-            for check in op['checks']:
-                if matches(facts, check['when']):
-                    found[op_id].append(check_access(op_id, check, events, case['boundaries'],
-                                                     case['supplemental'], case['result']))
-                    checked[op_id] += 1
-        positions = {op: sorted(p for o in obs for p in o.execution_positions) for op, obs in found.items()}
-        executed = {op for op, obs in found.items() if any(o.execution_observed for o in obs)}
-        confirmed_absent = {op for op, obs in found.items() if any(o.absence_confirmed for o in obs)}
+        found, positions, executed, confirmed_absent = case_observations(spec, facts, case, events, checked)
         observed |= {op for op in executed if positions[op]}
         state_only |= {op for op in executed if not positions[op]}
         absent |= confirmed_absent
@@ -647,26 +639,9 @@ def validate_trace(spec, trace, history):
             if (max(left) if edge['trace_order'] == 'last-before-first' else min(left)) > min(right):
                 raise ValueError(f'{key}: swapped ordering for {edge_id}')
             covered_edges.add(edge_id)
-        attempt_edges |= check_attempts(spec, key, facts, case, events, positions)
+        attempt_edges |= check_attempts(spec, key, facts, case, events, positions, found)
         stats['attempts'] += sum(1 for b in case['boundaries'] if b[0] == spec['attempts']['start_boundary']['phase'])
-        active = [branch for branch in spec['branches'].values() if matches(facts, branch['when'])]
-        if len(active) != 1:
-            raise ValueError(f'{key}: expected exactly one terminal branch, got {len(active)}')
-        branch = active[0]
-        dram = case['result']['dram']
-        if (dram['terminal']['pc'] if dram else None) != branch['dram_terminal_pc']:
-            raise ValueError(f'{key}: terminal branch expects DRAM terminal {branch["dram_terminal_pc"]}')
-        for op_id in branch['requires']:
-            if op_id not in executed:
-                raise ValueError(f'{key}: terminal branch missing {op_id}')
-        for op_id in branch['forbids']:
-            if op_id in executed or anchors(spec['operations'][op_id], events, case['boundaries'],
-                                            case['supplemental'], case['result']):
-                raise ValueError(f'{key}: terminal branch reached forbidden {op_id}')
-        for op_id in branch['confirm_absent']:
-            if op_id not in confirmed_absent:
-                raise ValueError(f'{key}: terminal branch lacks a positive absence check for {op_id}')
-        stats['absence_confirmations'] += len(branch['confirm_absent'])
+        stats['absence_confirmations'] += check_branch(spec, key, facts, case, events, executed, confirmed_absent)
     for op_id, op in spec['operations'].items():
         if op['checks'] and not checked[op_id]:
             raise ValueError(f'{op_id}: operation covered by no trace')
@@ -688,6 +663,44 @@ def validate_trace(spec, trace, history):
         semantics=semantic)
 
 
+def case_observations(spec, facts, case, events, checked=None):
+    """Run every applicable check: observations, execution positions, executed and confirmed-absent sets."""
+    found = defaultdict(list)
+    for op_id, op in spec['operations'].items():
+        for check in op['checks']:
+            if matches(facts, check['when']):
+                obs = check_access(op_id, check, events, case['boundaries'], case['supplemental'], case['result'])
+                obs.check = check
+                found[op_id].append(obs)
+                if checked is not None:
+                    checked[op_id] += 1
+    positions = {op: sorted(p for o in obs for p in o.execution_positions) for op, obs in found.items()}
+    executed = {op for op, obs in found.items() if any(o.execution_observed for o in obs)}
+    confirmed_absent = {op for op, obs in found.items() if any(o.absence_confirmed for o in obs)}
+    return found, positions, executed, confirmed_absent
+
+
+def check_branch(spec, key, facts, case, events, executed, confirmed_absent):
+    active = [branch for branch in spec['branches'].values() if matches(facts, branch['when'])]
+    if len(active) != 1:
+        raise ValueError(f'{key}: expected exactly one terminal branch, got {len(active)}')
+    branch = active[0]
+    dram = case['result']['dram']
+    if (dram['terminal']['pc'] if dram else None) != branch['dram_terminal_pc']:
+        raise ValueError(f'{key}: terminal branch expects DRAM terminal {branch["dram_terminal_pc"]}')
+    for op_id in branch['requires']:
+        if op_id not in executed:
+            raise ValueError(f'{key}: terminal branch missing {op_id}')
+    for op_id in branch['forbids']:
+        if op_id in executed or anchors(spec['operations'][op_id], events, case['boundaries'],
+                                        case['supplemental'], case['result']):
+            raise ValueError(f'{key}: terminal branch reached forbidden {op_id}')
+    for op_id in branch['confirm_absent']:
+        if op_id not in confirmed_absent:
+            raise ValueError(f'{key}: terminal branch lacks a positive absence check for {op_id}')
+    return len(branch['confirm_absent'])
+
+
 def attempt_intervals(spec, case):
     """Attempt identities and event intervals from the executed boundary stream."""
     cfg = spec['attempts']
@@ -707,7 +720,7 @@ def attempt_intervals(spec, case):
     return out
 
 
-def check_attempts(spec, key, facts, case, events, positions):
+def check_attempts(spec, key, facts, case, events, positions, found=None):
     """Per-attempt operation order, required/forbidden operations and retry transitions."""
     import contract_semantics as semantics
     cfg = spec['attempts']
@@ -740,6 +753,13 @@ def check_attempts(spec, key, facts, case, events, positions):
         for op in cfg['required']['all'] + cfg['required'][outcome]:
             if not inside.get(op):
                 raise ValueError(f'{who}: required operation {op} absent')
+            # Unbounded access checks describe accesses repeated by every attempt.
+            for obs in (found or {}).get(op, []):
+                check = obs.check
+                if (check['kind'] == 'event' and check['count'][0] >= 1 and check['count'][1] is None and
+                        not any(lo <= p < hi for p in obs.execution_positions)):
+                    raise ValueError(f"{who}: required operation {op} lacks access at site "
+                                     f"{check['match']['site'][0]:#x} in this attempt")
         for op in cfg['forbidden'][outcome]:
             if inside.get(op) or anchor_inside[op]:
                 raise ValueError(f'{who}: forbidden operation {op} present')
@@ -981,6 +1001,128 @@ def render_reference(contract):
     return ('\n'.join(rows) + '\n').encode('utf-8')
 
 
+CONTRACT_DOC = 'docs/bootloader-initialization-contract.md'
+BLOCK = re.compile(r'(<!-- generated:([a-z-]+) start -->\n)(.*?)(<!-- generated:\2 end -->)', re.S)
+
+
+def _hex(value):
+    return '—' if value is None else f'`{value:#x}`'
+
+
+def _refs(rows, keys):
+    out = []
+    for row in rows:
+        values = ' / '.join(str(row[k]) for k in keys)
+        group = 'all releases' if len(rows) == 1 else ', '.join(row['releases'])
+        out.append(f'{values} ({group})')
+    return '; '.join(out)
+
+
+def render_blocks(contract):
+    """Tables generated from the verified structured definitions."""
+    import contract_semantics as semantics
+    sem, fields = contract['semantics'], contract['configuration_fields']
+    blocks = {}
+    rows = ['| Field | Working offset | Width | Primary INI | Secondary INI | INI slot | Reference primary / secondary | Meaning |',
+            '|---|---:|---:|---:|---:|---:|---|---|']
+    for key, f in sorted(fields.items(), key=lambda kv: kv[1]['offset']):
+        if f['record'] != 'working-dram-record':
+            continue
+        rows.append(f"| `{key}` | +{f['offset']:#x} | {f['width']} | +{f['ini_offsets']['primary']:#x} | "
+                    f"+{f['ini_offsets']['secondary']:#x} | {f['ini_slot_width']} | "
+                    f"{_refs(f['reference'], ('primary', 'secondary'))} | {f['meaning']} |")
+    rows += ['', '| INI field | Offset | Width | Reference | Meaning |', '|---|---:|---:|---|---|']
+    for key, f in sorted(fields.items(), key=lambda kv: kv[1]['offset']):
+        if f['record'] == 'ini':
+            rows.append(f"| `{key}` | +{f['offset']:#x} | {f['width']} | {_refs(f['reference'], ('value',))} | {f['meaning']} |")
+    blocks['dram-record'] = rows
+    bus, rank, retry = sem['dram-bus'], sem['dram-rank'], sem['dram-retry']
+    rows = ['| Input bus selector | Initial width | Automatic x16 fallback | Working byte per attempt | Byte after persistent training failure |',
+            '|---|---|---|---|---|']
+    for r in bus['rules']:
+        span = f"{r['input_min']}" if r['input_min'] == r['input_max'] else f"{r['input_min']}..{r['input_max']}"
+        working = f"{r['working_bus_selector']} (x{r['initial_width_bits']})"
+        if r['automatic_width_fallback']:
+            working += ', then 1 (x16) after fallback'
+        rows.append(f"| {span} | x{r['initial_width_bits']} | {'yes' if r['automatic_width_fallback'] else 'no'} | "
+                    f"{working} | {r['retained_selector']} |")
+    rows += ['', '| Input chip-select selector | Initial ranks | Automatic rank retry | Byte after persistent training failure |',
+             '|---|---:|---|---|']
+    for r in rank['rules']:
+        span = f"{r['input_min']}" if r['input_min'] == r['input_max'] else f"{r['input_min']}..{r['input_max']}"
+        rows.append(f"| {span} | {r['initial_ranks']} | {'yes, 2 then 1' if r['automatic'] else 'no'} | {r['retained_selector']} |")
+    order = []
+    for b_in, c_in in ((2, 0), (2, 1), (2, 2), (1, 0), (0, 0)):
+        seq = semantics.attempts(sem, b_in, c_in, lambda *_: False)['attempts']
+        order.append(f"bus {b_in}, cs {c_in}: " + ' → '.join(f'({r},x{w})' for r, w in seq))
+    rows += ['', f"Retry is eligible only for internal {', '.join(retry['eligible_internal_codes'])} "
+             f"({retry['eligibility']}). Other internal codes return {retry['collapsed_return']} without retry. "
+             f"Attempt order with every attempt failing training: " + '; '.join(order) + '.']
+    blocks['dram-selectors'] = rows
+    cap = sem['dram-capacity']
+    rows = [f"Exponent e = {' + '.join(cap['exponent_terms'])} + {cap['exponent_bias']}; accepted when e ≤ {cap['max_exponent']}, "
+            f"else internal {cap['exponent_overflow']['internal_code']} returned as {cap['exponent_overflow']['returned_code']}. "
+            f"capacity_width_operand is {bus['capacity_width_operand']['16']} for x16 and {bus['capacity_width_operand']['32']} for x32; "
+            'it is not the working bus selector (0 for x32).', '']
+    rows += [f"* Bank code{'s' if len(b['bank_codes']) > 1 else ''} {', '.join(map(str, b['bank_codes']))}: `{b['formula']}`"
+             for b in cap['bank_branches']]
+    rows += ['', '| rcc | Row code | Column code | Bank code | Width | Ranks | Capacity |', '|---|---:|---:|---:|---|---:|---|']
+    for rcc, width, ranks in ((0x48, 16, 1), (0x48, 32, 1), (0x48, 16, 2), (0x48, 32, 2), (0x00, 16, 1), (0xCC, 16, 1),
+                              (0xCC, 16, 2), (0x49, 16, 1)):
+        mib, err = semantics.capacity(sem, rcc, width, ranks)
+        rows.append(f"| `{rcc:#04x}` | {rcc >> 6} | {(rcc >> 2) & 3} | {rcc & 3} | x{width} | {ranks} | "
+                    f"{f'{mib} MiB' if err is None else f'rejected ({err})'} |")
+    rows += ['', 'Limitations: ' + ' '.join(f'{x}.' for x in cap['limitations'])]
+    blocks['dram-capacity'] = rows
+    afi = contract['interfaces']['afi']
+    fb = afi['consumer']['fallback']
+    getter = {v: k for k, v in afi['consumer']['getters'].items()}
+    rows = ['| Offset | Width | Field | Encoding | Producer source | Getter fallback without magic |', '|---:|---:|---|---|---|---|']
+    for r in afi['format']:
+        source = r.get('source_field') and f"INI `{r['source_field']}`" or {
+            'magic': '`41 46 49`', 'reserved_byte_3': f"zero; not compared", 'boot_mode': f"{afi['cold_boot_mode']} on cold boot",
+            'boot_dev': ', '.join(f'{m} `{v:#x}`' for m, v in afi['boot_device_by_medium'].items()),
+            'capacity_bytes': afi['capacity_conversion']}[r['field']]
+        fallback = fb.get(getter.get(r['field'])) if r['field'] in getter else '—'
+        rows.append(f"| {r['offset']} | {r['width']} | `{r['field']}` | {r['encoding']} | {source} | {fallback} |")
+    rows += ['', f"Base `{afi['address']:#x}`, {afi['size']} bytes. Getters compare {afi['consumer']['magic_checked_bytes']} magic bytes. "
+             f"`dram_init` uses the size when it is at least {afi['consumer']['minimum_size_bytes'] >> 20} MiB, otherwise "
+             f"`{afi['consumer']['fallback_ram_bytes']:#x}`. {afi['generation']['note']} {afi['admission']['note']} {afi['linux_note']}"]
+    blocks['afi-layout'] = rows
+    layout = contract['interfaces']['sram-layout']
+    rows = ['| Range | Identifier | Basis | Live stages | Owner and derivation |', '|---|---|---|---|---|']
+    for r in layout['ranges']:
+        span = (f"`[{r['start']:#x},{r['end']:#x})`" if r['end'] is not None else f"top `{r['top']:#x}`, grows down, extent unknown")
+        d = r.get('derivation') or {}
+        how = {'sectors': f"; end = start + {d.get('sectors')} × {d.get('sector_bytes')}" +
+               (f" (storage read {d['storage_read']})" if 'storage_read' in d else ''),
+               'length': f"; end = start + {d.get('bytes', 0):#x}"}.get(d.get('kind'), '')
+        rows.append(f"| {span} | `{r['id']}` | {r['basis']} | {', '.join(r['stages'])} | {r['owner']}{how} |")
+    rows += ['', '| Overlap | Relation | Justification |', '|---|---|---|']
+    rows += [f"| `{o['a']}` / `{o['b']}` | {o['relation']} | {o['why']} |" for o in layout['overlaps']]
+    lo, hi = layout['emulator_mapping']
+    rows += ['', f"The emulator maps `[{lo:#x},{hi:#x})` ({layout['emulator_mapping_basis']}). Physical SRAM extent: unresolved."]
+    blocks['sram-layout'] = rows
+    return {name: '\n'.join(text) + '\n' for name, text in blocks.items()}
+
+
+def render_contract_doc(contract, text):
+    blocks = render_blocks(contract)
+    seen = set()
+
+    def fill(match):
+        name = match.group(2)
+        if name not in blocks:
+            raise ValueError(f'{CONTRACT_DOC}: unknown generated block {name}')
+        seen.add(name)
+        return match.group(1) + blocks[name] + match.group(4)
+
+    out = BLOCK.sub(fill, text)
+    if seen != blocks.keys():
+        raise ValueError(f'{CONTRACT_DOC}: missing generated blocks {sorted(blocks.keys() - seen)}')
+    return out
+
+
 def check_generated(root):
     spec = read(root / INPUT)
     contract = build_contract(root, spec)
@@ -988,15 +1130,44 @@ def check_generated(root):
         raise ValueError(f'{CONTRACT} is stale')
     if render_reference(contract) != (root / REFERENCE).read_bytes():
         raise ValueError(f'{REFERENCE} is stale')
+    doc = (root / CONTRACT_DOC).read_text(encoding='utf-8')
+    if render_contract_doc(contract, doc) != doc:
+        raise ValueError(f'{CONTRACT_DOC} generated tables are stale')
     trace = read(root / TRACE)
     if trace_bytes(trace) != (root / TRACE).read_bytes():
         raise ValueError(f'{TRACE} is not canonical')
     return validate_trace(contract, trace, read(root / HISTORY))
 
 
+def verify_sources(root, sources_dir):
+    """Check each pinned source reference against a local file: git blob SHA-1 and line bounds.
+
+    Distinguishes a digest that merely looks valid from one checked against the file."""
+    from build_dataset import REPOS
+    report = {}
+    for row in read(root / 'specifications/bootloader-source-references.json'):
+        folder, _, revision = REPOS[row['source']]
+        if revision != row['revision']:
+            raise ValueError(f"{row['id']}: revision differs from the source ledger")
+        path = Path(sources_dir) / folder / row['path']
+        if not path.is_file():
+            report[row['id']] = 'unavailable'
+            continue
+        data = path.read_bytes()
+        blob = hashlib.sha1(b'blob %d\0' % len(data) + data).hexdigest()
+        lines = data.decode('utf-8', 'replace').splitlines()
+        if blob != row['git_blob_sha1']:
+            raise ValueError(f"{row['id']}: local file blob {blob} differs from the pinned reference")
+        if not all(0 < a <= b <= len(lines) for a, b in row['line_ranges']):
+            raise ValueError(f"{row['id']}: line ranges exceed the {len(lines)}-line file")
+        report[row['id']] = 'verified'
+    return report
+
+
 def main():
     cli = argparse.ArgumentParser(description=__doc__)
-    cli.add_argument('mode', choices=('generate', 'validate', 'replay', 'compare'))
+    cli.add_argument('mode', choices=('generate', 'validate', 'replay', 'compare', 'sources'))
+    cli.add_argument('--sources-dir', type=Path, default=os.environ.get('ATM_SOURCES_DIR'))
     cli.add_argument('--firmware-dir', type=Path, default=os.environ.get('ATM_FIRMWARE_DIR'))
     cli.add_argument('--check', action='store_true', help='for replay, compare the new timeline byte for byte')
     args = cli.parse_args()
@@ -1008,8 +1179,14 @@ def main():
             check_structure(contract, history)
             (ROOT / CONTRACT).write_bytes(formatted(contract))
             (ROOT / REFERENCE).write_bytes(render_reference(contract))
+            doc = ROOT / CONTRACT_DOC
+            doc.write_text(render_contract_doc(contract, doc.read_text(encoding='utf-8')), encoding='utf-8')
         elif args.mode == 'validate':
             print(json.dumps(check_generated(ROOT), sort_keys=True))
+        elif args.mode == 'sources':
+            if not args.sources_dir:
+                cli.error('sources requires --sources-dir or ATM_SOURCES_DIR')
+            print(json.dumps(verify_sources(ROOT, args.sources_dir), sort_keys=True))
         elif args.mode == 'compare':
             print(json.dumps({name: {'config': row['config'], 'reference_dram': {
                 key: history['scenarios'][name]['sd2-reference']['dram_result'][key]
